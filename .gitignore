@@ -17,6 +17,8 @@ concordion-test/orbtrc*.txt
 ## Directory-based project format:
 .idea/
 
+.idea/misc.xml
+
 ## File-based project format:
 *.ipr
 *.iws
@@ -106,4 +108,5 @@ local.properties
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+.stylelintcache
 .DS_Store
