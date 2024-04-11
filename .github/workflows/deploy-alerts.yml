@@ -1,0 +1,44 @@
+name: Deploy alerts
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.nais/alderspensjon-endringssoknad-backend/alerts/**'
+      - '.nais/familieforhold-backend/alerts/**'
+      - '.nais/opptjening-overforomsorgsopptjening-backend/alerts/**'
+
+jobs:
+#  deploy-alerspensjon-endringssoknad-backend-alerts:
+#    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+#    permissions:
+#      contents: read
+#      id-token: write
+#    with:
+#      nais-template-q2: .nais/alderspensjon-endringssoknad-backend/alerts/alerts-q2.yml
+#      nais-template-production: .nais/alderspensjon-endringssoknad-backend/alerts/alerts-prod.yml
+#      dev-cluster: dev-gcp
+#      production-cluster: prod-gcp
+
+  deploy-familieforhold-backend-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-q2: .nais/familieforhold-backend/alerts/alerts-q2.yml
+      nais-template-production: .nais/familieforhold-backend/alerts/alerts-prod.yml
+      dev-cluster: dev-gcp
+      production-cluster: prod-gcp
+
+#  deploy-opptjening-overforomsorgsopptjening-backend-alerts:
+#    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+#    permissions:
+#      contents: read
+#      id-token: write
+#    with:
+#      nais-template-q2: .nais/opptjening-overforomsorgsopptjening-backend/alerts/alerts-q2.yml
+#      nais-template-production: .nais/opptjening-overforomsorgsopptjening-backend/alerts/alerts-prod.yml
+#      dev-cluster: dev-gcp
+#      production-cluster: prod-gcp
