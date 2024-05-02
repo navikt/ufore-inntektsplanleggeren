@@ -32,6 +32,28 @@ jobs:
       dev-cluster: dev-gcp
       production-cluster: prod-gcp
 
+  deploy-familieforhold-frontend-borger-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-q2: .nais/familieforhold-frontend-borger/alerts/alerts-q2.yml
+      nais-template-production: .nais/familieforhold-frontend-borger/alerts/alerts-prod.yml
+      dev-cluster: dev-gcp
+      production-cluster: prod-gcp
+
+  deploy-familieforhold-frontend-veileder-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-q2: .nais/familieforhold-frontend-veileder/alerts/alerts-q2.yml
+      nais-template-production: .nais/familieforhold-frontend-veileder/alerts/alerts-prod.yml
+      dev-cluster: dev-gcp
+      production-cluster: prod-gcp
+
 #  deploy-opptjening-overforomsorgsopptjening-backend-alerts:
 #    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
 #    permissions:
