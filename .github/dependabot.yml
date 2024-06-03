@@ -1,12 +1,8 @@
 version: 2
 updates:
+#### MAVEN ####
   - package-ecosystem: maven
     directory: "/familieforhold-backend/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: npm
-    directory: "/familieforhold-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -15,11 +11,40 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+  - package-ecosystem: maven
+    directory: "/opptjening-overforomsorgsopptjening-backend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+#### NPM ####
+  - package-ecosystem: npm
+    directory: "/familieforhold-frontend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
   - package-ecosystem: npm
     directory: "/alderspensjon-endringssoknad-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: "/opptjening-overforomsorgsopptjening-frontend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: "/bytt-bruker-frontend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: "/representasjon-banner-frontend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+
+#### GITHUB ACTIONS ####
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
