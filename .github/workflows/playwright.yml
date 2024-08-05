@@ -14,16 +14,17 @@ jobs:
     defaults:
       run:
         working-directory: ./${{ inputs.path }}
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: v18.18.1
+          node-version: 18.18.1
+          registry-url: 'https://npm.pkg.github.com'
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Run Playwright tests
         run: npx playwright test
