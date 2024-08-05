@@ -5,9 +5,13 @@ on:
       path:
         required: true
         type: string
+    secrets:
+      READER_TOKEN:
+        required: true
 
 jobs:
   run-playwright-tests:
+    name: Run playwright for ${{ inputs.path }}
     timeout-minutes: 10
     runs-on: ubuntu-latest
     defaults:
@@ -22,5 +26,7 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Run Playwright tests
         run: npx playwright test
