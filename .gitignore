@@ -1,7 +1,7 @@
 # Nix Flakes
 .direnv/
 result/
-/familieforhold-frontend/.env
+/familieforhold-frontend/.env.development
 .prefs
 .checkstyle
 *.lock
