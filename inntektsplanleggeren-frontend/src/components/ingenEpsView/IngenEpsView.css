@@ -1,0 +1,22 @@
+.samboer-felt {
+    max-width: 300px;
+    padding-top: 0.7em;
+}
+
+.buttons {
+    margin-top: 1em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+
+.registrer-samboer-header {
+    margin-top: 0.33em;
+}
+
+#add-samboer-knapp {
+    margin-top: -1em;
+}
+
+#success-div {
+    margin-top: 1em;
+}
