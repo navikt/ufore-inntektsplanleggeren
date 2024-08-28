@@ -1,0 +1,43 @@
+query($ident: ID!){
+    hentPerson(ident: $ident){
+        foedsel{
+            foedselsdato
+            folkeregistermetadata {
+                ajourholdstidspunkt
+                gyldighetstidspunkt
+            }
+            metadata {
+                master
+                endringer {
+                    registrert
+                    kilde
+                    registrertAv
+                    systemkilde
+                    type
+                }
+                historisk
+            }
+        }
+
+        navn(historikk: false) {
+            fornavn
+            mellomnavn
+            etternavn
+            folkeregistermetadata {
+                ajourholdstidspunkt
+                gyldighetstidspunkt
+            }
+            metadata {
+                master
+                endringer {
+                    registrert
+                    kilde
+                    registrertAv
+                    systemkilde
+                    type
+                }
+                historisk
+            }
+        }
+    }
+}
