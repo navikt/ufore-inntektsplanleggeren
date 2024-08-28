@@ -1,7 +1,7 @@
 import {Alert, Button, Heading, Table} from "@navikt/ds-react";
 import {pidFormat, pidFormatAdjustableView} from "@/common/pidutils";
 import {formatterNavStandardDato} from "@/common/timeutils";
-import SlettSamboerModal, {Props as SlettSamboerModalProps} from "@/components/slettSamboerModal/SlettSamboerModal";
+import SlettSamboerModal, {Props as SlettSamboerModalProps} from "@/components/YearView/SlettSamboerModal";
 import EndreSamboerforholdModal, {
     Props as EndreSamboerforholdModalProps
 } from "@/components/endreSamboerModal/EndreSamboerModal";

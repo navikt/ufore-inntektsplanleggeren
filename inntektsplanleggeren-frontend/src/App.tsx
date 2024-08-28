@@ -1,29 +1,24 @@
 import './App.css'
 import "@navikt/ds-css";
-import {BodyLong, Heading, Link, Panel} from "@navikt/ds-react";
-import IngenEpsView from "@/components/ingenEpsView/IngenEpsView";
-import EpsBarnView from "./components/epsBarnView/EpsBarnView";
+import {Heading, Panel,  Button} from "@navikt/ds-react";
 import {useContext} from "react";
 import {DataContext} from "@/DataContextProvider";
-import {HarEpsView} from "@/components/eps/HarEpsView";
 import {Loading} from "@/components/pageStatus/Loading";
 import {Error} from "@/components/pageStatus/Error";
 import {LoadingError} from "@/components/pageStatus/LoadingError";
 import {Feilmelding} from "@/components/pageStatus/Feilmelding";
-import SamboerHistorikk from "@/components/samboerHistorikk/SamboerHistorikk";
+import {InitialView} from "@/components/initialView/InitialView";
+import {YearView} from "@/components/YearView";
 
 export function App() {
 
     const {
-        brukersEps,
-        samboerforhold,
         error,
         loading,
         loadingError,
         feilmeldingkode
     } = useContext(DataContext)
 
-    const aktivSamboer = samboerforhold.filter(samboer => samboer.tom === null)[0]
 
     return (
         <div className="mainBody">
@@ -31,29 +26,20 @@ export function App() {
                 <Panel>
                     {loading ? <Loading/> :
                         <>
-                            <Heading size={"xlarge"} level={"1"} className="main-header">Familieforhold</Heading>
-                            <BodyLong>
-                                Her ser du registrert informasjon om den nærmeste familien din. Husk at du har plikt til
-                                å melde fra om endret sivilstand.
-                                Mer informasjon finner du på <Link
-                                href="https://www.skattetaten.no">skattetaten.no</Link>
-                            </BodyLong>
-                            <hr className="hr-spacing"/>
-                            <BodyLong>
-                                Hvis du inngår eller avslutter et samboerforhold, vil vi vurdere om det får betydning
-                                for eventuelle utbetalinger du og samboeren din får fra oss. Hvis samboeren din ikke har
-                                folkeregistrert adresse i Norge, må du kontakte oss for å registrere samboerskapet.
-                            </BodyLong>
+                            <Heading size={"xlarge"} level={"1"} className="main-header">Inntektsplanneleger</Heading>
+
+                            {/*todo: extract this into a textbox*/}
+
+                            <InitialView aktivSamboer={true}/>
+                            <YearView availableYears={[2004, 2005]} infoType={1}/>
+
+
+                            <Button variant="primary">Start inntektsplanlegger</Button>
+
 
                             {loadingError ? <LoadingError/> : <>
                                 {error ? <Error/> : <></>}
                                 {feilmeldingkode ? <Feilmelding/> : <></>}
-                                {brukersEps || aktivSamboer !== undefined ? <HarEpsView aktivSamboer={aktivSamboer}/> :
-                                    <IngenEpsView/>}
-                                <br/>
-                                {samboerforhold && samboerforhold.filter(samboer => samboer.tom !== null).length > 0 ?
-                                    <SamboerHistorikk samboerforhold={samboerforhold} /> : <></>}
-                                <EpsBarnView/>
                             </>}
                         </>
                     }
@@ -62,5 +48,4 @@ export function App() {
         </div>
     )
 }
-
 export default App
