@@ -6,7 +6,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 const buildConfig = {
-  base: '/pensjon/selvbetjening/familieforhold',
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
   build: {
     outDir: './dist'
   },

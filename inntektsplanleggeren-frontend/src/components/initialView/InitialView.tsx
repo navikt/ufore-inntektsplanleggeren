@@ -4,9 +4,12 @@ import {UforetrydgInBarnetilleggOgGjenlevendetillegg, gradertUforetrygCard, vari
 
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function InitialView(props: {
     aktivSamboer: boolean
+    setCounter: (value: number) => void
 }) {
+
     return (
         <div>
             {/*todo: extract this into a textbox*/}
