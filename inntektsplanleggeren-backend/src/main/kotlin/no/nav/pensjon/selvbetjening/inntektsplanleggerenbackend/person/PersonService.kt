@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.ParallelleSannheterService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.PersonNotFoundException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 

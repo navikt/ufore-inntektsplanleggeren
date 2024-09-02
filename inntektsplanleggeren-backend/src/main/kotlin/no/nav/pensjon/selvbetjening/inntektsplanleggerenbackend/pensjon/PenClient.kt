@@ -5,8 +5,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.Ca
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.ForbiddenException
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.ClientException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus

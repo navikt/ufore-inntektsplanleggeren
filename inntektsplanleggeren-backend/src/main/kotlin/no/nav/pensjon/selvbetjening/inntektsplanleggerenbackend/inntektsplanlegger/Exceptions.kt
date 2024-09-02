@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc

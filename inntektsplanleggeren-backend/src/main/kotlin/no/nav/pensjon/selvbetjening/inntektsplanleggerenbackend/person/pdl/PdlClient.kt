@@ -6,9 +6,9 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.Ca
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.ClientException
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.ForbiddenException
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.PersonNotFoundException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component

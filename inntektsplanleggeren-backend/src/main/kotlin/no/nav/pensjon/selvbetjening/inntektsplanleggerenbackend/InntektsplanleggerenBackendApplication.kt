@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class InntektsplanleggerenBackendApplication
 
 fun main(args: Array<String>) {
-	runApplication<no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.InntektsplanleggerenBackendApplication>(*args)
+	runApplication<InntektsplanleggerenBackendApplication>(*args)
 }
