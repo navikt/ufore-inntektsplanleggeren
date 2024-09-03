@@ -1,6 +1,7 @@
 
-import {Accordion, BodyLong, Box, Heading, Link} from "@navikt/ds-react";
+import {Accordion, BodyLong, Box, Button, Heading, Link, VStack} from "@navikt/ds-react";
 import {UforetrydgInBarnetilleggOgGjenlevendetillegg, gradertUforetrygCard, varigTilrettlagtArbeid} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
+import React from "react";
 
 
 
@@ -58,6 +59,13 @@ export function InitialView(props: {
                 <b> Vær obs på at enkelte ytelser, for eksempel bostøtte, kan ha egne grenser for hvor mye man kan tjene før disse bortfaller. Hvis du har andre ytelser enn uføretrygd og eventuelt barnetillegg eller gjenlevendetillegg, er det viktig at du undersøker hvordan inntekt vil påvirke dem. </b>
             </BodyLong>
             <Link href="#">Har du spørsmål?  Kontakt oss</Link>
+
+            {/*todo why does not this work??*/}
+            <VStack>
+                <Button as={Link} to="/forventede-inntekter" variant="primary">
+                    Start inntektsplanlegger
+                </Button>
+            </VStack>
         </div>
     )
 }
