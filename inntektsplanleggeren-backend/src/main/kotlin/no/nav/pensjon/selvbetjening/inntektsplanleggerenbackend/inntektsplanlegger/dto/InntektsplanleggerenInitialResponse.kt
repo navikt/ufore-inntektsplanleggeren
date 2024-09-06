@@ -6,7 +6,7 @@ data class InntektsplanleggerenInitialResponse(
     val kompensasjonsgrad: Int,
     val grenseStoppAvUfoeretrygd: Int,
     val varigTilrettelagtArbeid: Boolean,
-    val AktuelleAar: List<Int>,
+    val aktuelleAar: List<Int>,
     val harBarneTillegg: Boolean,
     val forventetInntektAnnenForelder: Int? = null,
 )
