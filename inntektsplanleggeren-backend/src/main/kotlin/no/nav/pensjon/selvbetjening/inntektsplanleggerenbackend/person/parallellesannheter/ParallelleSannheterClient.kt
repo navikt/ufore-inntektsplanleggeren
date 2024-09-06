@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallel
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.AdressebeskyttelseParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.FoedselParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.NavnParallelleSannheterContainer
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.planlegger.ClientException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
