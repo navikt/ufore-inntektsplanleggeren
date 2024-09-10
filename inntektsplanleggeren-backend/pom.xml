@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.3</version>
+		<version>3.3.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -19,8 +19,8 @@
 		<java.version>17</java.version>
 		<kotlin.version>2.0.0</kotlin.version>
 		<jackson-version>2.17.2</jackson-version>
-		<logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
-		<spring-boot-starter-security.version>3.1.4</spring-boot-starter-security.version>
+		<logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
+		<spring-boot-starter-security.version>3.3.3</spring-boot-starter-security.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
 	</properties>
 	<dependencies>
@@ -59,11 +59,6 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>${jackson-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
