@@ -1,11 +1,26 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {
-    Familierelasjon,
+    DisplayData,
+    Familierelasjon, hentDisplayData,
     hentEpsOgBarnForBruker,
 } from "@/api/apiFetching";
 import {EpsType} from "@/components/types";
 import {HenteFamilierelasjonsResponse, Samboerforhold} from "@/api/model/ApiRequests";
 
+export const DisplayDataDefaultValue: DisplayData | null = {
+    forventetInntekt: 100000,
+    forventetInntektAnnenForelder: null,
+    inntektsgrense: 50000,
+    kompensasjonsgrad: 60.14,
+    grenseStoppAvUfoeretrygd: 600000,
+    aktuelleAar: [
+        2024,
+        2025
+    ],
+    harVarigTilrettelagtArbeid: false,
+    harBarneTillegg: true,
+    harGjenlevendeTillegg: true
+}
 
 export const FamilierelasjonDefaultValue: Familierelasjon | null = {
     pid: "",
@@ -32,6 +47,7 @@ const SamboerforholdDefaultValue: Samboerforhold | null = {
 }
 
 const DataContextDefaultValue = {
+    displayData: DisplayDataDefaultValue,
     refetch: true,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setRefetch: (value: boolean) => {
@@ -73,6 +89,7 @@ interface DataContextProviderProps {
 
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
+    const [displayData, setDisplayData] = useState(DataContextDefaultValue.displayData)
     const [brukersEps, setBrukersEps] = useState(DataContextDefaultValue.brukersEps)
     const [samboerforhold, setSamboerforhold] = useState(DataContextDefaultValue.samboerforhold)
     const [historiskeForhold, setHistoriskeForhold] = useState(DataContextDefaultValue.historiskeForhold)
@@ -109,6 +126,9 @@ function DataContextProvider(props: DataContextProviderProps) {
                         setHistoriskeForhold(epsOgBarn.filter(familierelasjon => familierelasjon.relasjonstype == EpsType.SAMBOER.toString() && familierelasjon.tom))
                         setBrukersBarn(epsOgBarn.filter(familierelasjon => familierelasjon.relasjonstype == "BARN" && !familierelasjon.tom))
 
+                        const inntektsPlannleggerResponse = await hentDisplayData()
+                        setDisplayData(inntektsPlannleggerResponse)
+
                         setLoading(false)
                     } catch (e) {
                         setLoadingError(true)
@@ -125,6 +145,7 @@ function DataContextProvider(props: DataContextProviderProps) {
         <DataContext.Provider value={{
             refetch,
             setRefetch,
+            displayData,
             brukersEps,
             setBrukersEps,
             samboerforhold,

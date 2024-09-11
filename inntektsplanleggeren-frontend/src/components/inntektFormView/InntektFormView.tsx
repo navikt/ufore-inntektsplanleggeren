@@ -1,4 +1,4 @@
-import { BodyLong, ExpansionCard, TextField} from "@navikt/ds-react";
+import {BodyLong, ExpansionCard, List, TextField} from "@navikt/ds-react";
 import {useState} from "react";
 import {Innfylling} from "@/components/innfylling/innfylling";
 
@@ -8,7 +8,6 @@ export function InntektFormView(props: {
 }) {
 
     const [, setInntektFraArbeidsgiver] = useState<string>("")
-
 
     return (
         <div>

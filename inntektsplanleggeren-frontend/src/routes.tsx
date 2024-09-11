@@ -6,15 +6,19 @@ import {FormContainer} from "@/form-container";
 import {Innfylling} from "@/components/innfylling/innfylling";
 import {Beregning} from "@/components/beregning/beregning";
 import {Oppsummering} from "@/components/oppsummering/Oppsummering";
+import {DisplayData} from "@/api/apiFetching";
+import DataContextProvider from "@/DataContextProvider";
 
-export const AppRoutes = () => {
+export const AppRoutes = (
+) => {
     const [counter, setCounter] = useState<number>(0);
+  //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<App />}>
-                    <Route index element={<InitialView aktivSamboer={true}  setCounter={setCounter} availableYears={[2019, 2020]}/>} />
+                    <Route index element={<InitialView setCounter={setCounter}/>} />
                     {/*<Route element={<AccessControl />}>*/}
                         <Route element={<FormContainer />}>
                             <Route path="/forventede-inntekter" element={<Innfylling />} />

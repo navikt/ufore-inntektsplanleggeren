@@ -2,8 +2,11 @@
 
 .top-box {
     background: var(--a-bg-subtle);
+    borderColor: var(--a-border-default);
+    padding: var(--a-spacing-1);
 }
 
-.Heading {
-    size: "small"
+box-heading {
+    size: var(--a-font-size-heading-xsmall);
+    /*size: var(--a-font-size-heading-2xlarge);*/
 }

@@ -14,6 +14,62 @@ export interface Familierelasjon {
     relasjonPersondata: RelasjonPersondata | undefined,
 }
 
+export interface DisplayData {
+    forventetInntekt: number
+    forventetInntektAnnenForelder: number | null
+    inntektsgrense: number
+    kompensasjonsgrad: number
+    grenseStoppAvUfoeretrygd: number
+    aktuelleAar: number[]
+    harVarigTilrettelagtArbeid: boolean
+    harBarneTillegg: boolean
+    harGjenlevendeTillegg: boolean
+}
+
+// export type DisplayData = {
+//     forventetInntekt: number
+//     forventetInntektAnnenForelder: number | null
+//     inntektsgrense: number
+//     kompensasjonsgrad: number
+//     grenseStoppAvUfoeretrygd: number
+//     aktuelleAar: number[]
+//     harVarigTilrettelagtArbeid: boolean
+//     harBarneTillegg: boolean
+//     harGjenlevendeTillegg: boolean
+// }
+
+export async function hentDisplayData(): Promise<DisplayData> {
+
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    return await fetch(window.location.pathname + "api/inntektsplannleger", { //todo fix url
+        method: "GET",
+        credentials: "include",
+        headers: headers
+    })
+        .then(response => response.json())
+        .then(response => {
+            return response.displayData
+        }).catch(() => {
+            throw new Error("Fikk ikke 2xx respons fra server");
+        })
+
+}
+
 export async function hentSamboerforhold(): Promise<Samboerforhold[]> {
 
     const searchParams = new URLSearchParams(document.location.search)
