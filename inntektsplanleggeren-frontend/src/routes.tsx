@@ -14,7 +14,7 @@ export const AppRoutes = () => {
         <BrowserRouter>
             <Routes>
                 <Route element={<App />}>
-                    <Route index element={<InitialView aktivSamboer={true}  setCounter={setCounter} />} />
+                    <Route index element={<InitialView aktivSamboer={true}  setCounter={setCounter} availableYears={[2019, 2020]}/>} />
                     {/*<Route element={<AccessControl />}>*/}
                         <Route element={<FormContainer />}>
                             <Route path="/forventede-inntekter" element={<Innfylling />} />

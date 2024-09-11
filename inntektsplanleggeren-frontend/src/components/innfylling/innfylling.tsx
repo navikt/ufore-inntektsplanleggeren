@@ -11,11 +11,11 @@ interface IFormData {
 
 export const Innfylling = () => {
     const { year, setYear } = useContext(FormStateContext);
-    const [formState, setFormState] = useState({
-        field1: '',
-        field2: '',
-        field3: ''
-    });
+    // const [formState, setFormState] = useState({
+    //     field1: '',
+    //     field2: '',
+    //     field3: ''
+    // });
 
     const [errors, setErrors] = useState<Partial<Record<keyof IFormData, string>>>({})
 
@@ -38,6 +38,11 @@ export const Innfylling = () => {
                 return {
                     ...acc,
                     [key]: 'Maa vaere tall'
+                }
+            } else if(value < 0) {
+                return {
+                    ...acc,
+                    [key]: 'Må ikke være mindre enn 0'
                 }
             }
             return {}

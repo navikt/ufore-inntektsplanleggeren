@@ -1,0 +1,9 @@
+@import "@navikt/ds-tokens";
+
+.top-box {
+    background: var(--a-bg-subtle);
+}
+
+.Heading {
+    size: "small"
+}

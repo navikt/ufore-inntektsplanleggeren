@@ -1,7 +1,10 @@
 
-import {Accordion, BodyLong, Box, Button, Heading, Link, VStack} from "@navikt/ds-react";
+import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink} from "@navikt/ds-react";
 import {UforetrydgInBarnetilleggOgGjenlevendetillegg, gradertUforetrygCard, varigTilrettlagtArbeid} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
+import {Link} from "react-router-dom";
 import React from "react";
+import {YearView} from "@/components/YearView";
+import "./InitialView.css"
 
 
 
@@ -9,12 +12,12 @@ import React from "react";
 export function InitialView(props: {
     aktivSamboer: boolean
     setCounter: (value: number) => void
+    availableYears: number[]
 }) {
 
     return (
         <div>
-            {/*todo: extract this into a textbox*/}
-            <Box background="surface-info-subtle" borderRadius="xlarge" padding="6" className="melde-fra-box">
+            <Box  borderRadius="xlarge" padding="6" className="top-box">
                 <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
                 <BodyLong>
                     Dette tallet kan komme fra en tidligere registrering eller være basert på fjorårets inntekt.
@@ -32,21 +35,27 @@ export function InitialView(props: {
                 <li>se hvor mye du vil få i uføretrygd ved siden av inntekt</li>
                 <li>melde inn forventet inntekt til oss</li>
                 Du kan melde inn flere ganger hvis du ser at inntekten blir høyere eller lavere enn først forventet.
-                <Link href="#">Å kombinere arbeid og uføretrygd.</Link>
+                <NavLink href="#">Å kombinere arbeid og uføretrygd.</NavLink>
             </BodyLong>
 
 
             <Accordion>
                 <Accordion.Item>
-                    <Accordion.Header>Accordion Item 1</Accordion.Header>
+                    <Accordion.Header>Slik fungerer inntektsplanleggeren</Accordion.Header>
                     <Accordion.Content>
                         Text 1 Text 1 Text 1
                     </Accordion.Content>
                 </Accordion.Item>
                 <Accordion.Item>
-                    <Accordion.Header>Accordion Item 2</Accordion.Header>
+                    <Accordion.Header>Om inntekten har endret seg/varierer i løpet av året</Accordion.Header>
                     <Accordion.Content>
                         Text 2 Text 2 Text 2
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item>
+                    <Accordion.Header>Dette skjer etter innsending av inntektsmeldingen</Accordion.Header>
+                    <Accordion.Content>
+                        Text 3 Text 3 Text 3
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
@@ -58,9 +67,10 @@ export function InitialView(props: {
             <BodyLong>
                 <b> Vær obs på at enkelte ytelser, for eksempel bostøtte, kan ha egne grenser for hvor mye man kan tjene før disse bortfaller. Hvis du har andre ytelser enn uføretrygd og eventuelt barnetillegg eller gjenlevendetillegg, er det viktig at du undersøker hvordan inntekt vil påvirke dem. </b>
             </BodyLong>
-            <Link href="#">Har du spørsmål?  Kontakt oss</Link>
+            <NavLink href="#">Har du spørsmål?  Kontakt oss</NavLink>
 
-            {/*todo why does not this work??*/}
+            <YearView availableYears={props.availableYears} infoType={1}></YearView>
+
             <VStack>
                 <Button as={Link} to="/forventede-inntekter" variant="primary">
                     Start inntektsplanlegger
