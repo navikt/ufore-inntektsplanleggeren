@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PensjonService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.service.InntektsplanleggerService
 
 @RestController
@@ -20,27 +21,23 @@ class InntektsplanleggerController(
 
     @GetMapping("loepende-beregningsperioder")
     fun getLopendeBeregningsperioder(): ResponseEntity<Any> {
-        val dummyPid = "26853949913"  //FIXME
         try {
             log.info("Henter lopende beregningsperioder for inntektsplanleggeren")
-            val perioder = pensjonService.getLopendeBeregningsperiode(dummyPid)
-            val tmp = LopendeBeregningsPerioderResponse(perioder["iAar"]!!, perioder["nesteAar"]!!)
-            //val responseEntity = ResponseEntity<Any>(tmp, HttpStatus.OK)
-            return ResponseEntity(tmp, HttpStatus.OK)
+            val perioder = pensjonService.getLopendeBeregningsperiode(SecurityContextUtil.getPidFromContext())
+            return ResponseEntity(LopendeBeregningsPerioderResponse(perioder["iAar"]!!, perioder["nesteAar"]!!), HttpStatus.OK)
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, dummyPid)
+            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
         }
     }
 
     @GetMapping("initiate")
     fun getInntektsplanleggerenInitialData(): ResponseEntity<Any>  {
-        val dummyPid = "26853949913"  //FIXME
         return try {
-            log.info("Henter basic data for inntektsplanleggeren")
+            log.info("Henter initielle data for inntektsplanleggeren")
 
-            ResponseEntity(inntektsPlanleggerService.getInntektsplanleggerInitialResponse(dummyPid), HttpStatus.OK)
+            ResponseEntity(inntektsPlanleggerService.getInntektsplanleggerInitialResponse(SecurityContextUtil.getPidFromContext()), HttpStatus.OK)
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, dummyPid)
+            throw ErrorHandler.exceptionToErrorResponse(exception,SecurityContextUtil.getPidFromContext())
         }
     }
 

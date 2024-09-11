@@ -2,11 +2,12 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 data class InntektsplanleggerenInitialResponse(
     val forventetInntekt: Int,
-    val inntektsgrense: Int,
-    val kompensasjonsgrad: Int,
-    val grenseStoppAvUfoeretrygd: Int,
-    val varigTilrettelagtArbeid: Boolean,
-    val aktuelleAar: List<Int>,
-    val harBarneTillegg: Boolean,
     val forventetInntektAnnenForelder: Int? = null,
+    val inntektsgrense: Int,
+    val kompensasjonsgrad: Double,
+    val grenseStoppAvUfoeretrygd: Int,
+    val aktuelleAar: List<Int>,
+    val harVarigTilrettelagtArbeid: Boolean,
+    val harBarneTillegg: Boolean,
+    val harGjenlevendeTillegg: Boolean
 )

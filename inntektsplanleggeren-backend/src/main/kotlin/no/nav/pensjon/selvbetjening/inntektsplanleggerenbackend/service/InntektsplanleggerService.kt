@@ -8,24 +8,27 @@ import org.springframework.stereotype.Service
 class InntektsplanleggerService {
 
     fun getInntektsplanleggerInitialResponse(pid: String): InntektsplanleggerenInitialResponse {
-        val dummyInntektsgrense = 50000 // FIXME
+
         val dummyForventetInntekt = 100000
-        val dummyKompensasjonsgrad = 60
-        val dummyGrenseStoppAvUfoeretrygd = 600000
-        val dummyVarigTilrettelagtArbeid = false
-        val dummyAktuelleAar: List<Int> = listOf(2024)
-        val dummyHarBarneTillegg = true
         val dummyForventetInntektAnnenForelder = null
+        val dummyInntektsgrense = 50000
+        val dummyKompensasjonsgrad = 60.14
+        val dummyGrenseStoppAvUfoeretrygd = 600000
+        val dummyAktuelleAar: List<Int> = listOf(2024, 2025)
+        val dummyHarVarigTilrettelagtArbeid = false
+        val dummyHarBarneTillegg = true
+        val dummyGjenlevendeTillegg = true
 
         return InntektsplanleggerenInitialResponse(
-            dummyInntektsgrense,
             dummyForventetInntekt,
+            dummyForventetInntektAnnenForelder,
+            dummyInntektsgrense,
             dummyKompensasjonsgrad,
             dummyGrenseStoppAvUfoeretrygd,
-            dummyVarigTilrettelagtArbeid,
             dummyAktuelleAar,
+            dummyHarVarigTilrettelagtArbeid,
             dummyHarBarneTillegg,
-            dummyForventetInntektAnnenForelder
+            dummyGjenlevendeTillegg
             )
     }
 
