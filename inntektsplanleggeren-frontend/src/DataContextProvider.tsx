@@ -17,7 +17,7 @@ export const DisplayDataDefaultValue: DisplayData | null = {
         2024,
         2025
     ],
-    harVarigTilrettelagtArbeid: false,
+    harVarigTilrettelagtArbeid: true,
     harBarneTillegg: true,
     harGjenlevendeTillegg: true
 }

@@ -26,18 +26,6 @@ export interface DisplayData {
     harGjenlevendeTillegg: boolean
 }
 
-// export type DisplayData = {
-//     forventetInntekt: number
-//     forventetInntektAnnenForelder: number | null
-//     inntektsgrense: number
-//     kompensasjonsgrad: number
-//     grenseStoppAvUfoeretrygd: number
-//     aktuelleAar: number[]
-//     harVarigTilrettelagtArbeid: boolean
-//     harBarneTillegg: boolean
-//     harGjenlevendeTillegg: boolean
-// }
-
 export async function hentDisplayData(): Promise<DisplayData> {
 
     const searchParams = new URLSearchParams(document.location.search)

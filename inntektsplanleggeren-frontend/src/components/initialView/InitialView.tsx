@@ -1,6 +1,6 @@
 
 import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink} from "@navikt/ds-react";
-import {UforetrydgInBarnetilleggOgGjenlevendetillegg, gradertUforetrygCard, varigTilrettlagtArbeid} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
+import {InntektsgrenseCard} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
 import {Link} from "react-router-dom";
 import React, {useContext} from "react";
 import {YearView} from "@/components/YearView";
@@ -13,39 +13,25 @@ import {DataContext} from "@/DataContextProvider";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function InitialView(props: {
-    setCounter: (value: number) => void
-    // displayData: DisplayData
-    // aktivSamboer: boolean
-    // setCounter: (value: number) => void
-    // aktuelleAar: number[]
-    //
-    // forventetInntekt: number
-    // forventetInntektAnnenForelder: number | null
-    // inntektsgrense: number,
-    // kompensasjonsgrad: number,
-    // grenseStoppAvUfoeretrygd: number,
-    // harVarigTilrettelagtArbeid: boolean,
-    // harBarneTillegg: boolean,
-    // harGjenlevendeTillegg: boolean
+    setCounter: (value: number) => void;
 }) {
     const {displayData} = useContext(DataContext)
 
     return (
         <div>
-            <VStack>
+            <VStack gap={{ xs: "4", sm: "6", md: "8", lg: "10", xl: "12" }}>
                 <Box  borderRadius="xlarge" padding="4" borderWidth="1" className="top-box">
                     <VStack>
                         <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
                             <BodyLong> Dette tallet kan komme fra en tidligere registrering eller være basert på fjorårets inntekt.</BodyLong>
-                            {/*<BodyLong> Din forventede inntekt: {forventetInntekt} kr </BodyLong>*/}
-                            <BodyLong> Annen forelder du bor med sin forventede inntekt: 550 000 kr</BodyLong>
-
+                            <BodyLong> Din forventede inntekt: {displayData.forventetInntekt}kr </BodyLong>
+                            {displayData.forventetInntektAnnenForelder ?
+                                <BodyLong> Annen forelder du bor med sin forventede inntekt: {displayData.forventetInntektAnnenForelder}kr</BodyLong> : <></>
+                            }
                     </VStack>
                 </Box>
 
-                {UforetrydgInBarnetilleggOgGjenlevendetillegg("a", "b", "c")}
-                {gradertUforetrygCard("a", "b", "c")}
-                {varigTilrettlagtArbeid("a", "b", "c")}
+                <InntektsgrenseCard displayData={displayData}/>
 
                 <Heading size={"medium"} level={"2"}>I inntektsplanleggeren kan du</Heading>
                 <BodyLong>

@@ -2,6 +2,7 @@ import {Button, ErrorSummary, ExpansionCard, Heading, HStack, TextField, VStack}
 import React, {useContext, useState} from "react";
 import {FormStateContext} from "@/form-container";
 import {Link} from "react-router-dom";
+import "./innfylling.css"
 
 interface IFormData {
     arbeidsinntekt: string
@@ -65,23 +66,31 @@ export const Innfylling = () => {
 
             <HStack>
                 <form onSubmit={handleSubmit}>
-                    <VStack>
+                    <VStack gap={"5 5"}>
                         <TextField label="Arbeidsinntekt fra arbeidsgiver" inputMode="numeric"
-                                   size="small" id="arbeidsinntekt" />
-                        <ExpansionCard size="small"aria-label="Disse pensjonsgivende ytelsene skal med">
-                            <ExpansionCard.Header>
-                                <ExpansionCard.Title>Denne arbeidsinnteken skal med</ExpansionCard.Title>
-                            </ExpansionCard.Header>
-                            <ExpansionCard.Content>
-                                Description
-                            </ExpansionCard.Content>
-                        </ExpansionCard>
+                                   size="medium" id="arbeidsinntekt"/>
+                        <div className="description-card">
+                            <ExpansionCard size="small" aria-label="Disse pensjonsgivende ytelsene skal med">
+                                <ExpansionCard.Header>
+                                    <ExpansionCard.Title>Denne arbeidsinnteken skal med</ExpansionCard.Title>
+                                </ExpansionCard.Header>
+                                <ExpansionCard.Content>
+                                    Description
+                                </ExpansionCard.Content>
+                            </ExpansionCard>
+                            {/*<style>{`*/}
+                            {/*.description-card {*/}
+                            {/*--ac-expansioncard-bg: var(--a-deepblue-50);*/}
+                            {/*--ac-expansioncard-border-open-color: var(--a-border-alt-3);*/}
+                            {/*--ac-expansioncard-border-hover-color: var(--a-border-alt-3); */}
+                            {/*}`}</style>*/}
+                        </div>
                     </VStack>
 
 
-
-                <VStack>
-                    <TextField label="Pensjonsgivende ytelser fra oss/NAV" id="navYtelse" description="Uføretrygden skal ikke tas med"/>
+                    <VStack>
+                    <TextField label="Pensjonsgivende ytelser fra oss/NAV" id="navYtelse"
+                               description="Uføretrygden skal ikke tas med"/>
                     <ExpansionCard size="small" id="field" aria-label="Disse pensjonsgivende ytelsene skal med">
                         <ExpansionCard.Header>
                             <ExpansionCard.Title>Disse pensjonsgivende ytelsene skal med</ExpansionCard.Title>
