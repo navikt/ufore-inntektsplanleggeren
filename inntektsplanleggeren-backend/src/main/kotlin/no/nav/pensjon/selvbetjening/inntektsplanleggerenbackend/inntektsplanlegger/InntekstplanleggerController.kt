@@ -2,7 +2,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerenInitialResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
