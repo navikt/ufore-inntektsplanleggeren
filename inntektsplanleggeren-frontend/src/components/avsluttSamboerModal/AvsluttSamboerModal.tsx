@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import {DataContext} from "@/DataContextProvider";
 import {Button, DatePicker, DateValidationT, HStack, Modal, useDatepicker} from "@navikt/ds-react";
 import {PencilIcon} from "@navikt/aksel-icons";
-import {endreSamboerforholdForBruker, hentSamboerforhold} from "@/api/apiFetching";
+import {endreSamboerforholdForBruker} from "@/api/apiFetching";
 import {isoFormatIgnoreTimezone} from "@/common/timeutils";
 import {Samboerforhold} from "@/api/model/ApiRequests";
 
@@ -38,8 +38,6 @@ export default function AvsluttSamboerModal({periodeId, aktivSamboerFom, handleR
             setLoadingSubmit(true)
             try {
                 await endreSamboerforholdForBruker(periodeId, fom, isoFormatIgnoreTimezone(selectedDay!))
-                const samboerforhold = await hentSamboerforhold()
-                handleRefetchSamboerforhold(samboerforhold)
             } catch (e) {
                 setError(true)
             }

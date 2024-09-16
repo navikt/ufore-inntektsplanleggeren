@@ -5,17 +5,15 @@ import {Link} from "react-router-dom";
 import React, {useContext} from "react";
 import {YearView} from "@/components/YearView";
 import "./InitialView.css"
-import Body from "@navikt/ds-react/esm/table/Body";
-import {DisplayData} from "@/api/apiFetching";
 import {DataContext} from "@/DataContextProvider";
+import {FormStateContext} from "@/SelectedYear/SelectedYear";
 
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function InitialView(props: {
-    setCounter: (value: number) => void;
-}) {
+export function InitialView() {
     const {displayData} = useContext(DataContext)
+    const {setSelectedYear} = useContext(FormStateContext)
 
     return (
         <div>
@@ -73,7 +71,7 @@ export function InitialView(props: {
                 <NavLink href="#">Har du spørsmål?  Kontakt oss</NavLink>
 
                 {/*{ console.debugger("A") }*/}
-                <YearView availableYears={displayData.aktuelleAar} infoType={1}></YearView>
+                <YearView availableYears={displayData.aktuelleAar} setYear={setSelectedYear} infoType={1}></YearView>
 
                 <VStack>
                     <Button as={Link} to="/forventede-inntekter" variant="primary">

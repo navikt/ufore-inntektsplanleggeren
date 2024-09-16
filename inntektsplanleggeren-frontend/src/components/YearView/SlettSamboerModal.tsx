@@ -1,16 +1,14 @@
 import React, {useState} from "react";
 import {BodyLong, Button, HStack, Modal} from "@navikt/ds-react";
 import {TrashIcon} from "@navikt/aksel-icons";
-import {hentSamboerforhold, sletteSamboerforholdForBruker} from "@/api/apiFetching";
-import {Samboerforhold} from "@/api/model/ApiRequests";
+import {sletteSamboerforholdForBruker} from "@/api/apiFetching";
 
 export interface Props {
     periodeId: number,
-    handleRefetchSamboerforhold: (samboerforhold: Samboerforhold[]) => void,
-    isDesktop: boolean
+    isDesktop: boolean,
 }
 
-export default function SlettSamboerModal({periodeId, handleRefetchSamboerforhold, isDesktop}: Props) {
+export default function SlettSamboerModal({periodeId, isDesktop}: Props) {
     const [open, setOpen] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false)
 
@@ -18,14 +16,8 @@ export default function SlettSamboerModal({periodeId, handleRefetchSamboerforhol
     async function slettSamboer(periodeId: number) {
         setLoadingSubmit(true)
         await sletteSamboerforholdForBruker(periodeId)
-        const samboerforhold = await hentSamboerforhold()
-        populerSamboerState(samboerforhold)
         setOpen(false)
         setLoadingSubmit(false)
-    }
-
-    function populerSamboerState(samboerforhold: Samboerforhold[]) {
-        handleRefetchSamboerforhold(samboerforhold)
     }
 
     return (

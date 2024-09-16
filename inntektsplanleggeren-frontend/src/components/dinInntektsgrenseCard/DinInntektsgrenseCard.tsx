@@ -7,13 +7,8 @@ import {Link} from "react-router-dom";
 //todo see if it is possible to reduce the number of versions
 
 export function InntektsgrenseCard(props: {
-    // intektsgrense: number
-    // kompensasjonsgrad: number
-    // maksInntektsgrense: number
     displayData: DisplayData
 }) {
-    const {displayData} = useContext(DataContext)
-
     return (<div>
             <ExpansionCard aria-label="Demo med bare tittel">
                 <ExpansionCard.Header>

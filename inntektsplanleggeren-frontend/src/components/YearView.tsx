@@ -1,4 +1,6 @@
 import {Alert, ExpansionCard, Heading, Radio, RadioGroup} from "@navikt/ds-react";
+import {useContext} from "react";
+import {DataContext} from "@/DataContextProvider";
 
 
 export function YearView(props: {
@@ -7,6 +9,7 @@ export function YearView(props: {
     infoType: number //0 default, 1 for oct/nov, 2 for dec
 }) {
     // const handleChange = (val: number) => console.info(val);
+
 
     return (
         <div>

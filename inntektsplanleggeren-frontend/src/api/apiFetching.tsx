@@ -1,9 +1,7 @@
 import {
     OpprettSamboerforholdRequest,
     EndreSamboerforholdRequest,
-    HenteFamilierelasjonsResponse,
-    RelasjonPersondata,
-    Samboerforhold
+    HenteFamilierelasjonsResponse, RelasjonPersondata,
 } from "@/api/model/ApiRequests";
 
 export interface Familierelasjon {
@@ -11,7 +9,19 @@ export interface Familierelasjon {
     fom: string | undefined,
     tom: string | undefined,
     relasjonstype: string,
-    relasjonPersondata: RelasjonPersondata | undefined,
+    relasjonPersondata: RelasjonPersondata | undefined
+}
+
+export interface GetInntektResponse {
+    messages: Message[]
+    data: DisplayData
+
+}
+
+export interface Message {
+    messageCode: string,
+    details: string,
+    type: string
 }
 
 export interface DisplayData {
@@ -26,7 +36,7 @@ export interface DisplayData {
     harGjenlevendeTillegg: boolean
 }
 
-export async function hentDisplayData(): Promise<DisplayData> {
+export async function hentDisplayData(): Promise<GetInntektResponse> {
 
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
@@ -58,37 +68,6 @@ export async function hentDisplayData(): Promise<DisplayData> {
 
 }
 
-export async function hentSamboerforhold(): Promise<Samboerforhold[]> {
-
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-
-    let headers;
-
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    }
-
-    return await fetch(window.location.pathname + "api/samboer", {
-        method: "GET",
-        credentials: "include",
-        headers: headers
-    })
-        .then(response => response.json())
-        .then(samboerforholdResponse => {
-            return samboerforholdResponse.samboerforhold
-        }).catch(() => {
-            throw new Error("Fikk ikke 2xx respons fra server");
-        })
-
-}
 
 export async function opprettSamboerforholdForBruker(fom: string, pidSamboer: string): Promise<string> {
     const searchParams = new URLSearchParams(document.location.search)

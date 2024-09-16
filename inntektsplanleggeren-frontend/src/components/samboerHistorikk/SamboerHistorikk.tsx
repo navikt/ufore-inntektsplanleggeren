@@ -79,7 +79,6 @@ export default function SamboerHistorikk(props: {
                                     {toggleEdit ? <EditButtonWrapper periodeId={periodeId} fom={fom} tom={tom!}
                                                                      handleRefetchSamboerforhold={handleRefetchSamboerforhold} isDesktop={isDesktop} /> : <></>}
                                     {toggleEdit ? <SlettButtonWrapper periodeId={periodeId}
-                                                                      handleRefetchSamboerforhold={handleRefetchSamboerforhold}
                                                                       isDesktop={isDesktop}/> : <></>}
                                 </Table.Row>
                             );

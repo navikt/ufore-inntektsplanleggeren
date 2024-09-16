@@ -1,8 +1,8 @@
 import {Button, ErrorSummary, ExpansionCard, Heading, HStack, TextField, VStack} from "@navikt/ds-react";
 import React, {useContext, useState} from "react";
-import {FormStateContext} from "@/form-container";
 import {Link} from "react-router-dom";
 import "./innfylling.css"
+import {FormStateContext} from "@/SelectedYear/SelectedYear";
 
 interface IFormData {
     arbeidsinntekt: string
@@ -11,7 +11,7 @@ interface IFormData {
 }
 
 export const Innfylling = () => {
-    const { year, setYear } = useContext(FormStateContext);
+    const { selectedYear, setSelectedYear } = useContext(FormStateContext);
     // const [formState, setFormState] = useState({
     //     field1: '',
     //     field2: '',
@@ -57,7 +57,7 @@ export const Innfylling = () => {
     return (
         <>
 
-            <Heading level="2" size="small">Din forventede intekter i ({year})</Heading>
+            <Heading level="2" size="small">Din forventede intekter i ({selectedYear})</Heading>
             {Object.keys(errors).length > 0 && <ErrorSummary heading="Du må rette disse feilene før du kan sende inn søknaden:">
                 {Object.entries(errors).map(([key, value]) =>
                     <ErrorSummary.Item href={`#${key}`}><>{value}</></ErrorSummary.Item>
@@ -158,8 +158,8 @@ export const Innfylling = () => {
 
             </HStack>
 
-            <Heading level="2" size="small">Din inntekt hittil i år ({year})</Heading>
-            <Button onClick={() => setYear((year) => year + 1)}>Increase Year</Button>
+            <Heading level="2" size="small">Din inntekt hittil i år ({selectedYear})</Heading>
+            <Button onClick={() => setSelectedYear((year) => year + 1)}>Increase Year</Button>
 
             <Button as={Link} to="/" variant="secondary">
                 Tilbake

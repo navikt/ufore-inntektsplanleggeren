@@ -11,14 +11,13 @@ import DataContextProvider from "@/DataContextProvider";
 
 export const AppRoutes = (
 ) => {
-    const [counter, setCounter] = useState<number>(0);
   //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<App />}>
-                    <Route index element={<InitialView setCounter={setCounter}/>} />
+                    <Route index element={<InitialView/>} />
                     {/*<Route element={<AccessControl />}>*/}
                         <Route element={<FormContainer />}>
                             <Route path="/forventede-inntekter" element={<Innfylling />} />

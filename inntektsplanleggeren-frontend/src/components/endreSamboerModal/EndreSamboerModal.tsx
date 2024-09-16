@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {Button, DatePicker, HStack, Modal, RangeValidationT, useRangeDatepicker} from "@navikt/ds-react";
 import {PencilIcon} from "@navikt/aksel-icons";
-import {endreSamboerforholdForBruker, hentSamboerforhold} from "@/api/apiFetching";
+import {endreSamboerforholdForBruker} from "@/api/apiFetching";
 import {isoFormatIgnoreTimezone} from "@/common/timeutils";
 import {Samboerforhold} from "@/api/model/ApiRequests";
 import {DataContext} from "@/DataContextProvider";
@@ -83,9 +83,6 @@ export default function EndreSamboerforholdModal({periodeId, fom, tom, handleRef
                 if (responseMelding === "OK") {
                     if (!tom && selectedRange?.to !== undefined) {
                         setRefetch(true)
-                    } else {
-                        const samboerforhold = await hentSamboerforhold()
-                        handleRefetchSamboerforhold(samboerforhold)
                     }
                 } else {
                     setFeilmeldingkode(responseMelding)

@@ -36,42 +36,14 @@ export const DisplayDataDefaultValue: DisplayData | null = {
 //     harGjenlevendeTillegg: false
 // }
 
-export const FamilierelasjonDefaultValue: Familierelasjon | null = {
-    pid: "",
-    relasjonstype: "",
-    relasjonPersondata: {
-        tilgangsbegrensning: null,
-        navn: {
-            fornavn: "",
-            mellomnavn: null,
-            etternavn: ""
-        },
-        foedselsdato: null,
-        doedsdato: null,
-    },
-    fom: "",
-    tom: ""
-}
-
-const SamboerforholdDefaultValue: Samboerforhold | null = {
-    pid: "",
-    fom: "",
-    tom: "",
-    periodeId: 0
-}
-
 const DataContextDefaultValue = {
     displayData: DisplayDataDefaultValue,
+    // initialWarningBox: null,
     refetch: true,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setRefetch: (value: boolean) => {
     },
-    brukersEps: FamilierelasjonDefaultValue,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setBrukersEps: (value: React.SetStateAction<Familierelasjon>) => {
-    },
-    brukersBarn: [FamilierelasjonDefaultValue],
-    setBrukersBarn: {},
     loading: true,
     setLoading: {},
     error: false,
@@ -100,6 +72,7 @@ interface DataContextProviderProps {
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [displayData, setDisplayData] = useState(DataContextDefaultValue.displayData)
+    // const [initialWarningVariable, setInitialWarningBox] = useState(DataContextDefaultValue.initialWarningBox)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -124,7 +97,8 @@ function DataContextProvider(props: DataContextProviderProps) {
                     try {
                         setLoading(true)
                         const inntektsPlannleggerResponse = await hentDisplayData()
-                        setDisplayData(inntektsPlannleggerResponse)
+                        setDisplayData(inntektsPlannleggerResponse.data)
+                        // setInitialWarningBox(inntektsPlannleggerResponse.messages)
 
                         setLoading(false)
                     } catch (e) {
