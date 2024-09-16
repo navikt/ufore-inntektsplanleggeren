@@ -7,11 +7,13 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.Fullmak
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpServerErrorException.InternalServerError
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 
@@ -24,8 +26,8 @@ class PenClient(
     private val tokenService: TokenService
 ) {
 
-    fun getHasLopendeBeregningsperiode(pid: String): Map<String, Boolean> {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/lopendeBeregningsperiode"
+    fun fetchInitialInntektsplanleggerPensjonsdata(pid: String): InitialInntektsplanleggerPensjonsdata? {
+        val path = "/pen/api/selvbetjening/inntektsplanleggeren/initial"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -37,17 +39,19 @@ class PenClient(
                         .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
-                        .bodyToMono(object : ParameterizedTypeReference<Map<String, Boolean>>() {})
-                        .block() ?: emptyMap()
-                }
+                        .bodyToMono(InitialInntektsplanleggerPensjonsdata::class.java)
+                        .block()
+                }?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
         } catch (e: WebClientResponseException) {
             if (HttpStatus.FORBIDDEN == e.statusCode) {
                 throw ForbiddenException(AppId.PEN.name, path, e.message, e)
+            }
+            if (HttpStatus.NOT_FOUND == e.statusCode) {
+                return null
             }
             throw ClientException(AppId.PEN.name, path, e.message, e)
         } catch (e: Exception) {
             throw ClientException(AppId.PEN.name, path, e.message, e)
         }
     }
-
 }
