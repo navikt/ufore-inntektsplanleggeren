@@ -22,6 +22,20 @@ export const DisplayDataDefaultValue: DisplayData | null = {
     harGjenlevendeTillegg: true
 }
 
+// export const DisplayDataDefaultValue: DisplayData | null = {
+//     forventetInntekt: 350000,
+//     forventetInntektAnnenForelder: 250000,
+//     inntektsgrense: 124028,
+//     kompensasjonsgrad: 70.22,
+//     grenseStoppAvUfoeretrygd: 559530,
+//     aktuelleAar: [
+//         2024
+//     ],
+//     harVarigTilrettelagtArbeid: true,
+//     harBarneTillegg: true,
+//     harGjenlevendeTillegg: false
+// }
+
 export const FamilierelasjonDefaultValue: Familierelasjon | null = {
     pid: "",
     relasjonstype: "",
@@ -56,10 +70,6 @@ const DataContextDefaultValue = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setBrukersEps: (value: React.SetStateAction<Familierelasjon>) => {
     },
-    samboerforhold: [SamboerforholdDefaultValue],
-    setSamboerforhold: {},
-    historiskeForhold: [FamilierelasjonDefaultValue],
-    setHistoriskeForhold: {},
     brukersBarn: [FamilierelasjonDefaultValue],
     setBrukersBarn: {},
     loading: true,
@@ -90,10 +100,6 @@ interface DataContextProviderProps {
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [displayData, setDisplayData] = useState(DataContextDefaultValue.displayData)
-    const [brukersEps, setBrukersEps] = useState(DataContextDefaultValue.brukersEps)
-    const [samboerforhold, setSamboerforhold] = useState(DataContextDefaultValue.samboerforhold)
-    const [historiskeForhold, setHistoriskeForhold] = useState(DataContextDefaultValue.historiskeForhold)
-    const [brukersBarn, setBrukersBarn] = useState(DataContextDefaultValue.brukersBarn)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -115,17 +121,8 @@ function DataContextProvider(props: DataContextProviderProps) {
     useEffect(() => {
             (async () => {
                 if (refetch) {
-                    const searchParams = new URLSearchParams(document.location.search)
                     try {
                         setLoading(true)
-                        const response: HenteFamilierelasjonsResponse = await hentEpsOgBarnForBruker(searchParams.get('pid'))
-                        const epsOgBarn = response.familierelasjoner
-                        setSamboerforhold(response.samboerforhold)
-                        setBrukersEps(epsOgBarn.filter(familierelasjon => (familierelasjon.relasjonstype == EpsType.SAMBOER.toString()
-                            || familierelasjon.relasjonstype == EpsType.EKTEFELLE.toString() || familierelasjon.relasjonstype == EpsType.PARTNER.toString()) && !familierelasjon.tom)[0])
-                        setHistoriskeForhold(epsOgBarn.filter(familierelasjon => familierelasjon.relasjonstype == EpsType.SAMBOER.toString() && familierelasjon.tom))
-                        setBrukersBarn(epsOgBarn.filter(familierelasjon => familierelasjon.relasjonstype == "BARN" && !familierelasjon.tom))
-
                         const inntektsPlannleggerResponse = await hentDisplayData()
                         setDisplayData(inntektsPlannleggerResponse)
 
@@ -146,14 +143,6 @@ function DataContextProvider(props: DataContextProviderProps) {
             refetch,
             setRefetch,
             displayData,
-            brukersEps,
-            setBrukersEps,
-            samboerforhold,
-            setSamboerforhold,
-            historiskeForhold,
-            setHistoriskeForhold,
-            brukersBarn,
-            setBrukersBarn,
             loading,
             setLoading,
             error,
