@@ -1,26 +1,33 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerMessage
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerMessageCode
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageCode
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerenInitialData
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerenInitialResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
 
 @Service
-class InntektsplanleggerService(val penClient: PenClient) {
+class InntektsplanleggerService(
+    val penClient: PenClient,
+    val validator: Validator
+) {
 
     fun constructInitialInntektsplanleggerResponse(pid: String): InntektsplanleggerenInitialResponse {
         val initalPensjonsdata = penClient.fetchInitialInntektsplanleggerPensjonsdata(pid)
-            ?: return InntektsplanleggerenInitialResponse(
-                listOf(
-                    InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE)
-                ), null
-            )
-        return InntektsplanleggerenInitialResponse(
-            emptyList(), InntektsplanleggerenInitialData(
+        val messages = validator.validateUserInitialData(initalPensjonsdata)
+        return InntektsplanleggerenInitialResponse(messages, mapInntektsplanleggerenInitialData(initalPensjonsdata))
+    }
+
+    private fun mapInntektsplanleggerenInitialData(initalPensjonsdata: InitialInntektsplanleggerPensjonsdata?): InntektsplanleggerenInitialData? {
+        return if (initalPensjonsdata == null) {
+            null
+        } else {
+            InntektsplanleggerenInitialData(
                 forventetInntekt = initalPensjonsdata.forventetInntekt,
                 forventetInntektAnnenForelder = initalPensjonsdata.forventetInntektAnnenForelder,
                 inntektsgrense = initalPensjonsdata.inntektsgrense,
@@ -34,7 +41,7 @@ class InntektsplanleggerService(val penClient: PenClient) {
                     initalPensjonsdata.hasLopendeUforeVedtakNextYear
                 )
             )
-        )
+        }
     }
 
     private fun getAktuelleAar(
