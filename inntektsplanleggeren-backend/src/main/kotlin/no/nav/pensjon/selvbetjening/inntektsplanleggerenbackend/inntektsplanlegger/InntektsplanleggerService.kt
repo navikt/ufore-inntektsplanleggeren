@@ -20,14 +20,18 @@ class InntektsplanleggerService(
     fun constructInitialInntektsplanleggerResponse(pid: String): InntektsplanleggerenInitialResponse {
         val initalPensjonsdata = penClient.fetchInitialInntektsplanleggerPensjonsdata(pid)
         val messages = validator.validateUserInitialData(initalPensjonsdata)
-        return InntektsplanleggerenInitialResponse(messages, mapInntektsplanleggerenInitialData(initalPensjonsdata))
+        return InntektsplanleggerenInitialResponse(
+            messages,
+            mapInntektsplanleggerenInitialData(initalPensjonsdata, messages)
+        )
     }
 
-    private fun mapInntektsplanleggerenInitialData(initalPensjonsdata: InitialInntektsplanleggerPensjonsdata?): InntektsplanleggerenInitialData? {
-        return if (initalPensjonsdata == null) {
-            null
-        } else {
-            InntektsplanleggerenInitialData(
+    private fun mapInntektsplanleggerenInitialData(
+        initalPensjonsdata: InitialInntektsplanleggerPensjonsdata?,
+        messages: List<InntektsplanleggerMessage>
+    ): InntektsplanleggerenInitialData? {
+        if (initalPensjonsdata != null && messages.isEmpty()) {
+            return InntektsplanleggerenInitialData(
                 forventetInntekt = initalPensjonsdata.forventetInntekt,
                 forventetInntektAnnenForelder = initalPensjonsdata.forventetInntektAnnenForelder,
                 inntektsgrense = initalPensjonsdata.inntektsgrense,
@@ -42,6 +46,7 @@ class InntektsplanleggerService(
                 )
             )
         }
+        return null
     }
 
     private fun getAktuelleAar(
