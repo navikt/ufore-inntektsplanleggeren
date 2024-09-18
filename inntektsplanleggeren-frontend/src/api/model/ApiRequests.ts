@@ -1,4 +1,4 @@
-import {Familierelasjon} from "@/api/apiFetching";
+import {Familierelasjon, InntektInnfylling} from "@/api/apiFetching";
 
 export type RelasjonPersondata = {
     navn: Navn | null,
@@ -37,4 +37,8 @@ export type OpprettSamboerforholdRequest = {
 export type EndreSamboerforholdRequest = {
     fom: string
     tom: string | null
+}
+
+export type SubmitInntektRequest = {
+    inntekt: InntektInnfylling
 }

@@ -1,7 +1,6 @@
 import {
-    OpprettSamboerforholdRequest,
     EndreSamboerforholdRequest,
-    HenteFamilierelasjonsResponse, RelasjonPersondata,
+    RelasjonPersondata, SubmitInntektRequest,
 } from "@/api/model/ApiRequests";
 
 export interface Familierelasjon {
@@ -36,8 +35,21 @@ export interface DisplayData {
     harGjenlevendeTillegg: boolean
 }
 
-export async function hentDisplayData(): Promise<GetInntektResponse> {
+export interface PersonInntekt {
+    arbeidsinntekt: number
+    navYtelse: number
+    naeringsinntekt: number
+    inntektFraUtlandet: number
+    pensjonFraAndre: number
+    pensjonFraUtlandet: number
+}
 
+export interface InntektInnfylling {
+    personInntekt: PersonInntekt
+    annenForelderInntekt: PersonInntekt
+}
+
+export async function hentDisplayData(): Promise<GetInntektResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -68,14 +80,12 @@ export async function hentDisplayData(): Promise<GetInntektResponse> {
 
 }
 
-
-export async function opprettSamboerforholdForBruker(fom: string, pidSamboer: string): Promise<string> {
+export async function sendInntektsdata(inntektInnfylling: InntektInnfylling): Promise<string> {
     const searchParams = new URLSearchParams(document.location.search)
-    const pid = searchParams.get("pid")
+    const pid: string | null = searchParams.get('pid')
 
-    const request : OpprettSamboerforholdRequest = {
-        pidSamboer : pidSamboer,
-        fom : fom
+    const request : SubmitInntektRequest = {
+        inntekt: inntektInnfylling
     }
 
     let headers;
@@ -90,8 +100,7 @@ export async function opprettSamboerforholdForBruker(fom: string, pidSamboer: st
         }
     }
 
-
-    return await fetch(window.location.pathname + "api/samboer", {
+    return await fetch(window.location.pathname + "api/inntektsplannleger", {
             method: "POST",
             credentials: "include",
             headers: headers,
@@ -112,34 +121,6 @@ export async function opprettSamboerforholdForBruker(fom: string, pidSamboer: st
             }
         }
     )
-}
-
-export async function hentEpsOgBarnForBruker(pid: string | null): Promise<HenteFamilierelasjonsResponse> {
-
-    let headers;
-    if (pid !== null) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    }
-
-    return await fetch(window.location.pathname + "api/familieforhold", { // Må legge til pathname pga fetch fra frontend gir ikke riktig url
-        method: "GET",
-        credentials: "include",
-        headers: headers
-    })
-        .then(response => response.json())
-        .then(epsOgBarnResponse => {
-            if (epsOgBarnResponse) {
-                return epsOgBarnResponse
-            }
-        })
-
 }
 
 export async function sletteSamboerforholdForBruker(periodeId: number) {
