@@ -10,6 +10,8 @@ on:
       - '.nais/dinpensjon-frontend-borger/alerts/**'
       - '.nais/dinpensjon-frontend-veileder/alerts/**'
       - '.nais/familieforhold-backend/alerts/**'
+      - '.nais/familieforhold-frontend-borger/alerts/**'
+      - '.nais/familieforhold-frontend-veileder/alerts/**'
       - '.nais/opptjening-overforomsorgsopptjening-backend/alerts/**'
 
 jobs:
