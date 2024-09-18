@@ -6,6 +6,9 @@ on:
       - 'main'
     paths:
       - '.nais/alderspensjon-endringssoknad-backend/alerts/**'
+      - '.nais/dinpensjon-backend/alerts/**'
+      - '.nais/dinpensjon-frontend-borger/alerts/**'
+      - '.nais/dinpensjon-frontend-veileder/alerts/**'
       - '.nais/familieforhold-backend/alerts/**'
       - '.nais/opptjening-overforomsorgsopptjening-backend/alerts/**'
 
@@ -74,6 +77,33 @@ jobs:
       nais-template-q2: .nais/familieforhold-frontend-veileder/alerts/alerts-q2.yml
       nais-template-production: .nais/familieforhold-frontend-veileder/alerts/alerts-prod.yml
       dev-cluster: dev-gcp
+      production-cluster: prod-gcp
+
+  deploy-dinpensjon-backend-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: .nais/dinpensjon-backend/alerts/alerts-prod.yml
+      production-cluster: prod-gcp
+
+  deploy-dinpensjon-frontend-borger-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: .nais/dinpensjon-frontend-borger/alerts/alerts-prod.yml
+      production-cluster: prod-gcp
+
+  deploy-dinpensjon-frontend-veileder-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: .nais/dinpensjon-frontend-veileder/alerts/alerts-prod.yml
       production-cluster: prod-gcp
 
 #  deploy-opptjening-overforomsorgsopptjening-backend-alerts:
