@@ -9,7 +9,6 @@ import {LoadingError} from "@/components/pageStatus/LoadingError";
 import {Feilmelding} from "@/components/pageStatus/Feilmelding";
 import {InitialView} from "@/components/initialView/InitialView";
 import {YearView} from "@/components/YearView";
-import {InntektFormView} from "@/components/inntektFormView/InntektFormView";
 import {Outlet} from "react-router-dom";
 import {FormStateComponent} from "@/SelectedYear/SelectedYear";
 

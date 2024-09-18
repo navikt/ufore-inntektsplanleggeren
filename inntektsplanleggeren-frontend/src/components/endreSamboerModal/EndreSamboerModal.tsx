@@ -15,7 +15,7 @@ export interface Props {
     isDesktop: boolean
 }
 
-export default function EndreSamboerforholdModal({periodeId, fom, tom, handleRefetchSamboerforhold, isDesktop}: Props) {
+export default function EndreSamboerforholdModal({periodeId, fom, tom, isDesktop}: Props) {
     const {setRefetch, setFeilmeldingkode} = useContext(DataContext)
     const [open, setOpen] = useState(false);
     const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false)

@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const FormStateComponent = ({ children }: Props) => {
-    const [year, setYear]  = useState(2019);
+    const [year, setYear]  = useState(0);
 
     return (
         <FormStateContext.Provider value={{ selectedYear: year, setSelectedYear: setYear }}>

@@ -1,5 +1,5 @@
 
-import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink} from "@navikt/ds-react";
+import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink, Alert} from "@navikt/ds-react";
 import {InntektsgrenseCard} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
 import {Link} from "react-router-dom";
 import React, {useContext} from "react";
@@ -12,22 +12,28 @@ import {FormStateContext} from "@/SelectedYear/SelectedYear";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function InitialView() {
-    const {displayData} = useContext(DataContext)
+    const {displayData, warningMessage} = useContext(DataContext)
     const {setSelectedYear} = useContext(FormStateContext)
 
     return (
         <div>
             <VStack gap={{ xs: "4", sm: "6", md: "8", lg: "10", xl: "12" }}>
-                <Box  borderRadius="xlarge" padding="4" borderWidth="1" className="top-box">
-                    <VStack>
-                        <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
+                {warningMessage.length > 0 ?
+                    <Alert variant="warning">{warningMessage[0].details}</Alert> :
+                    <Box  borderRadius="xlarge" padding="4" borderWidth="1" className="top-box">
+                        <VStack>
+                            <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
                             <BodyLong> Dette tallet kan komme fra en tidligere registrering eller være basert på fjorårets inntekt.</BodyLong>
                             <BodyLong> Din forventede inntekt: {displayData.forventetInntekt}kr </BodyLong>
                             {displayData.forventetInntektAnnenForelder ?
                                 <BodyLong> Annen forelder du bor med sin forventede inntekt: {displayData.forventetInntektAnnenForelder}kr</BodyLong> : <></>
                             }
-                    </VStack>
-                </Box>
+                        </VStack>
+                    </Box>
+                }
+
+
+
 
                 <InntektsgrenseCard displayData={displayData}/>
 

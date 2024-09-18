@@ -28,6 +28,7 @@ export function YearView(props: {
                 </> :
                 <>
                     <Heading size={"medium"} level={"2"}>Du kan registrere inntekter for {props.availableYears[0]}</Heading>
+                    {props.setYear(props.availableYears[0])}
                     {card()}
                 </>
             }

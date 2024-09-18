@@ -1,11 +1,10 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {
     DisplayData,
-    Familierelasjon, hentDisplayData,
-    hentEpsOgBarnForBruker,
+    hentDisplayData,
+    Message,
 } from "@/api/apiFetching";
-import {EpsType} from "@/components/types";
-import {HenteFamilierelasjonsResponse, Samboerforhold} from "@/api/model/ApiRequests";
+
 
 export const DisplayDataDefaultValue: DisplayData | null = {
     forventetInntekt: 100000,
@@ -15,30 +14,25 @@ export const DisplayDataDefaultValue: DisplayData | null = {
     grenseStoppAvUfoeretrygd: 600000,
     aktuelleAar: [
         2024,
-        2025
+        2023
     ],
     harVarigTilrettelagtArbeid: true,
     harBarneTillegg: true,
     harGjenlevendeTillegg: true
 }
 
-// export const DisplayDataDefaultValue: DisplayData | null = {
-//     forventetInntekt: 350000,
-//     forventetInntektAnnenForelder: 250000,
-//     inntektsgrense: 124028,
-//     kompensasjonsgrad: 70.22,
-//     grenseStoppAvUfoeretrygd: 559530,
-//     aktuelleAar: [
-//         2024
-//     ],
-//     harVarigTilrettelagtArbeid: true,
-//     harBarneTillegg: true,
-//     harGjenlevendeTillegg: false
-// }
+export const WarningMessageDefaultValue: Message[] | null = [{
+    messageCode: "USER_HAS_NO_LOPENDE_VEDTAK_YET",
+    details: "Bruker kan ikke registrere inntektsendring før vedkommendes vedtak har blitt løpende",
+    type: "ERROR"
+}]
+
+// export const WarningMessageDefaultValue: Message[] | null = []
+
 
 const DataContextDefaultValue = {
     displayData: DisplayDataDefaultValue,
-    // initialWarningBox: null,
+    warningMessage: WarningMessageDefaultValue,
     refetch: true,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setRefetch: (value: boolean) => {
@@ -72,7 +66,7 @@ interface DataContextProviderProps {
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [displayData, setDisplayData] = useState(DataContextDefaultValue.displayData)
-    // const [initialWarningVariable, setInitialWarningBox] = useState(DataContextDefaultValue.initialWarningBox)
+    const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -117,6 +111,7 @@ function DataContextProvider(props: DataContextProviderProps) {
             refetch,
             setRefetch,
             displayData,
+            warningMessage,
             loading,
             setLoading,
             error,
