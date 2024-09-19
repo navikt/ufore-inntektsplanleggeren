@@ -12,6 +12,7 @@ kc.loadFromDefault();
 const inputNamespace = process.argv[2]
 const inputDeployment = process.argv[3]
 const inputSecretsToFetch = process.argv[4]?.split(',')
+const envFileName = process.argv[5]
 
 const k8sCore = kc.makeApiClient(k8s.CoreV1Api);
 const k8sApi = kc.makeApiClient(k8s.AppsV1Api);
@@ -95,15 +96,16 @@ const parsedSecrets = await k8sCore.listNamespacedSecret(chosenNamespace).then((
   }, {});
 })
 
-// TODO: Kanskje gjøre det mulig å lage env. fil i stedet
 
-// const TEMP_FILE_PATH = '/tmp/nav-env-file'
-// Save env-file to /tmp folder
-// await fs.writeFile(TEMP_FILE_PATH, stringify(parsedSecrets)).then(() => {
-//   console.log(`Env-file saved to ${TEMP_FILE_PATH}`)
-// })
-const shellCommand = process.env.SHELL
-if(!shellCommand) {
-  throw Error('No shell command found')
+if(envFileName) {
+  const tmpFilePath = `${process.cwd()}/${envFileName}`
+  await fs.writeFile(tmpFilePath, stringify(parsedSecrets)).then(() => {
+    console.log(`Env-file saved to ${tmpFilePath}`)
+  })
+} else {
+  const shellCommand = process.env.SHELL
+  if(!shellCommand) {
+    throw Error('No shell command found')
+  }
+  spawn(shellCommand, [], {stdio: 'inherit', env: {...process.env, ...parsedSecrets}})
 }
-spawn(shellCommand, [], {stdio: 'inherit', env: {...process.env, ...parsedSecrets}})
