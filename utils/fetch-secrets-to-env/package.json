@@ -1,0 +1,28 @@
+{
+  "name": "fetch-secrets-to-env",
+  "version": "1.0.0",
+  "main": "dist/fetch-secrets.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node ./dist/fetch-secrets.js",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.22.0",
+    "@types/node": "^22.5.5",
+    "envfile": "^7.1.0",
+    "inquirer": "^11.0.2",
+    "inquirer-autocomplete-standalone": "^0.8.1",
+    "inquirer-select-pro": "^1.0.0-alpha.7"
+  },
+  "bin" : {
+    "env-fetch-secrets": "./dist/fetch-secrets.js"
+  }
+}
