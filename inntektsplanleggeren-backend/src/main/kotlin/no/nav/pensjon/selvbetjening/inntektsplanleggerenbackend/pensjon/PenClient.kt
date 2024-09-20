@@ -4,16 +4,14 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.Ap
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpServerErrorException.InternalServerError
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 
