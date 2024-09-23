@@ -6,6 +6,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.ge
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.GrunnlagForInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.beans.factory.annotation.Value
@@ -23,6 +24,11 @@ class PenClient(
     private val webClient: WebClient,
     private val tokenService: TokenService
 ) {
+
+    fun fetchGrunnlagForInntekter(pid: String): GrunnlagForInntekter {
+        //TODO: Implement this
+        return GrunnlagForInntekter(false, true, false, "00000000001")
+    }
 
     fun fetchInitialInntektsplanleggerPensjonsdata(pid: String): InitialInntektsplanleggerPensjonsdata? {
         val path = "/pen/api/selvbetjening/inntektsplanleggeren/initial"

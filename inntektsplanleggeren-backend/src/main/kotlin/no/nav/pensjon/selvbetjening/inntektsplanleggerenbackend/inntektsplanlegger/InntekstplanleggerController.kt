@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntekterResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerenInitialResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.service.InntektsplanleggerService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -19,6 +21,15 @@ class InntektsplanleggerController(
     fun getInntektsplanleggerenInitialData(): ResponseEntity<InntektsplanleggerenInitialResponse>  {
         return try {
             ResponseEntity(inntektsPlanleggerService.constructInitialInntektsplanleggerResponse(SecurityContextUtil.getPidFromContext()), HttpStatus.OK)
+        } catch (exception: Exception) {
+            throw ErrorHandler.exceptionToErrorResponse(exception,SecurityContextUtil.getPidFromContext())
+        }
+    }
+
+    @GetMapping("inntekter")
+    fun getInntekter(@RequestParam("simuleringsaar", required = true) simuleringsaar: Int): ResponseEntity<InntekterResponse>  {
+        return try {
+            ResponseEntity(inntektsPlanleggerService.constructInntekterResponse(SecurityContextUtil.getPidFromContext(), simuleringsaar), HttpStatus.OK)
         } catch (exception: Exception) {
             throw ErrorHandler.exceptionToErrorResponse(exception,SecurityContextUtil.getPidFromContext())
         }

@@ -1,8 +1,8 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.service
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.Maanedsinntekt
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerenInitialData
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.InntektsplanleggerenInitialResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
@@ -13,8 +13,28 @@ import java.time.Month
 @Service
 class InntektsplanleggerService(
     val penClient: PenClient,
-    val validator: Validator
+    val validator: Validator,
+    val inntektService: InntektService
 ) {
+
+    fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse {
+        val inntektGrunnlagsdata = penClient.fetchGrunnlagForInntekter(pid)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
+            pid,
+            inntektGrunnlagsdata.epsPid,
+            inntektGrunnlagsdata.barnetilleggFellesbarn,
+            inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
+            simuleringsaar
+        )
+
+        return InntekterResponse(
+            arbeidsinntektOgYtelserHittilIAar = mapMaanedsinntekterToInntekterHittilIAar(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
+            pensjonFraAndreHittilIAar = mapMaanedsinntekterToInntekterHittilIAar(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
+            forventetEgneInntekter = emptyList(), //TODO
+            forventetAnnenForelderInntekter = emptyList(), //TODO
+            uforeHeleAaret = inntektGrunnlagsdata.uforeHeleAaret
+        )
+    }
 
     fun constructInitialInntektsplanleggerResponse(pid: String): InntektsplanleggerenInitialResponse {
         val initalPensjonsdata = penClient.fetchInitialInntektsplanleggerPensjonsdata(pid)
@@ -65,5 +85,22 @@ class InntektsplanleggerService(
             return listOf(today.year + 1)
         }
         return emptyList()
+    }
+
+    private fun mapMaanedsinntekterToInntekterHittilIAar(maanedsinntekter: List<Maanedsinntekt>): List<InntektHittilIAar> {
+        val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()
+
+        maanedsinntekter.forEach { maanedsinntekt ->
+            inntekterEachMonth[maanedsinntekt.maned]?.add(maanedsinntekt)
+                ?: { inntekterEachMonth[maanedsinntekt.maned] = mutableListOf(maanedsinntekt) }
+        }
+
+        return inntekterEachMonth.keys.map { maaned ->
+            InntektHittilIAar(
+                maaned,
+                inntekterEachMonth[maaned]?.sumOf { it.belop } ?: 0.0,
+                inntekterEachMonth[maaned]?.map { it.utbetaltFra } ?: emptyList()
+            )
+        }
     }
 }

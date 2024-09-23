@@ -4,10 +4,11 @@ data class InntekterResponse(
     val arbeidsinntektOgYtelserHittilIAar: List<InntektHittilIAar>,
     val pensjonFraAndreHittilIAar: List<InntektHittilIAar>,
     val forventetEgneInntekter: List<ForventetInntekt>,
-    val forventetAnnenForelderInntekter: List<ForventetInntekt>
+    val forventetAnnenForelderInntekter: List<ForventetInntekt>,
+    val uforeHeleAaret: Boolean
 )
 
-data class InntektHittilIAar(val maned: Int, val belop: Double?, val inntektsgiver: String?)
+data class InntektHittilIAar(val maned: Int, val belop: Double?, val inntektsgivere: List<String>)
 
 data class ForventetInntekt(
     val typeInntekt: Inntektstype,
