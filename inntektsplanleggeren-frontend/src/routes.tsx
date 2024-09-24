@@ -4,7 +4,7 @@ import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
 import {FormContainer} from "@/form-container";
 import {Innfylling} from "@/components/innfylling/innfylling";
-import {Beregning} from "@/components/beregning/beregning";
+import {Beregning} from "@/components/beregning/Beregning";
 import {Oppsummering} from "@/components/oppsummering/Oppsummering";
 import {DisplayData} from "@/api/apiFetching";
 import DataContextProvider from "@/DataContextProvider";

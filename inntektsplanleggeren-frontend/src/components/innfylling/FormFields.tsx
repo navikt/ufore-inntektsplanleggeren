@@ -1,8 +1,7 @@
 import { VStack, TextField, ReadMore, Button, Box, ErrorSummary } from "@navikt/ds-react";
 import React, { useState } from "react";
-import {PersonInntekt} from "@/api/apiFetching";
-
-
+import "./FormFields.css";
+import {PersonInntekt} from "@/api/apiFetching"; // Import the CSS file
 
 interface FormFieldsProps {
     year: number;
@@ -11,7 +10,7 @@ interface FormFieldsProps {
     setPersonInntekt: (personInntekt: PersonInntekt) => void;
 }
 
-export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormFieldsProps) => {
+export const FormFields = ({ year, errors, setErrors, setPersonInntekt }: FormFieldsProps) => {
     const [inntektSum, setInntektSum] = useState<number>(0);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -30,20 +29,20 @@ export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormF
                 return {
                     ...acc,
                     [key]: 'Feltet er påkrevd'
-                }
-            } else if (isNaN(value)) {
+                };
+            } else if (isNaN(value as number)) {
                 return {
                     ...acc,
                     [key]: 'Maa vaere tall'
-                }
+                };
             } else if (value < 0) {
                 return {
                     ...acc,
                     [key]: 'Må ikke være mindre enn 0'
-                }
+                };
             }
             return acc;
-        }, {});
+        }, {} as Partial<Record<keyof PersonInntekt, string>>);
 
         setErrors(newErrors);
 
@@ -55,7 +54,7 @@ export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormF
     };
 
     function updateInntektSum(formData: PersonInntekt) {
-        const sum = Object.values(formData).reduce((acc, value) => acc + value, 0);
+        const sum = Object.values(formData).reduce((acc, value) => acc + (value as number), 0);
         setInntektSum(sum);
     }
 
@@ -71,7 +70,7 @@ export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormF
                 </ErrorSummary>
             )}
 
-            <VStack gap={"5 5"}>
+            <VStack className="vstack-gap">
                 <TextField label="Arbeidsinntekt fra arbeidsgiver" inputMode="numeric" id="arbeidsinntekt"/>
                 <div className="description-card">
                     <ReadMore header="Denne arbeidsinnteken skal med ">
@@ -80,7 +79,7 @@ export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormF
                 </div>
             </VStack>
 
-            <VStack>
+            <VStack className="vstack-gap">
                 <TextField label="Pensjonsgivende ytelser fra oss/NAV" inputMode="numeric" id="navYtelse"
                            description="Uføretrygden skal ikke tas med"/>
                 <ReadMore header="Disse pensjonsgivende ytelsene skal med">
@@ -89,21 +88,21 @@ export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormF
                 </ReadMore>
             </VStack>
 
-            <VStack>
+            <VStack className="vstack-gap">
                 <TextField label="Næringsinntekt" inputMode="numeric" id="naeringsinntekt"/>
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt.
                 </ReadMore>
             </VStack>
 
-            <VStack>
+            <VStack className="vstack-gap">
                 <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric" id="inntektFraUtlandet"/>
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                 </ReadMore>
             </VStack>
 
-            <VStack>
+            <VStack className="vstack-gap">
                 <TextField label="Pensjoner og uførepensjon fra andre enn folketrygden" inputMode="numeric" id="pensjonFraAndre"/>
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss. Har du krigspensjon eller familiepleieytelse
@@ -111,7 +110,7 @@ export const FormFields = ({ year, errors, setErrors,  setPersonInntekt }: FormF
                 </ReadMore>
             </VStack>
 
-            <VStack>
+            <VStack className="vstack-gap">
                 <TextField label="Pensjoner fra utlandet, i norske kroner" inputMode="numeric" id="pensjonFraUtlandet"/>
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra utlandet som et årsbeløp før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.

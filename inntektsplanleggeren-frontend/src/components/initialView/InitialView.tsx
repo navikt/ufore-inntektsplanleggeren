@@ -1,19 +1,25 @@
-
 import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink, Alert} from "@navikt/ds-react";
 import {InntektsgrenseCard} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
 import {Link} from "react-router-dom";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {YearView} from "@/components/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/SelectedYear/SelectedYear";
 
-
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function InitialView() {
     const {displayData, warningMessage} = useContext(DataContext)
-    const {setSelectedYear} = useContext(FormStateContext)
+    const {selectedYear, setSelectedYear} = useContext(FormStateContext)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+    // const handleButtonClick = () => {
+    //     if (!selectedYear) {
+    //         setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
+    //     } else {
+    //
+    //
+    //     }
+    // }
 
     return (
         <div>
@@ -32,9 +38,6 @@ export function InitialView() {
                     </Box>
                 }
 
-
-
-
                 <InntektsgrenseCard displayData={displayData}/>
 
                 <Heading size={"medium"} level={"2"}>I inntektsplanleggeren kan du</Heading>
@@ -44,7 +47,6 @@ export function InitialView() {
                     Du kan melde inn flere ganger hvis du ser at inntekten blir høyere eller lavere enn først forventet.
                     <NavLink href="#">Å kombinere arbeid og uføretrygd.</NavLink>
                 </BodyLong>
-
 
                 <Accordion>
                     <Accordion.Item>
@@ -76,10 +78,14 @@ export function InitialView() {
                 </BodyLong>
                 <NavLink href="#">Har du spørsmål?  Kontakt oss</NavLink>
 
-                {/*{ console.debugger("A") }*/}
                 <YearView availableYears={displayData.aktuelleAar} setYear={setSelectedYear} infoType={1}></YearView>
 
+                {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
+
                 <VStack>
+                    {/*<Button onClick={handleButtonClick} variant="primary">*/}
+                    {/*    Start inntektsplanlegger*/}
+                    {/*</Button>*/}
                     <Button as={Link} to="/forventede-inntekter" variant="primary">
                         Start inntektsplanlegger
                     </Button>
