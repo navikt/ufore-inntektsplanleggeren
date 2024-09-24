@@ -1,11 +1,14 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.AbonnerteInntekterIdentOgPeriode
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.HentAbonnerteInntekterBolkResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.HentForventetInntektResponse
 import org.springframework.stereotype.Component
 
 @Component
 class InntektskomponentClient {
     fun hentForventetInntekt(
-        fnr: String,
+        pid: String,
         inntektsAar: List<Int>
     ): HentForventetInntektResponse {
         //TODO: Implement this
@@ -16,7 +19,7 @@ class InntektskomponentClient {
         abonnerteInntekterIdentOgPeriodeListe: List<AbonnerteInntekterIdentOgPeriode>,
         ainntektsfilter: String,
         formaal: String
-    ): HentAbonnerteInntekterBolkResponse{
+    ): HentAbonnerteInntekterBolkResponse {
         //TODO: Implement this
         return HentAbonnerteInntekterBolkResponse(emptyList(), emptyList())
     }

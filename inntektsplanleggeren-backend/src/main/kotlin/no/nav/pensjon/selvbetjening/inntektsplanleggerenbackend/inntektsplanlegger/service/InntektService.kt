@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister.EregService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.*
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.*
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
@@ -34,6 +35,16 @@ class InntektService(
             pensjonerFraAndreEnnFolketrygdenEps = pensjonFraAndreEnnFolketrygden[epsPid]
         )
     }
+
+    fun getForventedeInntekter(pid: String, simuleringsaar: Int) {
+        val allForventedeInntekterRelatedToPid = inntektskomponentClient.hentForventetInntekt(pid, listOf(simuleringsaar))
+        val forvendeInntekter = allForventedeInntekterRelatedToPid.forventetInntektListe.filter{ !it.isForventetInntektEPS() }
+        val forventedeInntekterEps = allForventedeInntekterRelatedToPid.forventetInntektListe.filter{ it.isForventetInntektEPS() }
+
+    }
+
+    private fun ForventetInntekt.isForventetInntektEPS() =
+        this.type.endsWith("_EPS")
 
     private fun fetchArbeidsinntektOgPensjonsgivendeYtelser(
         pid: String,
