@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model
 
 data class InntekterHittilIAar(
     val arbeidsinntektOgPensjonsgivendeYtelser: List<Maanedsinntekt>,

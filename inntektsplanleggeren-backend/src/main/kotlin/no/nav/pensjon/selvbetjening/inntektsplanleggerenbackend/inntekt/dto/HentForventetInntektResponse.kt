@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto
 
 import java.time.LocalDateTime
 

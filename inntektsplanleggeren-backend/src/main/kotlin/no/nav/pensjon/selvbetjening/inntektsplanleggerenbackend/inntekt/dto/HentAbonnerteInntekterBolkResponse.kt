@@ -1,6 +1,5 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto
 
-import java.math.BigDecimal
 import java.time.YearMonth
 
 data class HentAbonnerteInntekterBolkResponse(
