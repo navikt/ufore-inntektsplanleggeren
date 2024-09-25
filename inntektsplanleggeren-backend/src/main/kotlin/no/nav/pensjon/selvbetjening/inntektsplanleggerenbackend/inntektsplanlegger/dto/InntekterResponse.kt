@@ -1,25 +1,12 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekter
+
 data class InntekterResponse(
-    val arbeidsinntektOgYtelserHittilIAar: List<InntektHittilIAar>,
-    val pensjonFraAndreHittilIAar: List<InntektHittilIAar>,
-    val forventetEgneInntekter: List<ForventetInntekt>,
-    val forventetAnnenForelderInntekter: List<ForventetInntekt>,
+    val arbeidsinntektOgYtelserHittilIAar: List<AccumulatedMaanedsinntekt>,
+    val pensjonFraAndreHittilIAar: List<AccumulatedMaanedsinntekt>,
+    val forventedeInntekter: ForventedeInntekter,
     val uforeHeleAaret: Boolean
 )
 
-data class InntektHittilIAar(val maned: Int, val belop: Double?, val inntektsgivere: List<String>)
-
-data class ForventetInntekt(
-    val typeInntekt: Inntektstype,
-    val belop: Double
-)
-
-enum class Inntektstype {
-    ARBEIDSINNTEKT,
-    PENSJONSGIVENDE_YTELSER_FRA_NAV,
-    NAERINGSINNTEKT,
-    INNTEKT_FRA_UTLANDET,
-    PENSJON_FRA_ANDRE,
-    PENSJON_FRA_UTLANDET
-}
+data class AccumulatedMaanedsinntekt(val maned: Int, val belop: Double?, val inntektsgivere: List<String>)

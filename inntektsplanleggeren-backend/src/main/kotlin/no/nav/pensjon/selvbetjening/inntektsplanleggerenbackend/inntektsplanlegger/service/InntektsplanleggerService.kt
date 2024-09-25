@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.service
 
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.Maanedsinntekt
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
@@ -28,10 +29,15 @@ class InntektsplanleggerService(
         )
 
         return InntekterResponse(
-            arbeidsinntektOgYtelserHittilIAar = mapMaanedsinntekterToInntekterHittilIAar(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
-            pensjonFraAndreHittilIAar = mapMaanedsinntekterToInntekterHittilIAar(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
-            forventetEgneInntekter = emptyList(), //TODO
-            forventetAnnenForelderInntekter = emptyList(), //TODO
+            arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
+            pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
+            forventedeInntekter = inntektService.getForventedeInntekter(
+                pid,
+                inntektGrunnlagsdata.epsPid,
+                inntektGrunnlagsdata.barnetilleggFellesbarn,
+                inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
+                simuleringsaar
+            ),
             uforeHeleAaret = inntektGrunnlagsdata.uforeHeleAaret
         )
     }
@@ -87,7 +93,7 @@ class InntektsplanleggerService(
         return emptyList()
     }
 
-    private fun mapMaanedsinntekterToInntekterHittilIAar(maanedsinntekter: List<Maanedsinntekt>): List<InntektHittilIAar> {
+    private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>): List<AccumulatedMaanedsinntekt> {
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()
 
         maanedsinntekter.forEach { maanedsinntekt ->
@@ -96,7 +102,7 @@ class InntektsplanleggerService(
         }
 
         return inntekterEachMonth.keys.map { maaned ->
-            InntektHittilIAar(
+            AccumulatedMaanedsinntekt(
                 maaned,
                 inntekterEachMonth[maaned]?.sumOf { it.belop } ?: 0.0,
                 inntekterEachMonth[maaned]?.map { it.utbetaltFra } ?: emptyList()
