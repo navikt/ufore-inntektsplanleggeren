@@ -14,27 +14,10 @@ export const Innfylling = () => {
     const navigate = useNavigate()
     const year = searchParams.get('year')
 
-    const { selectedYear, setFormData, setSelectedYear } = useContext(FormStateContext);
+    const { selectedYear, setFormData, setSelectedYear, setPersoninntekt, setAnnenForelderInntekt, personInntektSum, annenForelderInntektSum, formData } = useContext(FormStateContext);
     const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({})
-    const [inntektInnfylling] = useState<InntektInnfylling> ({
-        personInntekt: {
-            arbeidsinntekt: 0,
-            navYtelse: 0,
-            naeringsinntekt: 0,
-            inntektFraUtlandet: 0,
-            pensjonFraAndre: 0,
-            pensjonFraUtlandet: 0
-        },
-        annenForelderInntekt: {
-            arbeidsinntekt: 0,
-            navYtelse: 0,
-            naeringsinntekt: 0,
-            inntektFraUtlandet: 0,
-            pensjonFraAndre: 0,
-            pensjonFraUtlandet: 0
-        }
-    })
+
     React.useEffect(() => {
 
         if (year) {
@@ -44,10 +27,9 @@ export const Innfylling = () => {
 
 
     // make this function call the api
-    const handleSubmit = () => {
-        console.log("inntektInnfylling", inntektInnfylling)
-        sendInntektsdata(inntektInnfylling)
-        setFormData(inntektInnfylling)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData)
     };
 
     if (!year) {
@@ -63,16 +45,17 @@ export const Innfylling = () => {
 
 
 
+            <form onSubmit={handleSubmit}>
             <HStack>
-                <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setPersonInntekt={(value) => inntektInnfylling.personInntekt = value}/>
+                <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt} inntektSum={personInntektSum}/>
             </HStack>
 
-            {isAnnenForelder ? <>
+            {isAnnenForelder && <>
                 <Heading level="2" size="small">Den forventede Iintekten til annen forelder, Test Testeson, i ({selectedYear})</Heading>
                 <HStack>
-                    <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setPersonInntekt={(value) => inntektInnfylling.annenForelderInntekt = value} />
+                    <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt} setInntekt={setAnnenForelderInntekt} inntektSum={annenForelderInntektSum} />
                 </HStack>
-                </>: <> </>
+                </>
             }
 
 
@@ -80,10 +63,11 @@ export const Innfylling = () => {
                 <Button as={Link} to="/" variant="secondary" >
                     Tilbake
                 </Button>
-                <Button as={Link} to="/beregning" variant="primary" onSubmit={() => handleSubmit()}>
+                <Button type="submit">
                     Beregning
                 </Button>
             </HStack>
+            </form>
         </>
     );
 };
