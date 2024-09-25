@@ -1,8 +1,8 @@
 import {Box, Button, Heading, HStack} from "@navikt/ds-react";
 import React, {useContext, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import "./innfylling.css"
-import {FormStateContext} from "@/SelectedYear/SelectedYear";
+import {FormStateContext} from "@/SelectedYear/FormData";
 import { FormFields } from "./FormFields";
 import {InntektInnfylling, PersonInntekt, sendInntektsdata} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
@@ -10,7 +10,11 @@ import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 
 
 export const Innfylling = () => {
-    const { selectedYear } = useContext(FormStateContext);
+    const [ searchParams ] = useSearchParams();
+    const navigate = useNavigate()
+    const year = searchParams.get('year')
+
+    const { selectedYear, setFormData, setSelectedYear } = useContext(FormStateContext);
     const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({})
     const [inntektInnfylling] = useState<InntektInnfylling> ({
@@ -31,13 +35,24 @@ export const Innfylling = () => {
             pensjonFraUtlandet: 0
         }
     })
+    React.useEffect(() => {
+
+        if (year) {
+            setSelectedYear(year)
+        }
+        }, [searchParams, setSelectedYear]);
+
 
     // make this function call the api
     const handleSubmit = () => {
         console.log("inntektInnfylling", inntektInnfylling)
         sendInntektsdata(inntektInnfylling)
-
+        setFormData(inntektInnfylling)
     };
+
+    if (!year) {
+        navigate("/")
+    }
 
     return (
         <>

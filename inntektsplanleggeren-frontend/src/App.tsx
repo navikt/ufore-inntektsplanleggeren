@@ -10,7 +10,7 @@ import {Feilmelding} from "@/components/pageStatus/Feilmelding";
 import {InitialView} from "@/components/initialView/InitialView";
 import {YearView} from "@/components/YearView";
 import {Outlet} from "react-router-dom";
-import {FormStateComponent} from "@/SelectedYear/SelectedYear";
+import {FormStateComponent} from "@/SelectedYear/FormData";
 
 
 

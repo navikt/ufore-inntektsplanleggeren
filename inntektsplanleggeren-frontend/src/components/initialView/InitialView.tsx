@@ -1,25 +1,26 @@
 import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink, Alert} from "@navikt/ds-react";
 import {InntektsgrenseCard} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useState} from "react";
 import {YearView} from "@/components/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
-import {FormStateContext} from "@/SelectedYear/SelectedYear";
+import {FormStateContext} from "@/SelectedYear/FormData";
 
 export function InitialView() {
     const {displayData, warningMessage} = useContext(DataContext)
     const {selectedYear, setSelectedYear} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const navigate = useNavigate()
 
-    // const handleButtonClick = () => {
-    //     if (!selectedYear) {
-    //         setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
-    //     } else {
-    //
-    //
-    //     }
-    // }
+    const handleButtonClick = () => {
+        if (!selectedYear) {
+            setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
+        } else {
+            const params = new URLSearchParams({ year: selectedYear.toString() })
+            navigate(`/forventede-inntekter?${params.toString()}`)
+        }
+    }
 
     return (
         <div>
@@ -83,12 +84,12 @@ export function InitialView() {
                 {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
 
                 <VStack>
-                    {/*<Button onClick={handleButtonClick} variant="primary">*/}
-                    {/*    Start inntektsplanlegger*/}
-                    {/*</Button>*/}
-                    <Button as={Link} to="/forventede-inntekter" variant="primary">
+                    <Button onClick={handleButtonClick} variant="primary">
                         Start inntektsplanlegger
                     </Button>
+                    {/*/!*<Button as={Link} to="/forventede-inntekter" variant="primary">*!/*/}
+                    {/*    Start inntektsplanlegger*/}
+                    {/*</Button>*/}
                 </VStack>
             </VStack>
         </div>
