@@ -1,17 +1,18 @@
-import React, {createContext, SetStateAction, useState} from "react";
+import React, {createContext, SetStateAction, useContext, useState} from "react";
 import {Link, Outlet} from "react-router-dom";
 import {Button, FormProgress} from "@navikt/ds-react";
+import {FormStateContext} from "@/context/FormData";
 
 
 
 export const FormContainer = () => {
 
 
-    // const activeStep =
+    const { formStep } = useContext(FormStateContext);
 
     return (
         <>
-            <FormProgress totalSteps={3} activeStep={1}>
+            <FormProgress totalSteps={3} activeStep={formStep}>
                 <FormProgress.Step href="/forventede-inntekter" completed>Forventede inntekter</FormProgress.Step>
                 <FormProgress.Step href="/beregning">Beregning</FormProgress.Step>
                 <FormProgress.Step href="/oppsummering">Oppsummering før innsending</FormProgress.Step>
@@ -19,7 +20,7 @@ export const FormContainer = () => {
 
 
 
-                <Outlet />
+            <Outlet/>
         </>
     );
 };

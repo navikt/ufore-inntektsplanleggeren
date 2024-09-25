@@ -1,10 +1,10 @@
-import {Box, Button, Heading, HStack} from "@navikt/ds-react";
+import {Button, Heading, HStack, VStack} from "@navikt/ds-react";
 import React, {useContext, useState} from "react";
-import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import "./innfylling.css"
-import {FormStateContext} from "@/SelectedYear/FormData";
+import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {InntektInnfylling, PersonInntekt, sendInntektsdata} from "@/api/apiFetching";
+import {PersonInntekt} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 
 
@@ -14,14 +14,17 @@ export const Innfylling = () => {
     const navigate = useNavigate()
     const year = searchParams.get('year')
 
-    const { selectedYear, setFormData, setSelectedYear, setPersoninntekt, setAnnenForelderInntekt, personInntektSum, annenForelderInntektSum, formData } = useContext(FormStateContext);
+    const { selectedYear, setSelectedYear, setPersoninntekt, setAnnenForelderInntekt, personInntektSum, annenForelderInntektSum, formData, setFormStep } = useContext(FormStateContext);
     const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({})
+    setFormStep(1)
 
     React.useEffect(() => {
 
+
         if (year) {
             setSelectedYear(year)
+
         }
         }, [searchParams, setSelectedYear]);
 
@@ -37,7 +40,7 @@ export const Innfylling = () => {
     }
 
     return (
-        <>
+        <VStack gap="4">
             <Heading level="2" size="small">Din inntekt hittil i år</Heading>
             <DinInntektTable/>
 
@@ -63,11 +66,14 @@ export const Innfylling = () => {
                 <Button as={Link} to="/" variant="secondary" >
                     Tilbake
                 </Button>
-                <Button type="submit">
+                <Button as={Link} to="/beregning" variant="secondary" >
                     Beregning
                 </Button>
+                {/*<Button type="submit">*/}
+                {/*    Beregning*/}
+                {/*</Button>*/}
             </HStack>
             </form>
-        </>
+        </VStack>
     );
 };

@@ -1,11 +1,11 @@
 import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink, Alert} from "@navikt/ds-react";
-import {InntektsgrenseCard} from "@/components/dinInntektsgrenseCard/DinInntektsgrenseCard";
+import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useState} from "react";
 import {YearView} from "@/components/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
-import {FormStateContext} from "@/SelectedYear/FormData";
+import {FormStateContext} from "@/context/FormData";
 
 export function InitialView() {
     const {displayData, warningMessage} = useContext(DataContext)

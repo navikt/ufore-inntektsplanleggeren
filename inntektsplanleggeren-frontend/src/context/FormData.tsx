@@ -11,6 +11,8 @@ interface FormState {
     setAnnenForelderInntekt: (key: keyof PersonInntekt, value: number) => void,
     personInntektSum: number,
     annenForelderInntektSum: number,
+    formStep: number
+    setFormStep: (value: SetStateAction<number>) => void
 }
 
 const initialFormData = {
@@ -41,6 +43,8 @@ export const FormStateContext = createContext<FormState>({
     setAnnenForelderInntekt: () => undefined,
     personInntektSum: 0,
     annenForelderInntektSum: 0,
+    formStep: 1,
+    setFormStep: () => undefined
 });
 
 interface Props {
@@ -54,6 +58,7 @@ function summerPersoninntekt(personInntekt: PersonInntekt) {
 export const FormStateComponent = ({ children }: Props) => {
     const [year, setYear]  = useState<string | undefined>(undefined);
     const [formData, setFormData] = useState<InntektInnfylling>(initialFormData)
+    const [formStep, setFormStep] = useState<number>(1);
 
     const setPersoninntekt = (key: keyof PersonInntekt, value: number) => {
         setFormData((prev) => ({
@@ -86,6 +91,8 @@ export const FormStateComponent = ({ children }: Props) => {
             setAnnenForelderInntekt: setAnnenForelderInntekt,
             personInntektSum: summerPersoninntekt(formData.personInntekt),
             annenForelderInntektSum: summerPersoninntekt(formData.annenForelderInntekt),
+            formStep: formStep,
+            setFormStep: setFormStep
         }}>
             {children}
         </FormStateContext.Provider>

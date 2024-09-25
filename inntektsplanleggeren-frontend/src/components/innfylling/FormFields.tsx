@@ -1,4 +1,4 @@
-import { VStack, TextField, ReadMore, Button, Box, ErrorSummary } from "@navikt/ds-react";
+import { VStack, TextField, ReadMore, Box, ErrorSummary } from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
 import { PersonInntekt} from "@/api/apiFetching";
@@ -51,7 +51,7 @@ export const FormFields = ({ year, errors, setErrors, setInntekt, data, inntektS
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Pensjonsgivende ytelser fra oss/NAV" inputMode="numeric" id="navYtelse" error={fieldErrors.navYtelse}  value={data.navYtelse} onChange={handleInputChange} description="Uføretrygden skal ikke tas med"/>
+                <TextField label="Pensjonsgivende ytelser fra oss/NAV" inputMode="numeric" id="navYtelse" error={fieldErrors.navYtelse}  value={data.navYtelse} onChange={handleInputChange} onBlur={handleInputChange} description="Uføretrygden skal ikke tas med"/>
                 <ReadMore header="Disse pensjonsgivende ytelsene skal med">
                     Har du sykepenger, arbeidsavklaringspenger, dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, ventelønn, omsorgs-, pleie- eller opplæringspenger
                     fra oss, skal du oppgi dette her. Uføretrygden skal ikke tas med.
@@ -59,21 +59,21 @@ export const FormFields = ({ year, errors, setErrors, setInntekt, data, inntektS
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Næringsinntekt" inputMode="numeric" id="naeringsinntekt" error={fieldErrors.naeringsinntekt} value={data.naeringsinntekt} onChange={handleInputChange}/>
+                <TextField label="Næringsinntekt" inputMode="numeric" id="naeringsinntekt" error={fieldErrors.naeringsinntekt} value={data.naeringsinntekt} onChange={handleInputChange} onBlur={handleInputChange}/>
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt.
                 </ReadMore>
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric" id="inntektFraUtlandet" error={fieldErrors.inntektFraUtlandet} value={data.inntektFraUtlandet} onChange={handleInputChange}/>
+                <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric" id="inntektFraUtlandet" error={fieldErrors.inntektFraUtlandet} value={data.inntektFraUtlandet} onChange={handleInputChange} onBlur={handleInputChange}/>
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                 </ReadMore>
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Pensjoner og uførepensjon fra andre enn folketrygden" inputMode="numeric" id="pensjonFraAndre" error={fieldErrors.pensjonFraAndre} value={data.pensjonFraAndre} onChange={handleInputChange}/>
+                <TextField label="Pensjoner og uførepensjon fra andre enn folketrygden" inputMode="numeric" id="pensjonFraAndre" error={fieldErrors.pensjonFraAndre} value={data.pensjonFraAndre} onChange={handleInputChange} onBlur={handleInputChange}/>
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss. Har du krigspensjon eller familiepleieytelse
                     fra oss, skal du oppgi dette også her. Ikke oppgi eventuell alderspensjon du mottar fra oss. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
