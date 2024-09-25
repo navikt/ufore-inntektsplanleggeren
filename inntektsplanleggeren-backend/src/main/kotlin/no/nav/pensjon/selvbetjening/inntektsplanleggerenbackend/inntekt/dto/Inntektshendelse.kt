@@ -6,7 +6,7 @@ enum class Inntektshendelse(val code: String) {
     BENYTTET("Benyttet");
 
     companion object {
-        fun getHendelseOrCode(code: String?): Inntektshendelse? =
+        fun getHendelseForCode(code: String?): Inntektshendelse? =
             Inntektshendelse.entries.firstOrNull { it.code == code }
     }
 }

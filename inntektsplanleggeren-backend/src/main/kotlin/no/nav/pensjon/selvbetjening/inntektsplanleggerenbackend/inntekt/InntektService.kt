@@ -113,7 +113,7 @@ class InntektService(
             .sortedByDescending { it.endringstidspunkt }
             .firstOrNull { it.type == inntektstype }
         if (mostRecentInntektOfType != null) {
-            return Personinntekt(mostRecentInntektOfType.beloep, Inntektshendelse.getHendelseOrCode(mostRecentInntektOfType.hendelse))
+            return Personinntekt(mostRecentInntektOfType.beloep, Inntektshendelse.getHendelseForCode(mostRecentInntektOfType.hendelse))
         }
         return null
     }
