@@ -61,27 +61,58 @@ const chosenDeployment: string = inputDeployment ?? await k8sApi.listNamespacedD
   });
 })
 
-// Ask for secrets to get
-const secretsToFetch = inputSecretsToFetch ?? await select({
-  message: 'Secrets to set to environment',
-  multiple: true,
-  defaultValue: ['azure', 'tokenx'],
-  options: [
-    { name: 'Azure', value: "azure" },
-    { name: 'TokenX', value: "tokenx" },
-  ]
+const azureSecretMount = '/var/run/secrets/nais.io/azure'
+
+interface ISecretOption {
+  name: 'azure' | 'tokenx',
+  value: string
+}
+const possibleSecrets: ISecretOption[]  = await k8sApi.readNamespacedDeployment(chosenDeployment, chosenNamespace).then((res) => {
+  const tokenXSecret = res.body.spec?.template.spec?.containers.find((container) => container.name === chosenDeployment)?.envFrom?.find((envFrom) => envFrom.secretRef?.name?.includes('tokenx'))?.secretRef?.name
+  const azureSecret = res.body.spec?.template.spec?.containers.find((container) => container.name === chosenDeployment)?.volumeMounts?.find((volumeMount) => volumeMount.mountPath === azureSecretMount)?.name
+  return [{name: 'TokenX', value: tokenXSecret}, {name: 'Azure', value: azureSecret}].filter((secret) => secret.value) as ISecretOption[]
 })
+
+// Ask for secrets to get
+const secretsStep = async (): Promise<string[]> => {
+  if(inputSecretsToFetch) {
+    const filteredSecrets = possibleSecrets.filter((secret) => inputSecretsToFetch.find((inputSecret) =>  secret.value.includes(inputSecret)
+    )).map((secret) => secret.value)
+    if(filteredSecrets.length === 0) {
+      throw Error(`No secrets found of: ${inputSecretsToFetch.toString()}`)
+    } else {
+      return filteredSecrets
+    }
+  } else if(possibleSecrets.every((secret) => !secret.value)) {
+    throw Error('No secrets found')
+  } else if(possibleSecrets.length === 1) {
+    return [possibleSecrets[0].value]
+  } else {
+    return await select({
+      message: 'Secrets to set to environment',
+      multiple: true,
+      defaultValue: possibleSecrets.map((secret) => secret.value),
+      options: possibleSecrets
+    })
+  }
+}
+
+
+const secretsToFetch = await secretsStep()
+
+console.log('Secrets to fetch', secretsToFetch)
 
 const parsedSecrets = await k8sCore.listNamespacedSecret(chosenNamespace).then((res) => {
   const secrets = res.body.items;
-
   return secretsToFetch.reduce((acc, inputSecret) => {
-    const secretsToParse = secrets.find((secret) => 
-      secret.metadata?.name?.includes(`${inputSecret}-${chosenDeployment}`)
+    const secretsToParse = secrets.find((secret) =>
+      secret.metadata?.name === inputSecret
     )
 
+    console.log('Found secret', secretsToParse?.metadata?.name)
+
     if(!secretsToParse?.data) {
-      throw Error(`No secrets found for ${inputSecret}-${chosenDeployment}`)
+      throw Error(`No secrets ${inputSecret} found`)
     }
 
     const newParsedSecrets = Object.entries(secretsToParse.data).reduce((parsedSecrets, [key, value]) => {
