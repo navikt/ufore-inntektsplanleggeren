@@ -97,8 +97,13 @@ class InntektsplanleggerService(
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()
 
         maanedsinntekter.forEach { maanedsinntekt ->
-            inntekterEachMonth[maanedsinntekt.maned]?.add(maanedsinntekt)
-                ?: { inntekterEachMonth[maanedsinntekt.maned] = mutableListOf(maanedsinntekt) }
+            run {
+                if (inntekterEachMonth.containsKey(maanedsinntekt.maned)) {
+                    inntekterEachMonth[maanedsinntekt.maned]?.add(maanedsinntekt)
+                } else {
+                    inntekterEachMonth[maanedsinntekt.maned] = mutableListOf(maanedsinntekt)
+                }
+            }
         }
 
         return inntekterEachMonth.keys.map { maaned ->
