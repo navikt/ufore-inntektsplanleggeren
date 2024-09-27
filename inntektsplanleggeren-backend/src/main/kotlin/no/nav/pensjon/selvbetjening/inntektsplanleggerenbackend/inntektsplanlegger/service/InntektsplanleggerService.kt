@@ -18,9 +18,20 @@ class InntektsplanleggerService(
     val inntektService: InntektService
 ) {
 
-    fun simulerInntektsendring(pid: String, simuleringsAar: Int, inntekter: ForventedeInntekter): SimuleringResponse{
+    fun simulerInntektsendring(pid: String, simuleringsAar: Int, inntekter: ForventedeInntekter): SimuleringResponse {
+        val initalPensjonsdata = penClient.fetchInitialInntektsplanleggerPensjonsdata(pid) //TODO: Vurder å effektivisere ved at disse to PEN-kallene slås sammen, kanskje?
+        val inntektGrunnlagsdata = penClient.fetchGrunnlagForInntekter(pid)
+        val validationResult = validator.validateUserAndInputBeforeSimulering(
+            initalPensjonsdata,
+            inntekter,
+            pid,
+            inntektGrunnlagsdata.epsPid,
+            inntektGrunnlagsdata.barnetilleggFellesbarn,
+            inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
+            simuleringsAar
+        )
 
-        return SimuleringResponse(emptyList(), null)
+        return SimuleringResponse(validationResult, null)
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse {

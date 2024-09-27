@@ -3,6 +3,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
 
 data class SimuleringResponse(val messages: List<InntektsplanleggerMessage>,
-                              val data: Simuleringsresultet?)
+                              val data: Simuleringsresultat?)
 
-data class Simuleringsresultet(val temp: String)
+data class Simuleringsresultat(val temp: String)

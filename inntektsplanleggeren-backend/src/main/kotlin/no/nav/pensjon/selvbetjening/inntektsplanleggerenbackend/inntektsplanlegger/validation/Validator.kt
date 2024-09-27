@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
 @Service
-class Validator(val inntektService: InntektService) {
+class Validator(private val inntektService: InntektService) {
     fun validateUserInitialData(initialPensjonsdata: InitialInntektsplanleggerPensjonsdata?): List<InntektsplanleggerMessage> {
         if (initialPensjonsdata == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
