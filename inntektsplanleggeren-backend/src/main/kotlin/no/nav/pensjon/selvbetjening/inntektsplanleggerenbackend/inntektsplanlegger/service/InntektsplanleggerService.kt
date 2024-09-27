@@ -18,6 +18,11 @@ class InntektsplanleggerService(
     val inntektService: InntektService
 ) {
 
+    fun simulerInntektsendring(pid: String, simuleringsAar: Int, inntekter: ForventedeInntekter): SimuleringResponse{
+
+        return SimuleringResponse(emptyList(), null)
+    }
+
     fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse {
         val inntektGrunnlagsdata = penClient.fetchGrunnlagForInntekter(pid)
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
@@ -37,7 +42,7 @@ class InntektsplanleggerService(
                 inntektGrunnlagsdata.barnetilleggFellesbarn,
                 inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
                 simuleringsaar
-            ),
+            ).toDto(),
             uforeHeleAaret = inntektGrunnlagsdata.uforeHeleAaret
         )
     }

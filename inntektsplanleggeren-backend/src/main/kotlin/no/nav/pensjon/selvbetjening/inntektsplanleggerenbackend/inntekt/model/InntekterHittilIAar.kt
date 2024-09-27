@@ -6,3 +6,5 @@ data class InntekterHittilIAar(
     val arbeidsinntektOgPensjonsgivendeYtelserEps: List<Maanedsinntekt>?,
     val pensjonerFraAndreEnnFolketrygdenEps: List<Maanedsinntekt>?
 )
+
+data class Maanedsinntekt(val maned: Int, val belop: Double, val utbetaltFra: String)
