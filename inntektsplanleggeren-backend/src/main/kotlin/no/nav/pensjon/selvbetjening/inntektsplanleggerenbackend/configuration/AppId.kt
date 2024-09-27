@@ -7,5 +7,6 @@ enum class AppId(
     PENSJON_FULLMAKT(true, false),
     SKJERMING(false, false),
     PEN(true, false),
-    PDL(true, false)
+    PDL(true, false),
+    INNTEKTSKOMPONENTEN(false, false)
 }

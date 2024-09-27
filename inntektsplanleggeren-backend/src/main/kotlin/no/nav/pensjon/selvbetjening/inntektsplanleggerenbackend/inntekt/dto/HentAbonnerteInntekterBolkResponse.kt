@@ -29,3 +29,10 @@ data class UnntakForIdent(
     val ident: Aktoer,
     val unntaksmelding: String? = null
 )
+
+data class HentAbonnerteInntekterBolkRequest(
+    val filter: String,
+    val filterVersjon: String?,
+    val formaal: String,
+    val liste: List<AbonnerteInntekterIdentOgPeriode>
+)
