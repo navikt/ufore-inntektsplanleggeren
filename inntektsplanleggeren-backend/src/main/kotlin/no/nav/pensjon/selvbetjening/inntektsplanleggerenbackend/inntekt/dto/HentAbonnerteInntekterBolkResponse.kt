@@ -4,12 +4,12 @@ import java.time.YearMonth
 
 data class HentAbonnerteInntekterBolkResponse(
     val abonnerteInntekterPerIdentListe: List<AbonnerteInntekterPerIdent>,
-    val unntakForIdentListe: List<UnntakForIdent>
+    val unntakForIdentListe: List<UnntakForIdent>?
 )
 
 data class AbonnerteInntekterPerIdent(
     val ident: Aktoer,
-    val abonnerteInntekterMaanedListe: List<AbonnerteInntekterMaaned> = emptyList()
+    var abonnerteInntekterMaanedListe: List<AbonnerteInntekterMaaned>? = emptyList()
 )
 
 data class SumOpplysningspliktig(
@@ -31,8 +31,8 @@ data class UnntakForIdent(
 )
 
 data class HentAbonnerteInntekterBolkRequest(
-    val filter: String,
-    val filterVersjon: String?,
+    val ainntektsfilter: String,
+    val filterversjon: String?,
     val formaal: String,
-    val liste: List<AbonnerteInntekterIdentOgPeriode>
+    val abonnerteInntekterIdentOgPeriodeListe: List<AbonnerteInntekterIdentOgPeriode>
 )
