@@ -154,7 +154,7 @@ class InntektService(
 
         inntektOgYtelsePerIdentList.forEach { person ->
             if (person.abonnerteInntekterMaanedListe == null) {
-                person.abonnerteInntekterMaanedListe = emptyList()              //TODO: Ikke den meste elegante løsningen
+                person.abonnerteInntekterMaanedListe = emptyList() //TODO: Ikke den meste elegante løsningen
             }
             inntektYtelseMap[person.ident.identifikator] =
                 person.abonnerteInntekterMaanedListe!!.flatMap { convertAbonnertInntektToMaanedsinntekter(it) }
