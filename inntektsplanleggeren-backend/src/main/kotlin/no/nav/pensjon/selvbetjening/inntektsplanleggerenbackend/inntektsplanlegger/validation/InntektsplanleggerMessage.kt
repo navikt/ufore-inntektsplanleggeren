@@ -41,7 +41,7 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
     ),
     MISSING_RELEVANT_INNTEKTER_WHEN_BARNETILLEGG(
         InntektsplanleggerMessageType.ERROR,
-        "Inntekt fra andre ytelser og pensjon fra utlandet må oppgis når bruker har barnetillegg for fellesbarn eller særkullsbarn. hvis bruker ikke har noen inntekter for disse kategoriene, skal 0 sendes inn."
+        "Inntekt fra andre ytelser og pensjon fra utlandet må oppgis når bruker har barnetillegg for fellesbarn eller særkullsbarn. Hvis bruker ikke har noen inntekter for disse kategoriene, skal 0 sendes inn."
     ),
     EPS_INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG_FELLESBARN(
         InntektsplanleggerMessageType.ERROR,
