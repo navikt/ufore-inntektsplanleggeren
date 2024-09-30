@@ -124,7 +124,7 @@ class InntektService(
         barnetilleggFellesbarn: Boolean,
         barnetilleggSaerkullsbarn: Boolean,
     ): Map<String, List<Maanedsinntekt>> =
-        fetchInntekter(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, "UFOERE_A_INNTEKT")
+        fetchInntekter(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, "UfoereA-Inntekt")
 
     private fun fetchPensjonFraAndreEnnFolketrygden(
         pid: String,
@@ -133,7 +133,7 @@ class InntektService(
         barnetilleggSaerkullsbarn: Boolean,
     ): Map<String, List<Maanedsinntekt>> =
         if (barnetilleggFellesbarn || barnetilleggSaerkullsbarn) {
-            fetchInntekter(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, "UFOERE_BT_A_INNTEKT")
+            fetchInntekter(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, "UfoereBarnetilleggA-inntekt")
         } else emptyMap()
 
     private fun fetchInntekter(
@@ -153,8 +153,11 @@ class InntektService(
         val inntektYtelseMap = mutableMapOf<String, List<Maanedsinntekt>>()
 
         inntektOgYtelsePerIdentList.forEach { person ->
+            if (person.abonnerteInntekterMaanedListe == null) {
+                person.abonnerteInntekterMaanedListe = emptyList() //TODO: Ikke den meste elegante løsningen
+            }
             inntektYtelseMap[person.ident.identifikator] =
-                person.abonnerteInntekterMaanedListe.flatMap { convertAbonnertInntektToMaanedsinntekter(it) }
+                person.abonnerteInntekterMaanedListe!!.flatMap { convertAbonnertInntektToMaanedsinntekter(it) }
         }
 
         return inntektYtelseMap
@@ -221,9 +224,9 @@ class InntektService(
 
     private fun decideFormal(isBarnetillegg: Boolean) =
         if (isBarnetillegg) {
-            "UFOERETRYGDBARNETILLEGG"
+            "Ufoeretrygdbarnetillegg"
         } else {
-            "UFOERE"
+            "Ufoeretrygd"
         }
 
 
