@@ -42,3 +42,34 @@ export type EndreSamboerforholdRequest = {
 export type SubmitInntektRequest = {
     inntekt: InntektInnfylling
 }
+
+export type InntektDetaljer = {
+    maned: number;
+    belop: number;
+    inntektsgivere: string[];
+};
+
+export type ForventetInntekt = {
+    belop: number;
+    status: string;
+};
+
+export type ForventedeInntekter = {
+    arbeidsinntekt: ForventetInntekt;
+    andrePensjonsgivendeYtelser: ForventetInntekt;
+    naeringsinntekt: ForventetInntekt;
+    inntektUtland: ForventetInntekt;
+    pensjonUtland: ForventetInntekt;
+};
+
+export type ForventedeInntekterResponse = {
+    bruker: ForventedeInntekter;
+    eps: ForventedeInntekter;
+};
+
+export type ApiResponse = {
+    arbeidsinntektOgYtelserHittilIAar: InntektDetaljer[];
+    pensjonFraAndreHittilIAar: InntektDetaljer[];
+    forventedeInntekter: ForventedeInntekterResponse;
+    uforeHeleAaret: boolean;
+};

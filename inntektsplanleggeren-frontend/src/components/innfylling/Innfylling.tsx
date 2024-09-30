@@ -6,6 +6,7 @@ import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
 import {PersonInntekt} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
+import {InntektDetaljer} from "@/api/model/ApiRequests";
 
 
 
@@ -42,7 +43,7 @@ export const Innfylling = () => {
     return (
         <VStack gap="4">
             <Heading level="2" size="small">Din inntekt hittil i år</Heading>
-            <DinInntektTable/>
+            <DinInntektTable data={data}/>
 
             <Heading level="2" size="small">Din forventede intekter i ({selectedYear})</Heading>
 
@@ -77,3 +78,35 @@ export const Innfylling = () => {
         </VStack>
     );
 };
+
+const data = [
+    {
+        "maned": 5,
+        "belop": 53426.0,
+        "inntektsgivere": [
+        "Veterinær AS",
+        "Grønnsakssuppekjøkkenet AS"
+    ]
+    },
+    {
+        "maned": 6,
+        "belop": 34543.0,
+        "inntektsgivere": [
+        "Isbilen AS"
+    ]
+    },
+    {
+        "maned": 7,
+        "belop": 54001.0,
+        "inntektsgivere": [
+        "Veterinær AS"
+    ]
+    },
+    {
+        "maned": 8,
+        "belop": 7641.0,
+        "inntektsgivere": [
+        "Veterinær AS"
+    ]
+    }
+    ];

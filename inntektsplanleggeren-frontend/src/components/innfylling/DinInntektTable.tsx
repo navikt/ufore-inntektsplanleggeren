@@ -1,8 +1,9 @@
 import { ExternalLinkIcon } from "@navikt/aksel-icons";
 import { BodyLong, ExpansionCard, Label, Link, Table } from "@navikt/ds-react";
-import "./DinInntektTable.css"; // Import the CSS file
+import "./DinInntektTable.css";
+import {InntektDetaljer} from "@/api/model/ApiRequests"; // Import the CSS file
 
-export const DinInntektTable = () => {
+export const DinInntektTable = (props : {data: InntektDetaljer[]}) => {
     return (
         <div className="grid gap-6">
             <ExpansionCard size="small" aria-label="Small-variant med description" className="expansion-card-gray">
@@ -13,14 +14,15 @@ export const DinInntektTable = () => {
                     </ExpansionCard.Description>
                 </ExpansionCard.Header>
                 <ExpansionCard.Content>
-                    <Innhold />
+                    <Innhold data={props.data} />
                 </ExpansionCard.Content>
             </ExpansionCard>
         </div>
     );
 };
 
-const Innhold = () => {
+
+const Innhold = (props : {data: InntektDetaljer[]}) => {
     return (
         <Table>
             <Table.Header>
@@ -31,29 +33,14 @@ const Innhold = () => {
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {data.map(({ name, fnr, start }, i) => (
-                    <Table.Row key={i + fnr}>
-                        <Table.HeaderCell scope="row">{name}</Table.HeaderCell>
-                        <Table.DataCell>{fnr}</Table.DataCell>
-                        <Table.DataCell>{start}</Table.DataCell>
+                {props.data.map(({ maned, belop, inntektsgivere }, i) => (
+                    <Table.Row key={i}>
+                        <Table.HeaderCell scope="row">{maned}</Table.HeaderCell>
+                        <Table.DataCell>{belop} kr</Table.DataCell>
+                        <Table.DataCell>{inntektsgivere.join(", ")}</Table.DataCell>
                     </Table.Row>
                 ))}
             </Table.Body>
         </Table>
     );
 };
-
-const format = (date: Date) => {
-    const y = date.getFullYear();
-    const m = (date.getMonth() + 1).toString().padStart(2, "0");
-    const d = date.getDate().toString().padStart(2, "0");
-    return `${d}.${m}.${y}`;
-};
-
-const data = [
-    { name: "Januar", fnr: "21 280 kr", start: "Milano restaurant, NAV " },
-    { name: "Februar", fnr: "21 280 kr", start: "Milano restaurant, NAV " },
-    { name: "Mars", fnr: "21 280 kr", start: "Milano restaurant" },
-    { name: "April", fnr: "21 280 kr", start: "Milano restaurant" },
-    { name: "Mai", fnr: "21 280 kr", start: "Milano restaurant" }
-];
