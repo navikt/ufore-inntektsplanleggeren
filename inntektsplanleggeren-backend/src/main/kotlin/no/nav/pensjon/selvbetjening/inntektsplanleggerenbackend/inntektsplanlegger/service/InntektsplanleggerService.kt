@@ -31,6 +31,8 @@ class InntektsplanleggerService(
             simuleringsAar
         )
 
+        //TODO: Kall simuleringstjeneste i PEN og inkluder resultatet i responsen. (ikke kall simulering i PEN hvis valideringen returnerer ERROR)
+
         return SimuleringResponse(validationResult, null)
     }
 

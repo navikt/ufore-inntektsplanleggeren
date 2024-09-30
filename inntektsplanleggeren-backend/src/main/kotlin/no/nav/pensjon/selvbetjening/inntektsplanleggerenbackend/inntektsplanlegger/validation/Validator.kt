@@ -7,6 +7,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Ma
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.Month
 import java.util.stream.Collectors
 
 @Service
@@ -31,6 +33,10 @@ class Validator(private val inntektService: InntektService) {
         barnetilleggSaerkullsbarn: Boolean,
         simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
+        val monthValidation = validateMonth(simuleringsaar)
+        if (monthValidation != null) {
+            return listOf(monthValidation)
+        }
         val validationMessages = mutableListOf<InntektsplanleggerMessage>()
         validationMessages.addAll(validateUserInitialData(initialPensjonsdata))
         validationMessages.addAll(
@@ -47,6 +53,14 @@ class Validator(private val inntektService: InntektService) {
         return validationMessages
     }
 
+    private fun validateMonth(simuleringsaar: Int): InntektsplanleggerMessage? {
+        val today = LocalDate.now()
+        if (today.year == simuleringsaar && today.month == Month.DECEMBER) {
+            return InntektsplanleggerMessage(InntektsplanleggerMessageCode.ILLEGAL_MONTH_DECEMBER_THIS_YEAR)
+        }
+        return null
+    }
+
     private fun validateInntekter(
         pid: String,
         inputInntektData: ForventedeInntekter,
@@ -58,6 +72,13 @@ class Validator(private val inntektService: InntektService) {
         val messages = mutableListOf<InntektsplanleggerMessage>()
 
         messages.addAll(validateInntektValidity(inputInntektData))
+        messages.addAll(
+            validateInntektAndBarnetillegg(
+                barnetilleggFellesbarn,
+                barnetilleggSaerkullsbarn,
+                inputInntektData
+            )
+        )
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
@@ -79,7 +100,35 @@ class Validator(private val inntektService: InntektService) {
 
         validateInntektStatus(forventedeInntekter)?.let { messages.add(it) }
         validateEpsInntektChanged(inputInntektData, forventedeInntekter)?.let { messages.add(it) }
+        return messages
+    }
 
+    private fun validateInntektAndBarnetillegg(
+        barnetilleggFellesbarn: Boolean,
+        barnetilleggSaerkullsbarn: Boolean,
+        inputInntektData: ForventedeInntekter
+    ): List<InntektsplanleggerMessage> {
+        val messages = mutableListOf<InntektsplanleggerMessage>()
+
+        val hasBarnetillegg = barnetilleggFellesbarn || barnetilleggSaerkullsbarn
+
+        if (!hasBarnetillegg && (inputInntektData.bruker.andrePensjonsgivendeYtelser != null || inputInntektData.bruker.pensjonUtland != null)) {
+            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG))
+        } else if (hasBarnetillegg && (inputInntektData.bruker.andrePensjonsgivendeYtelser == null || inputInntektData.bruker.pensjonUtland == null)) {
+            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.MISSING_RELEVANT_INNTEKTER_WHEN_BARNETILLEGG))
+        }
+
+        if (!barnetilleggFellesbarn && inputInntektData.eps != null) {
+            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.EPS_INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG_FELLESBARN))
+        } else if (barnetilleggFellesbarn &&
+            (inputInntektData.eps?.arbeidsinntekt == null
+                    || inputInntektData.eps.naeringsinntekt == null
+                    || inputInntektData.eps.inntektUtland == null
+                    || inputInntektData.eps.pensjonUtland == null
+                    || inputInntektData.eps.andrePensjonsgivendeYtelser == null)
+        ) {
+            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN))
+        }
         return messages
     }
 
@@ -87,51 +136,68 @@ class Validator(private val inntektService: InntektService) {
         val messages = mutableListOf<InntektsplanleggerMessage>()
         validateInntektFieldValueValidity(
             inputInntektData.bruker.arbeidsinntekt,
-            FieldReference.ARBEIDSINNTEKT_BRUKER
+            FieldReference.ARBEIDSINNTEKT_BRUKER,
+            false
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.bruker.naeringsinntekt,
-            FieldReference.NAERINGSINNTEKT_BRUKER
+            FieldReference.NAERINGSINNTEKT_BRUKER,
+            false
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.bruker.inntektUtland,
-            FieldReference.INNTEKT_UTLAND_BRUKER
+            FieldReference.INNTEKT_UTLAND_BRUKER,
+            false
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.bruker.pensjonUtland,
-            FieldReference.PENSJON_UTLAND_BRUKER
+            FieldReference.PENSJON_UTLAND_BRUKER,
+            true
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.bruker.andrePensjonsgivendeYtelser,
-            FieldReference.ANDRE_YTELSER_BRUKER
+            FieldReference.ANDRE_YTELSER_BRUKER,
+            true
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.eps?.arbeidsinntekt,
-            FieldReference.ARBEIDSINNTEKT_EPS
+            FieldReference.ARBEIDSINNTEKT_EPS,
+            true
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.eps?.naeringsinntekt,
-            FieldReference.NAERINGSINNTEKT_EPS
+            FieldReference.NAERINGSINNTEKT_EPS,
+            true
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.eps?.inntektUtland,
-            FieldReference.INNTEKT_UTLAND_EPS
+            FieldReference.INNTEKT_UTLAND_EPS,
+            true
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.eps?.pensjonUtland,
-            FieldReference.PENSJON_UTLAND_EPS
+            FieldReference.PENSJON_UTLAND_EPS,
+            true
         )?.let { messages.add(it) }
         validateInntektFieldValueValidity(
             inputInntektData.eps?.andrePensjonsgivendeYtelser,
-            FieldReference.ANDRE_YTELSER_EPS
+            FieldReference.ANDRE_YTELSER_EPS,
+            true
         )?.let { messages.add(it) }
         return messages
     }
 
     private fun validateInntektFieldValueValidity(
         fieldValue: Int?,
-        fieldReference: FieldReference
+        fieldReference: FieldReference,
+        canBeNull: Boolean
     ): InntektsplanleggerMessage? {
+        if (fieldValue == null && !canBeNull) {
+            return InntektsplanleggerMessage(
+                messageCode = InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL,
+                metadata = mapOf(MetadataKey.AFFECTED_FIELD to fieldReference.name)
+            )
+        }
         if (fieldValue != null && fieldValue < 0) {
             return InntektsplanleggerMessage(
                 messageCode = InntektsplanleggerMessageCode.ILLEGAL_INNTEKT_FIELD_VALUE,

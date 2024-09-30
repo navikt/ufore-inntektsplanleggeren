@@ -5,4 +5,4 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 data class SimuleringResponse(val messages: List<InntektsplanleggerMessage>,
                               val data: Simuleringsresultat?)
 
-data class Simuleringsresultat(val temp: String)
+data class Simuleringsresultat(val temp: String) //TODO: Implement this
