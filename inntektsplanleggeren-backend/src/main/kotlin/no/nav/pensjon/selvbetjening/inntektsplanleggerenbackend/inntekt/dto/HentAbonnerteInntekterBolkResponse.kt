@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto
 import java.time.YearMonth
 
 data class HentAbonnerteInntekterBolkResponse(
-    val abonnerteInntekterPerIdentListe: List<AbonnerteInntekterPerIdent>,
+    val abonnerteInntekterPerIdentListe: List<AbonnerteInntekterPerIdent>?,
     val unntakForIdentListe: List<UnntakForIdent>?
 )
 
