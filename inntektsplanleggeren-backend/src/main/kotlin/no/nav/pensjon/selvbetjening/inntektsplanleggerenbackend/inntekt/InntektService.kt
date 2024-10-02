@@ -223,63 +223,33 @@ class InntektService(
         val onlyBenyttedeInntekter =
             allForventedeInntekterRelatedToPid.filter { it.hendelse == Inntektshendelse.BENYTTET.code }
 
-        val sumInntekter = listOfNotNull(
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.ARBEIDSINNTEKT_BRUKER.code
-            ),
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.NAERINGSINNTEKT_BRUKER.code
-            ),
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.UTENLANDSINNTEKT_BRUKER.code
-            )
-        ).sumOf { it.belop }
-
-        val sumYtelserAndPensjon = if (hasBarnetillegg) {
-            listOfNotNull(
-                getMostRecentInntektOfTypeAsPersoninntekt(
-                    onlyBenyttedeInntekter,
-                    Inntektstype.ANDRE_YTELSER_BRUKER.code
-                ),
-                getMostRecentInntektOfTypeAsPersoninntekt(
-                    onlyBenyttedeInntekter,
-                    Inntektstype.PENSJON_UTLAND_BRUKER.code
-                )
-            ).sumOf { it.belop }
-        } else 0
-
-        return sumInntekter + sumYtelserAndPensjon
+        return listOfNotNull(
+            Inntektstype.ARBEIDSINNTEKT_BRUKER,
+            Inntektstype.NAERINGSINNTEKT_BRUKER,
+            Inntektstype.UTENLANDSINNTEKT_BRUKER,
+            if (hasBarnetillegg) {
+                Inntektstype.ANDRE_YTELSER_BRUKER
+            } else null,
+            if (hasBarnetillegg) {
+                Inntektstype.PENSJON_UTLAND_BRUKER
+            } else null
+        )
+            .mapNotNull { getMostRecentInntektOfTypeAsPersoninntekt(onlyBenyttedeInntekter, it.code) }
+            .sumOf { it.belop }
     }
 
     private fun calculateSumBenyttedeInntekterEps(allForventedeInntekterRelatedToPid: List<ForventetInntekt>): Int {
         val onlyBenyttedeInntekter =
             allForventedeInntekterRelatedToPid.filter { it.hendelse == Inntektshendelse.BENYTTET.code }
-
-        return listOfNotNull(
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.ARBEIDSINNTEKT_EPS.code
-            ),
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.NAERINGSINNTEKT_EPS.code
-            ),
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.UTENLANDSINNTEKT_EPS.code
-            ),
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.ANDRE_YTELSER_EPS.code
-            ),
-            getMostRecentInntektOfTypeAsPersoninntekt(
-                onlyBenyttedeInntekter,
-                Inntektstype.PENSJON_UTLAND_EPS.code
-            )
-        ).sumOf { it.belop }
+        return listOf(
+            Inntektstype.ARBEIDSINNTEKT_EPS,
+            Inntektstype.NAERINGSINNTEKT_EPS,
+            Inntektstype.UTENLANDSINNTEKT_EPS,
+            Inntektstype.ANDRE_YTELSER_EPS,
+            Inntektstype.PENSJON_UTLAND_EPS
+        )
+            .mapNotNull { getMostRecentInntektOfTypeAsPersoninntekt(onlyBenyttedeInntekter, it.code) }
+            .sumOf { it.belop }
     }
 
     private fun getMostRecentInntektOfTypeAsPersoninntekt(
@@ -385,7 +355,10 @@ class InntektService(
         pensjonsdata: Pensjonsdata
     ): List<AbonnerteInntekterIdentOgPeriode> =
         if (pensjonsdata.hasEpsWithFellesbarn()) {
-            listOf(createAbonnerteInntekterIdentOgPeriode(pid), createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!))
+            listOf(
+                createAbonnerteInntekterIdentOgPeriode(pid),
+                createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!)
+            )
         } else {
             listOf(createAbonnerteInntekterIdentOgPeriode(pid))
         }
