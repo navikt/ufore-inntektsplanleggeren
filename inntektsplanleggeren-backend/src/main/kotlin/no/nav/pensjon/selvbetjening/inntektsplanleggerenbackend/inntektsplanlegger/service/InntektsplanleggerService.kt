@@ -79,7 +79,7 @@ class InntektsplanleggerService(
                 kompensasjonsgrad = pensjonsdata.kompensasjonsgrad,
                 grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,
                 hasGjenlevendeTillegg = pensjonsdata.hasGjenlevendeTillegg,
-                hasBarneTillegg = pensjonsdata.barnetilleggFellesbarn || pensjonsdata.barnetilleggSaerkullsbarn,
+                hasBarneTillegg = pensjonsdata.hasBarnetillegg(),
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
                 aktuelleAar = getAktuelleAar(
                     pensjonsdata.hasLopendeUforeVedtakThisYear,

@@ -21,3 +21,11 @@ data class Inntektsgrunnlag(
     val changeStamp: String? = null,
     val version: Int? = null
 )
+
+enum class InntektsgrunnlagType(val code: String) {
+    ARBEIDSINNTEKT("FORINTARB"),
+    NAERINGSINNTEKT(""),
+    INNTEKT_UTLAND(""),
+    PENSJON_UTLAND(""),
+    ANDRE_YTELSER("")
+}

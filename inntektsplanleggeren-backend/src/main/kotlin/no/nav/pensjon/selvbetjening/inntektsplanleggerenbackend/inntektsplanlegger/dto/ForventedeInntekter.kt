@@ -8,4 +8,7 @@ data class PersonInntekter(
     val naeringsinntekt: Int?,
     val inntektUtland: Int?,
     val pensjonUtland: Int?
-)
+) {
+    fun sum(): Int =
+        listOfNotNull(arbeidsinntekt, andrePensjonsgivendeYtelser, naeringsinntekt, inntektUtland, pensjonUtland).sum()
+}

@@ -4,6 +4,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister.E
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -51,104 +52,176 @@ class InntektService(
             ).forventetInntektListe
                 ?.filter { it.hendelse != Inntektshendelse.VARSLET.code }
 
+        val forventedeInntekter = if (pensjonsdata.hasOpenKravWithInntekter()) {
+            getForventedeInntekterFromAapentKrav(pensjonsdata)
+        } else {
+            getForventedeInntekterFromInntektskomponent(
+                allForventedeInntekterRelatedToPid,
+                pensjonsdata
+            )
+        }
+
         return ForventedeInntekterSummary(
-            ForventedeInntekter(
-                bruker = PersonInntekter(
+            forventedeInntekter,
+            allForventedeInntekterRelatedToPid?.let {
+                calculateSumBenyttedeInntekterBruker(it, hasBarnetillegg)
+            } ?: 0,
+            if (pensjonsdata.hasEpsWithFellesbarn()) {
+                allForventedeInntekterRelatedToPid?.let { calculateSumBenyttedeInntekterEps(it) } ?: 0
+            } else null
+        )
+    }
+
+    private fun getForventedeInntekterFromAapentKrav(
+        pensjonsdata: Pensjonsdata
+    ): ForventedeInntekter {
+        val inntektsgrunnlagFromKravBruker = pensjonsdata.inntekterFromOpenKravBruker
+        val inntektsgrunnlagFromKravEps = pensjonsdata.inntekterFromOpenKravEps
+        return ForventedeInntekter(
+            bruker = PersonInntekter(
+                arbeidsinntekt = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                    inntektsgrunnlagFromKravBruker!!,
+                    InntektsgrunnlagType.ARBEIDSINNTEKT
+                ),
+                naeringsinntekt = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                    inntektsgrunnlagFromKravBruker,
+                    InntektsgrunnlagType.NAERINGSINNTEKT
+                ),
+                inntektUtland = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                    inntektsgrunnlagFromKravBruker,
+                    InntektsgrunnlagType.INNTEKT_UTLAND
+                ),
+                pensjonUtland = if (pensjonsdata.hasBarnetillegg()) {
+                    getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravBruker,
+                        InntektsgrunnlagType.PENSJON_UTLAND
+                    )
+                } else null,
+                andrePensjonsgivendeYtelser = if (pensjonsdata.hasBarnetillegg()) {
+                    getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravBruker,
+                        InntektsgrunnlagType.ANDRE_YTELSER
+                    )
+                } else null
+            ),
+            eps = if (pensjonsdata.hasEpsWithFellesbarn()) {
+                PersonInntekter(
+                    arbeidsinntekt = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravEps!!,
+                        InntektsgrunnlagType.ARBEIDSINNTEKT
+                    ),
+                    naeringsinntekt = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravEps,
+                        InntektsgrunnlagType.NAERINGSINNTEKT
+                    ),
+                    inntektUtland = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravEps,
+                        InntektsgrunnlagType.INNTEKT_UTLAND
+                    ),
+                    pensjonUtland = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravEps,
+                        InntektsgrunnlagType.PENSJON_UTLAND
+                    ),
+                    andrePensjonsgivendeYtelser = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+                        inntektsgrunnlagFromKravEps,
+                        InntektsgrunnlagType.ANDRE_YTELSER
+                    )
+                )
+            } else null
+        )
+    }
+
+    private fun getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
+        inntektsgrunnlagListe: List<Inntektsgrunnlag>,
+        type: InntektsgrunnlagType
+    ): Personinntekt {
+        val belop = inntektsgrunnlagListe.sortedByDescending { it.endringstidspunkt }
+            .firstOrNull { it.bruk && type.code == it.inntektType }?.belop ?: 0
+        return Personinntekt(belop, Inntektshendelse.REGISTRERT)
+    }
+
+    private fun getForventedeInntekterFromInntektskomponent(
+        allForventedeInntekterRelatedToPid: List<ForventetInntekt>?,
+        pensjonsdata: Pensjonsdata
+    ): ForventedeInntekter {
+        return ForventedeInntekter(
+            bruker = PersonInntekter(
+                arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
+                    getMostRecentInntektOfTypeAsPersoninntekt(
+                        it,
+                        Inntektstype.ARBEIDSINNTEKT_BRUKER.code
+                    )
+                },
+                naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
+                    getMostRecentInntektOfTypeAsPersoninntekt(
+                        it,
+                        Inntektstype.NAERINGSINNTEKT_BRUKER.code
+                    )
+                },
+                inntektUtland = allForventedeInntekterRelatedToPid?.let {
+                    getMostRecentInntektOfTypeAsPersoninntekt(
+                        it,
+                        Inntektstype.UTENLANDSINNTEKT_BRUKER.code
+                    )
+                },
+                andrePensjonsgivendeYtelser = if (pensjonsdata.hasBarnetillegg()) {
+                    allForventedeInntekterRelatedToPid?.let {
+                        getMostRecentInntektOfTypeAsPersoninntekt(
+                            it,
+                            Inntektstype.ANDRE_YTELSER_BRUKER.code
+                        )
+                    }
+                } else null,
+                pensjonUtland = if (pensjonsdata.hasBarnetillegg()) {
+                    allForventedeInntekterRelatedToPid?.let {
+                        getMostRecentInntektOfTypeAsPersoninntekt(
+                            it,
+                            Inntektstype.PENSJON_UTLAND_BRUKER.code
+                        )
+                    }
+                } else null,
+            ),
+            eps = if (pensjonsdata.hasEpsWithFellesbarn()) {
+                PersonInntekter(
                     arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
                         getMostRecentInntektOfTypeAsPersoninntekt(
                             it,
-                            Inntektstype.ARBEIDSINNTEKT_BRUKER.code
+                            Inntektstype.ARBEIDSINNTEKT_EPS.code
                         )
                     },
                     naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
                         getMostRecentInntektOfTypeAsPersoninntekt(
                             it,
-                            Inntektstype.NAERINGSINNTEKT_BRUKER.code
+                            Inntektstype.NAERINGSINNTEKT_EPS.code
                         )
                     },
                     inntektUtland = allForventedeInntekterRelatedToPid?.let {
                         getMostRecentInntektOfTypeAsPersoninntekt(
                             it,
-                            Inntektstype.UTENLANDSINNTEKT_BRUKER.code
+                            Inntektstype.UTENLANDSINNTEKT_EPS.code
                         )
                     },
-                    andrePensjonsgivendeYtelser = if (hasBarnetillegg) {
-                        allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.ANDRE_YTELSER_BRUKER.code
-                            )
-                        }
-                    } else null,
-                    pensjonUtland = if (hasBarnetillegg) {
-                        allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.PENSJON_UTLAND_BRUKER.code
-                            )
-                        }
-                    } else null,
-                ),
-                eps = if (pensjonsdata.epsPid != null && pensjonsdata.barnetilleggFellesbarn) {
-                    PersonInntekter(
-                        arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.ARBEIDSINNTEKT_EPS.code
-                            )
-                        },
-                        naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.NAERINGSINNTEKT_EPS.code
-                            )
-                        },
-                        inntektUtland = allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.UTENLANDSINNTEKT_EPS.code
-                            )
-                        },
-                        andrePensjonsgivendeYtelser = allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.ANDRE_YTELSER_EPS.code
-                            )
-                        },
-                        pensjonUtland = allForventedeInntekterRelatedToPid?.let {
-                            getMostRecentInntektOfTypeAsPersoninntekt(
-                                it,
-                                Inntektstype.PENSJON_UTLAND_EPS.code
-                            )
-                        }
-                    )
-                } else null
-            ), allForventedeInntekterRelatedToPid?.let {
-                calculateSumBenyttedeInntekterBruker(
-                    it,
-                    pensjonsdata.inntekterFromOpenKrav,
-                    hasBarnetillegg
+                    andrePensjonsgivendeYtelser = allForventedeInntekterRelatedToPid?.let {
+                        getMostRecentInntektOfTypeAsPersoninntekt(
+                            it,
+                            Inntektstype.ANDRE_YTELSER_EPS.code
+                        )
+                    },
+                    pensjonUtland = allForventedeInntekterRelatedToPid?.let {
+                        getMostRecentInntektOfTypeAsPersoninntekt(
+                            it,
+                            Inntektstype.PENSJON_UTLAND_EPS.code
+                        )
+                    }
                 )
-            } ?: 0,
-            if (pensjonsdata.epsPid != null && pensjonsdata.barnetilleggFellesbarn) {
-                allForventedeInntekterRelatedToPid?.let { calculateSumBenyttedeInntekterEps(it) } ?: 0
             } else null
         )
     }
 
     private fun calculateSumBenyttedeInntekterBruker(
         allForventedeInntekterRelatedToPid: List<ForventetInntekt>,
-        inntekterFromOpenKrav: List<Inntektsgrunnlag>?,
         hasBarnetillegg: Boolean
     ): Int {
-        if (!inntekterFromOpenKrav.isNullOrEmpty()) {
-            val sortedInntekter = inntekterFromOpenKrav.sortedByDescending { it.endringstidspunkt }
-            val arbeidsinntekt = sortedInntekter.firstOrNull { it.bruk && it.inntektType == "FORINTARB" }
-            val naeringsinntekt = sortedInntekter.firstOrNull { it.bruk && it.inntektType == "FORINTNAE" }
-            val inntektUtland = sortedInntekter.firstOrNull { it.bruk && it.inntektType == "FORINTUTL" }
-
-            return listOf(arbeidsinntekt, naeringsinntekt, inntektUtland).sumOf { it?.belop ?: 0 }
-        }
 
         val onlyBenyttedeInntekter =
             allForventedeInntekterRelatedToPid.filter { it.type == Inntektshendelse.BENYTTET.code }
@@ -344,6 +417,4 @@ class InntektService(
         } else {
             "Ufoere"
         }
-
-
 }

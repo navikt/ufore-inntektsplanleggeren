@@ -13,7 +13,7 @@ data class Simuleringsresultat(
     val barnetillegg: BeforeAndAfterValues?,
     val gjenlevendetillegg: BeforeAndAfterValues?,
     val sum: BeforeAndAfterValues,
-    val uforetrygdPerMaaned: Double
+    val uforetrygdPerMaaned: Int
 )
 
-data class BeforeAndAfterValues(val before: Double, val after: Double)
+data class BeforeAndAfterValues(val before: Int, val after: Int)

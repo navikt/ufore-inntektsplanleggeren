@@ -54,9 +54,11 @@ class PenClient(
             false,
             true,
             null,
+            null,
             null)
     }
 
+    //TODO: Should be removed
     fun fetchInitialInntektsplanleggerPensjonsdata(pid: String): InitialInntektsplanleggerPensjonsdata? {
         val path = "/pen/api/selvbetjening/inntektsplanleggeren/initial"
         try {

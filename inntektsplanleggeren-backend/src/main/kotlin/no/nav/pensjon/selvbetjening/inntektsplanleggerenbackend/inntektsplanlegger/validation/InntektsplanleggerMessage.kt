@@ -29,7 +29,7 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
     ),
     EPS_INNTEKT_CHANGED(
         InntektsplanleggerMessageType.WARNING,
-        "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var registrert som EPS sin inntekt."
+        "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt."
     ),
     ILLEGAL_MONTH_DECEMBER_THIS_YEAR(
         InntektsplanleggerMessageType.ERROR,

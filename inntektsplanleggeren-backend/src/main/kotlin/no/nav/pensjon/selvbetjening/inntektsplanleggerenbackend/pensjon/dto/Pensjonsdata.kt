@@ -12,5 +12,14 @@ data class Pensjonsdata(
     val barnetilleggSaerkullsbarn: Boolean,
     val barnetilleggFellesbarn: Boolean,
     val epsPid: String?,
-    val inntekterFromOpenKrav: List<Inntektsgrunnlag>?
-)
+    val inntekterFromOpenKravBruker: List<Inntektsgrunnlag>?,
+    val inntekterFromOpenKravEps: List<Inntektsgrunnlag>?
+) {
+
+    fun hasBarnetillegg() = barnetilleggFellesbarn || barnetilleggSaerkullsbarn
+
+    fun hasEpsWithFellesbarn() = epsPid != null && barnetilleggFellesbarn
+
+    fun hasOpenKravWithInntekter() =
+        inntekterFromOpenKravBruker != null && ((epsPid != null && inntekterFromOpenKravEps != null) || (epsPid == null && inntekterFromOpenKravEps == null))
+}

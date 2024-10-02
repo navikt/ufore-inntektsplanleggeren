@@ -90,10 +90,7 @@ class Validator(private val inntektService: InntektService) {
 
         val forventedeInntekter = inntektService.getForventedeInntekter(
             pid,
-            pensjonsdata.epsPid,
-            pensjonsdata.barnetilleggFellesbarn,
-            pensjonsdata.barnetilleggSaerkullsbarn,
-            pensjonsdata. inntekterFromOpenKrav,
+            pensjonsdata,
             simuleringsaar
         ).mostRecentForventedeInntekterRegistrertAndBenyttet
 
