@@ -123,13 +123,15 @@ class InntektService(
                         }
                     )
                 } else null
-            ), calculateSumBenyttedeInntekterBruker(
-                allForventedeInntekterRelatedToPid,
-                pensjonsdata.inntekterFromOpenKrav,
-                hasBarnetillegg
-            ),
+            ), allForventedeInntekterRelatedToPid?.let {
+                calculateSumBenyttedeInntekterBruker(
+                    it,
+                    pensjonsdata.inntekterFromOpenKrav,
+                    hasBarnetillegg
+                )
+            } ?: 0,
             if (pensjonsdata.epsPid != null && pensjonsdata.barnetilleggFellesbarn) {
-                calculateSumBenyttedeInntekterEps(allForventedeInntekterRelatedToPid)
+                allForventedeInntekterRelatedToPid?.let { calculateSumBenyttedeInntekterEps(it) } ?: 0
             } else null
         )
     }
