@@ -44,7 +44,6 @@ class InntektService(
         pensjonsdata: Pensjonsdata,
         simuleringsaar: Int
     ): ForventedeInntekterSummary {
-        val hasBarnetillegg = pensjonsdata.barnetilleggFellesbarn || pensjonsdata.barnetilleggSaerkullsbarn
         val allForventedeInntekterRelatedToPid =
             inntektskomponentClient.hentForventetInntekt(
                 pid,
@@ -64,7 +63,7 @@ class InntektService(
         return ForventedeInntekterSummary(
             forventedeInntekter,
             allForventedeInntekterRelatedToPid?.let {
-                calculateSumBenyttedeInntekterBruker(it, hasBarnetillegg)
+                calculateSumBenyttedeInntekterBruker(it, pensjonsdata.hasBarnetillegg())
             } ?: 0,
             if (pensjonsdata.hasEpsWithFellesbarn()) {
                 allForventedeInntekterRelatedToPid?.let { calculateSumBenyttedeInntekterEps(it) } ?: 0
