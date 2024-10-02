@@ -1,10 +1,15 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Inntektshendelse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter
+
+data class ForventedeInntekterSummary(
+    val mostRecentForventedeInntekterRegistrertAndBenyttet: ForventedeInntekter,
+    val sumBenyttedeInntekterBruker: Int,
+    val sumBenyttedeInntekterEps: Int?
+)
 
 data class ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?) {
-    fun toDto(): ForventedeInntekter = ForventedeInntekter(
+    fun toDto(): no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter = no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter(
         no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.PersonInntekter(
             arbeidsinntekt = this.bruker.arbeidsinntekt?.belop,
             andrePensjonsgivendeYtelser = this.bruker.andrePensjonsgivendeYtelser?.belop,

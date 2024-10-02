@@ -8,6 +8,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.GrunnlagForInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -25,9 +27,34 @@ class PenClient(
     private val tokenService: TokenService
 ) {
 
-    fun fetchGrunnlagForInntekter(pid: String): GrunnlagForInntekter {
-        //TODO: Implement this
-        return GrunnlagForInntekter(false, true, false, "00000000001")
+    fun simulerInntektsendring(): SimulerEndringUforetrygdResponse {
+        return SimulerEndringUforetrygdResponse(
+            false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+    }
+
+    fun fetchInntektsplanleggerData(pid: String): Pensjonsdata? {
+        return Pensjonsdata(
+            20000,
+            43093.0,
+            500434,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            null,
+            null)
     }
 
     fun fetchInitialInntektsplanleggerPensjonsdata(pid: String): InitialInntektsplanleggerPensjonsdata? {
@@ -45,7 +72,7 @@ class PenClient(
                         .retrieve()
                         .bodyToMono(InitialInntektsplanleggerPensjonsdata::class.java)
                         .block()
-                }?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
+                } ?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
         } catch (e: WebClientResponseException) {
             if (HttpStatus.FORBIDDEN == e.statusCode) {
                 throw ForbiddenException(AppId.PEN.name, path, e.message, e)

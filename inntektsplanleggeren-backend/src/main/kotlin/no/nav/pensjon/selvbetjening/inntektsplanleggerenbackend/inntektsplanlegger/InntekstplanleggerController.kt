@@ -9,6 +9,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.Securit
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("api")
@@ -20,7 +21,7 @@ class InntektsplanleggerController(
     fun getInntektsplanleggerenInitialData(): ResponseEntity<InntektsplanleggerenInitialResponse> {
         return try {
             ResponseEntity(
-                inntektsPlanleggerService.constructInitialInntektsplanleggerResponse(SecurityContextUtil.getPidFromContext()),
+                inntektsPlanleggerService.constructInitialInntektsplanleggerResponse(SecurityContextUtil.getPidFromContext(), LocalDate.now().year),
                 HttpStatus.OK
             )
         } catch (exception: Exception) {

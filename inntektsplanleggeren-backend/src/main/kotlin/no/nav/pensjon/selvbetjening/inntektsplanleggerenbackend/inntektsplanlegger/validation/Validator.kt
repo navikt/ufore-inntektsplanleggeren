@@ -6,6 +6,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.In
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
@@ -13,24 +15,21 @@ import java.util.stream.Collectors
 
 @Service
 class Validator(private val inntektService: InntektService) {
-    fun validateUserInitialData(initialPensjonsdata: InitialInntektsplanleggerPensjonsdata?): List<InntektsplanleggerMessage> {
-        if (initialPensjonsdata == null) {
+    fun validateUserInitialData(pensjonsdata: Pensjonsdata?): List<InntektsplanleggerMessage> {
+        if (pensjonsdata == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
         }
 
-        if (!initialPensjonsdata.hasLopendeUforeVedtakNextYear && !initialPensjonsdata.hasLopendeUforeVedtakThisYear) {
+        if (!pensjonsdata.hasLopendeUforeVedtakNextYear && !pensjonsdata.hasLopendeUforeVedtakThisYear) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET))
         }
         return emptyList()
     }
 
     fun validateUserAndInputBeforeSimulering(
-        initialPensjonsdata: InitialInntektsplanleggerPensjonsdata?,
+        pensjonsdata: Pensjonsdata?,
         inputInntektData: ForventedeInntekter,
         pid: String,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean,
-        barnetilleggSaerkullsbarn: Boolean,
         simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
         val monthValidation = validateMonth(simuleringsaar)
@@ -38,17 +37,18 @@ class Validator(private val inntektService: InntektService) {
             return listOf(monthValidation)
         }
         val validationMessages = mutableListOf<InntektsplanleggerMessage>()
-        validationMessages.addAll(validateUserInitialData(initialPensjonsdata))
-        validationMessages.addAll(
-            validateInntekter(
-                pid,
-                inputInntektData,
-                epsPid,
-                barnetilleggFellesbarn,
-                barnetilleggSaerkullsbarn,
-                simuleringsaar
+        validationMessages.addAll(validateUserInitialData(pensjonsdata))
+        if (pensjonsdata != null) {
+            validationMessages.addAll(
+                validateInntekter(
+                    pid,
+                    inputInntektData,
+                    pensjonsdata,
+                    simuleringsaar
+                )
             )
-        )
+        }
+
 
         return validationMessages
     }
@@ -64,9 +64,7 @@ class Validator(private val inntektService: InntektService) {
     private fun validateInntekter(
         pid: String,
         inputInntektData: ForventedeInntekter,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean,
-        barnetilleggSaerkullsbarn: Boolean,
+        pensjonsdata: Pensjonsdata,
         simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
         val messages = mutableListOf<InntektsplanleggerMessage>()
@@ -74,17 +72,17 @@ class Validator(private val inntektService: InntektService) {
         messages.addAll(validateInntektValidity(inputInntektData))
         messages.addAll(
             validateInntektAndBarnetillegg(
-                barnetilleggFellesbarn,
-                barnetilleggSaerkullsbarn,
+                pensjonsdata.barnetilleggFellesbarn,
+                pensjonsdata.barnetilleggSaerkullsbarn,
                 inputInntektData
             )
         )
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
-            epsPid,
-            barnetilleggFellesbarn,
-            barnetilleggSaerkullsbarn,
+            pensjonsdata.epsPid,
+            pensjonsdata.barnetilleggFellesbarn,
+            pensjonsdata.barnetilleggSaerkullsbarn,
             simuleringsaar
         )
 
@@ -92,11 +90,12 @@ class Validator(private val inntektService: InntektService) {
 
         val forventedeInntekter = inntektService.getForventedeInntekter(
             pid,
-            epsPid,
-            barnetilleggFellesbarn,
-            barnetilleggSaerkullsbarn,
+            pensjonsdata.epsPid,
+            pensjonsdata.barnetilleggFellesbarn,
+            pensjonsdata.barnetilleggSaerkullsbarn,
+            pensjonsdata. inntekterFromOpenKrav,
             simuleringsaar
-        )
+        ).mostRecentForventedeInntekterRegistrertAndBenyttet
 
         validateInntektStatus(forventedeInntekter)?.let { messages.add(it) }
         validateEpsInntektChanged(inputInntektData, forventedeInntekter)?.let { messages.add(it) }

@@ -2,7 +2,18 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
 
-data class SimuleringResponse(val messages: List<InntektsplanleggerMessage>,
-                              val data: Simuleringsresultat?)
+data class SimuleringResponse(
+    val messages: List<InntektsplanleggerMessage>,
+    val result: Simuleringsresultat?
+)
 
-data class Simuleringsresultat(val temp: String) //TODO: Implement this
+data class Simuleringsresultat(
+    val uforetrygd: BeforeAndAfterValues,
+    val forventetInntekt: BeforeAndAfterValues,
+    val barnetillegg: BeforeAndAfterValues?,
+    val gjenlevendetillegg: BeforeAndAfterValues?,
+    val sum: BeforeAndAfterValues,
+    val uforetrygdPerMaaned: Double
+)
+
+data class BeforeAndAfterValues(val before: Double, val after: Double)

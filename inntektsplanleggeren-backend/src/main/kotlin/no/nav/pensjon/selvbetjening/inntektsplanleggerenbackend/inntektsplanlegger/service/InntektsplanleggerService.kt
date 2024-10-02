@@ -6,7 +6,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
@@ -15,19 +15,16 @@ import java.time.Month
 class InntektsplanleggerService(
     val penClient: PenClient,
     val validator: Validator,
-    val inntektService: InntektService
+    val inntektService: InntektService,
+    val simuleringService: SimuleringService
 ) {
 
     fun simulerInntektsendring(pid: String, simuleringsAar: Int, inntekter: ForventedeInntekter): SimuleringResponse {
-        val initalPensjonsdata = penClient.fetchInitialInntektsplanleggerPensjonsdata(pid) //TODO: Vurder å effektivisere ved at disse to PEN-kallene slås sammen, kanskje?
-        val inntektGrunnlagsdata = penClient.fetchGrunnlagForInntekter(pid)
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)
         val validationResult = validator.validateUserAndInputBeforeSimulering(
-            initalPensjonsdata,
+            pensjonsdata,
             inntekter,
             pid,
-            inntektGrunnlagsdata.epsPid,
-            inntektGrunnlagsdata.barnetilleggFellesbarn,
-            inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
             simuleringsAar
         )
 
@@ -36,13 +33,13 @@ class InntektsplanleggerService(
         return SimuleringResponse(validationResult, null)
     }
 
-    fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse {
-        val inntektGrunnlagsdata = penClient.fetchGrunnlagForInntekter(pid)
+    fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
-            inntektGrunnlagsdata.epsPid,
-            inntektGrunnlagsdata.barnetilleggFellesbarn,
-            inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
+            pensjonsdata.epsPid,
+            pensjonsdata.barnetilleggFellesbarn,
+            pensjonsdata.barnetilleggSaerkullsbarn,
             simuleringsaar
         )
 
@@ -51,41 +48,42 @@ class InntektsplanleggerService(
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
             forventedeInntekter = inntektService.getForventedeInntekter(
                 pid,
-                inntektGrunnlagsdata.epsPid,
-                inntektGrunnlagsdata.barnetilleggFellesbarn,
-                inntektGrunnlagsdata.barnetilleggSaerkullsbarn,
+                pensjonsdata,
                 simuleringsaar
-            ).toDto(),
-            uforeHeleAaret = inntektGrunnlagsdata.uforeHeleAaret
+            ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto(),
+            uforeHeleAaret = pensjonsdata.uforeHeleAaret
         )
     }
 
-    fun constructInitialInntektsplanleggerResponse(pid: String): InntektsplanleggerenInitialResponse {
-        val initalPensjonsdata = penClient.fetchInitialInntektsplanleggerPensjonsdata(pid)
-        val messages = validator.validateUserInitialData(initalPensjonsdata)
+    fun constructInitialInntektsplanleggerResponse(pid: String, simuleringsaar: Int): InntektsplanleggerenInitialResponse {
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)
+        val messages = validator.validateUserInitialData(pensjonsdata)
         return InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(initalPensjonsdata, messages)
+            mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, messages)
         )
     }
 
     private fun mapInntektsplanleggerenInitialData(
-        initalPensjonsdata: InitialInntektsplanleggerPensjonsdata?,
+        pid: String,
+        pensjonsdata: Pensjonsdata?,
+        simuleringsaar: Int,
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
-        if (initalPensjonsdata != null && messages.isEmpty()) {
+        if (pensjonsdata != null && messages.isEmpty()) {
+            val forventedeInntekter = inntektService.getForventedeInntekter(pid, pensjonsdata, simuleringsaar)
             return InntektsplanleggerenInitialData(
-                forventetInntekt = initalPensjonsdata.forventetInntekt,
-                forventetInntektAnnenForelder = initalPensjonsdata.forventetInntektAnnenForelder,
-                inntektsgrense = initalPensjonsdata.inntektsgrense,
-                kompensasjonsgrad = initalPensjonsdata.kompensasjonsgrad,
-                grenseStoppAvUfoeretrygd = initalPensjonsdata.grenseStoppAvUfoeretrygd,
-                hasGjenlevendeTillegg = initalPensjonsdata.hasGjenlevendeTillegg,
-                hasBarneTillegg = initalPensjonsdata.hasBarneTillegg,
-                hasVarigTilrettelagtArbeid = initalPensjonsdata.hasVarigTilrettelagtArbeid,
+                forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
+                forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps,
+                inntektsgrense = pensjonsdata.inntektsgrense,
+                kompensasjonsgrad = pensjonsdata.kompensasjonsgrad,
+                grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,
+                hasGjenlevendeTillegg = pensjonsdata.hasGjenlevendeTillegg,
+                hasBarneTillegg = pensjonsdata.barnetilleggFellesbarn || pensjonsdata.barnetilleggSaerkullsbarn,
+                hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
                 aktuelleAar = getAktuelleAar(
-                    initalPensjonsdata.hasLopendeUforeVedtakThisYear,
-                    initalPensjonsdata.hasLopendeUforeVedtakNextYear
+                    pensjonsdata.hasLopendeUforeVedtakThisYear,
+                    pensjonsdata.hasLopendeUforeVedtakNextYear
                 )
             )
         }

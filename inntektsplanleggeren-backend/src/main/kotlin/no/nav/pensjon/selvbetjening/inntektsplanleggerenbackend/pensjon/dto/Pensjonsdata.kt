@@ -1,14 +1,16 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto
 
-data class InitialInntektsplanleggerPensjonsdata(
-    val forventetInntekt: Int,
-    val forventetInntektAnnenForelder: Int? = null,
+data class Pensjonsdata(
     val inntektsgrense: Int,
     val kompensasjonsgrad: Double,
     val grenseStoppAvUfoeretrygd: Int,
     val hasLopendeUforeVedtakThisYear: Boolean,
     val hasLopendeUforeVedtakNextYear: Boolean,
     val hasVarigTilrettelagtArbeid: Boolean,
-    val hasBarneTillegg: Boolean,
-    val hasGjenlevendeTillegg: Boolean
+    val hasGjenlevendeTillegg: Boolean,
+    val uforeHeleAaret: Boolean,
+    val barnetilleggSaerkullsbarn: Boolean,
+    val barnetilleggFellesbarn: Boolean,
+    val epsPid: String?,
+    val inntekterFromOpenKrav: List<Inntektsgrunnlag>?
 )
