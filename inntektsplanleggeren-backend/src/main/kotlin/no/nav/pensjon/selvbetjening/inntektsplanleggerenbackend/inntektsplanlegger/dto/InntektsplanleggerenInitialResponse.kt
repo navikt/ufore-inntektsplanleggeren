@@ -9,8 +9,8 @@ data class InntektsplanleggerenInitialResponse(
 
 
 data class InntektsplanleggerenInitialData(
-    val forventetInntekt: Int, //TODO: Denne utledes feil i PEN, bør utledes her ved hjelp av inntektskomponenten fremfor via PEN.
-    val forventetInntektAnnenForelder: Int? = null, //TODO: Denne utledes feil i PEN, bør utledes her ved hjelp av inntektskomponenten fremfor via PEN.
+    val forventetInntekt: Int,
+    val forventetInntektAnnenForelder: Int? = null,
     val inntektsgrense: Int,
     val kompensasjonsgrad: Double,
     val grenseStoppAvUfoeretrygd: Int,
