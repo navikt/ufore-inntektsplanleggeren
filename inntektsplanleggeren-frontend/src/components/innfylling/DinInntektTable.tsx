@@ -1,16 +1,17 @@
 import { ExternalLinkIcon } from "@navikt/aksel-icons";
 import { BodyLong, ExpansionCard, Label, Link, Table } from "@navikt/ds-react";
 import "./DinInntektTable.css";
-import {InntektDetaljer} from "@/api/model/ApiRequests"; // Import the CSS file
+import {InntektDetaljer} from "@/api/model/ApiRequests";
+import {Month} from "@/common/MonthEnum";
+import {numberFormat} from "@/common/Utils"; // Import the CSS file
 
 export const DinInntektTable = (props : {data: InntektDetaljer[]}) => {
     return (
         <div className="grid gap-6">
             <ExpansionCard size="small" aria-label="Small-variant med description" className="expansion-card-gray">
                 <ExpansionCard.Header>
-                    <ExpansionCard.Title>Utbetaling av sykepenger</ExpansionCard.Title>
                     <ExpansionCard.Description>
-                        Du er registerert som mottaker av sykepenger fra NAV
+                        Du har mottatt {numberFormat(belopSum(props.data))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
                     </ExpansionCard.Description>
                 </ExpansionCard.Header>
                 <ExpansionCard.Content>
@@ -21,8 +22,7 @@ export const DinInntektTable = (props : {data: InntektDetaljer[]}) => {
     );
 };
 
-
-const Innhold = (props : {data: InntektDetaljer[]}) => {
+const Innhold = (props: { data: InntektDetaljer[] }) => {
     return (
         <Table>
             <Table.Header>
@@ -35,12 +35,22 @@ const Innhold = (props : {data: InntektDetaljer[]}) => {
             <Table.Body>
                 {props.data.map(({ maned, belop, inntektsgivere }, i) => (
                     <Table.Row key={i}>
-                        <Table.HeaderCell scope="row">{maned}</Table.HeaderCell>
-                        <Table.DataCell>{belop} kr</Table.DataCell>
+                        <Table.HeaderCell scope="row">{Month[maned]}</Table.HeaderCell>
+                        <Table.DataCell>{numberFormat(belop)} kr</Table.DataCell>
                         <Table.DataCell>{inntektsgivere.join(", ")}</Table.DataCell>
                     </Table.Row>
                 ))}
+                <Table.Row>
+                    <Table.DataCell colSpan={4}>
+                        <Table.HeaderCell scope="row">Sum hittil i år</Table.HeaderCell>
+                        <Table.DataCell>{numberFormat(belopSum(props.data))} kr</Table.DataCell>
+                    </Table.DataCell>
+                </Table.Row>
             </Table.Body>
         </Table>
     );
 };
+
+function  belopSum(data: InntektDetaljer[]): number {
+    return data.reduce((acc, { belop }) => acc + belop, 0);
+}

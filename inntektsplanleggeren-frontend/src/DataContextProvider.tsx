@@ -1,7 +1,7 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {
     DisplayData,
-    hentDisplayData,
+    getInntektsgrense,
     Message,
 } from "@/api/apiFetching";
 
@@ -90,7 +90,7 @@ function DataContextProvider(props: DataContextProviderProps) {
                 if (refetch) {
                     try {
                         setLoading(true)
-                        const inntektsPlannleggerResponse = await hentDisplayData()
+                        const inntektsPlannleggerResponse = await getInntektsgrense()
                         setDisplayData(inntektsPlannleggerResponse.data)
                         // setInitialWarningBox(inntektsPlannleggerResponse.messages)
 

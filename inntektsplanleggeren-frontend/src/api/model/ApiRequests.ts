@@ -51,7 +51,6 @@ export type InntektDetaljer = {
 
 export type ForventetInntekt = {
     belop: number;
-    status: string;
 };
 
 export type ForventedeInntekter = {
@@ -67,7 +66,7 @@ export type ForventedeInntekterResponse = {
     eps: ForventedeInntekter;
 };
 
-export type ApiResponse = {
+export type InntekterResponse = {
     arbeidsinntektOgYtelserHittilIAar: InntektDetaljer[];
     pensjonFraAndreHittilIAar: InntektDetaljer[];
     forventedeInntekter: ForventedeInntekterResponse;
