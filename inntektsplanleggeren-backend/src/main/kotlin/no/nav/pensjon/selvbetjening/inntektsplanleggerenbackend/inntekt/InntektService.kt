@@ -221,7 +221,7 @@ class InntektService(
     ): Int {
 
         val onlyBenyttedeInntekter =
-            allForventedeInntekterRelatedToPid.filter { it.type == Inntektshendelse.BENYTTET.code }
+            allForventedeInntekterRelatedToPid.filter { it.hendelse == Inntektshendelse.BENYTTET.code }
 
         val sumInntekter = listOfNotNull(
             getMostRecentInntektOfTypeAsPersoninntekt(
@@ -256,7 +256,7 @@ class InntektService(
 
     private fun calculateSumBenyttedeInntekterEps(allForventedeInntekterRelatedToPid: List<ForventetInntekt>): Int {
         val onlyBenyttedeInntekter =
-            allForventedeInntekterRelatedToPid.filter { it.type == Inntektshendelse.BENYTTET.code }
+            allForventedeInntekterRelatedToPid.filter { it.hendelse == Inntektshendelse.BENYTTET.code }
 
         return listOfNotNull(
             getMostRecentInntektOfTypeAsPersoninntekt(
