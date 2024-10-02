@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 data class HentForventetInntektResponse (
     val norskident: String?,
-    val forventetInntektListe: List<ForventetInntekt> = emptyList(),
+    val forventetInntektListe: List<ForventetInntekt>? = emptyList(),
 )
 
 data class ForventetInntekt (
