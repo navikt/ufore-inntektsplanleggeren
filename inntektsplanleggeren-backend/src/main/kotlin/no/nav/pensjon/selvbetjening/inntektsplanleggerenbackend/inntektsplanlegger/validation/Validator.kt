@@ -2,11 +2,10 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Inntektshendelse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.InntekterHittilIAar
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InitialInntektsplanleggerPensjonsdata
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -28,7 +27,8 @@ class Validator(private val inntektService: InntektService) {
 
     fun validateUserAndInputBeforeSimulering(
         pensjonsdata: Pensjonsdata?,
-        inputInntektData: ForventedeInntekter,
+        oppgitteForventedeInntekter: ForventedeInntekter,
+        registrerteForventedeInntekter: ForventedeInntekterSummary?,
         pid: String,
         simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
@@ -42,8 +42,9 @@ class Validator(private val inntektService: InntektService) {
             validationMessages.addAll(
                 validateInntekter(
                     pid,
-                    inputInntektData,
+                    oppgitteForventedeInntekter,
                     pensjonsdata,
+                    registrerteForventedeInntekter,
                     simuleringsaar
                 )
             )
@@ -63,18 +64,19 @@ class Validator(private val inntektService: InntektService) {
 
     private fun validateInntekter(
         pid: String,
-        inputInntektData: ForventedeInntekter,
+        oppgitteForventedeInntekter: ForventedeInntekter,
         pensjonsdata: Pensjonsdata,
+        registrerteForventedeInntekter: ForventedeInntekterSummary?,
         simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
         val messages = mutableListOf<InntektsplanleggerMessage>()
 
-        messages.addAll(validateInntektValidity(inputInntektData))
+        messages.addAll(validateInntektValidity(oppgitteForventedeInntekter))
         messages.addAll(
             validateInntektAndBarnetillegg(
                 pensjonsdata.barnetilleggFellesbarn,
                 pensjonsdata.barnetilleggSaerkullsbarn,
-                inputInntektData
+                oppgitteForventedeInntekter
             )
         )
 
@@ -84,16 +86,17 @@ class Validator(private val inntektService: InntektService) {
             simuleringsaar
         )
 
-        messages.addAll(validateInntektInputMatchingInntektHittilIAar(inputInntektData, inntekterHittilIAar))
+        messages.addAll(validateInntektInputMatchingInntektHittilIAar(oppgitteForventedeInntekter, inntekterHittilIAar))
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(
-            pid,
-            pensjonsdata,
-            simuleringsaar
-        ).mostRecentForventedeInntekterRegistrertAndBenyttet
+        val forventedeInntekter = registrerteForventedeInntekter?.mostRecentForventedeInntekterRegistrertAndBenyttet
+            ?: inntektService.getForventedeInntekter(
+                pid,
+                pensjonsdata,
+                simuleringsaar
+            ).mostRecentForventedeInntekterRegistrertAndBenyttet
 
         validateInntektStatus(forventedeInntekter)?.let { messages.add(it) }
-        validateEpsInntektChanged(inputInntektData, forventedeInntekter)?.let { messages.add(it) }
+        validateEpsInntektChanged(oppgitteForventedeInntekter, forventedeInntekter)?.let { messages.add(it) }
         return messages
     }
 

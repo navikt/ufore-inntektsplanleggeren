@@ -4,6 +4,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Ma
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
@@ -13,22 +14,36 @@ import java.time.Month
 
 @Service
 class InntektsplanleggerService(
-    val penClient: PenClient,
-    val validator: Validator,
-    val inntektService: InntektService,
-    val simuleringService: SimuleringService
+    private val penClient: PenClient,
+    private val validator: Validator,
+    private val inntektService: InntektService,
+    private val simuleringService: SimuleringService
 ) {
 
-    fun simulerInntektsendring(pid: String, simuleringsAar: Int, inntekter: ForventedeInntekter): SimuleringResponse {
+    fun simulerInntektsendring(
+        pid: String,
+        simuleringsAar: Int,
+        oppgitteInntekter: ForventedeInntekter
+    ): SimuleringResponse? {
         val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)
+        val gjeldendeForventedeInntekter =
+            pensjonsdata?.let { inntektService.getForventedeInntekter(pid, it, simuleringsAar) }
         val validationResult = validator.validateUserAndInputBeforeSimulering(
             pensjonsdata,
-            inntekter,
+            oppgitteInntekter,
+            gjeldendeForventedeInntekter,
             pid,
             simuleringsAar
         )
-
-        //TODO: Kall simuleringstjeneste i PEN og inkluder resultatet i responsen. (ikke kall simulering i PEN hvis valideringen returnerer ERROR)
+        if (validationResult.none { it.type == InntektsplanleggerMessageType.ERROR }) {
+            return SimuleringResponse(
+                validationResult,
+                simuleringService.simulerInntektsendring(
+                    forventedeInntekterOppgitt = oppgitteInntekter,
+                    forventedeInntekter = gjeldendeForventedeInntekter!!
+                )
+            )
+        }
 
         return SimuleringResponse(validationResult, null)
     }
