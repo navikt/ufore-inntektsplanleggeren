@@ -34,12 +34,10 @@ class InntektsplanleggerService(
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)?: return null
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
-            pensjonsdata.epsPid,
-            pensjonsdata.barnetilleggFellesbarn,
-            pensjonsdata.barnetilleggSaerkullsbarn,
+            pensjonsdata,
             simuleringsaar
         )
 
@@ -55,7 +53,10 @@ class InntektsplanleggerService(
         )
     }
 
-    fun constructInitialInntektsplanleggerResponse(pid: String, simuleringsaar: Int): InntektsplanleggerenInitialResponse {
+    fun constructInitialInntektsplanleggerResponse(
+        pid: String,
+        simuleringsaar: Int
+    ): InntektsplanleggerenInitialResponse {
         val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)
         val messages = validator.validateUserInitialData(pensjonsdata)
         return InntektsplanleggerenInitialResponse(

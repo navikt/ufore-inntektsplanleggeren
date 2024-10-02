@@ -80,9 +80,7 @@ class Validator(private val inntektService: InntektService) {
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
-            pensjonsdata.epsPid,
-            pensjonsdata.barnetilleggFellesbarn,
-            pensjonsdata.barnetilleggSaerkullsbarn,
+            pensjonsdata,
             simuleringsaar
         )
 

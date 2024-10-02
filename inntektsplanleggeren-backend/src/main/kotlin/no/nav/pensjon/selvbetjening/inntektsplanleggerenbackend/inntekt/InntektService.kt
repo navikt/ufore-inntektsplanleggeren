@@ -18,24 +18,22 @@ class InntektService(
 ) {
     fun getInntekterHittilIAar(
         pid: String,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean,
-        barnetilleggSaerkullsbarn: Boolean,
+        pensjonsdata: Pensjonsdata,
         simuleringsaar: Int
     ): InntekterHittilIAar {
         if (LocalDate.now().year != simuleringsaar) {
             return InntekterHittilIAar(emptyList(), emptyList(), emptyList(), emptyList())
         }
         val arbeidsinntekterOgPensjonsgivendeYtelser =
-            fetchArbeidsinntektOgPensjonsgivendeYtelser(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn)
+            fetchArbeidsinntektOgPensjonsgivendeYtelser(pid, pensjonsdata)
         val pensjonFraAndreEnnFolketrygden =
-            fetchPensjonFraAndreEnnFolketrygden(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn)
+            fetchPensjonFraAndreEnnFolketrygden(pid, pensjonsdata)
 
         return InntekterHittilIAar(
             arbeidsinntektOgPensjonsgivendeYtelser = arbeidsinntekterOgPensjonsgivendeYtelser[pid] ?: emptyList(),
             pensjonerFraAndreEnnFolketrygden = pensjonFraAndreEnnFolketrygden[pid] ?: emptyList(),
-            arbeidsinntektOgPensjonsgivendeYtelserEps = arbeidsinntekterOgPensjonsgivendeYtelser[epsPid],
-            pensjonerFraAndreEnnFolketrygdenEps = pensjonFraAndreEnnFolketrygden[epsPid]
+            arbeidsinntektOgPensjonsgivendeYtelserEps = arbeidsinntekterOgPensjonsgivendeYtelser[pensjonsdata.epsPid],
+            pensjonerFraAndreEnnFolketrygdenEps = pensjonFraAndreEnnFolketrygden[pensjonsdata.epsPid]
         )
     }
 
@@ -302,40 +300,32 @@ class InntektService(
 
     private fun fetchArbeidsinntektOgPensjonsgivendeYtelser(
         pid: String,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean,
-        barnetilleggSaerkullsbarn: Boolean,
+        pensjonsdata: Pensjonsdata,
     ): Map<String, List<Maanedsinntekt>> =
-        fetchInntekter(pid, epsPid, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, "UfoereA-Inntekt")
+        fetchInntekter(pid, pensjonsdata, "UfoereA-Inntekt")
 
     private fun fetchPensjonFraAndreEnnFolketrygden(
         pid: String,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean,
-        barnetilleggSaerkullsbarn: Boolean,
+        pensjonsdata: Pensjonsdata,
     ): Map<String, List<Maanedsinntekt>> =
-        if (barnetilleggFellesbarn || barnetilleggSaerkullsbarn) {
+        if (pensjonsdata.hasBarnetillegg()) {
             fetchInntekter(
                 pid,
-                epsPid,
-                barnetilleggFellesbarn,
-                barnetilleggSaerkullsbarn,
+                pensjonsdata,
                 "UfoereBarnetilleggA-inntekt"
             )
         } else emptyMap()
 
     private fun fetchInntekter(
         pid: String,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean,
-        barnetilleggSaerkullsbarn: Boolean,
+        pensjonsdata: Pensjonsdata,
         inntektFilterCode: String
     ): Map<String, List<Maanedsinntekt>> {
         val inntektOgYtelsePerIdentList = inntektskomponentClient
             .hentAbonnerteInntekterBolk(
-                constructAbonnerteInntekterIdentOgPerioder(pid, epsPid, barnetilleggFellesbarn),
+                constructAbonnerteInntekterIdentOgPerioder(pid, pensjonsdata),
                 inntektFilterCode,
-                decideFormal(barnetilleggFellesbarn || barnetilleggSaerkullsbarn)
+                decideFormal(pensjonsdata.hasBarnetillegg())
             )
             .abonnerteInntekterPerIdentListe
         val inntektYtelseMap = mutableMapOf<String, List<Maanedsinntekt>>()
@@ -392,11 +382,10 @@ class InntektService(
 
     private fun constructAbonnerteInntekterIdentOgPerioder(
         pid: String,
-        epsPid: String?,
-        barnetilleggFellesbarn: Boolean
+        pensjonsdata: Pensjonsdata
     ): List<AbonnerteInntekterIdentOgPeriode> =
-        if (barnetilleggFellesbarn && epsPid != null) {
-            listOf(createAbonnerteInntekterIdentOgPeriode(pid), createAbonnerteInntekterIdentOgPeriode(epsPid))
+        if (pensjonsdata.hasEpsWithFellesbarn()) {
+            listOf(createAbonnerteInntekterIdentOgPeriode(pid), createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!))
         } else {
             listOf(createAbonnerteInntekterIdentOgPeriode(pid))
         }
