@@ -8,5 +8,6 @@ enum class AppId(
     SKJERMING(false, false),
     PEN(true, false),
     PDL(true, false),
-    INNTEKTSKOMPONENTEN(false, false)
+    INNTEKTSKOMPONENTEN(false, false),
+    EREG(false, false)
 }

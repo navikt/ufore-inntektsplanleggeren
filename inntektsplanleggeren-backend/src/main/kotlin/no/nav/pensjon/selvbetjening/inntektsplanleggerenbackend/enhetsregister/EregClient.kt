@@ -6,6 +6,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.ge
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister.dto.Organisasjon
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -39,13 +40,16 @@ class EregClient(
                         .block())?.navn?.sammensattnavn ?: organisasjonsnummer
 
         } catch (e: WebClientResponseException) {
-            if (HttpStatus.NOT_FOUND == e.statusCode) {
-                logger.warn("404 fra ereg-services, organisasjon ikke funnet - orgnr: $organisasjonsnummer")
-                return organisasjonsnummer
+            when (e.statusCode) {
+                HttpStatus.NOT_FOUND -> {
+                    logger.warn("404 fra ereg-services, organisasjon ikke funnet - orgnr: $organisasjonsnummer")
+                    return organisasjonsnummer
+                }
+                HttpStatus.FORBIDDEN -> throw ForbiddenException(AppId.EREG.name, path, e.message, e)
+                else -> throw ClientException(AppId.EREG.name, path, e.message, e)
             }
-            throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
         } catch (e: Exception) {
-            throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+            throw ClientException(AppId.EREG.name, path, e.message, e)
         }
     }
 }
