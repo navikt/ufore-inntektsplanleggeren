@@ -10,7 +10,10 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Hent
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.HentForventetInntektResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -26,6 +29,8 @@ class InntektskomponentClient(
     private val webClient: WebClient,
     private val tokenService: TokenService,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(InntektskomponentClient::class.java)
+
     fun hentForventetInntekt(
         pid: String,
         inntektsAar: List<Int>
@@ -48,10 +53,14 @@ class InntektskomponentClient(
                         .block()!!
                 }
         } catch (e: WebClientResponseException) {
-            if (HttpStatus.FORBIDDEN == e.statusCode) {
-                throw ForbiddenException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+            when (e.statusCode) {
+                HttpStatus.FORBIDDEN -> throw ForbiddenException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+                HttpStatus.NOT_FOUND  -> throw PersonNotFoundException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+                HttpStatus.BAD_REQUEST  -> {
+                    logger.error("Bad request "+ e.responseBodyAsString)
+                    throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)}
+                else -> throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
             }
-            throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
         } catch (e: Exception) {
             throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
         }
@@ -85,10 +94,14 @@ class InntektskomponentClient(
                         .block()!!
                 }
         } catch (e: WebClientResponseException) {
-            if (HttpStatus.FORBIDDEN == e.statusCode) {
-                throw ForbiddenException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+            when (e.statusCode) {
+                HttpStatus.FORBIDDEN -> throw ForbiddenException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+                HttpStatus.NOT_FOUND  -> throw PersonNotFoundException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+                HttpStatus.BAD_REQUEST  -> {
+                    logger.error("Bad request "+ e.responseBodyAsString)
+                    throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)}
+                else -> throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
             }
-            throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
         } catch (e: Exception) {
             throw ClientException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
         }
