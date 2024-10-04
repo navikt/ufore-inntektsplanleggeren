@@ -6,8 +6,7 @@ import {FormContainer} from "@/form-container";
 import {Innfylling} from "@/components/innfylling/Innfylling";
 import {Beregning} from "@/components/beregning/Beregning";
 import {Oppsummering} from "@/components/oppsummering/Oppsummering";
-import {DisplayData} from "@/api/apiFetching";
-import DataContextProvider from "@/DataContextProvider";
+import {Kvittering} from "@/components/kvittering/Kvittering";
 
 export const AppRoutes = (
 ) => {
@@ -23,6 +22,7 @@ export const AppRoutes = (
                             <Route path="/forventede-inntekter" element={<Innfylling />} />
                             <Route path="/beregning" element={<Beregning />} />
                             <Route path="/oppsummering" element={<Oppsummering />} />
+                            <Route path="/kvittering" element={<Kvittering />} />
                         </Route>
                     {/*</Route>*/}
                 </Route>

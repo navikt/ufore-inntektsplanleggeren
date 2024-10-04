@@ -1,4 +1,4 @@
-import {Button, Heading} from "@navikt/ds-react";
+import {Button, Heading, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
@@ -9,15 +9,15 @@ export const Beregning = () => {
     setFormStep(2)
 
     return (
-        <>
-            {/*<Heading level="2" size="small">Din inntekt og uføretrygd før skatt i {year}</Heading>*/}
+        <VStack>
+            {/*<Heading level="2" size="small">Din inntekt og uføretrygd før skatt i </Heading>*/}
 
             <Button as={Link} to="/forventede-inntekter" variant="secondary">
                 Tilbake
             </Button>
             <Button as={Link} to="/oppsummering" variant="primary">
-                Oppsummering
+                Send inn
             </Button>
-        </>
+        </VStack>
     );
 };

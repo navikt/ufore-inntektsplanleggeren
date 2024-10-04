@@ -1,4 +1,4 @@
-import {BodyLong, Button, FormSummary, Heading} from "@navikt/ds-react";
+import {BodyLong, Button, FormSummary, Heading, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
@@ -7,12 +7,12 @@ export const Oppsummering = () => {
     const { selectedYear, personInntektSum, annenForelderInntektSum } = useContext(FormStateContext);
 
     const { setFormStep } = useContext(FormStateContext);
-    setFormStep(2)
+    setFormStep(3)
 
     const send = () => undefined; // TODO: Implement.
 
     return (
-        <>
+        <VStack gap="5">
             <BodyLong>Sjekk at opplysningene du har oppgitt er riktige. [Reskrive det neste] Opplysningene gjelder bare for uføretrygden du får fra oss.
                 Hvis du har tjenestepensjon, må du kontakte tjenestepensjonsordningen du tilhører.</BodyLong>
             <FormSummary>
@@ -26,9 +26,9 @@ export const Oppsummering = () => {
             <Button as={Link} to="/beregning" variant="secondary">
                 Tilbake
             </Button>
-            <Button onClick={() => send()} variant="primary">
+            <Button onClick={() => send()} as={Link} to="/kvittering" variant="primary">
                 Send
             </Button>
-        </>
+        </VStack>
     );
 };

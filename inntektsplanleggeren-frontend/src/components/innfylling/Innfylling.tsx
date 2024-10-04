@@ -16,20 +16,21 @@ export const Innfylling = () => {
     const { selectedYear, setSelectedYear, setPersoninntekt, setAnnenForelderInntekt, personInntektSum, annenForelderInntektSum, formData, setFormStep } = useContext(FormStateContext);
     const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({});
-    const [inntektData, setInntektData] = useState<InntekterResponse>();
+    const [inntektResponse, setInntektResponse] = useState<InntekterResponse>();
 
     setFormStep(1);
 
     useEffect(() => {
         if (year) {
             setSelectedYear(year);
-            getInntekter(year).then(data => setInntektData(data));
+            getInntekter(year).then(data => setInntektResponse(data));
         }
     }, [year, setSelectedYear]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
+
     };
 
     if (!year) {
@@ -37,30 +38,29 @@ export const Innfylling = () => {
     }
 
     return (
-        <VStack gap="4">
+        <VStack className="form-container">
             <Heading level="2" size="small">Din inntekt hittil i år</Heading>
-            {(inntektData && inntektData.arbeidsinntektOgYtelserHittilIAar) && <DinInntektTable data={inntektData.arbeidsinntektOgYtelserHittilIAar}/>}
-            {(inntektData && inntektData.pensjonFraAndreHittilIAar) && <DinInntektTable data={inntektData.pensjonFraAndreHittilIAar}/>}
-
-            <Heading level="2" size="small">Din forventede intekter i ({selectedYear})</Heading>
+            {(inntektResponse && inntektResponse.arbeidsinntektOgYtelserHittilIAar) && <DinInntektTable data={inntektResponse.arbeidsinntektOgYtelserHittilIAar}/>}
+            {(inntektResponse && inntektResponse.pensjonFraAndreHittilIAar) && <DinInntektTable data={inntektResponse.pensjonFraAndreHittilIAar}/>}
 
             <form onSubmit={handleSubmit}>
-                <HStack>
+                <VStack className="innfylling-container">
+                    <Heading level="2" size="small">Din forventede intekter i ({selectedYear})</Heading>
                     <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt} inntektSum={personInntektSum}/>
-                </HStack>
+                </VStack>
 
                 {isAnnenForelder && <>
-                    <Heading level="2" size="small">Den forventede Iintekten til annen forelder, Test Testeson, i ({selectedYear})</Heading>
-                    <HStack>
+                    <VStack className="innfylling-container">
+                        <Heading level="2" size="small">Den forventede Iintekten til annen forelder, Test Testeson, i ({selectedYear})</Heading>
                         <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt} setInntekt={setAnnenForelderInntekt} inntektSum={annenForelderInntektSum} />
-                    </HStack>
+                    </VStack>
                 </>}
 
                 <HStack>
                     <Button as={Link} to="/" variant="secondary">
                         Tilbake
                     </Button>
-                    <Button as={Link} to="/beregning" variant="secondary">
+                    <Button type="submit" as={Link} to="/beregning" variant="secondary">
                         Beregning
                     </Button>
                 </HStack>

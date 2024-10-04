@@ -6,3 +6,12 @@
         --ac-expansioncard-border-open-color: var(--a-border-alt-3);
         --ac-expansioncard-border-hover-color: var(--a-border-alt-3);
     }
+
+.innfylling-container {
+    border: 2px solid black;
+    padding: 16px;
+}
+
+.form-container {
+    gap: 20px; /* Adjust the value as needed */
+}
