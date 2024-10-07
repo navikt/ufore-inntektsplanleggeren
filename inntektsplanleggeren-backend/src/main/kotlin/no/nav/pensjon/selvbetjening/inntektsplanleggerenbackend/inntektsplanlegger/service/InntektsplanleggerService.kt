@@ -39,8 +39,10 @@ class InntektsplanleggerService(
             return SimuleringResponse(
                 validationResult,
                 simuleringService.simulerInntektsendring(
+                    pid = pid,
                     forventedeInntekterOppgitt = oppgitteInntekter,
-                    forventedeInntekter = gjeldendeForventedeInntekter!!
+                    forventedeInntekter = gjeldendeForventedeInntekter!!,
+                    simuleringsaar = simuleringsAar
                 )
             )
         }

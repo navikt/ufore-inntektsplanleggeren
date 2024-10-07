@@ -24,8 +24,8 @@ data class Inntektsgrunnlag(
 
 enum class InntektsgrunnlagType(val code: String) {
     ARBEIDSINNTEKT("FORINTARB"),
-    NAERINGSINNTEKT(""),
-    INNTEKT_UTLAND(""),
-    PENSJON_UTLAND(""),
-    ANDRE_YTELSER("")
+    NAERINGSINNTEKT("FORINTNAE"),
+    INNTEKT_UTLAND("FORINTUTL"),
+    PENSJON_UTLAND("FORPENUTL"),
+    ANDRE_YTELSER("FORINTAND")
 }

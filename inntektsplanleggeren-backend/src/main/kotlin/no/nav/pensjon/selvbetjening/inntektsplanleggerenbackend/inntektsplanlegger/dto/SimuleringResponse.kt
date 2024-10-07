@@ -10,7 +10,8 @@ data class SimuleringResponse(
 data class Simuleringsresultat(
     val uforetrygd: BeforeAndAfterValues,
     val forventetInntekt: BeforeAndAfterValues,
-    val barnetillegg: BeforeAndAfterValues?,
+    val barnetilleggFellesbarn: BeforeAndAfterValues?,
+    val barnetilleggSaerkullsbarn: BeforeAndAfterValues?,
     val gjenlevendetillegg: BeforeAndAfterValues?,
     val sum: BeforeAndAfterValues,
     val uforetrygdPerMaaned: Int
