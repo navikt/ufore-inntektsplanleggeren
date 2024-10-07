@@ -1,6 +1,17 @@
-import {Accordion, BodyLong, Box, Button, Heading, VStack, Link as NavLink, Alert} from "@navikt/ds-react";
+import {
+    Accordion,
+    BodyLong,
+    Box,
+    Button,
+    Heading,
+    VStack,
+    Link as NavLink,
+    Alert,
+    List,
+    BodyShort
+} from "@navikt/ds-react";
 import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
-import {Link, useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, {useContext, useState} from "react";
 import {YearView} from "@/components/YearView";
 import "./InitialView.css"
@@ -8,8 +19,8 @@ import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 
 export function InitialView() {
-    const {displayData, warningMessage} = useContext(DataContext)
-    const {selectedYear, setSelectedYear} = useContext(FormStateContext)
+    const {initialViewData, warningMessage} = useContext(DataContext)
+    const {selectedYear} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
 
@@ -23,75 +34,88 @@ export function InitialView() {
     }
 
     return (
-        <div>
-            <VStack gap={{ xs: "4", sm: "6", md: "8", lg: "10", xl: "12" }}>
-                {warningMessage.length > 0 ?
-                    <Alert variant="warning">{warningMessage[0].details}</Alert> :
-                    <Box  borderRadius="xlarge" padding="4" borderWidth="1" className="top-box">
-                        <VStack>
-                            <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
-                            <BodyLong> Dette tallet kan komme fra en tidligere registrering eller være basert på fjorårets inntekt.</BodyLong>
-                            <BodyLong> Din forventede inntekt: {displayData.forventetInntekt}kr </BodyLong>
-                            {displayData.forventetInntektAnnenForelder ?
-                                <BodyLong> Annen forelder du bor med sin forventede inntekt: {displayData.forventetInntektAnnenForelder}kr</BodyLong> : <></>
-                            }
-                        </VStack>
-                    </Box>
-                }
+        <VStack gap="4">
+            {warningMessage.length > 0 ?
+                <Alert variant="warning">{warningMessage[0].details}</Alert> :
 
-                <InntektsgrenseCard displayData={displayData}/>
+                <Box borderRadius="xlarge" padding="4" borderWidth="1" className="top-box">
+                    <VStack>
+                        <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
+                        <BodyLong> Dette tallet kan komme fra en tidligere registrering eller være basert på fjorårets inntekt.</BodyLong>
+                        <BodyLong> Din forventede inntekt: {initialViewData.forventetInntekt}kr </BodyLong>
+                        {initialViewData.forventetInntektAnnenForelder ?
+                            <BodyLong> Annen forelder du bor med sin forventede inntekt: {initialViewData.forventetInntektAnnenForelder}kr</BodyLong> : <></>
+                        }
+                    </VStack>
+                </Box>
+            }
 
-                <Heading size={"medium"} level={"2"}>I inntektsplanleggeren kan du</Heading>
-                <BodyLong>
-                    <li>se hvor mye du vil få i uføretrygd ved siden av inntekt</li>
-                    <li>melde inn forventet inntekt til oss</li>
+            <InntektsgrenseCard displayData={initialViewData}/>
+
+            <section>
+                <List title="I inntektsplanleggeren kan du">
+                    <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
+                    <List.Item>melde inn forventet inntekt til oss</List.Item>
+                </List>
+
+                <BodyShort spacing>
                     Du kan melde inn flere ganger hvis du ser at inntekten blir høyere eller lavere enn først forventet.
+                </BodyShort>
+
+                <BodyShort spacing>
                     <NavLink href="#">Å kombinere arbeid og uføretrygd.</NavLink>
-                </BodyLong>
+                </BodyShort>
+            </section>
 
-                <Accordion>
-                    <Accordion.Item>
-                        <Accordion.Header>Slik fungerer inntektsplanleggeren</Accordion.Header>
-                        <Accordion.Content>
-                            Text 1 Text 1 Text 1
-                        </Accordion.Content>
-                    </Accordion.Item>
-                    <Accordion.Item>
-                        <Accordion.Header>Om inntekten har endret seg/varierer i løpet av året</Accordion.Header>
-                        <Accordion.Content>
-                            Text 2 Text 2 Text 2
-                        </Accordion.Content>
-                    </Accordion.Item>
-                    <Accordion.Item>
-                        <Accordion.Header>Dette skjer etter innsending av inntektsmeldingen</Accordion.Header>
-                        <Accordion.Content>
-                            Text 3 Text 3 Text 3
-                        </Accordion.Content>
-                    </Accordion.Item>
-                </Accordion>
+            <Accordion>
+                <Accordion.Item>
+                    <Accordion.Header>Slik fungerer inntektsplanleggeren</Accordion.Header>
+                    <Accordion.Content>
+                        Text 1 Text 1 Text 1
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item>
+                    <Accordion.Header>Om inntekten har endret seg/varierer i løpet av året</Accordion.Header>
+                    <Accordion.Content>
+                        Text 2 Text 2 Text 2
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item>
+                    <Accordion.Header>Dette skjer etter innsending av inntektsmeldingen</Accordion.Header>
+                    <Accordion.Content>
+                        Text 3 Text 3 Text 3
+                    </Accordion.Content>
+                </Accordion.Item>
+            </Accordion>
 
-                <Heading size={"medium"} level={"2"}>Har du (bostøtte eller) andre ytelser i tillegg til uføretrygd? </Heading>
-                <BodyLong>
+            <section>
+                <Heading size="medium" level="2" spacing>Har du (bostøtte eller) andre ytelser i tillegg til uføretrygd? </Heading>
+
+                <BodyLong spacing>
                     Inntektsplanleggeren påvirker kun uføretrygd, samt barnetillegg og gjenlevendetillegg på uføretrygden dersom du har det. Du ser ikke hvordan ny inntekt påvirker eventuelle andre ytelser du har fra oss, eller eventuelle ytelser du har fra andre ordninger enn NAV.
                 </BodyLong>
-                <BodyLong>
-                    <b> Vær obs på at enkelte ytelser, for eksempel bostøtte, kan ha egne grenser for hvor mye man kan tjene før disse bortfaller. Hvis du har andre ytelser enn uføretrygd og eventuelt barnetillegg eller gjenlevendetillegg, er det viktig at du undersøker hvordan inntekt vil påvirke dem. </b>
+
+                <BodyLong spacing>
+                    <b>Vær obs på at enkelte ytelser, for eksempel bostøtte, kan ha egne grenser for hvor mye man kan tjene før disse bortfaller. Hvis du har andre ytelser enn uføretrygd og eventuelt barnetillegg eller gjenlevendetillegg, er det viktig at du undersøker hvordan inntekt vil påvirke dem.</b>
                 </BodyLong>
-                <NavLink href="#">Har du spørsmål?  Kontakt oss</NavLink>
 
-                <YearView availableYears={displayData.aktuelleAar} setYear={setSelectedYear} infoType={1}></YearView>
+                <BodyShort spacing>
+                    <NavLink href="#">Har du spørsmål?  Kontakt oss</NavLink>
+                </BodyShort>
+            </section>
 
-                {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
+            <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 
-                <VStack>
-                    <Button onClick={handleButtonClick} variant="primary">
-                        Start inntektsplanlegger
-                    </Button>
-                    {/*/!*<Button as={Link} to="/forventede-inntekter" variant="primary">*!/*/}
-                    {/*    Start inntektsplanlegger*/}
-                    {/*</Button>*/}
-                </VStack>
+            {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
+
+            <VStack>
+                <Button onClick={handleButtonClick} variant="primary">
+                    Start inntektsplanlegger
+                </Button>
+                {/*/!*<Button as={Link} to="/forventede-inntekter" variant="primary">*!/*/}
+                {/*    Start inntektsplanlegger*/}
+                {/*</Button>*/}
             </VStack>
-        </div>
+        </VStack>
     )
 }

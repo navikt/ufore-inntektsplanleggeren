@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Routes, Route, BrowserRouter} from "react-router-dom";
+import React, {useContext, useState} from "react";
+import {Routes, Route, BrowserRouter, Outlet, Navigate} from "react-router-dom";
 import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
 import {FormContainer} from "@/form-container";
@@ -7,6 +7,8 @@ import {Innfylling} from "@/components/innfylling/Innfylling";
 import {Beregning} from "@/components/beregning/Beregning";
 import {Oppsummering} from "@/components/oppsummering/Oppsummering";
 import {Kvittering} from "@/components/kvittering/Kvittering";
+import {FormStateContext} from "@/context/FormData";
+import { SelectedYearProvider } from "@/context/SelectedYear";
 
 export const AppRoutes = (
 ) => {
@@ -16,13 +18,15 @@ export const AppRoutes = (
         <BrowserRouter>
             <Routes>
                 <Route element={<App />}>
-                    <Route index element={<InitialView/>} />
                     {/*<Route element={<AccessControl />}>*/}
-                        <Route element={<FormContainer />}>
-                            <Route path="/forventede-inntekter" element={<Innfylling />} />
-                            <Route path="/beregning" element={<Beregning />} />
-                            <Route path="/oppsummering" element={<Oppsummering />} />
-                            <Route path="/kvittering" element={<Kvittering />} />
+                        <Route index element={<InitialView />} />
+                        <Route element={<YearGuard />}>
+                            <Route element={<FormContainer />}>
+                                <Route path="/forventede-inntekter" element={<Innfylling />} />
+                                <Route path="/beregning" element={<Beregning />} />
+                                <Route path="/oppsummering" element={<Oppsummering />} />
+                                <Route path="/kvittering" element={<Kvittering />} />
+                            </Route>
                         </Route>
                     {/*</Route>*/}
                 </Route>
@@ -30,3 +34,31 @@ export const AppRoutes = (
         </BrowserRouter>
     );
 };
+
+const YearGuard = () => {
+    const { selectedYear } = useContext(FormStateContext);
+
+    if (selectedYear === undefined) {
+        return <Navigate to="/" replace />;
+    }
+
+    return (
+        <SelectedYearProvider selectedYear={selectedYear}>
+            <Outlet />
+        </SelectedYearProvider>
+    );
+};
+
+// const AccessControl = () => {
+//     const user = getuser();
+//
+//     if (loading) {
+//         return <Loader />;
+//     }
+//
+//     if (user === undefined) {
+//         return <Navigate to="/login"/>;
+//     }
+//
+//     return <Outlet/>;
+// };

@@ -6,7 +6,7 @@ import {
 } from "@/api/apiFetching";
 
 
-export const DisplayDataDefaultValue: DisplayData | null = {
+export const InitialViewDefaultData: DisplayData | null = {
     forventetInntekt: 100000,
     forventetInntektAnnenForelder: null,
     inntektsgrense: 50000,
@@ -31,7 +31,7 @@ export const WarningMessageDefaultValue: Message[] | null = [{
 
 
 const DataContextDefaultValue = {
-    displayData: DisplayDataDefaultValue,
+    initialViewData: InitialViewDefaultData,
     warningMessage: WarningMessageDefaultValue,
     refetch: true,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -65,7 +65,7 @@ interface DataContextProviderProps {
 
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
-    const [displayData, setDisplayData] = useState(DataContextDefaultValue.displayData)
+    const [initialViewData, setInitialViewData] = useState(DataContextDefaultValue.initialViewData)
     const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
@@ -91,7 +91,7 @@ function DataContextProvider(props: DataContextProviderProps) {
                     try {
                         setLoading(true)
                         const inntektsPlannleggerResponse = await getInntektsgrense()
-                        setDisplayData(inntektsPlannleggerResponse.data)
+                        setInitialViewData(inntektsPlannleggerResponse.data)
                         // setInitialWarningBox(inntektsPlannleggerResponse.messages)
 
                         setLoading(false)
@@ -110,7 +110,7 @@ function DataContextProvider(props: DataContextProviderProps) {
         <DataContext.Provider value={{
             refetch,
             setRefetch,
-            displayData,
+            initialViewData,
             warningMessage,
             loading,
             setLoading,

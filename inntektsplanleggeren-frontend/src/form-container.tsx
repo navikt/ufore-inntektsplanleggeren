@@ -18,8 +18,6 @@ export const FormContainer = () => {
                 <FormProgress.Step href="/oppsummering">Oppsummering før innsending</FormProgress.Step>
             </FormProgress>
 
-
-
             <Outlet/>
         </>
     );

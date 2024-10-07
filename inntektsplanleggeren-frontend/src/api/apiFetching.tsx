@@ -1,15 +1,5 @@
-import {
-    EndreSamboerforholdRequest, InntekterResponse,
-    RelasjonPersondata, SubmitInntektRequest,
+import {InntekterResponse, SubmitInntektRequest, SubmitInntektResponse,
 } from "@/api/model/ApiRequests";
-
-export interface Familierelasjon {
-    pid: string,
-    fom: string | undefined,
-    tom: string | undefined,
-    relasjonstype: string,
-    relasjonPersondata: RelasjonPersondata | undefined
-}
 
 export interface GetInntektResponse {
     messages: Message[]
@@ -182,35 +172,58 @@ const inntektData : InntekterResponse = {
     "uforeHeleAaret": false
 };
 
+const MOCKS_ENABLED = true;
+
 export async function getInntekter(year: string): Promise<InntekterResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers;
+    const headers = pid ? { 'Content-Type': 'application/json', 'pid': pid } : { 'Content-Type': 'application/json' };
 
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
+    // return inntektData
+
+    const res = await fetch(window.location.pathname + `api/inntektsplannleger?year=${year}`, {
+        method: "GET",
+        credentials: "include",
+        headers: headers
+    });
+
+    if (!res.ok) {
+        if (MOCKS_ENABLED) {
+            return inntektData;
         }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
+
+        throw new Error("Fikk ikke 2xx respons fra server");
     }
-    return inntektData
-    //
-    // return await fetch(window.location.pathname + `api/inntektsplannleger?year=${year}`, {
-    //     method: "GET",
-    //     credentials: "include",
-    //     headers: headers
-    // })
-    //     .then(response => response.json())
-    //     .then(response => {
-    //         return response.displayData
-    //     }).catch(() => {
-    //         throw new Error("Fikk ikke 2xx respons fra server");
-    //     })
+
+    const parsed = await res.json();
+
+    return parsed.displayData;
+}
+
+export async function submitInntekt(request: SubmitInntektRequest): Promise<SubmitInntektResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    const headers = pid ? { 'Content-Type': 'application/json', 'pid': pid } : { 'Content-Type': 'application/json' };
+
+    const res = await fetch(window.location.pathname + `api/inntektsplannleger`, {
+        method: "POST",
+        credentials: "include",
+        headers: headers
+    });
+
+    if (!res.ok) {
+        if (MOCKS_ENABLED) {
+            return inntektData;
+        }
+
+        throw new Error("Fikk ikke 2xx respons fra server");
+    }
+
+    const parsed = await res.json();
+
+    return parsed.displayData;
 }
 
 

@@ -2,14 +2,17 @@ import {BodyLong, Button, FormSummary, Heading, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
+import {submitInntekt} from "@/api/apiFetching";
+import {SelectedYearContext} from "@/context/SelectedYear";
 
 export const Oppsummering = () => {
-    const { selectedYear, personInntektSum, annenForelderInntektSum } = useContext(FormStateContext);
+    const { personInntektSum, annenForelderInntektSum } = useContext(FormStateContext);
+    const { selectedYear } = useContext(SelectedYearContext);
 
     const { setFormStep } = useContext(FormStateContext);
     setFormStep(3)
 
-    const send = () => undefined; // TODO: Implement.
+    const send = () => submitInntekt(); // TODO: Implement.
 
     return (
         <VStack gap="5">

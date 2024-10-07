@@ -1,5 +1,6 @@
-import React, {createContext, SetStateAction, useState} from "react";
+import React, {createContext, SetStateAction, useContext, useState} from "react";
 import {InntektInnfylling, PersonInntekt} from "@/api/apiFetching";
+import {DataContext} from "@/DataContextProvider";
 
 
 interface FormState {
@@ -56,7 +57,9 @@ function summerPersoninntekt(personInntekt: PersonInntekt) {
 }
 
 export const FormStateComponent = ({ children }: Props) => {
-    const [year, setYear]  = useState<string | undefined>(undefined);
+    const { initialViewData } = useContext(DataContext)
+    const { aktuelleAar } = initialViewData;
+    const [year, setYear]  = useState<string | undefined>(aktuelleAar.length === 1 ? aktuelleAar[0].toString(10) : undefined);
     const [formData, setFormData] = useState<InntektInnfylling>(initialFormData)
     const [formStep, setFormStep] = useState<number>(1);
 

@@ -1,54 +1,64 @@
-import {Alert, ExpansionCard, Heading, Radio, RadioGroup} from "@navikt/ds-react";
+import {Alert, ExpansionCard, Heading, Radio, RadioGroup, VStack} from "@navikt/ds-react";
 import {useContext} from "react";
-import {DataContext} from "@/DataContextProvider";
+import {FormStateContext} from "@/context/FormData";
 
-
-export function YearView(props: {
+interface Props {
     availableYears: number[],
-    setYear: (value: number) => void
     infoType: number //0 default, 1 for oct/nov, 2 for dec
-}) {
-    // const handleChange = (val: number) => console.info(val);
+}
 
+export function YearView({ availableYears, infoType }: Props) {
+    const {selectedYear, setSelectedYear} = useContext(FormStateContext)
+
+    const [firstYear, secondYear] = availableYears;
+
+    // useEffect(() => {
+    //     if (firstYear !== undefined && secondYear === undefined) {
+    //         setSelectedYear(firstYear.toString(10));
+    //     }
+    // }, [firstYear, secondYear, setSelectedYear]);
+
+    if (availableYears.length === 0) {
+        return null;
+    }
+
+    if (availableYears.length === 1) {
+        return (
+            <>
+                <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekter for {firstYear}</Heading>
+
+                <Card />
+            </>
+        );
+    }
 
     return (
-        <div>
-            { props.availableYears.length > 1 ?
-                <>
-                    <Heading size={"medium"} level={"2"}>Du kan registrere inntekter for {props.availableYears[0]} og {props.availableYears[1]}</Heading>
-                    {card()}
-                    {props.infoType !== 0 ? <>
-                        <Alert variant="info">{infoMessage(props.infoType)}</Alert>
-                        </> : <></>
-                    }
-                    <RadioGroup legend="Hvilket år ønsker du å registrere inntekter for?" onChange={props.setYear}>
-                        <Radio value={props.availableYears[0]}>{props.availableYears[0]}</Radio>
-                        <Radio value={props.availableYears[1]}>{props.availableYears[1]}</Radio>
-                    </RadioGroup>
-                </> :
-                <>
-                    <Heading size={"medium"} level={"2"}>Du kan registrere inntekter for {props.availableYears[0]}</Heading>
-                    {props.setYear(props.availableYears[0])}
-                    {card()}
-                </>
-            }
-        </div>
+        <>
+            <Heading size="medium" level="2" spacing>Du kan registrere inntekter for {firstYear} og {secondYear}</Heading>
+
+            <VStack gap="4">
+                <Card />
+
+                {infoType === 0 ? null : <Alert variant="info">{infoMessage(infoType)}</Alert>}
+
+                <RadioGroup legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
+                    {availableYears.map(year => <Radio key={year} value={year.toString(10)}>{year}</Radio>)}
+                </RadioGroup>
+            </VStack>
+        </>
     )
 }
 
-function card() {
-    return (
-    <>
-        <ExpansionCard aria-label="Demo med bare tittel" size="small">
-            <ExpansionCard.Header>
-                <ExpansionCard.Title>Å legge inn inntekt for andre år</ExpansionCard.Title>
-            </ExpansionCard.Header>
-            <ExpansionCard.Content>
-                Tekst Tekst Tekst Tekst Tekst
-            </ExpansionCard.Content>
-        </ExpansionCard>
-    </>)
-}
+const Card = () => (
+    <ExpansionCard aria-label="Demo med bare tittel" size="small">
+        <ExpansionCard.Header>
+            <ExpansionCard.Title>Å legge inn inntekt for andre år</ExpansionCard.Title>
+        </ExpansionCard.Header>
+        <ExpansionCard.Content>
+            Tekst Tekst Tekst Tekst Tekst
+        </ExpansionCard.Content>
+    </ExpansionCard>
+);
 
 function infoMessage(infoType: number): string {
     switch (infoType) {

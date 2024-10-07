@@ -26,12 +26,12 @@ export function App() {
 
     return (
         <FormStateComponent>
-            <div className="mainBody">
-                <div className="contentWrapper">
+            <main className="mainBody">
+                <article className="contentWrapper">
                     <Heading size="xlarge" level="1" className="main-header">Inntektsplanneleggeren</Heading>
                     <Outlet />
-                </div>
-            </div>
+                </article>
+            </main>
         </FormStateComponent>
     )
 
