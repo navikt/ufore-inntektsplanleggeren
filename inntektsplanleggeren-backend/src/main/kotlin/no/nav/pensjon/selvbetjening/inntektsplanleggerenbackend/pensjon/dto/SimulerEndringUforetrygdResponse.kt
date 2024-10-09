@@ -10,16 +10,18 @@ data class SimulerEndringUforetrygdResponse(
     val sumNettoRestArWithoutBTandET: Int?,
     val sumBruttoRestArWithoutBTandET: Double?,
     val inntektstak: Int?,
-    val gjeldendeBeregningFom: LocalDate?
+    val gjeldendeBeregningFom: LocalDate?,
+    val isFaktoromregnetEllerManueltOverstyrt: Boolean,
+    val hasOpenInntektsendringskrav: Boolean
 )
 
 data class UforetrygdSummary(
-    val ytelseskomponenter: Ytelseskomponenter,
+    val uforetrygdYtelseskomponenter: UforetrygdYtelseskomponenter,
     val totalbelopNetto: Int?,
     val sumYtelseskomponenter: Int?
 )
 
-data class Ytelseskomponenter(
+data class UforetrygdYtelseskomponenter(
     val uforetrygdOrdiner: Ytelseskomponent,
     val barnetilleggFellesbarn: Ytelseskomponent?,
     val barnetilleggSaerkullsbarn: Ytelseskomponent?,

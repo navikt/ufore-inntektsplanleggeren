@@ -41,7 +41,7 @@ class PenClient(
                         .header("Authorization", "Bearer $accessToken")
                         .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
                         .accept(MediaType.APPLICATION_JSON)
-                        .bodyValue(SimuleringEndringUforetrygdRequest(virk, inntektsgrunnlagListe, inntektsgrunnlagListeEps))
+                        .bodyValue(SimuleringEndringUforetrygdRequest(pid, virk, inntektsgrunnlagListe, inntektsgrunnlagListeEps))
                         .retrieve()
                         .bodyToMono(SimulerEndringUforetrygdResponse::class.java)
                         .block()
@@ -56,39 +56,20 @@ class PenClient(
         }
     }
 
-    fun fetchInntektsplanleggerData(pid: String): Pensjonsdata? {
-        return Pensjonsdata(
-            20000,
-            43093.0,
-            500434,
-            true,
-            false,
-            true,
-            false,
-            true,
-            false,
-            true,
-            null,
-            null,
-            null
-        )
-    }
-
-    //TODO: Should be removed
-    fun fetchInitialInntektsplanleggerPensjonsdata(pid: String): InitialInntektsplanleggerPensjonsdata? {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/initial"
+    fun fetchInntektsplanleggerData(pid: String, simuleringFom: LocalDate): Pensjonsdata? {
+        val path = "/pen/api/selvbetjening/inntektsplanleggeren/data"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
                     webClient
                         .get()
-                        .uri("$url$path")
+                        .uri("$url$path?simuleringFom=$simuleringFom")
                         .header("fnr", pid)
                         .header("Authorization", "Bearer $accessToken")
                         .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
-                        .bodyToMono(InitialInntektsplanleggerPensjonsdata::class.java)
+                        .bodyToMono(Pensjonsdata::class.java)
                         .block()
                 } ?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
         } catch (e: WebClientResponseException) {

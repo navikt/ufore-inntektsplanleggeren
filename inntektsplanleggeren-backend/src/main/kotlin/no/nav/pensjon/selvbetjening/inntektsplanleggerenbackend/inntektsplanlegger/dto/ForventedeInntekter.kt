@@ -3,8 +3,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
-import java.time.LocalDate
-import java.time.Month
+import java.time.*
 
 data class ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?)
 
@@ -26,22 +25,45 @@ data class PersonInntekter(
         createInntektsgrunnlag(InntektsgrunnlagType.PENSJON_UTLAND.code, pensjonUtland, simuleringsaar)
     )
 
-    private fun createInntektsgrunnlag(type: String, belop: Int?, simuleringsaar: Int): Inntektsgrunnlag = Inntektsgrunnlag(
-        inntektsgrunnlagId = null,
-        fomDato = LocalDate.of(simuleringsaar, Month.JANUARY, 1),
-        tomDato = LocalDate.of(simuleringsaar, Month.DECEMBER, 31),
-        endringstidspunkt = LocalDate.now(),
-        belop = belop ?: 0,
-        bruk = true,
-        kopiertFraGammeltKrav = false,
-        registerOpprettetAv = "", //TODO
-        grunnlagKilde = "BRUKER_OPP",
-        registerKilde = "SELVBETJ",
-        inntektType = type,
-        inntektHendelseType = "BENYTTET",
-        grunnIkkeReduksjonType = null,
-        persongrunnlagId = null,
-        changeStamp = null,
-        version = null
-    )
+    private fun createInntektsgrunnlag(type: String, belop: Int?, simuleringsaar: Int): Inntektsgrunnlag =
+        Inntektsgrunnlag(
+            inntektsgrunnlagId = null,
+            fomDato = OffsetDateTime.ofInstant(
+                ZonedDateTime.of(
+                    simuleringsaar,
+                    Month.JANUARY.value,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    ZoneId.of("Europe/Oslo")
+                ).toInstant(), ZoneId.of("Europe/Oslo")
+            ),
+            tomDato = OffsetDateTime.ofInstant(
+                ZonedDateTime.of(
+                    simuleringsaar,
+                    Month.DECEMBER.value,
+                    31,
+                    23,
+                    59,
+                    59,
+                    0,
+                    ZoneId.of("Europe/Oslo")
+                ).toInstant(), ZoneId.of("Europe/Oslo")
+            ),
+            endringstidspunkt = OffsetDateTime.ofInstant(ZonedDateTime.now().toInstant(), ZoneId.of("Europe/Oslo")),
+            belop = belop ?: 0,
+            bruk = true,
+            kopiertFraGammeltKrav = false,
+            registerOpprettetAv = "", //TODO
+            grunnlagKilde = "BRUKER_OPP",
+            registerKilde = "SELVBETJ",
+            inntektType = type,
+            inntektHendelseType = "BENYTTET",
+            grunnIkkeReduksjonType = null,
+            persongrunnlagId = null,
+            changeStamp = null,
+            version = null
+        )
 }

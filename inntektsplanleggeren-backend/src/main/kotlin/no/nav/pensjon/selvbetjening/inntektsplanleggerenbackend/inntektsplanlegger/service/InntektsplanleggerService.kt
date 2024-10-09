@@ -25,7 +25,7 @@ class InntektsplanleggerService(
         simuleringsAar: Int,
         oppgitteInntekter: ForventedeInntekter
     ): SimuleringResponse? {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsAar))
         val gjeldendeForventedeInntekter =
             pensjonsdata?.let { inntektService.getForventedeInntekter(pid, it, simuleringsAar) }
         val validationResult = validator.validateUserAndInputBeforeSimulering(
@@ -35,6 +35,7 @@ class InntektsplanleggerService(
             pid,
             simuleringsAar
         )
+        //TODO: Data fra simuleringsresultatet skal brukes for videre validering. Strukturen her må derfor endres.
         if (validationResult.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             return SimuleringResponse(
                 validationResult,
@@ -42,7 +43,8 @@ class InntektsplanleggerService(
                     pid = pid,
                     forventedeInntekterOppgitt = oppgitteInntekter,
                     forventedeInntekter = gjeldendeForventedeInntekter!!,
-                    simuleringsaar = simuleringsAar
+                    simuleringsaar = simuleringsAar,
+                    simuleringFomDato = getSimuleringFomDato(simuleringsAar)
                 )
             )
         }
@@ -51,7 +53,7 @@ class InntektsplanleggerService(
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid) ?: return null
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
             pensjonsdata,
@@ -74,7 +76,7 @@ class InntektsplanleggerService(
         pid: String,
         simuleringsaar: Int
     ): InntektsplanleggerenInitialResponse {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid)
+        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
         val messages = validator.validateUserInitialData(pensjonsdata)
         return InntektsplanleggerenInitialResponse(
             messages,
@@ -148,4 +150,10 @@ class InntektsplanleggerService(
             )
         }
     }
+
+    private fun getSimuleringFomDato(simuleringsaar: Int): LocalDate =
+        if (simuleringsaar > LocalDate.now().year)
+            LocalDate.of(simuleringsaar, Month.JANUARY, 1)
+        else
+            LocalDate.now().plusMonths(1).withDayOfMonth(1)
 }
