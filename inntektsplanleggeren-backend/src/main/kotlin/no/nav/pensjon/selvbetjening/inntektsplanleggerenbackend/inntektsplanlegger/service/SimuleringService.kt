@@ -100,7 +100,7 @@ class SimuleringService(val penClient: PenClient) {
         return if (simuleringsresultat.gjeldendeBeregningFom?.year == simuleringsaar) {
             simuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter ?: 0
         } else {
-            simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0
+            simuleringsresultat.currentUforetrygdSummary.totalbelopNettoAr?.toInt() ?: 0
         }
     }
 

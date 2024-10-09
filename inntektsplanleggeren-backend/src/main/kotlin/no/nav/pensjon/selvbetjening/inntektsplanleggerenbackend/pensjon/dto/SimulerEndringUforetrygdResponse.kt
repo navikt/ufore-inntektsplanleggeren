@@ -17,6 +17,7 @@ data class SimulerEndringUforetrygdResponse(
 
 data class UforetrygdSummary(
     val uforetrygdYtelseskomponenter: UforetrygdYtelseskomponenter,
+    val totalbelopNettoAr: Double?,
     val totalbelopNetto: Int?,
     val sumYtelseskomponenter: Int?
 )
