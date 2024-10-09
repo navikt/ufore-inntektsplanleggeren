@@ -3,6 +3,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.BeforeAndAfterValues
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.ForventedeInntekter
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.SimuleringAmounts
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.Simuleringsresultat
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
@@ -22,40 +23,76 @@ class SimuleringService(val penClient: PenClient) {
             pid = pid,
             virk = simuleringFomDato,
             inntektsgrunnlagListe = forventedeInntekterOppgitt.bruker.mapToInntektsgrunnlag(simuleringsaar),
-            inntektsgrunnlagListeEps = forventedeInntekterOppgitt.eps?.mapToInntektsgrunnlag(simuleringsaar)?: emptyList()
+            inntektsgrunnlagListeEps = forventedeInntekterOppgitt.eps?.mapToInntektsgrunnlag(simuleringsaar)
+                ?: emptyList()
         )
         return Simuleringsresultat(
-            uforetrygd = BeforeAndAfterValues(
-                before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerYear,
-                after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerYear
+            uforetrygd = SimuleringAmounts(
+                yearly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerYear,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerYear
+                ), monthly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerMonth,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerMonth
+                )
             ),
-            forventetInntekt = BeforeAndAfterValues(
-                before = forventedeInntekter.sumBenyttedeInntekterBruker,
-                after = forventedeInntekterOppgitt.bruker.sum()
+            forventetInntekt = SimuleringAmounts(
+                yearly = BeforeAndAfterValues(
+                    before = forventedeInntekter.sumBenyttedeInntekterBruker,
+                    after = forventedeInntekterOppgitt.bruker.sum()
+                ), monthly = BeforeAndAfterValues(
+                    before = forventedeInntekter.sumBenyttedeInntekterBruker / 12,
+                    after = forventedeInntekterOppgitt.bruker.sum() / 12
+                )
             ),
-            barnetilleggFellesbarn = BeforeAndAfterValues(
-                before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerYear
-                    ?: 0,
-                after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerYear
-                    ?: 0
+            barnetilleggFellesbarn = SimuleringAmounts(
+                yearly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerYear
+                        ?: 0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerYear
+                        ?: 0
+                ), monthly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerMonth
+                        ?: 0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerMonth
+                        ?: 0
+                )
             ),
-            barnetilleggSaerkullsbarn = BeforeAndAfterValues(
-                before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerYear
-                    ?: 0,
-                after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerYear
-                    ?: 0
+            barnetilleggSaerkullsbarn = SimuleringAmounts(
+                yearly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerYear
+                        ?: 0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerYear
+                        ?: 0
+                ), monthly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerMonth
+                        ?: 0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerMonth
+                        ?: 0
+                )
             ),
-            gjenlevendetillegg = BeforeAndAfterValues(
-                before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerYear
-                    ?: 0,
-                after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerYear
-                    ?: 0
+            gjenlevendetillegg = SimuleringAmounts(
+                yearly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerYear
+                        ?: 0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerYear
+                        ?: 0
+                ), monthly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerMonth
+                        ?: 0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerMonth
+                        ?: 0
+                )
             ),
-            sum = BeforeAndAfterValues(
-                before = getSumArligUforetrygd(simuleringsresultat, simuleringsaar),
-                after = getSumArligUforetrygdSimulert(simuleringsresultat)
-            ),
-            uforetrygdPerMaaned = 0
+            sum = SimuleringAmounts(
+                yearly = BeforeAndAfterValues(
+                    before = getSumArligUforetrygd(simuleringsresultat, simuleringsaar),
+                    after = getSumArligUforetrygdSimulert(simuleringsresultat)
+                ), monthly = BeforeAndAfterValues(
+                    before = simuleringsresultat.currentUforetrygdSummary.totalbelopNetto?:0,
+                    after = simuleringsresultat.simulertUforetrygdSummary.totalbelopNetto?:0
+                )
+            )
         )
     }
 
