@@ -1,5 +1,7 @@
-import {InntekterResponse, SubmitInntektRequest, SubmitInntektResponse,
+import {
+    InntekterResponse, SubmitInntektRequest, SubmitInntektSimulationResponse,
 } from "@/api/model/ApiRequests";
+import {InntektSimulationDefaultValue} from "@/DataContextProvider";
 
 export interface GetInntektResponse {
     messages: Message[]
@@ -37,37 +39,6 @@ export interface PersonInntekt {
 export interface InntektInnfylling {
     personInntekt: PersonInntekt
     annenForelderInntekt: PersonInntekt
-}
-
-export async function getInntektsgrense(): Promise<GetInntektResponse> {
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-
-    let headers;
-
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    }
-
-    return await fetch(window.location.pathname + "api/inntektsplannleger", { //todo fix url
-        method: "GET",
-        credentials: "include",
-        headers: headers
-    })
-        .then(response => response.json())
-        .then(response => {
-            return response.displayData
-        }).catch(() => {
-            throw new Error("Fikk ikke 2xx respons fra server");
-        })
-
 }
 
 const inntektData : InntekterResponse = {
@@ -172,12 +143,46 @@ const inntektData : InntekterResponse = {
     "uforeHeleAaret": false
 };
 
+
+
+export async function getInntektsgrense(): Promise<GetInntektResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    return await fetch(window.location.pathname + "api/inntektsplannleger", { //todo fix url
+        method: "GET",
+        credentials: "include",
+        headers: headers
+    })
+        .then(response => response.json())
+        .then(response => {
+            return response.displayData
+        }).catch(() => {
+            throw new Error("Fikk ikke 2xx respons fra server");
+        })
+
+}
+
+
+
 const MOCKS_ENABLED = true;
 
 export async function getInntekter(year: string): Promise<InntekterResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
-
     const headers = pid ? { 'Content-Type': 'application/json', 'pid': pid } : { 'Content-Type': 'application/json' };
 
     // return inntektData
@@ -188,10 +193,12 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
         headers: headers
     });
 
+    if (MOCKS_ENABLED) {
+        return inntektData;
+    }
+
+
     if (!res.ok) {
-        if (MOCKS_ENABLED) {
-            return inntektData;
-        }
 
         throw new Error("Fikk ikke 2xx respons fra server");
     }
@@ -201,7 +208,11 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
     return parsed.displayData;
 }
 
-export async function submitInntekt(request: SubmitInntektRequest): Promise<SubmitInntektResponse> {
+export async function submitInntektSimulation(formData: InntektInnfylling, year: string): Promise<SubmitInntektSimulationResponse> {
+    const request: SubmitInntektRequest = {
+        inntekt: formData,
+        year: year
+    }
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -210,12 +221,13 @@ export async function submitInntekt(request: SubmitInntektRequest): Promise<Subm
     const res = await fetch(window.location.pathname + `api/inntektsplannleger`, {
         method: "POST",
         credentials: "include",
-        headers: headers
+        headers: headers,
+        body: JSON.stringify(request)
     });
 
     if (!res.ok) {
         if (MOCKS_ENABLED) {
-            return inntektData;
+            return InntektSimulationDefaultValue;
         }
 
         throw new Error("Fikk ikke 2xx respons fra server");
@@ -223,8 +235,9 @@ export async function submitInntekt(request: SubmitInntektRequest): Promise<Subm
 
     const parsed = await res.json();
 
-    return parsed.displayData;
+    return parsed;
 }
+
 
 
 

@@ -27,6 +27,25 @@ export const WarningMessageDefaultValue: Message[] | null = [{
     type: "ERROR"
 }]
 
+export const InntektSimulationDefaultValue = {
+    "messages":[
+        {
+            "messageCode": "EPS_INNTEKT_CHANGED",
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": "WARNING",
+            "metadata": {}
+        }
+    ],
+    "result": {
+        "uforetrygd": {"before": 200000, "after": 300000},
+        "forventetInntekt": {"before": 430982, "after": 150000},
+        "barnetilleggFellesbarn": {"before": 0, "after": 4342},
+        "barnetilleggSaerkullsbarn": {"before": 0, "after": 0},
+        "gjenlevendetillegg": {"before": 0, "after": 0},
+        "sum": {"before": 630982, "after": 454342},
+    }
+}
+
 // export const WarningMessageDefaultValue: Message[] | null = []
 
 
@@ -50,6 +69,7 @@ const DataContextDefaultValue = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setFeilmeldingkode: (value: string) => {
     },
+    inntektSimulation: InntektSimulationDefaultValue,
     success: false,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setSuccess: (value: boolean) => {
@@ -66,6 +86,7 @@ interface DataContextProviderProps {
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [initialViewData, setInitialViewData] = useState(DataContextDefaultValue.initialViewData)
+    const [inntektSimulation, setInntektSimulation] = useState(DataContextDefaultValue.inntektSimulation)
     const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
@@ -108,6 +129,7 @@ function DataContextProvider(props: DataContextProviderProps) {
 
     return (
         <DataContext.Provider value={{
+            inntektSimulation,
             refetch,
             setRefetch,
             initialViewData,

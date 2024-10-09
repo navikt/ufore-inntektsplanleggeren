@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import "./innfylling.css"
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {getInntekter, PersonInntekt} from "@/api/apiFetching";
+import {getInntekter, PersonInntekt, submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {InntekterResponse} from "@/api/model/ApiRequests";
 import {SelectedYearContext} from "@/context/SelectedYear";
 
 export const Innfylling = () => {
-    const { setPersoninntekt, setAnnenForelderInntekt, personInntektSum, annenForelderInntektSum, formData, setFormStep } = useContext(FormStateContext);
+    const { setPersoninntekt, setAnnenForelderInntekt, getPersonInntektSum, getAnnenForelderInntektSum, formData, setFormStep } = useContext(FormStateContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({});
@@ -25,7 +25,7 @@ export const Innfylling = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
-
+        // submitSimulInntektSimulation(formData);
     };
 
     return (
@@ -38,13 +38,13 @@ export const Innfylling = () => {
                 <VStack gap="4">
                     <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                         <Heading level="2" size="small" spacing>Din forventede intekter i ({selectedYear})</Heading>
-                        <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt} inntektSum={personInntektSum}/>
+                        <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt} inntektSum={getPersonInntektSum}/>
                     </Box>
 
                     {isAnnenForelder && <>
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <Heading level="2" size="small" spacing>Den forventede Iintekten til annen forelder, Test Testeson, i ({selectedYear})</Heading>
-                            <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt} setInntekt={setAnnenForelderInntekt} inntektSum={annenForelderInntektSum} />
+                            <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt} setInntekt={setAnnenForelderInntekt} inntektSum={getAnnenForelderInntektSum} />
                         </Box>
                     </>}
 

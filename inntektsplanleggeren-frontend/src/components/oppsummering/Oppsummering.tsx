@@ -2,17 +2,17 @@ import {BodyLong, Button, FormSummary, Heading, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import {submitInntekt} from "@/api/apiFetching";
+import {submitInntektSimulation} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 
 export const Oppsummering = () => {
-    const { personInntektSum, annenForelderInntektSum } = useContext(FormStateContext);
+    const { formData, getPersonInntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
     const { selectedYear } = useContext(SelectedYearContext);
 
     const { setFormStep } = useContext(FormStateContext);
     setFormStep(3)
 
-    const send = () => submitInntekt(); // TODO: Implement.
+    const send = () => submitInntektSimulation(formData, selectedYear); // TODO: Implement.
 
     return (
         <VStack gap="5">
@@ -21,8 +21,8 @@ export const Oppsummering = () => {
             <FormSummary>
                 <FormSummary.Header>        <FormSummary.Heading level="2">Opplysningene du sender inn</FormSummary.Heading>        <FormSummary.EditLink href="#" />      </FormSummary.Header>
                 <FormSummary.Answers>
-                    <FormSummary.Answer> <FormSummary.Label>Din forventede inntekt i {selectedYear}</FormSummary.Label>  <FormSummary.Value>{personInntektSum}</FormSummary.Value>        </FormSummary.Answer>
-                    <FormSummary.Answer> <FormSummary.Label>Annen forelders forventede inntekt i 2024</FormSummary.Label> <FormSummary.Value>{annenForelderInntektSum}</FormSummary.Value>        </FormSummary.Answer>
+                    <FormSummary.Answer> <FormSummary.Label>Din forventede inntekt i {selectedYear}</FormSummary.Label>  <FormSummary.Value>{getPersonInntektSum}</FormSummary.Value>        </FormSummary.Answer>
+                    <FormSummary.Answer> <FormSummary.Label>Annen forelders forventede inntekt i 2024</FormSummary.Label> <FormSummary.Value>{getAnnenForelderInntektSum}</FormSummary.Value>        </FormSummary.Answer>
                 </FormSummary.Answers>
             </FormSummary>
 

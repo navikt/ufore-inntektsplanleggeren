@@ -1,19 +1,24 @@
 import React, {createContext, SetStateAction, useContext, useState} from "react";
 import {InntektInnfylling, PersonInntekt} from "@/api/apiFetching";
 import {DataContext} from "@/DataContextProvider";
+import {SimulationResult} from "@/api/model/ApiRequests";
 
 
 interface FormState {
+    formStep: number
+    setFormStep: (value: SetStateAction<number>) => void
     selectedYear?: string;
     setSelectedYear: (value: SetStateAction<string | undefined>) => void
+
     formData: InntektInnfylling;
     setFormData: (value: SetStateAction<InntektInnfylling>) => void,
     setPersoninntekt: (key: keyof PersonInntekt, value: number) => void,
     setAnnenForelderInntekt: (key: keyof PersonInntekt, value: number) => void,
-    personInntektSum: number,
-    annenForelderInntektSum: number,
-    formStep: number
-    setFormStep: (value: SetStateAction<number>) => void
+    getPersonInntektSum: number,
+    getAnnenForelderInntektSum: number,
+
+    simulationInntekt: SimulationResult | undefined,
+    setSimulationInntekt: (value: SetStateAction<SimulationResult>) => void
 }
 
 const initialFormData = {
@@ -42,10 +47,12 @@ export const FormStateContext = createContext<FormState>({
     setFormData: () => undefined,
     setPersoninntekt: () => undefined,
     setAnnenForelderInntekt: () => undefined,
-    personInntektSum: 0,
-    annenForelderInntektSum: 0,
+    getPersonInntektSum: 0,
+    getAnnenForelderInntektSum: 0,
     formStep: 1,
-    setFormStep: () => undefined
+    setFormStep: () => undefined,
+    simulationInntekt: undefined,
+    setSimulationInntekt: () => undefined
 });
 
 interface Props {
@@ -92,10 +99,12 @@ export const FormStateComponent = ({ children }: Props) => {
             setFormData: setFormData,
             setPersoninntekt: setPersoninntekt,
             setAnnenForelderInntekt: setAnnenForelderInntekt,
-            personInntektSum: summerPersoninntekt(formData.personInntekt),
-            annenForelderInntektSum: summerPersoninntekt(formData.annenForelderInntekt),
+            getPersonInntektSum: summerPersoninntekt(formData.personInntekt),
+            getAnnenForelderInntektSum: summerPersoninntekt(formData.annenForelderInntekt),
             formStep: formStep,
-            setFormStep: setFormStep
+            setFormStep: setFormStep,
+            simulationInntekt: undefined,
+            setSimulationInntekt: () => undefined
         }}>
             {children}
         </FormStateContext.Provider>

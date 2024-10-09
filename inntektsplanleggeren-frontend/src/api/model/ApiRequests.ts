@@ -3,6 +3,7 @@ import {InntektInnfylling} from "@/api/apiFetching";
 
 export type SubmitInntektRequest = {
     inntekt: InntektInnfylling
+    year: string
 }
 
 export type InntektDetaljer = {
@@ -35,10 +36,30 @@ export type InntekterResponse = {
     uforeHeleAaret: boolean;
 };
 
-export type SubmitInntektRequest = {
-    inntekt: InntektInnfylling
-}
+export type SubmitInntektSimulationResponse = {
+    messages: Message[];
+    result: SimulationResult;
+};
 
-export type SubmitInntektResponse = {
-    a: string
-}
+export type Message = {
+    messageCode: string;
+    details: string;
+    type: string;
+    metadata: Record<string, unknown>;
+};
+
+export type ResultDetails = {
+    before: number;
+    after: number;
+};
+
+export type SimulationResult = {
+    uforetrygd: ResultDetails;
+    forventetInntekt: ResultDetails;
+    barnetilleggFellesbarn: ResultDetails;
+    barnetilleggSaerkullsbarn: ResultDetails;
+    gjenlevendetillegg: ResultDetails;
+    sum: ResultDetails;
+};
+
+
