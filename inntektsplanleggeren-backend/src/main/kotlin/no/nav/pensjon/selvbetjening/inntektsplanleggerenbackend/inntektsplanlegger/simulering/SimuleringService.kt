@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.SimuleringValidator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
-class SimuleringService(val penClient: PenClient, val validator: Validator) {
+class SimuleringService(val penClient: PenClient, val validator: SimuleringValidator) {
     fun simulerInntektsendring(
         pid: String,
         forventedeInntekterOppgitt: ForventedeInntekter,
