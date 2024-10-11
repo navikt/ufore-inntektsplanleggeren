@@ -1,8 +1,12 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.service
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto.*
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
@@ -35,17 +39,19 @@ class InntektsplanleggerService(
             pid,
             simuleringsAar
         )
-        //TODO: Data fra simuleringsresultatet skal brukes for videre validering. Strukturen her må derfor endres.
+
         if (validationResult.none { it.type == InntektsplanleggerMessageType.ERROR }) {
+            val simuleringData = simuleringService.simulerInntektsendring(
+                pid = pid,
+                forventedeInntekterOppgitt = oppgitteInntekter,
+                forventedeInntekter = gjeldendeForventedeInntekter!!,
+                simuleringsaar = simuleringsAar,
+                simuleringFomDato = getSimuleringFomDato(simuleringsAar)
+            )
+
             return SimuleringResponse(
-                validationResult,
-                simuleringService.simulerInntektsendring(
-                    pid = pid,
-                    forventedeInntekterOppgitt = oppgitteInntekter,
-                    forventedeInntekter = gjeldendeForventedeInntekter!!,
-                    simuleringsaar = simuleringsAar,
-                    simuleringFomDato = getSimuleringFomDato(simuleringsAar)
-                )
+                validationResult + simuleringData.valideringsresultat,
+                simuleringData.simuleringsresultat
             )
         }
 
@@ -53,7 +59,8 @@ class InntektsplanleggerService(
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
+        val pensjonsdata =
+            penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
             pensjonsdata,

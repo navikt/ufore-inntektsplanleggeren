@@ -1,8 +1,7 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
 import java.time.*
 
 data class ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?)
@@ -16,6 +15,9 @@ data class PersonInntekter(
 ) {
     fun sum(): Int =
         listOfNotNull(arbeidsinntekt, andrePensjonsgivendeYtelser, naeringsinntekt, inntektUtland, pensjonUtland).sum()
+
+    fun sumInntekterRelevantTowardsInntektstak(): Int =
+        listOfNotNull(arbeidsinntekt, naeringsinntekt, inntektUtland).sum()
 
     fun mapToInntektsgrunnlag(simuleringsaar: Int): List<Inntektsgrunnlag> = listOf(
         createInntektsgrunnlag(InntektsgrunnlagType.ARBEIDSINNTEKT.code, arbeidsinntekt, simuleringsaar),

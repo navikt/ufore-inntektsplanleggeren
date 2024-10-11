@@ -12,7 +12,9 @@ data class SimulerEndringUforetrygdResponse(
     val inntektstak: Int?,
     val gjeldendeBeregningFom: LocalDate?,
     val isFaktoromregnetEllerManueltOverstyrt: Boolean,
-    val hasOpenInntektsendringskrav: Boolean
+    val hasOpenInntektsendringskrav: Boolean,
+    val firstVedtakFom: LocalDate,
+    val lastVedtakTom: LocalDate?
 )
 
 data class UforetrygdSummary(

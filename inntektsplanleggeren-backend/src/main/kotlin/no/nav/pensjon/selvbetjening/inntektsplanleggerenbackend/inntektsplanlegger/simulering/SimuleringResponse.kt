@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.dto
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
 
