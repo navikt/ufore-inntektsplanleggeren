@@ -15,38 +15,32 @@ on:
       - '.nais/opptjening-overforomsorgsopptjening-backend/alerts/**'
 
 jobs:
-#  deploy-alerspensjon-endringssoknad-backend-alerts:
-#    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
-#    permissions:
-#      contents: read
-#      id-token: write
-#    with:
-#      nais-template-q2: .nais/alderspensjon-endringssoknad-backend/alerts/alerts-q2.yml
-#      nais-template-production: .nais/alderspensjon-endringssoknad-backend/alerts/alerts-prod.yml
-#      dev-cluster: dev-gcp
-#      production-cluster: prod-gcp
+  deploy-alerspensjon-endringssoknad-backend-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: .nais/alderspensjon-endringssoknad-backend/alerts/alerts-prod.yml
+      production-cluster: prod-gcp
 
-#  deploy-alerspensjon-endringssoknad-frontend-borger-alerts:
-#    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
-#    permissions:
-#      contents: read
-#      id-token: write
-#    with:
-#      nais-template-q2: .nais/alderspensjon-endringssoknad-frontend-borger/alerts/alerts-q2.yml
-#      nais-template-production: .nais/alderspensjon-endringssoknad-frontend-borger/alerts/alerts-prod.yml
-#      dev-cluster: dev-gcp
-#      production-cluster: prod-gcp
+  deploy-alerspensjon-endringssoknad-frontend-borger-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: .nais/alderspensjon-endringssoknad-frontend-borger/alerts/alerts-prod.yml
+      production-cluster: prod-gcp
 
-#  deploy-alerspensjon-endringssoknad-frontend-veileder-alerts:
-#    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
-#    permissions:
-#      contents: read
-#      id-token: write
-#    with:
-#      nais-template-q2: .nais/alderspensjon-endringssoknad-frontend-veileder/alerts/alerts-q2.yml
-#      nais-template-production: .nais/alderspensjon-endringssoknad-frontend-veileder/alerts/alerts-prod.yml
-#      dev-cluster: dev-gcp
-#      production-cluster: prod-gcp
+  deploy-alerspensjon-endringssoknad-frontend-veileder-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: .nais/alderspensjon-endringssoknad-frontend-veileder/alerts/alerts-prod.yml
+      production-cluster: prod-gcp
 
   deploy-familieforhold-backend-alerts:
     uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
