@@ -225,10 +225,12 @@ export async function submitInntektSimulation(formData: InntektInnfylling, year:
         body: JSON.stringify(request)
     });
 
+    if (MOCKS_ENABLED) {
+        return InntektSimulationDefaultValue;
+    }
+
+
     if (!res.ok) {
-        if (MOCKS_ENABLED) {
-            return InntektSimulationDefaultValue;
-        }
 
         throw new Error("Fikk ikke 2xx respons fra server");
     }

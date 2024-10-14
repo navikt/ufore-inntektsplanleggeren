@@ -12,13 +12,39 @@ interface FormFieldsProps {
     inntektSum: number
 }
 
+export const formatInntekt = (amount?: number | string | null): string => {
+    if (amount === null || amount === undefined || amount === '') return ''
+    const integerAmount =
+        typeof amount === 'string'
+            ? parseInt(amount.replace(/\D+/g, ''), 10)
+            : amount
+
+    return !isNaN(integerAmount)
+        ? Intl.NumberFormat('nb-NO', {
+            style: 'decimal',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }).format(integerAmount)
+        : ''
+}
+
+export const formatInntektToNumber = (s?: string) => {
+    if(!s) return 0
+    const returnData = Number(s.replace(/\s+/g, ''))
+    return returnData
+}
+
+
 
 export const FormFields = ({ year, errors, setErrors, setInntekt, data, inntektSum }: FormFieldsProps) => {
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({});
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
-        const numericValue = Number(value);
+        const numericValue = formatInntektToNumber(value);
 
         if (isNaN(numericValue) || numericValue < 0 ) { //todo care about Infinity and other weird numbers?
             setFieldErrors((prev) => ({ ...prev, [id]: 'Må være et tall' }));
@@ -42,7 +68,7 @@ export const FormFields = ({ year, errors, setErrors, setInntekt, data, inntektS
             )}
 
             <VStack className="vstack-gap">
-                <TextField label="Arbeidsinntekt fra arbeidsgiver" inputMode="numeric" id="arbeidsinntekt" error={fieldErrors.arbeidsinntekt} value={data.arbeidsinntekt} onBlur={handleInputChange} onChange={handleInputChange} pattern="[\d\s]+"/>
+                <TextField label="Arbeidsinntekt fra arbeidsgiver" inputMode="numeric" id="arbeidsinntekt" error={fieldErrors.arbeidsinntekt} value={formatInntekt(data.arbeidsinntekt)} onBlur={handleInputChange} onChange={handleInputChange} pattern="[\d\s]+"/>
                 <div className="description-card">
                     <ReadMore header="Denne arbeidsinnteken skal med ">
                         Legg inn lønn fra arbeidsgiver som et årsbeløp før skatt. Ta med eventuell bonus og overtidsbetaling og feriepenger som blir utbetalt i {year}.

@@ -3,24 +3,28 @@ import { BodyLong, ExpansionCard, Label, Link, Table } from "@navikt/ds-react";
 import "./DinInntektTable.css";
 import {InntektDetaljer} from "@/api/model/ApiRequests";
 import {Month} from "@/common/MonthEnum";
-import {numberFormat} from "@/common/Utils"; // Import the CSS file
+import {belopSum, numberFormat} from "@/common/Utils"; // Import the CSS file
 
-export const DinInntektTable = (props : {data: InntektDetaljer[]}) => {
-    return (
-        <div className="grid gap-6">
-            <ExpansionCard size="small" aria-label="Small-variant med description" className="expansion-card-gray">
-                <ExpansionCard.Header>
-                    <ExpansionCard.Description>
-                        Du har mottatt {numberFormat(belopSum(props.data))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
-                    </ExpansionCard.Description>
-                </ExpansionCard.Header>
-                <ExpansionCard.Content>
-                    <Innhold data={props.data} />
-                </ExpansionCard.Content>
-            </ExpansionCard>
-        </div>
-    );
-};
+interface DinInntektTableProps {
+    data: InntektDetaljer[];
+    children: React.ReactNode;
+}
+
+export const DinInntektTable = ({ data, children }: DinInntektTableProps) => (
+    <div className="grid gap-6">
+        {/*todo style/colors when open or selected?*/}
+        <ExpansionCard size="small" aria-label="Small-variant med description" className="expansion-card-gray">
+            <ExpansionCard.Header>
+                <ExpansionCard.Description>
+                    {children}
+                </ExpansionCard.Description>
+            </ExpansionCard.Header>
+            <ExpansionCard.Content>
+                <Innhold data={data} />
+            </ExpansionCard.Content>
+        </ExpansionCard>
+    </div>
+);
 
 const Innhold = (props: { data: InntektDetaljer[] }) => {
     return (
@@ -50,7 +54,3 @@ const Innhold = (props: { data: InntektDetaljer[] }) => {
         </Table>
     );
 };
-
-function  belopSum(data: InntektDetaljer[]): number {
-    return data.reduce((acc, { belop }) => acc + belop, 0);
-}

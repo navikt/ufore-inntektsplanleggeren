@@ -19,22 +19,26 @@ import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 
 export function InitialView() {
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const {initialViewData, warningMessage} = useContext(DataContext)
     const {selectedYear} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
+    // const [enableInntektsplannlegger] = useState<boolean>(true)
 
     const handleButtonClick = () => {
         if (!selectedYear) {
             setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
         } else {
-            const params = new URLSearchParams({ year: selectedYear.toString() })
-            navigate(`/forventede-inntekter?${params.toString()}`)
+            navigate(`/forventede-inntekter`)
         }
     }
 
     return (
-        <VStack gap="4">
+        <VStack gap="10">
             {warningMessage.length > 0 ?
                 <Alert variant="warning">{warningMessage[0].details}</Alert> :
 
@@ -104,18 +108,19 @@ export function InitialView() {
                 </BodyShort>
             </section>
 
-            <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
+            {initialViewData.aktuelleAar && initialViewData.aktuelleAar.length > 0 && //todo figure out when inntektsplannlegger is enabled
+                <VStack>
+                    <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 
-            {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
+                    {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
 
-            <VStack>
-                <Button onClick={handleButtonClick} variant="primary">
-                    Start inntektsplanlegger
-                </Button>
-                {/*/!*<Button as={Link} to="/forventede-inntekter" variant="primary">*!/*/}
-                {/*    Start inntektsplanlegger*/}
-                {/*</Button>*/}
-            </VStack>
+                    <VStack>
+                        <Button onClick={handleButtonClick} variant="primary">
+                            Start inntektsplanlegger
+                        </Button>
+                    </VStack>
+                </VStack>
+            }
         </VStack>
     )
 }

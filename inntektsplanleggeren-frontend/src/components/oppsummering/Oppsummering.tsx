@@ -6,6 +6,10 @@ import {submitInntektSimulation} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 
 export const Oppsummering = () => {
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const { formData, getPersonInntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
     const { selectedYear } = useContext(SelectedYearContext);
 

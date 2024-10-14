@@ -1,5 +1,5 @@
-import {Alert, ExpansionCard, Heading, Radio, RadioGroup, VStack} from "@navikt/ds-react";
-import {useContext} from "react";
+import {Alert, ExpansionCard, Heading, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
+import React, {useContext} from "react";
 import {FormStateContext} from "@/context/FormData";
 
 interface Props {
@@ -50,14 +50,9 @@ export function YearView({ availableYears, infoType }: Props) {
 }
 
 const Card = () => (
-    <ExpansionCard aria-label="Demo med bare tittel" size="small">
-        <ExpansionCard.Header>
-            <ExpansionCard.Title>Å legge inn inntekt for andre år</ExpansionCard.Title>
-        </ExpansionCard.Header>
-        <ExpansionCard.Content>
-            Tekst Tekst Tekst Tekst Tekst
-        </ExpansionCard.Content>
-    </ExpansionCard>
+    <ReadMore header="Å legge inn inntekt for andre år">
+        Tekst Tekst Tekst Tekst Tekst
+    </ReadMore>
 );
 
 function infoMessage(infoType: number): string {

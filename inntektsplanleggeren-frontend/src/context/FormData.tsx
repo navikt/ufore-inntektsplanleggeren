@@ -1,6 +1,6 @@
 import React, {createContext, SetStateAction, useContext, useState} from "react";
 import {InntektInnfylling, PersonInntekt} from "@/api/apiFetching";
-import {DataContext} from "@/DataContextProvider";
+import {DataContext, InntektSimulationDefaultValue} from "@/DataContextProvider";
 import {SimulationResult} from "@/api/model/ApiRequests";
 
 
@@ -68,6 +68,7 @@ export const FormStateComponent = ({ children }: Props) => {
     const { aktuelleAar } = initialViewData;
     const [year, setYear]  = useState<string | undefined>(aktuelleAar.length === 1 ? aktuelleAar[0].toString(10) : undefined);
     const [formData, setFormData] = useState<InntektInnfylling>(initialFormData)
+    const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | undefined>();
     const [formStep, setFormStep] = useState<number>(1);
 
     const setPersoninntekt = (key: keyof PersonInntekt, value: number) => {
@@ -103,8 +104,8 @@ export const FormStateComponent = ({ children }: Props) => {
             getAnnenForelderInntektSum: summerPersoninntekt(formData.annenForelderInntekt),
             formStep: formStep,
             setFormStep: setFormStep,
-            simulationInntekt: undefined,
-            setSimulationInntekt: () => undefined
+            simulationInntekt: simulationInntekt,
+            setSimulationInntekt: setSimulationInntekt
         }}>
             {children}
         </FormStateContext.Provider>
