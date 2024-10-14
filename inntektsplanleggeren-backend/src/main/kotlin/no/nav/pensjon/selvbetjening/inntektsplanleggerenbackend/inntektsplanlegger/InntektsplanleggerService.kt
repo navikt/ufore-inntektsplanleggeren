@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.audit.Auditor
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
@@ -13,8 +14,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,6 +27,7 @@ class InntektsplanleggerService(
     private val validator: Validator,
     private val inntektService: InntektService,
     private val simuleringService: SimuleringService,
+    private val auditor: Auditor,
     private val tokenService: TokenService
 ) {
 
@@ -101,7 +103,9 @@ class InntektsplanleggerService(
             pensjonsdata,
             simuleringsaar
         )
-
+        if (tokenService.isUserLoggedInAsSaksbehandler()) {
+            auditor.auditInternalUserRead("Z990000", pid)
+        }
         return InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
