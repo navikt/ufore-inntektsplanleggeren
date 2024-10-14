@@ -4,7 +4,7 @@ data class InntektsplanleggerMessage(
     val messageCode: InntektsplanleggerMessageCode,
     val details: String = messageCode.details,
     val type: InntektsplanleggerMessageType = messageCode.type,
-    val metadata: Map<MetadataKey, String> = mapOf(),
+    val metadata: Map<MetadataKey, Any?> = mapOf(),
 )
 
 
@@ -54,6 +54,30 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
     FIELD_CAN_NOT_BE_NULL(
         InntektsplanleggerMessageType.ERROR,
         "Feltet må alltid ha en verdi. Hvis bruker ikke har noen inntekt for feltet, skal verdien være 0."
+    ),
+    OPPGITT_INNTEKT_OVER_INNTEKTSTAK(
+        InntektsplanleggerMessageType.WARNING,
+        "Bruker har oppgitt inntekt som overstiger 80% av oppjustert IFU (inntekt før uføretrygd), dette medfører at uføretrygd blir redusert til 0"
+    ),
+    OPPGITT_INNTEKT_GIVES_LOWER_UFORETRYGD_THAN_ALREADY_UTBETALT(
+        InntektsplanleggerMessageType.WARNING,
+        "Bruker har oppgitt inntekt som er høyere enn tidligere oppgitt. Uføretrygd som allerede er utbetalt dette året er høyere enn det bruker ville fått dette året med den oppgitte inntekten. Bruker må tilbakebetale i etteroppgjør."
+    ),
+    OPPGITT_INNTEKT_GIVES_MORE_UFORETRYGD_THAN_ALREADY_UTBETALT(
+        InntektsplanleggerMessageType.WARNING,
+        "Bruker har oppgitt inntekt som er lavere enn tidligere oppgitt. Brukers uføretrygd vil derfor ikke reduseres mot inntekt resten av året. Hvis for lite utbetales i uføretrygd, vil bruker få etterbetalt i etteroppgjør."
+    ),
+    FAKTOROMREGNET_ELLER_MANUELT_OVERSTYRT(
+        InntektsplanleggerMessageType.WARNING,
+        "Brukers nåværende sak er faktoromregnet eller manuelt overstyrt. Det er dermed ikke mulig å simulere på saken, men bruker kan likevel sende inn inntektsendring."
+    ),
+    OPEN_INNTEKTSENDRING_KRAV(
+        InntektsplanleggerMessageType.WARNING,
+        "Bruker har et åpent krav om inntektsendring. Dette medfører at siste rapporterte inntekt ikke nødvendigvis er den som vises som dagens inntekt for brukeren, da siste innsendte fremdeles er under behandling."
+    ),
+    SIMULERING_CONTAINS_MOTREGNING(
+        InntektsplanleggerMessageType.WARNING,
+        "Simuleringen inneholder en eller flere ytelseskomponenter som har en motregning. Dette kan bety at simuleringsresultatet blir misvisende å vise til bruker."
     )
 }
 
@@ -77,5 +101,10 @@ enum class FieldReference {
 }
 
 enum class MetadataKey {
-    AFFECTED_FIELD
+    AFFECTED_FIELD,
+    INNTEKTSTAK,
+    SUM_OVER_INNTEKTSTAK,
+    UFORE_HITTIL_I_AR,
+    SUM_SIMULERT_UFORETRYGD,
+    SUM_HITTIL_I_AAR
 }
