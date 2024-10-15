@@ -37,7 +37,7 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
     ),
     INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG(
         InntektsplanleggerMessageType.ERROR,
-        "Inntekt fra andre ytelser og pensjon fra utlandet er kun relevant når bruker har barnetillegg for felelsbarn eller særkullsbarn."
+        "Inntekt fra andre ytelser og pensjon fra utlandet er kun relevant når bruker har barnetillegg for fellesbarn eller særkullsbarn."
     ),
     MISSING_RELEVANT_INNTEKTER_WHEN_BARNETILLEGG(
         InntektsplanleggerMessageType.ERROR,

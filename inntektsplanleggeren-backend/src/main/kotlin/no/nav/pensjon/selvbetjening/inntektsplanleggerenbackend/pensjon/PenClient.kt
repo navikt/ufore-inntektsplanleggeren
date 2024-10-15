@@ -25,9 +25,50 @@ class PenClient(
     private val tokenService: TokenService
 ) {
 
+    fun sendInntektsendring(
+        pid: String,
+        virk: LocalDate,
+        simulertTotalbelopNetto: Int,
+        inntektsgrunnlagListe: List<Inntektsgrunnlag>,
+        inntektsgrunnlagListeEps: List<Inntektsgrunnlag>?
+    ): InnsendingResponse {
+        val path = "/pen/api/selvbetjening/inntektsplanleggeren/behandle"
+        try {
+            return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
+                .let { accessToken ->
+                    webClient
+                        .post()
+                        .uri("$url$path")
+                        .header("Authorization", "Bearer $accessToken")
+                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .bodyValue(
+                            InnsendingRequest(
+                                pid,
+                                simulertTotalbelopNetto,
+                                virk,
+                                inntektsgrunnlagListe,
+                                inntektsgrunnlagListeEps?: emptyList(),
+                                tokenService.determineLoggedInUser()
+                            )
+                        )
+                        .retrieve()
+                        .bodyToMono(InnsendingResponse::class.java)
+                        .block()
+                } ?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
+        } catch (e: WebClientResponseException) {
+            if (HttpStatus.FORBIDDEN == e.statusCode) {
+                throw ForbiddenException(AppId.PEN.name, path, e.message, e)
+            }
+            throw ClientException(AppId.PEN.name, path, e.message, e)
+        } catch (e: Exception) {
+            throw ClientException(AppId.PEN.name, path, e.message, e)
+        }
+    }
+
     fun simulerInntektsendring(
         pid: String,
-        virk: LocalDate?,
+        virk: LocalDate,
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         inntektsgrunnlagListeEps: List<Inntektsgrunnlag>
     ): SimulerEndringUforetrygdResponse {
@@ -41,7 +82,14 @@ class PenClient(
                         .header("Authorization", "Bearer $accessToken")
                         .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
                         .accept(MediaType.APPLICATION_JSON)
-                        .bodyValue(SimuleringEndringUforetrygdRequest(pid, virk, inntektsgrunnlagListe, inntektsgrunnlagListeEps))
+                        .bodyValue(
+                            SimuleringEndringUforetrygdRequest(
+                                pid,
+                                virk,
+                                inntektsgrunnlagListe,
+                                inntektsgrunnlagListeEps
+                            )
+                        )
                         .retrieve()
                         .bodyToMono(SimulerEndringUforetrygdResponse::class.java)
                         .block()

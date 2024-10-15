@@ -65,6 +65,18 @@ class TokenService(
         }
     }
 
+    fun determineLoggedInUser(): String {
+        SecurityContextHolder.getContext().authentication.let {
+            val token = (it as JwtAuthenticationToken).token
+            if (determineTokenType() == TokenType.TOKEN_X) {
+                return token.getClaim("pid")
+            } else if (determineTokenType() == TokenType.AZURE_AD_ON_BEHALF_OF) {
+                return token.getClaim("name")
+            }
+        }
+        return "SYSTEM"
+    }
+
     fun isUserInStrengtFortroligGroup(): Boolean = getGroups().contains(strengtFortroligAdresseGroupId)
 
     fun isUserInFortroligGroup(): Boolean = getGroups().contains(fortroligAdresseGroupId)

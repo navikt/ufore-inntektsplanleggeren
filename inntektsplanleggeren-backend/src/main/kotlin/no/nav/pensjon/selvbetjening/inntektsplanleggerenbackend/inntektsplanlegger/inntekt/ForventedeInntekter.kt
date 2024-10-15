@@ -4,7 +4,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Innt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import java.time.*
 
-data class ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?)
+data class  ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?)
 
 data class PersonInntekter(
     val arbeidsinntekt: Int?,
@@ -19,15 +19,15 @@ data class PersonInntekter(
     fun sumInntekterRelevantTowardsInntektstak(): Int =
         listOfNotNull(arbeidsinntekt, naeringsinntekt, inntektUtland).sum()
 
-    fun mapToInntektsgrunnlag(simuleringsaar: Int): List<Inntektsgrunnlag> = listOf(
-        createInntektsgrunnlag(InntektsgrunnlagType.ARBEIDSINNTEKT.code, arbeidsinntekt, simuleringsaar),
-        createInntektsgrunnlag(InntektsgrunnlagType.NAERINGSINNTEKT.code, naeringsinntekt, simuleringsaar),
-        createInntektsgrunnlag(InntektsgrunnlagType.ANDRE_YTELSER.code, andrePensjonsgivendeYtelser, simuleringsaar),
-        createInntektsgrunnlag(InntektsgrunnlagType.INNTEKT_UTLAND.code, inntektUtland, simuleringsaar),
-        createInntektsgrunnlag(InntektsgrunnlagType.PENSJON_UTLAND.code, pensjonUtland, simuleringsaar)
+    fun mapToInntektsgrunnlag(simuleringsaar: Int, opprettetAv: String): List<Inntektsgrunnlag> = listOf(
+        createInntektsgrunnlag(InntektsgrunnlagType.ARBEIDSINNTEKT.code, arbeidsinntekt, simuleringsaar, opprettetAv),
+        createInntektsgrunnlag(InntektsgrunnlagType.NAERINGSINNTEKT.code, naeringsinntekt, simuleringsaar, opprettetAv),
+        createInntektsgrunnlag(InntektsgrunnlagType.ANDRE_YTELSER.code, andrePensjonsgivendeYtelser, simuleringsaar, opprettetAv),
+        createInntektsgrunnlag(InntektsgrunnlagType.INNTEKT_UTLAND.code, inntektUtland, simuleringsaar, opprettetAv),
+        createInntektsgrunnlag(InntektsgrunnlagType.PENSJON_UTLAND.code, pensjonUtland, simuleringsaar, opprettetAv)
     )
 
-    private fun createInntektsgrunnlag(type: String, belop: Int?, simuleringsaar: Int): Inntektsgrunnlag =
+    private fun createInntektsgrunnlag(type: String, belop: Int?, simuleringsaar: Int, opprettetAv: String): Inntektsgrunnlag =
         Inntektsgrunnlag(
             inntektsgrunnlagId = null,
             fomDato = OffsetDateTime.ofInstant(
@@ -58,7 +58,7 @@ data class PersonInntekter(
             belop = belop ?: 0,
             bruk = true,
             kopiertFraGammeltKrav = false,
-            registerOpprettetAv = "", //TODO
+            registerOpprettetAv = opprettetAv,
             grunnlagKilde = "BRUKER_OPP",
             registerKilde = "SELVBETJ",
             inntektType = type,

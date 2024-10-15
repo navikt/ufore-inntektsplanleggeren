@@ -6,11 +6,16 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
-class SimuleringService(val penClient: PenClient, val validator: SimuleringValidator) {
+class SimuleringService(
+    val penClient: PenClient,
+    val validator: SimuleringValidator,
+    val tokenService: TokenService
+) {
     fun simulerInntektsendring(
         pid: String,
         forventedeInntekterOppgitt: ForventedeInntekter,
@@ -18,14 +23,21 @@ class SimuleringService(val penClient: PenClient, val validator: SimuleringValid
         simuleringsaar: Int,
         simuleringFomDato: LocalDate
     ): SimuleringData {
+        val initiertAv = tokenService.determineLoggedInUser()
         val simuleringsresultat = penClient.simulerInntektsendring(
             pid = pid,
             virk = simuleringFomDato,
-            inntektsgrunnlagListe = forventedeInntekterOppgitt.bruker.mapToInntektsgrunnlag(simuleringsaar),
-            inntektsgrunnlagListeEps = forventedeInntekterOppgitt.eps?.mapToInntektsgrunnlag(simuleringsaar)
+            inntektsgrunnlagListe = forventedeInntekterOppgitt.bruker.mapToInntektsgrunnlag(simuleringsaar, initiertAv),
+            inntektsgrunnlagListeEps = forventedeInntekterOppgitt.eps?.mapToInntektsgrunnlag(simuleringsaar, initiertAv)
                 ?: emptyList()
         )
-        val valideringsresultat = validator.validateSimulering(simuleringsresultat, forventedeInntekterOppgitt, simuleringFomDato, simuleringsaar, pid)
+        val valideringsresultat = validator.validateSimulering(
+            simuleringsresultat,
+            forventedeInntekterOppgitt,
+            simuleringFomDato,
+            simuleringsaar,
+            pid
+        )
         return SimuleringData(
             valideringsresultat = valideringsresultat, simuleringsresultat = Simuleringsresultat(
                 uforetrygd = SimuleringAmounts(
