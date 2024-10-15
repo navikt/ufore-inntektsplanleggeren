@@ -1,5 +1,5 @@
 /* DinInntektTable.css */
 .expansion-card-gray {
-    background-color: var(--a-blue-100);
-    --ac-expansioncard-border-color: transparent /* Light gray background */
+    background-color: var(--a-blue-50);
+    --ac-expansioncard-border-color: transparent
 }

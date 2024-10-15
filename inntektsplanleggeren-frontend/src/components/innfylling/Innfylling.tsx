@@ -9,7 +9,7 @@ import {getInntekter, PersonInntekt, submitInntektSimulation} from "@/api/apiFet
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {InntekterResponse, SubmitInntektSimulationResponse} from "@/api/model/ApiRequests";
 import {SelectedYearContext} from "@/context/SelectedYear";
-import {belopSum, numberFormat} from "@/common/Utils";
+import {belopSum, numberFormatWithKr} from "@/common/Utils";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
@@ -44,12 +44,12 @@ export const Innfylling = () => {
             <Heading level="2" size="small">Din inntekt hittil i år</Heading>
             {(inntektResponse && inntektResponse.arbeidsinntektOgYtelserHittilIAar) &&
                 <DinInntektTable data={inntektResponse.arbeidsinntektOgYtelserHittilIAar}>
-                    Du har mottatt {numberFormat(belopSum(inntektResponse.arbeidsinntektOgYtelserHittilIAar))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
+                    Du har mottatt {numberFormatWithKr(belopSum(inntektResponse.arbeidsinntektOgYtelserHittilIAar))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
                 </DinInntektTable>
             }
             {(inntektResponse && inntektResponse.pensjonFraAndreHittilIAar) &&
                 <DinInntektTable data={inntektResponse.pensjonFraAndreHittilIAar}>
-                    Du har mottatt {numberFormat(belopSum(inntektResponse.pensjonFraAndreHittilIAar))} kr i pensjoner fra andre enn folketrygden hittil i år.
+                    Du har mottatt {numberFormatWithKr(belopSum(inntektResponse.pensjonFraAndreHittilIAar))} kr i pensjoner fra andre enn folketrygden hittil i år.
                 </DinInntektTable>
             }
 
