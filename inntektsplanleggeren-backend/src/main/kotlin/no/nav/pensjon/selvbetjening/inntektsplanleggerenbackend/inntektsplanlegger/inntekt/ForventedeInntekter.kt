@@ -4,7 +4,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Innt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import java.time.*
 
-data class  ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?)
+data class ForventedeInntekter(val bruker: PersonInntekter, val eps: PersonInntekter?)
 
 data class PersonInntekter(
     val arbeidsinntekt: Int?,
