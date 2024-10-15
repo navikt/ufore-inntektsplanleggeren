@@ -43,10 +43,15 @@ class InntektsplanleggerService(
                 inntektsgrunnlagListeEps = oppgitteInntekter.eps?.mapToInntektsgrunnlag(simuleringsaar, initiertAv)
             )
             val status =
-                if (innsending.status == BehandlingStatus.AUTOMATISK_BEHANDLING.name)
-                    InnsendingStatus.AUTOMATISK_BEHANDLING
-                else
-                    InnsendingStatus.INNTEKT_LAGRET_INGEN_BEHANDLING
+                when (innsending.status) {
+                    BehandlingStatus.AUTOMATISK_BEHANDLING.name -> {
+                        InnsendingStatus.AUTOMATISK_BEHANDLING
+                    }
+                    BehandlingStatus.INNTEKT_LAGRET.name -> {
+                        InnsendingStatus.INNTEKT_LAGRET_INGEN_BEHANDLING
+                    }
+                    else -> InnsendingStatus.IKKE_SENDT
+                }
             return InntektsplanleggerenSendResponse(simulering.messages, status)
         }
         return InntektsplanleggerenSendResponse(simulering.messages, InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET)

@@ -7,5 +7,6 @@ data class InntektsplanleggerenSendResponse(val messages: List<Inntektsplanlegge
 enum class InnsendingStatus{
     AUTOMATISK_BEHANDLING,
     INNTEKT_LAGRET_INGEN_BEHANDLING,
-    IKKE_SENDT_VALIDERING_FEILET
+    IKKE_SENDT_VALIDERING_FEILET,
+    IKKE_SENDT
 }
