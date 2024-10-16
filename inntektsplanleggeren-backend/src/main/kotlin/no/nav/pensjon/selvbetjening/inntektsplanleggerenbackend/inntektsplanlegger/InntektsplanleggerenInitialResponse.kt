@@ -16,6 +16,11 @@ data class InntektsplanleggerenInitialData(
     val grenseStoppAvUfoeretrygd: Int,
     val aktuelleAar: List<Int>,
     val hasVarigTilrettelagtArbeid: Boolean,
-    val hasBarneTillegg: Boolean,
+    val hasBarneTilleggFellesbarn: Boolean,
+    val grenseStoppAvBarnetilleggFellesbarn: Int?,
+    val fribelopBarnetilleggFellesbarn: Int?,
+    val hasBarnetilleggSaerkullsbarn: Boolean,
+    val grenseStoppAvBarnetilleggSaerkullsbarn: Int?,
+    val fribelopBarnetilleggSaerkullsbarn: Int?,
     val hasGjenlevendeTillegg: Boolean
 )

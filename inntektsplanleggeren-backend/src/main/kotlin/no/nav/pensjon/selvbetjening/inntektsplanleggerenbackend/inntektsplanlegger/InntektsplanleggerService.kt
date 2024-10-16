@@ -139,7 +139,12 @@ class InntektsplanleggerService(
                 kompensasjonsgrad = pensjonsdata.kompensasjonsgrad,
                 grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,
                 hasGjenlevendeTillegg = pensjonsdata.hasGjenlevendeTillegg,
-                hasBarneTillegg = pensjonsdata.hasBarnetillegg(),
+                hasBarneTilleggFellesbarn = pensjonsdata.barnetilleggFellesbarn,
+                grenseStoppAvBarnetilleggFellesbarn = pensjonsdata.grenseStoppAvBarnetilleggFellesbarn,
+                fribelopBarnetilleggFellesbarn = pensjonsdata.fribelopBarnetilleggFellesbarn,
+                hasBarnetilleggSaerkullsbarn = pensjonsdata.barnetilleggSaerkullsbarn,
+                grenseStoppAvBarnetilleggSaerkullsbarn = pensjonsdata.grenseStoppAvBarnetilleggSaerkullsbarn,
+                fribelopBarnetilleggSaerkullsbarn = pensjonsdata.fribelopBarnetilleggSaerkullsbarn,
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
                 aktuelleAar = getAktuelleAar(
                     pensjonsdata.hasLopendeUforeVedtakThisYear,
