@@ -63,4 +63,22 @@ class InntektsplanleggerController(
             throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
         }
     }
+
+    @PostMapping("send")
+    fun send(
+        @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
+        @RequestBody forventedeInntekter: ForventedeInntekter
+    ): ResponseEntity<InntektsplanleggerenSendResponse> {
+        return try {
+            ResponseEntity(
+                inntektsPlanleggerService.sendInntektsendring(
+                    SecurityContextUtil.getPidFromContext(),
+                    simuleringsaar,
+                    forventedeInntekter
+                ), HttpStatus.OK
+            )
+        } catch (exception: Exception) {
+            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+        }
+    }
 }

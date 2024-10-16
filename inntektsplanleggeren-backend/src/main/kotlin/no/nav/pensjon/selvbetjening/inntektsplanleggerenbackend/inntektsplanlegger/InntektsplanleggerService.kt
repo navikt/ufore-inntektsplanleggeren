@@ -11,7 +11,9 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
@@ -21,14 +23,45 @@ class InntektsplanleggerService(
     private val penClient: PenClient,
     private val validator: Validator,
     private val inntektService: InntektService,
-    private val simuleringService: SimuleringService
+    private val simuleringService: SimuleringService,
+    private val tokenService: TokenService
 ) {
+
+    fun sendInntektsendring(
+        pid: String,
+        simuleringsaar: Int,
+        oppgitteInntekter: ForventedeInntekter
+    ): InntektsplanleggerenSendResponse {
+        val simulering = simulerInntektsendring(pid, simuleringsaar, oppgitteInntekter)
+        if (simulering.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
+            val initiertAv = tokenService.determineLoggedInUser()
+            val innsending = penClient.sendInntektsendring(
+                pid = pid,
+                virk = getSimuleringFomDato(simuleringsaar),
+                simulertTotalbelopNetto = simulering.result?.sum?.monthly?.after!!,
+                inntektsgrunnlagListe = oppgitteInntekter.bruker.mapToInntektsgrunnlag(simuleringsaar, initiertAv),
+                inntektsgrunnlagListeEps = oppgitteInntekter.eps?.mapToInntektsgrunnlag(simuleringsaar, initiertAv)
+            )
+            val status =
+                when (innsending.status) {
+                    BehandlingStatus.AUTOMATISK_BEHANDLING.name -> {
+                        InnsendingStatus.AUTOMATISK_BEHANDLING
+                    }
+                    BehandlingStatus.INNTEKT_LAGRET.name -> {
+                        InnsendingStatus.INNTEKT_LAGRET_INGEN_BEHANDLING
+                    }
+                    else -> InnsendingStatus.IKKE_SENDT
+                }
+            return InntektsplanleggerenSendResponse(simulering.messages, status)
+        }
+        return InntektsplanleggerenSendResponse(simulering.messages, InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET)
+    }
 
     fun simulerInntektsendring(
         pid: String,
         simuleringsAar: Int,
         oppgitteInntekter: ForventedeInntekter
-    ): SimuleringResponse? {
+    ): SimuleringResponse {
         val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsAar))
         val gjeldendeForventedeInntekter =
             pensjonsdata?.let { inntektService.getForventedeInntekter(pid, it, simuleringsAar) }
