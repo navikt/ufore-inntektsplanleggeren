@@ -22,7 +22,6 @@ export const DinInntektTable = ({ data, children }: DinInntektTableProps) => { /
     });
 
     const isDesktop = width > 768;
-    const tableTextSize = isDesktop ? "medium" : "small"
 
     return    <div className="grid gap-6">
             {/*todo style/colors when open or selected?*/}
@@ -70,19 +69,14 @@ const Innhold = (props: { data: InntektDetaljer[] }) => {
 const InnholdMobile = (props: { data: InntektDetaljer[] }) => {
     return (
         <Table>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell scope="col">Detaljer</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
             <Table.Body>
                 {props.data.map(({ maned, belop, inntektsgivere }, i) => (
                     <Table.Row key={i}>
                         <Table.DataCell>
                             <div>
                                 <b>{Month[maned]}</b>
-                                <div>Beløp per måned: {numberFormatWithKr(belop)}</div>
-                                {inntektsgivere && <div>Arbeidsgiver: {inntektsgivere.join(", ")}</div>}
+                                <div>Beløp per måned: {belop > 0 ? numberFormatWithKr(belop) : "Ikke mottatt"}</div>
+                                {inntektsgivere.length > 0 ? <div>Arbeidsgiver: {inntektsgivere.join(", ")}</div> : null}
                             </div>
                         </Table.DataCell>
                     </Table.Row>

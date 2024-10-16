@@ -25,6 +25,15 @@ export interface DisplayData {
     harVarigTilrettelagtArbeid: boolean
     harBarneTillegg: boolean
     harGjenlevendeTillegg: boolean
+
+
+    "hasBarneTilleggFellesbarn": true,
+    "grenseStoppAvBarnetilleggFellesbarn": 669751,
+    "fribelopBarnetilleggFellesbarn": 570529,
+    "hasBarnetilleggSaerkullsbarn": false,
+    "grenseStoppAvBarnetilleggSaerkullsbarn": null,
+    "fribelopBarnetilleggSaerkullsbarn": null,
+    "hasGjenlevendeTillegg": false
 }
 
 export interface PersonInntekt {
@@ -53,9 +62,9 @@ const inntektData : InntekterResponse = {
         },
         {
             "maned": 6,
-            "belop": 34543.0,
+            "belop": 0.0,
             "inntektsgivere": [
-                "Isbilen AS"
+                // "Isbilen AS"
             ]
         },
         {
@@ -162,7 +171,7 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         }
     }
 
-    return await fetch(window.location.pathname + "api/inntektsplannleger", { //todo fix url
+    return await fetch(window.location.pathname + "api/inntektsplannleger/initiate", { //todo fix url
         method: "GET",
         credentials: "include",
         headers: headers
