@@ -10,7 +10,11 @@ data class Pensjonsdata(
     val hasGjenlevendeTillegg: Boolean,
     val uforeHeleAaret: Boolean,
     val barnetilleggSaerkullsbarn: Boolean,
+    val grenseStoppAvBarnetilleggSaerkullsbarn: Int?,
+    val fribelopBarnetilleggSaerkullsbarn: Int?,
     val barnetilleggFellesbarn: Boolean,
+    val grenseStoppAvBarnetilleggFellesbarn: Int?,
+    val fribelopBarnetilleggFellesbarn: Int?,
     val epsPid: String?,
     val inntekterFromOpenKravBruker: List<Inntektsgrunnlag>?,
     val inntekterFromOpenKravEps: List<Inntektsgrunnlag>?
