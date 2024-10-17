@@ -1,6 +1,6 @@
-import React, {createContext, SetStateAction, useContext, useState} from "react";
-import {Link, Outlet} from "react-router-dom";
-import {Button, FormProgress} from "@navikt/ds-react";
+import React, {useContext} from "react";
+import {Outlet} from "react-router-dom";
+import {FormProgress} from "@navikt/ds-react";
 import {FormStateContext} from "@/context/FormData";
 
 
