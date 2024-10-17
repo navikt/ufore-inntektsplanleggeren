@@ -91,7 +91,9 @@ interface DataContextProviderProps {
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [initialViewData, setInitialViewData] = useState(DataContextDefaultValue.initialViewData)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [inntektSimulation, setInntektSimulation] = useState(DataContextDefaultValue.inntektSimulation)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
