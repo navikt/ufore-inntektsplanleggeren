@@ -36,7 +36,7 @@ export const formatInntektToNumber = (s?: string) => {
 
 
 
-export const FormFields = ({ year, errors, setErrors, setInntekt, data, inntektSum }: FormFieldsProps) => {
+export const FormFields = ({ year, errors, setInntekt, data, inntektSum }: FormFieldsProps) => {
     React.useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
