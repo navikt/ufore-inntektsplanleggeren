@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import {Routes, Route, BrowserRouter, Outlet, Navigate} from "react-router-dom";
 import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
