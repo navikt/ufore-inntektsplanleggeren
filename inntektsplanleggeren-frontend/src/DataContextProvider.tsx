@@ -7,17 +7,22 @@ import {
 
 
 export const InitialViewDefaultData: DisplayData | null = {
-    forventetInntekt: 100000,
-    forventetInntektAnnenForelder: null,
-    inntektsgrense: 50000,
-    kompensasjonsgrad: 60.14,
-    grenseStoppAvUfoeretrygd: 600000,
+    forventetInntekt: 120000,
+    forventetInntektAnnenForelder: 800000,
+    inntektsgrense: 49611,
+    kompensasjonsgrad: 49.7,
+    grenseStoppAvUfoeretrygd: 460060,
     aktuelleAar: [
         2024,
-        2023
+        2025
     ],
     hasVarigTilrettelagtArbeid: true,
-    hasBarneTillegg: true,
+    hasBarneTilleggFellesbarn: true,
+    grenseStoppAvBarnetilleggFellesbarn: 669751,
+    fribelopBarnetilleggFellesbarn: 570529,
+    hasBarnetilleggSaerkullsbarn: false,
+    grenseStoppAvBarnetilleggSaerkullsbarn: 676,
+    fribelopBarnetilleggSaerkullsbarn: 576,
     hasGjenlevendeTillegg: true
 }
 

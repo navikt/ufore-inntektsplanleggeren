@@ -167,7 +167,7 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         }
     }
 
-    return await fetch(window.location.pathname + "api/inntektsplannleger/initiate", { //todo fix url
+    return await fetch(window.location.pathname + "api/initiate", {
         method: "GET",
         credentials: "include",
         headers: headers
@@ -192,7 +192,7 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
 
     // return inntektData
 
-    const res = await fetch(window.location.pathname + `api/inntektsplannleger?year=${year}`, {
+    const res = await fetch(window.location.pathname + `api?year=${year}`, {
         method: "GET",
         credentials: "include",
         headers: headers
