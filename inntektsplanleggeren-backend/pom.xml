@@ -22,6 +22,7 @@
 		<logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
 		<spring-boot-starter-security.version>3.3.3</spring-boot-starter-security.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
+		<micrometer.version>1.13.5</micrometer.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -64,6 +65,11 @@
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 			<version>${kotlin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>${micrometer.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
