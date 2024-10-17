@@ -1,4 +1,4 @@
-import {Alert, ExpansionCard, Heading, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
+import {Alert, Heading, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {FormStateContext} from "@/context/FormData";
 

@@ -61,7 +61,7 @@ const DataContextDefaultValue = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setRefetch: (value: boolean) => {
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     loading: true,
     setLoading: {},
     error: false,

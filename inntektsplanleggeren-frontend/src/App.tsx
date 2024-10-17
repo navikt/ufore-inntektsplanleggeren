@@ -1,14 +1,6 @@
 import './App.css'
 import "@navikt/ds-css";
-import {Heading, Panel,  Button} from "@navikt/ds-react";
-import {createContext, SetStateAction, useContext, useState} from "react";
-import {DataContext} from "@/DataContextProvider";
-import {Loading} from "@/components/pageStatus/Loading";
-import {Error} from "@/components/pageStatus/Error";
-import {LoadingError} from "@/components/pageStatus/LoadingError";
-import {Feilmelding} from "@/components/pageStatus/Feilmelding";
-import {InitialView} from "@/components/initialView/InitialView";
-import {YearView} from "@/components/YearView";
+import {Heading} from "@navikt/ds-react";
 import {Outlet} from "react-router-dom";
 import {FormStateComponent} from "@/context/FormData";
 

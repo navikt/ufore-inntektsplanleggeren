@@ -1,4 +1,4 @@
-import {BodyLong, Button, FormSummary, Heading, VStack} from "@navikt/ds-react";
+import {BodyLong, Button, FormSummary, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";

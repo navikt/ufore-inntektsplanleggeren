@@ -1,6 +1,4 @@
 import {BodyLong, ExpansionCard, Label} from "@navikt/ds-react";
-import {useContext} from "react";
-import {DataContext} from "@/DataContextProvider";
 import {DisplayData} from "@/api/apiFetching";
 import {Link} from "react-router-dom";
 

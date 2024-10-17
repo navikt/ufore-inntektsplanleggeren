@@ -1,6 +1,5 @@
-import {Heading, HStack, VStack, Alert, BodyLong} from "@navikt/ds-react";
-import React, {useContext, useState, useEffect} from "react";
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {Heading, VStack, Alert} from "@navikt/ds-react";
+import React from "react";
 
 
 export const SuccessView = () => {
