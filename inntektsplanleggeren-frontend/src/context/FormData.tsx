@@ -1,6 +1,6 @@
 import React, {createContext, SetStateAction, useContext, useState} from "react";
 import {InntektInnfylling, PersonInntekt} from "@/api/apiFetching";
-import {DataContext, InntektSimulationDefaultValue} from "@/DataContextProvider";
+import {DataContext} from "@/DataContextProvider";
 import {SimulationResult} from "@/api/model/ApiRequests";
 
 
@@ -18,7 +18,7 @@ interface FormState {
     getAnnenForelderInntektSum: number,
 
     simulationInntekt: SimulationResult | undefined,
-    setSimulationInntekt: (value: SetStateAction<SimulationResult>) => void
+    setSimulationInntekt: (value: SetStateAction<SimulationResult | undefined>) => void
 }
 
 const initialFormData = {

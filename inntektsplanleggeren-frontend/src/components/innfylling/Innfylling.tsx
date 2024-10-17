@@ -7,7 +7,7 @@ import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
 import {getInntekter, PersonInntekt, submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
-import {InntekterResponse, SubmitInntektSimulationResponse} from "@/api/model/ApiRequests";
+import {InntekterResponse} from "@/api/model/ApiRequests";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
 
@@ -27,7 +27,7 @@ export const Innfylling = () => {
         getInntekter(selectedYear).then(data => setInntektResponse(data));
     }, [selectedYear]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         console.log(formData);
         try {

@@ -188,8 +188,18 @@ const MOCKS_ENABLED = true;
 export async function getInntekter(year: string): Promise<InntekterResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
-    const headers = pid ? { 'Content-Type': 'application/json', 'pid': pid } : { 'Content-Type': 'application/json' };
+    let headers;
 
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
     // return inntektData
 
     const res = await fetch(window.location.pathname + `api?year=${year}`, {
@@ -220,8 +230,18 @@ export async function submitInntektSimulation(formData: InntektInnfylling, year:
     }
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
+    let headers;
 
-    const headers = pid ? { 'Content-Type': 'application/json', 'pid': pid } : { 'Content-Type': 'application/json' };
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
 
     const res = await fetch(window.location.pathname + `api/inntektsplannleger`, {
         method: "POST",
