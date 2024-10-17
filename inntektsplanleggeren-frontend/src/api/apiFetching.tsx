@@ -22,18 +22,14 @@ export interface DisplayData {
     kompensasjonsgrad: number
     grenseStoppAvUfoeretrygd: number
     aktuelleAar: number[]
-    harVarigTilrettelagtArbeid: boolean
-    harBarneTillegg: boolean
-    harGjenlevendeTillegg: boolean
-
-
-    "hasBarneTilleggFellesbarn": true,
-    "grenseStoppAvBarnetilleggFellesbarn": 669751,
-    "fribelopBarnetilleggFellesbarn": 570529,
-    "hasBarnetilleggSaerkullsbarn": false,
-    "grenseStoppAvBarnetilleggSaerkullsbarn": null,
-    "fribelopBarnetilleggSaerkullsbarn": null,
-    "hasGjenlevendeTillegg": false
+    hasVarigTilrettelagtArbeid: boolean
+    hasBarneTilleggFellesbarn: boolean,
+    grenseStoppAvBarnetilleggFellesbarn: number | null,
+    fribelopBarnetilleggFellesbarn: number | null,
+    hasBarnetilleggSaerkullsbarn: boolean,
+    grenseStoppAvBarnetilleggSaerkullsbarn: number | null,
+    fribelopBarnetilleggSaerkullsbarn: number | null,
+    hasGjenlevendeTillegg: boolean
 }
 
 export interface PersonInntekt {

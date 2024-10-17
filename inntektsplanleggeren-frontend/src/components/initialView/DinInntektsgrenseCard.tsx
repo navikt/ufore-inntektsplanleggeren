@@ -22,7 +22,7 @@ export function InntektsgrenseCard(props: {
                     </BodyLong>
 
                     <Label as="p">Din inntektsgrense: {props.displayData.inntektsgrense}kr</Label>
-                    {props.displayData.harVarigTilrettelagtArbeid ?
+                    {props.displayData.hasVarigTilrettelagtArbeid ?
                         <BodyLong spacing>
                             Du har tiltaket <Link to={"nav.no"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil 124 028 kroner, som tilsvarer grunnbeløpet
                             i folketrygden. Hvis du får høyere inntekt enn dette, begynner vi å trekke en prosent av uføretrygd tilsvarende det beløpet
@@ -48,7 +48,7 @@ export function InntektsgrenseCard(props: {
                         uføretrygd igjen, dersom du ikke tjener for mye også det året.
                     </BodyLong>
 
-                    { props.displayData.harBarneTillegg ?
+                    { props.displayData.fribelopBarnetilleggFellesbarn ? //todo check if this condition is right!
                         <div>
                             <Label as="p"> Barnetillegg har egne grenser </Label>
                             <Link to={"nav.no"}> Les om inntektsgrenser for barnetillegg.</Link>
@@ -59,7 +59,7 @@ export function InntektsgrenseCard(props: {
                         </div> : <></>
                     }
 
-                    { props.displayData.harGjenlevendeTillegg ?
+                    { props.displayData.hasGjenlevendeTillegg ?
                         <div>
                             <Label as="p"> Gjenlevendetillegg </Label>
                             <BodyLong spacing>

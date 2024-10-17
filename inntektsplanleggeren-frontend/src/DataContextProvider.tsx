@@ -16,9 +16,9 @@ export const InitialViewDefaultData: DisplayData | null = {
         2024,
         2023
     ],
-    harVarigTilrettelagtArbeid: true,
-    harBarneTillegg: true,
-    harGjenlevendeTillegg: true
+    hasVarigTilrettelagtArbeid: true,
+    hasBarneTillegg: true,
+    hasGjenlevendeTillegg: true
 }
 
 export const WarningMessageDefaultValue: Message[] | null = [{
