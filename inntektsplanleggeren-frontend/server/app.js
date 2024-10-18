@@ -133,7 +133,7 @@ async function getTokenValue(idToken) {
         return await azure.getOnBehalfOfAccessToken(
             client,
             idToken,
-            process.env.FAMILIEFORHOLD_BACKEND_SCOPE,
+            process.env.INNTEKTSPLANLEGGEREN_BACKEND_SCOPE,
             tokenEndpoint
         );
 
@@ -141,7 +141,7 @@ async function getTokenValue(idToken) {
         return await tokenx.getTokenExchangeAccessToken(
             client,
             idToken,
-            process.env.FAMILIEFORHOLD_BACKEND_AUDIENCE
+            process.env.INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE
         );
     }
 }
