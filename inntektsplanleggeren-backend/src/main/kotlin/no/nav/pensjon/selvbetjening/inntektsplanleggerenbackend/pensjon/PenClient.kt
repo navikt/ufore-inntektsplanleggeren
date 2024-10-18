@@ -119,7 +119,7 @@ class PenClient(
                         .retrieve()
                         .bodyToMono(Pensjonsdata::class.java)
                         .block()
-                } ?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
+                }
         } catch (e: WebClientResponseException) {
             if (HttpStatus.FORBIDDEN == e.statusCode) {
                 throw ForbiddenException(AppId.PEN.name, path, e.message, e)
