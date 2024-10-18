@@ -8,5 +8,6 @@
 
 box-heading {
     size: var(--a-font-size-heading-xsmall);
-    /*size: var(--a-font-size-heading-2xlarge);*/
+
+    /* size: var(--a-font-size-heading-2xlarge); */
 }
