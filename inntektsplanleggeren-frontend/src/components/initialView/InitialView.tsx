@@ -27,7 +27,7 @@ export function InitialView() {
     const {selectedYear} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
-    // const [enableInntektsplannlegger] = useState<boolean>(true)
+    // const [enableInntektsplanlegger] = useState<boolean>(true)
 
     const handleButtonClick = () => {
         if (!selectedYear) {
@@ -108,7 +108,7 @@ export function InitialView() {
                 </BodyShort>
             </section>
 
-            {initialViewData.aktuelleAar && initialViewData.aktuelleAar.length > 0 && //todo figure out when inntektsplannlegger is enabled
+            {initialViewData.aktuelleAar && initialViewData.aktuelleAar.length > 0 && //todo figure out when inntektsplanlegger is enabled
                 <VStack>
                     <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 

@@ -118,9 +118,9 @@ function DataContextProvider(props: DataContextProviderProps) {
                 if (refetch) {
                     try {
                         setLoading(true)
-                        const inntektsPlannleggerResponse = await getInntektsgrense()
-                        setInitialViewData(inntektsPlannleggerResponse.data)
-                        // setInitialWarningBox(inntektsPlannleggerResponse.messages)
+                        const inntektsPlanleggerenResponse = await getInntektsgrense()
+                        setInitialViewData(inntektsPlanleggerenResponse.data)
+                        // setInitialWarningBox(inntektsPlanleggerResponse.messages)
 
                         setLoading(false)
                     } catch (e) {

@@ -243,7 +243,7 @@ export async function submitInntektSimulation(formData: InntektInnfylling, year:
         }
     }
 
-    const res = await fetch(window.location.pathname + `api/inntektsplannleger`, {
+    const res = await fetch(window.location.pathname + `api/inntektsplanlegger`, {
         method: "POST",
         credentials: "include",
         headers: headers,

@@ -46,7 +46,7 @@ export function InntektsgrenseCard(props: {
                         uføretrygd igjen, dersom du ikke tjener for mye også det året.
                     </BodyLong>
 
-                    { props.displayData.fribelopBarnetilleggFellesbarn ? //todo check if this condition is right!
+                    { props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? //todo check if this condition is right!
                         <div>
                             <Label as="p"> Barnetillegg har egne grenser </Label>
                             <Link to={"nav.no"}> Les om inntektsgrenser for barnetillegg.</Link>
