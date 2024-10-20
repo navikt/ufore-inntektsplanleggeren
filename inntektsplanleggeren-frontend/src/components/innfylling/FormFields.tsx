@@ -1,7 +1,8 @@
-import { VStack, TextField, ReadMore, Box, ErrorSummary } from "@navikt/ds-react";
+import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
 import { PersonInntekt} from "@/api/apiFetching";
+import {numberFormatWithKr} from "@/common/Utils";
 
 interface FormFieldsProps {
     year?: string;
@@ -68,7 +69,8 @@ export const FormFields = ({ year, errors, setInntekt, data, inntektSum }: FormF
             )}
 
             <VStack className="vstack-gap">
-                <TextField label="Arbeidsinntekt fra arbeidsgiver" inputMode="numeric" id="arbeidsinntekt" error={fieldErrors.arbeidsinntekt} value={formatInntekt(data.arbeidsinntekt)} onBlur={handleInputChange} onChange={handleInputChange} pattern="[\d\s]+"/>
+                <TextField label="Arbeidsinntekt fra arbeidsgiver" inputMode="numeric" id="arbeidsinntekt" error={fieldErrors.arbeidsinntekt}
+                           value={formatInntekt(data.arbeidsinntekt)} onBlur={handleInputChange} onChange={handleInputChange} pattern="[\d\s]+" htmlSize={30}/>
                 <div className="description-card">
                     <ReadMore header="Denne arbeidsinnteken skal med ">
                         Legg inn lønn fra arbeidsgiver som et årsbeløp før skatt. Ta med eventuell bonus og overtidsbetaling og feriepenger som blir utbetalt i {year}.
@@ -77,7 +79,8 @@ export const FormFields = ({ year, errors, setInntekt, data, inntektSum }: FormF
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Pensjonsgivende ytelser fra oss/NAV" inputMode="numeric" id="navYtelse" error={fieldErrors.navYtelse}  value={data.navYtelse} onChange={handleInputChange} onBlur={handleInputChange} description="Uføretrygden skal ikke tas med"/>
+                <TextField label="Pensjonsgivende ytelser fra oss/NAV" inputMode="numeric" id="navYtelse" error={fieldErrors.navYtelse}  value={data.navYtelse}
+                           onChange={handleInputChange} onBlur={handleInputChange} description="Uføretrygden skal ikke tas med" htmlSize={30}/>
                 <ReadMore header="Disse pensjonsgivende ytelsene skal med">
                     Har du sykepenger, arbeidsavklaringspenger, dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, ventelønn, omsorgs-, pleie- eller opplæringspenger
                     fra oss, skal du oppgi dette her. Uføretrygden skal ikke tas med.
@@ -85,21 +88,24 @@ export const FormFields = ({ year, errors, setInntekt, data, inntektSum }: FormF
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Næringsinntekt" inputMode="numeric" id="naeringsinntekt" error={fieldErrors.naeringsinntekt} value={data.naeringsinntekt} onChange={handleInputChange} onBlur={handleInputChange}/>
+                <TextField label="Næringsinntekt" inputMode="numeric" id="naeringsinntekt" error={fieldErrors.naeringsinntekt}
+                           value={data.naeringsinntekt} onChange={handleInputChange} onBlur={handleInputChange} htmlSize={30}/>
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt.
                 </ReadMore>
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric" id="inntektFraUtlandet" error={fieldErrors.inntektFraUtlandet} value={data.inntektFraUtlandet} onChange={handleInputChange} onBlur={handleInputChange}/>
+                <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric" id="inntektFraUtlandet" error={fieldErrors.inntektFraUtlandet}
+                           value={data.inntektFraUtlandet} onChange={handleInputChange} onBlur={handleInputChange} htmlSize={30}/>
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                 </ReadMore>
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Pensjoner og uførepensjon fra andre enn folketrygden" inputMode="numeric" id="pensjonFraAndre" error={fieldErrors.pensjonFraAndre} value={data.pensjonFraAndre} onChange={handleInputChange} onBlur={handleInputChange}/>
+                <TextField label="Pensjoner og uførepensjon fra andre enn folketrygden" inputMode="numeric" id="pensjonFraAndre"
+                           error={fieldErrors.pensjonFraAndre} value={data.pensjonFraAndre} onChange={handleInputChange} onBlur={handleInputChange} htmlSize={30}/>
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss. Har du krigspensjon eller familiepleieytelse
                     fra oss, skal du oppgi dette også her. Ikke oppgi eventuell alderspensjon du mottar fra oss. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
@@ -107,12 +113,19 @@ export const FormFields = ({ year, errors, setInntekt, data, inntektSum }: FormF
             </VStack>
 
             <VStack className="vstack-gap">
-                <TextField label="Pensjoner fra utlandet, i norske kroner" inputMode="numeric" id="pensjonFraUtlandet" error={fieldErrors.pensjonFraUtlandet} value={data.pensjonFraUtlandet} onChange={handleInputChange}/>
+                <TextField label="Pensjoner fra utlandet, i norske kroner" inputMode="numeric" id="pensjonFraUtlandet"
+                           error={fieldErrors.pensjonFraUtlandet} value={data.pensjonFraUtlandet} onChange={handleInputChange} htmlSize={30}/>
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra utlandet som et årsbeløp før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
                 </ReadMore>
             </VStack>
-            <Box padding="4" background="surface-info-subtle"> Din samlede forventede inntekt i {year}:  {inntektSum} </Box>
+
+            <Box padding="4" background="surface-info-subtle">
+                <VStack>
+                    <Heading size="small"> Din samlede forventede inntekt i {year}: </Heading>
+                    <p className="sum">{numberFormatWithKr(inntektSum)}</p>
+                </VStack>
+            </Box>
         </div>
     );
 };

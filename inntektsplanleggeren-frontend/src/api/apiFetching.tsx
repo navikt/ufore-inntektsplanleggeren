@@ -2,6 +2,9 @@ import {
     InntekterResponse, SubmitInntektRequest, SubmitInntektSimulationResponse,
 } from "@/api/model/ApiRequests";
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
+import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
+
+const MOCKS_ENABLED = true;
 
 export interface GetInntektResponse {
     messages: Message[]
@@ -46,107 +49,6 @@ export interface InntektInnfylling {
     annenForelderInntekt: PersonInntekt
 }
 
-const inntektData : InntekterResponse = {
-    "arbeidsinntektOgYtelserHittilIAar": [
-        {
-            "maned": 5,
-            "belop": 53426.0,
-            "inntektsgivere": [
-                "Veterinær AS",
-                "Grønnsakssuppekjøkkenet AS"
-            ]
-        },
-        {
-            "maned": 6,
-            "belop": 0.0,
-            "inntektsgivere": [
-                // "Isbilen AS"
-            ]
-        },
-        {
-            "maned": 7,
-            "belop": 54001.0,
-            "inntektsgivere": [
-                "Veterinær AS"
-            ]
-        },
-        {
-            "maned": 8,
-            "belop": 7641.0,
-            "inntektsgivere": [
-                "Veterinær AS"
-            ]
-        }
-    ],
-    "pensjonFraAndreHittilIAar": [
-        {
-            "maned": 5,
-            "belop": 10,
-            "inntektsgivere": [
-                "Isbilen AS",
-                "Veterinær AS"
-            ]
-        },
-        {
-            "maned": 6,
-            "belop": 34543.0,
-            "inntektsgivere": [
-                "Grønnsakssuppekjøkkenet AS"
-            ]
-        },
-        {
-            "maned": 7,
-            "belop": 54001.0,
-            "inntektsgivere": [
-                "Isbilen AS"
-            ]
-        },
-        {
-            "maned": 8,
-            "belop": 7641.0,
-            "inntektsgivere": [
-                "Isbilen AS"
-            ]
-        }
-    ],
-    "forventedeInntekter": {
-        "bruker": {
-            "arbeidsinntekt": {
-                "belop": 32456
-            },
-            "andrePensjonsgivendeYtelser": {
-                "belop": 22144
-            },
-            "naeringsinntekt": {
-                "belop": 23543
-            },
-            "inntektUtland": {
-                "belop": 1009
-            },
-            "pensjonUtland": {
-                "belop": 9342
-            }
-        },
-        "eps": {
-            "arbeidsinntekt": {
-                "belop": 10
-            },
-            "andrePensjonsgivendeYtelser": {
-                "belop": 10
-            },
-            "naeringsinntekt": {
-                "belop": 2341024
-            },
-            "inntektUtland": {
-                "belop": 4553
-            },
-            "pensjonUtland": {
-                "belop": 3323,
-            }
-        }
-    },
-    "uforeHeleAaret": false
-};
 
 
 
@@ -166,6 +68,9 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
             'Content-Type': 'application/json'
         }
     }
+    if (MOCKS_ENABLED) {
+        return mockInitiateResponse
+    }
 
     return await fetch(window.location.pathname + "api/initiate", {
         method: "GET",
@@ -181,9 +86,6 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
 
 }
 
-
-
-const MOCKS_ENABLED = true;
 
 export async function getInntekter(year: string): Promise<InntekterResponse> {
     const searchParams = new URLSearchParams(document.location.search)

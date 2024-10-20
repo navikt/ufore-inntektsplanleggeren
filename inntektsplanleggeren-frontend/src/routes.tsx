@@ -4,7 +4,6 @@ import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
 import {FormContainer} from "@/form-container";
 import {Innfylling} from "@/components/innfylling/Innfylling";
-import {Beregning} from "@/components/beregning/Beregning";
 import {Oppsummering} from "@/components/oppsummering/Oppsummering";
 import {Kvittering} from "@/components/kvittering/Kvittering";
 import {FormStateContext} from "@/context/FormData";
@@ -23,7 +22,7 @@ export const AppRoutes = (
                         <Route element={<YearGuard />}>
                             <Route element={<FormContainer />}>
                                 <Route path="/forventede-inntekter" element={<Innfylling />} />
-                                <Route path="/beregning" element={<Beregning />} />
+                                <Route path="/beregning" element={<Oppsummering />} />
                                 <Route path="/oppsummering" element={<Oppsummering />} />
                                 <Route path="/kvittering" element={<Kvittering />} />
                             </Route>

@@ -1,41 +1,35 @@
-import {BodyLong, Button, FormSummary, VStack} from "@navikt/ds-react";
+import {Button, Heading, HStack, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import {submitInntektSimulation} from "@/api/apiFetching";
-import {SelectedYearContext} from "@/context/SelectedYear";
+import {SimulationTable} from "@/components/oppsummering/SimulationTable";
 
 export const Oppsummering = () => {
     React.useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const { formData, getPersonInntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
-    const { selectedYear } = useContext(SelectedYearContext);
-
-    const { setFormStep } = useContext(FormStateContext);
-    setFormStep(3)
-
-    const send = () => submitInntektSimulation(formData, selectedYear); // TODO: Implement.
+    const { setFormStep, simulationInntekt, selectedYear } = useContext(FormStateContext);
+    setFormStep(2)
 
     return (
-        <VStack gap="5">
-            <BodyLong>Sjekk at opplysningene du har oppgitt er riktige. [Reskrive det neste] Opplysningene gjelder bare for uføretrygden du får fra oss.
-                Hvis du har tjenestepensjon, må du kontakte tjenestepensjonsordningen du tilhører.</BodyLong>
-            <FormSummary>
-                <FormSummary.Header>        <FormSummary.Heading level="2">Opplysningene du sender inn</FormSummary.Heading>        <FormSummary.EditLink href="#" />      </FormSummary.Header>
-                <FormSummary.Answers>
-                    <FormSummary.Answer> <FormSummary.Label>Din forventede inntekt i {selectedYear}</FormSummary.Label>  <FormSummary.Value>{getPersonInntektSum}</FormSummary.Value>        </FormSummary.Answer>
-                    <FormSummary.Answer> <FormSummary.Label>Annen forelders forventede inntekt i 2024</FormSummary.Label> <FormSummary.Value>{getAnnenForelderInntektSum}</FormSummary.Value>        </FormSummary.Answer>
-                </FormSummary.Answers>
-            </FormSummary>
+        <VStack gap="4">
+            <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
+            {/*<Heading level="2" size="small">Din inntekt og uføretrygd før skatt i </Heading>*/}
 
-            <Button as={Link} to="/beregning" variant="secondary">
-                Tilbake
-            </Button>
-            <Button onClick={() => send()} as={Link} to="/kvittering" variant="primary">
-                Send
-            </Button>
+            <VStack gap="6">
+                <Heading size={"large"}>Detaljert oversikt før skatt 2024</Heading>
+                { simulationInntekt && <SimulationTable simulationResult={simulationInntekt}></SimulationTable>}
+            </VStack>
+
+            <HStack gap="4">
+                <Button as={Link} to="/forventede-inntekter" variant="secondary">
+                    Tilbake
+                </Button>
+                <Button as={Link} to="/kvittering" variant="primary">
+                    Send inn
+                </Button>
+            </HStack>
         </VStack>
     );
 };

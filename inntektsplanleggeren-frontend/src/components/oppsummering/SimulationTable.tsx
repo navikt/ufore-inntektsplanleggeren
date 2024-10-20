@@ -9,9 +9,9 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
         <Table>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell scope="col">Type</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Before</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">After</Table.HeaderCell>
+                    <Table.HeaderCell scope="col"></Table.HeaderCell>
+                    <Table.HeaderCell scope="col">I dag (kr)</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">Med dine endringer (kr)</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
