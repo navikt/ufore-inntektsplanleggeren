@@ -9,7 +9,6 @@ const MOCKS_ENABLED = false;
 export interface GetInntektResponse {
     messages: Message[]
     data: DisplayData
-
 }
 
 export interface Message {
@@ -95,8 +94,7 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         headers: headers,
     });
 
-    console.log(res)
-    console.log(res.json())
+    console.log("bkla")
 
     if (!res.ok) {
         console.log("error")
@@ -107,8 +105,7 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
 
     console.log(parsed.data)
 
-
-    return parsed.data.displayData;
+    return parsed;
 }
 
 
