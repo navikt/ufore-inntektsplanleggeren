@@ -83,18 +83,16 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
     // })
     //     .then(response => response.json())
     //     .then(response => {
-    //         return response.displayData
+    //         return response.data
     //     }).catch(() => {
     //         throw new Error("Fikk ikke 2xx respons fra server");
     //     })
 
-    const res = await fetch(window.location.pathname + `api/initiate`, {
+    const res = await fetch(window.location.pathname + `/api/initiate`, {
         method: "GET",
         credentials: "include",
         headers: headers,
     });
-
-    console.log("bkla")
 
     if (!res.ok) {
         console.log("error")
@@ -102,9 +100,6 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
     }
 
     const parsed = await res.json();
-
-    console.log(parsed.data)
-
     return parsed;
 }
 

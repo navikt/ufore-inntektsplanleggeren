@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 
-const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 const app = express();
 app.use(express.json())

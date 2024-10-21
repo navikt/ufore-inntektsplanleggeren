@@ -18,7 +18,7 @@ export const AppRoutes = (
             <Routes>
                 <Route element={<App />}>
                     {/*<Route element={<AccessControl />}>*/}
-                        <Route index element={<InitialView />} />
+                        <Route path="/pensjon/selvbetjening/inntektsplanleggeren" index element={<InitialView />} />
                         <Route element={<YearGuard />}>
                             <Route element={<FormContainer />}>
                                 <Route path="/forventede-inntekter" element={<Innfylling />} />
