@@ -1,4 +1,4 @@
-import {BodyShort, Box, Button, Heading, HStack, List, VStack} from "@navikt/ds-react";
+import {Box, Button, Heading, HStack, List, VStack} from "@navikt/ds-react";
 import React, {useContext, useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import "./innfylling.css"
@@ -10,7 +10,6 @@ import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {InntekterResponse} from "@/api/model/ApiRequests";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
-import {Link as NavLink} from "@navikt/ds-react/esm/link";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
