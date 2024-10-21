@@ -23,6 +23,7 @@ export function InitialView() {
         window.scrollTo(0, 0);
     }, []);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {initialViewData, warningMessage} = useContext(DataContext)
     const {selectedYear} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -39,8 +40,9 @@ export function InitialView() {
 
     return (
         <VStack gap="10">
-            {warningMessage.length > 0 ?
-                <Alert variant="warning">{warningMessage[0].details}</Alert> :
+            {
+                // warningMessage !== null && warningMessage.length > 0 ?
+                // <Alert variant="warning">{warningMessage[0].details}</Alert> :
 
                 <Box borderRadius="xlarge" padding="4" borderWidth="1" className="top-box">
                     <VStack>

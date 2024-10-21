@@ -45,11 +45,13 @@ export const InitialViewDefaultData: DisplayData | null = {
 }
 
 
-export const WarningMessageDefaultValue: Message[] | null = [{
-    messageCode: "USER_HAS_NO_LOPENDE_VEDTAK_YET",
-    details: "Bruker kan ikke registrere inntektsendring før vedkommendes vedtak har blitt løpende",
-    type: "ERROR"
-}]
+// export const WarningMessageDefaultValue: Message[] | null = [{
+//     messageCode: "USER_HAS_NO_LOPENDE_VEDTAK_YET",
+//     details: "Bruker kan ikke registrere inntektsendring før vedkommendes vedtak har blitt løpende",
+//     type: "ERROR"
+// }]
+
+export const WarningMessageDefaultValue: Message[] | null = null
 
 export const InntektSimulationDefaultValue = {
     "messages":[
