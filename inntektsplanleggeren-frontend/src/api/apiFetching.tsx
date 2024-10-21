@@ -16,6 +16,11 @@ export interface Message {
     messageCode: string,
     details: string,
     type: string
+    metadata: StringDictionary
+}
+
+export interface StringDictionary {
+    [key: string]: never;
 }
 
 export interface DisplayData {
@@ -90,7 +95,9 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         headers: headers,
     });
 
+    console.log(res)
     console.log(res.json())
+
     if (!res.ok) {
 
         throw new Error("Fikk ikke 2xx respons fra server");
