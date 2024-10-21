@@ -4,7 +4,7 @@ import {
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
 import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
 
-const MOCKS_ENABLED = true;
+const MOCKS_ENABLED = false;
 
 export interface GetInntektResponse {
     messages: Message[]
