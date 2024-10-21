@@ -95,8 +95,8 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         headers: headers,
     });
 
-    console.log(res)
-    console.log(res.json())
+    console.log("res:" + res)
+    console.log("res json" + res.json())
 
     if (!res.ok) {
 
@@ -105,7 +105,10 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
 
     const parsed = await res.json();
 
-    return parsed.displayData;
+    console.log("res json data" + parsed.data)
+
+
+    return parsed.data.displayData;
 }
 
 
