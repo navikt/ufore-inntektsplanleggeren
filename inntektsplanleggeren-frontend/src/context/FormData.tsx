@@ -7,8 +7,8 @@ import {SimulationResult} from "@/api/model/ApiRequests";
 interface FormState {
     formStep: number
     setFormStep: (value: SetStateAction<number>) => void
-    selectedYear?: string;
-    setSelectedYear: (value: SetStateAction<string | undefined>) => void
+    selectedYear: string | null;
+    setSelectedYear: (value: SetStateAction<string | null>) => void
 
     formData: InntektInnfylling;
     setFormData: (value: SetStateAction<InntektInnfylling>) => void,
@@ -17,8 +17,8 @@ interface FormState {
     getPersonInntektSum: number,
     getAnnenForelderInntektSum: number,
 
-    simulationInntekt: SimulationResult | undefined,
-    setSimulationInntekt: (value: SetStateAction<SimulationResult | undefined>) => void
+    simulationInntekt: SimulationResult | null,
+    setSimulationInntekt: (value: SetStateAction<SimulationResult | null>) => void
 }
 
 const initialFormData = {
@@ -41,7 +41,7 @@ const initialFormData = {
 }
 
 export const FormStateContext = createContext<FormState>({
-    selectedYear: undefined,
+    selectedYear: null,
     setSelectedYear: () => undefined,
     formData: initialFormData,
     setFormData: () => undefined,
@@ -51,7 +51,7 @@ export const FormStateContext = createContext<FormState>({
     getAnnenForelderInntektSum: 0,
     formStep: 1,
     setFormStep: () => undefined,
-    simulationInntekt: undefined,
+    simulationInntekt: null,
     setSimulationInntekt: () => undefined
 });
 
@@ -66,9 +66,9 @@ function summerPersoninntekt(personInntekt: PersonInntekt) {
 export const FormStateComponent = ({ children }: Props) => {
     const { initialViewData } = useContext(DataContext)
     const { aktuelleAar } = initialViewData;
-    const [year, setYear]  = useState<string | undefined>(aktuelleAar.length === 1 ? aktuelleAar[0].toString(10) : undefined);
+    const [year, setYear]  = useState<string | null>(aktuelleAar.length === 1 ? aktuelleAar[0].toString(10) : null);
     const [formData, setFormData] = useState<InntektInnfylling>(initialFormData)
-    const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | undefined>();
+    const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | null>(null);
     const [formStep, setFormStep] = useState<number>(1);
 
     const setPersoninntekt = (key: keyof PersonInntekt, value: number) => {
