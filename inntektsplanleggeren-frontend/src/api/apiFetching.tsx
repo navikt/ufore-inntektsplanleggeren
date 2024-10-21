@@ -95,17 +95,17 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         headers: headers,
     });
 
-    console.log("res:" + res)
-    console.log("res json" + res.json())
+    console.log(res)
+    console.log(res.json())
 
     if (!res.ok) {
-
+        console.log("error")
         throw new Error("Fikk ikke 2xx respons fra server");
     }
 
     const parsed = await res.json();
 
-    console.log("res json data" + parsed.data)
+    console.log(parsed.data)
 
 
     return parsed.data.displayData;
