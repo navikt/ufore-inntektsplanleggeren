@@ -12,19 +12,20 @@ import { SelectedYearProvider } from "@/context/SelectedYear";
 export const AppRoutes = (
 ) => {
   //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
+    const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route element={<App />}>
                     {/*<Route element={<AccessControl />}>*/}
-                        <Route path="/pensjon/selvbetjening/inntektsplanleggeren" index element={<InitialView />} />
+                        <Route path={basePath} index element={<InitialView />} />
                         <Route element={<YearGuard />}>
                             <Route element={<FormContainer />}>
-                                <Route path="/forventede-inntekter" element={<Innfylling />} />
-                                <Route path="/beregning" element={<Oppsummering />} />
-                                <Route path="/oppsummering" element={<Oppsummering />} />
-                                <Route path="/kvittering" element={<Kvittering />} />
+                                <Route path={basePath + "/forventede-inntekter"} element={<Innfylling />} />
+                                <Route path={basePath + "/beregning"} element={<Oppsummering />} />
+                                <Route path={basePath + "/oppsummering"} element={<Oppsummering />} />
+                                <Route path={basePath + "/kvittering"} element={<Kvittering />} />
                             </Route>
                         </Route>
                     {/*</Route>*/}
