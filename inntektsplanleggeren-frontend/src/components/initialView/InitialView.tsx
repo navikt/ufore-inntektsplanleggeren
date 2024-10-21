@@ -17,6 +17,8 @@ import {YearView} from "@/components/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
+import {basePath} from "@/routes";
+import {numberFormatWithKr} from "@/common/Utils";
 
 export function InitialView() {
     React.useEffect(() => {
@@ -34,7 +36,7 @@ export function InitialView() {
         if (!selectedYear) {
             setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
         } else {
-            navigate(`/forventede-inntekter`)
+            navigate(basePath + `/forventede-inntekter`)
         }
     }
 
@@ -48,9 +50,9 @@ export function InitialView() {
                     <VStack>
                         <Heading size={"small"} level={"2"}>Nåværende registrert forventet inntekt i tillegg til uføretrygd</Heading>
                         <BodyLong> Dette tallet kan komme fra en tidligere registrering eller være basert på fjorårets inntekt.</BodyLong>
-                        <BodyLong> Din forventede inntekt: {initialViewData.forventetInntekt}kr </BodyLong>
+                        <BodyLong> Din forventede inntekt: {numberFormatWithKr(initialViewData.forventetInntekt)}</BodyLong>
                         {initialViewData.forventetInntektAnnenForelder ?
-                            <BodyLong> Annen forelder du bor med sin forventede inntekt: {initialViewData.forventetInntektAnnenForelder}kr</BodyLong> : <></>
+                            <BodyLong> Annen forelder du bor med sin forventede inntekt: {numberFormatWithKr(initialViewData.forventetInntektAnnenForelder)}</BodyLong> : <></>
                         }
                     </VStack>
                 </Box>

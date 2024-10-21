@@ -10,6 +10,7 @@ import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {InntekterResponse} from "@/api/model/ApiRequests";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
+import {basePath} from "@/routes";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
@@ -36,7 +37,7 @@ export const Innfylling = () => {
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
-        navigate("/beregning");
+        navigate(basePath + "/beregning");
     };
 
     return (
@@ -80,7 +81,7 @@ export const Innfylling = () => {
                     </>}
 
                     <HStack gap="4">
-                        <Button as={Link} to="/" variant="secondary">
+                        <Button as={Link} to={basePath} variant="secondary">
                             Tilbake
                         </Button>
                         <Button type="submit" as={Link} to="/beregning" variant="primary" onClick={handleSubmit}>

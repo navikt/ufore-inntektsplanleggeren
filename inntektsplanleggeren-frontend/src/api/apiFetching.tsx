@@ -4,7 +4,7 @@ import {
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
 import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
 
-const MOCKS_ENABLED = false;
+const MOCKS_ENABLED = true;
 
 export interface GetInntektResponse {
     messages: Message[]
@@ -59,34 +59,14 @@ export interface InntektInnfylling {
 export async function getInntektsgrense(): Promise<GetInntektResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(pid && { 'pid': pid })
+    };
 
-    let headers;
-
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    }
     if (MOCKS_ENABLED) {
         return mockInitiateResponse
     }
-
-    // return await fetch(window.location.pathname + "api/initiate", {
-    //     method: "GET",
-    //     credentials: "include",
-    //     headers: headers
-    // })
-    //     .then(response => response.json())
-    //     .then(response => {
-    //         return response.data
-    //     }).catch(() => {
-    //         throw new Error("Fikk ikke 2xx respons fra server");
-    //     })
 
     const res = await fetch(window.location.pathname + `/api/initiate`, {
         method: "GET",
@@ -135,7 +115,6 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
 
 
     if (!res.ok) {
-
         throw new Error("Fikk ikke 2xx respons fra server");
     }
 

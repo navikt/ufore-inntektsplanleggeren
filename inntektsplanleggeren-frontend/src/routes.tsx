@@ -9,10 +9,13 @@ import {Kvittering} from "@/components/kvittering/Kvittering";
 import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
 
+
+export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+
 export const AppRoutes = (
 ) => {
   //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
-    const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+
 
     return (
         <BrowserRouter>
