@@ -72,7 +72,6 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         return mockInitiateResponse
     }
 
-    // debugger
     // return await fetch(window.location.pathname + "api/initiate", {
     //     method: "GET",
     //     credentials: "include",
@@ -91,7 +90,7 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         headers: headers,
     });
 
-    console.log(res)
+    console.log(res.json())
     if (!res.ok) {
 
         throw new Error("Fikk ikke 2xx respons fra server");
