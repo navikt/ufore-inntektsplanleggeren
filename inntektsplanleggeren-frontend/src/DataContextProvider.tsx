@@ -6,15 +6,33 @@ import {
 } from "@/api/apiFetching";
 
 
+// export const InitialViewDefaultData: DisplayData | null = {
+//     forventetInntekt: 120000,
+//     forventetInntektAnnenForelder: 800000,
+//     inntektsgrense: 49611,
+//     kompensasjonsgrad: 49.7,
+//     grenseStoppAvUfoeretrygd: 460060,
+//     aktuelleAar: [
+//         2024,
+//         2025
+//     ],
+//     hasVarigTilrettelagtArbeid: true,
+//     hasBarneTilleggFellesbarn: true,
+//     grenseStoppAvBarnetilleggFellesbarn: 669751,
+//     fribelopBarnetilleggFellesbarn: 570529,
+//     hasBarnetilleggSaerkullsbarn: false,
+//     grenseStoppAvBarnetilleggSaerkullsbarn: 676,
+//     fribelopBarnetilleggSaerkullsbarn: 576,
+//     hasGjenlevendeTillegg: true
+// }
+
 export const InitialViewDefaultData: DisplayData | null = {
-    forventetInntekt: 120000,
-    forventetInntektAnnenForelder: 800000,
-    inntektsgrense: 49611,
-    kompensasjonsgrad: 49.7,
-    grenseStoppAvUfoeretrygd: 460060,
+    forventetInntekt: 0,
+    forventetInntektAnnenForelder: 0,
+    inntektsgrense: 0,
+    kompensasjonsgrad: 0,
+    grenseStoppAvUfoeretrygd: 0,
     aktuelleAar: [
-        2024,
-        2025
     ],
     hasVarigTilrettelagtArbeid: true,
     hasBarneTilleggFellesbarn: true,
@@ -25,6 +43,7 @@ export const InitialViewDefaultData: DisplayData | null = {
     fribelopBarnetilleggSaerkullsbarn: 576,
     hasGjenlevendeTillegg: true
 }
+
 
 export const WarningMessageDefaultValue: Message[] | null = [{
     messageCode: "USER_HAS_NO_LOPENDE_VEDTAK_YET",

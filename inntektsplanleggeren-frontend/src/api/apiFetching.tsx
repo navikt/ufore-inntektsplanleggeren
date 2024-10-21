@@ -72,19 +72,37 @@ export async function getInntektsgrense(): Promise<GetInntektResponse> {
         return mockInitiateResponse
     }
 
-    return await fetch(window.location.pathname + "api/initiate", {
+    // debugger
+    // return await fetch(window.location.pathname + "api/initiate", {
+    //     method: "GET",
+    //     credentials: "include",
+    //     headers: headers
+    // })
+    //     .then(response => response.json())
+    //     .then(response => {
+    //         return response.displayData
+    //     }).catch(() => {
+    //         throw new Error("Fikk ikke 2xx respons fra server");
+    //     })
+
+    const res = await fetch(window.location.pathname + `api/initiate`, {
         method: "GET",
         credentials: "include",
-        headers: headers
-    })
-        .then(response => response.json())
-        .then(response => {
-            return response.displayData
-        }).catch(() => {
-            throw new Error("Fikk ikke 2xx respons fra server");
-        })
+        headers: headers,
+    });
 
+    console.log(res)
+    if (!res.ok) {
+
+        throw new Error("Fikk ikke 2xx respons fra server");
+    }
+
+    const parsed = await res.json();
+
+    return parsed.displayData;
 }
+
+
 
 
 export async function getInntekter(year: string): Promise<InntekterResponse> {

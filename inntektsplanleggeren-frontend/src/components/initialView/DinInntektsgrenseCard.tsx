@@ -1,6 +1,7 @@
 import {BodyLong, ExpansionCard, Label} from "@navikt/ds-react";
 import {DisplayData} from "@/api/apiFetching";
 import {Link} from "react-router-dom";
+import {numberFormatWithKr} from "@/common/Utils";
 
 //todo see if it is possible to reduce the number of versions
 
@@ -19,7 +20,7 @@ export function InntektsgrenseCard(props: {
                         uføretrygd alene.
                     </BodyLong>
 
-                    <Label as="p">Din inntektsgrense: {props.displayData.inntektsgrense}kr</Label>
+                    <Label as="p">Din inntektsgrense: {numberFormatWithKr(props.displayData.inntektsgrense)}</Label>
                     {props.displayData.hasVarigTilrettelagtArbeid ?
                         <BodyLong spacing>
                             Du har tiltaket <Link to={"nav.no"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil 124 028 kroner, som tilsvarer grunnbeløpet
@@ -40,7 +41,7 @@ export function InntektsgrenseCard(props: {
                         tillegg til lønnen din.
                     </BodyLong>
 
-                    <Label as="p">Inntekt som ikke gir deg utbetaling av uføretrygd det året: {props.displayData.grenseStoppAvUfoeretrygd}kr</Label>
+                    <Label as="p">Inntekt som ikke gir deg utbetaling av uføretrygd det året: {numberFormatWithKr(props.displayData.grenseStoppAvUfoeretrygd)}</Label>
                     <BodyLong spacing>
                         Hvis du tjener over denne summen får du ikke uføretrygd det aktuelle året. Neste vil du få
                         uføretrygd igjen, dersom du ikke tjener for mye også det året.
