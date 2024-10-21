@@ -191,7 +191,7 @@ class InntektValidator(val inntektService: InntektService) {
             )
         }
 
-        if (inntektInput.bruker.andrePensjonsgivendeYtelser!=null && inntektInput.bruker.andrePensjonsgivendeYtelser < sumAndreYtelserHittilIAarBruker) {
+        if (inntektInput.bruker.andrePensjonsgivendeYtelser != null && inntektInput.bruker.andrePensjonsgivendeYtelser < sumAndreYtelserHittilIAarBruker) {
             messages.add(
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
