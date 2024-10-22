@@ -4,7 +4,7 @@ import {
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
 import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
 
-const MOCKS_ENABLED = true;
+const MOCKS_ENABLED = false;
 
 export interface GetInntektsgrenseResponse {
     messages: Message[]
@@ -87,8 +87,6 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
         'Content-Type': 'application/json',
         ...(pid && { 'pid': pid })
     };
-
-    debugger
 
     if (MOCKS_ENABLED) {
         return inntektData
