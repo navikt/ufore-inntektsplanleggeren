@@ -26,6 +26,7 @@ export const Innfylling = () => {
 
 
     useEffect(() => {
+        console.log("Fetching inntekt data for year", selectedYear)
         getInntekter(selectedYear).then(data => {
         setInntektResponse(data)});
         console.log(inntektResponse)

@@ -52,6 +52,8 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
+
+        console.log(req.query.simuleringsaar)
         const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/inntekter?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders
