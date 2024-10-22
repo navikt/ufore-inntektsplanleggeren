@@ -1,15 +1,20 @@
 import {Heading, VStack, Alert, BodyLong} from "@navikt/ds-react";
-import React from "react";
+import React, {useContext, useEffect} from "react";
+import {FormStateContext} from "@/context/FormData";
 
 export const Kvittering = () => {
+    const { setFormStep } = useContext(FormStateContext);
+
+    useEffect(() => {
+        setFormStep(3);
+    }, [setFormStep]);
+
     return (
         <VStack className="form-container">
             <Heading level="2" size="small">Kvittering</Heading>
             <Alert variant="success">
                 <Heading spacing size="small" level="3">        Viktig informasjon      </Heading>
                 Søknaden din hart blitt sendt
-                {/*<BodyLong>Something</BodyLong>*/}
-                {/*<BodyLong>Something</BodyLong>*/}
             </Alert>
 
             <Heading size={"medium"}>Husk å oppdatere skattekortet</Heading>

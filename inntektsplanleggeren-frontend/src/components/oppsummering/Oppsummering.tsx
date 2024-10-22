@@ -1,22 +1,20 @@
 import {Button, Heading, HStack, VStack} from "@navikt/ds-react";
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/oppsummering/SimulationTable";
 import {basePath} from "@/routes";
 
 export const Oppsummering = () => {
-    React.useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
     const { setFormStep, simulationInntekt, selectedYear } = useContext(FormStateContext);
-    setFormStep(2)
+
+    useEffect(() => {
+        setFormStep(2)
+    }, [setFormStep]);
 
     return (
         <VStack gap="4">
             <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
-            {/*<Heading level="2" size="small">Din inntekt og uføretrygd før skatt i </Heading>*/}
 
             <VStack gap="6">
                 <Heading size={"large"}>Detaljert oversikt før skatt 2024</Heading>

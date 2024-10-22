@@ -42,19 +42,10 @@ export interface InitiateData {
     hasGjenlevendeTillegg: boolean
 }
 
-export interface PersonInntekt {
-    arbeidsinntekt: number
-    andrePensjonsgivendeYtelser: number
-    naeringsinntekt: number
-    inntektUtland: number
-    pensjonUtland: number
-}
-
 export interface InntektInnfylling {
     brukerinntekt: ForventedeInntekter
     annenForelderInntekt: ForventedeInntekter
 }
-
 
 export async function getInntektsgrense(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -78,8 +69,7 @@ export async function getInntektsgrense(): Promise<GetInntektsgrenseResponse> {
         throw new Error("Fikk ikke 2xx respons fra server");
     }
 
-    const parsed = await res.json();
-    return parsed;
+    return res.json();
 }
 
 export async function getInntekter(year: string): Promise<InntekterResponse> {
@@ -87,7 +77,7 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
     const pid: string | null = searchParams.get('pid')
     const headers = {
         'Content-Type': 'application/json',
-        ...(pid && { 'pid': pid })
+        ...(pid && {'pid': pid})
     };
 
     if (MOCKS_ENABLED) {
@@ -105,8 +95,7 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
         throw new Error("Fikk ikke 2xx respons fra server");
     }
 
-    const parsed = await res.json();
-    return parsed;
+    return res.json();
 }
 
 export async function submitInntektSimulation(formData: InntektInnfylling, year: string): Promise<SubmitInntektSimulationResponse> {
@@ -142,16 +131,8 @@ export async function submitInntektSimulation(formData: InntektInnfylling, year:
 
 
     if (!res.ok) {
-
         throw new Error("Fikk ikke 2xx respons fra server");
     }
 
-    const parsed = await res.json();
-
-    return parsed;
+    return res.json();
 }
-
-
-
-
-

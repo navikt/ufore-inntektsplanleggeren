@@ -17,31 +17,28 @@ import {YearView} from "@/components/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
-import {basePath} from "@/routes";
 import {numberFormatWithKr} from "@/common/Utils";
 import {getInntekter} from "@/api/apiFetching";
 
 export function InitialView() {
-    React.useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {initialViewData, warningMessage, setInntekterResponse} = useContext(DataContext)
     const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
-    // const [enableInntektsplanlegger] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const handleButtonClick = async () => {
         if (!selectedYear) {
             setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
         } else {
+            setIsLoading(true)
             const data = await getInntekter(selectedYear)
+            await delay(1_000);
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker)
             setAnnenForelderInntekt(data.forventedeInntekter.eps)
-            navigate(basePath + `/forventede-inntekter`)
+            navigate('forventede-inntekter')
         }
     }
 
@@ -124,7 +121,7 @@ export function InitialView() {
                     {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
 
                     <VStack>
-                        <Button onClick={handleButtonClick} variant="primary">
+                        <Button onClick={handleButtonClick} variant="primary" loading={isLoading}>
                             Start inntektsplanlegger
                         </Button>
                     </VStack>
@@ -133,3 +130,5 @@ export function InitialView() {
         </VStack>
     )
 }
+
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms)); // TODO: remove after demo.

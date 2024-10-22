@@ -1,15 +1,14 @@
 import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
-import { PersonInntekt} from "@/api/apiFetching";
 import {numberFormatWithKr} from "@/common/Utils";
 import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
 interface FormFieldsProps {
     year?: string;
-    errors: Partial<Record<keyof PersonInntekt, string>>;
-    setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof PersonInntekt, string>>>>;
-    setInntekt: (key: keyof PersonInntekt, value: number) => void;
+    errors: Partial<Record<keyof ForventedeInntekter, string>>;
+    setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof ForventedeInntekter, string>>>>;
+    setInntekt: (key: keyof ForventedeInntekter, value: number) => void;
     inntektSum: number;
     forventedeInntekter: ForventedeInntekter
 }
@@ -36,17 +35,13 @@ export const parseInntekt = (s: string) => {
 }
 
 export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeInntekter }: FormFieldsProps) => {
-    React.useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({});
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
 
 
-    const handleInputChange = (field: keyof ForventedeInntekter) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        const numericValue = parseInntekt(value);
+    const handleInputChange = (field: keyof ForventedeInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+        const numericValue = parseInntekt(target.value);
 
-        if (isNaN(numericValue) || numericValue < 0 ) { //todo care about Infinity and other weird numbers?
+        if (isNaN(numericValue) || numericValue < 0) {
             setFieldErrors((prev) => ({ ...prev, [field]: 'Må være et tall' }));
         } else {
             setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -79,7 +74,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
             <VStack className="vstack-gap">
                 <TextField label="Næringsinntekt" inputMode="numeric"  error={fieldErrors.naeringsinntekt}
                            value={formatInntekt(forventedeInntekter.naeringsinntekt.belop)} onChange={handleInputChange("naeringsinntekt")} onBlur={handleInputChange("naeringsinntekt")} htmlSize={30}
-                           defaultValue={forventedeInntekter?.naeringsinntekt.belop ?? 0}/>
+                           />
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt.
                 </ReadMore>
@@ -88,7 +83,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
             <VStack className="vstack-gap">
                 <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric"  error={fieldErrors.inntektUtland}
                            value={formatInntekt(forventedeInntekter.inntektUtland.belop)} onChange={handleInputChange("inntektUtland")} onBlur={handleInputChange("inntektUtland")} htmlSize={30}
-                           defaultValue={forventedeInntekter?.inntektUtland.belop ?? 0}/>
+                           />
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                 </ReadMore>
@@ -97,7 +92,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
             <VStack className="vstack-gap">
                 <TextField label="Pensjonerer og uførepensjoner fra andre enn folketrygden" inputMode="numeric"
                            error={fieldErrors.andrePensjonsgivendeYtelser} value={formatInntekt(forventedeInntekter.andrePensjonsgivendeYtelser.belop)} onChange={handleInputChange("andrePensjonsgivendeYtelser")} onBlur={handleInputChange("andrePensjonsgivendeYtelser")} htmlSize={30}
-                           defaultValue={forventedeInntekter?.andrePensjonsgivendeYtelser.belop ?? 0}/>
+                           />
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss. Har du krigspensjon eller familiepleieytelse
                     fra oss, skal du oppgi dette også her. Ikke oppgi eventuell alderspensjon du mottar fra oss. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
@@ -107,7 +102,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
             <VStack className="vstack-gap">
                 <TextField label="Pensjoner fra utlandet, i norske kroner" inputMode="numeric"
                            error={fieldErrors.pensjonUtland} value={formatInntekt(forventedeInntekter.pensjonUtland.belop)} onChange={handleInputChange("pensjonUtland")} onBlur={handleInputChange("pensjonUtland")} htmlSize={30}
-                           defaultValue={forventedeInntekter?.pensjonUtland.belop}/>
+                           />
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra utlandet som et årsbeløp før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
                 </ReadMore>
