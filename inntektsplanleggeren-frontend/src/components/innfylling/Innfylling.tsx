@@ -22,10 +22,14 @@ export const Innfylling = () => {
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({});
     const [inntektResponse, setInntektResponse] = useState<InntekterResponse>();
 
-    setFormStep(1);
+    setFormStep(1)
+
 
     useEffect(() => {
-        getInntekter(selectedYear).then(data => setInntektResponse(data));
+        getInntekter(selectedYear).then(data => {
+            debugger
+        setInntektResponse(data)});
+        console.log(inntektResponse)
     }, [selectedYear]);
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -70,13 +74,15 @@ export const Innfylling = () => {
                 <VStack gap="4">
                     <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                         <Heading level="2" size="small" spacing>Din forventede intekter i ({selectedYear})</Heading>
-                        <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt} inntektSum={getPersonInntektSum}/>
+                        <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt}
+                                    forventedeInntekter={inntektResponse?.forventedeInntekter.bruker ?? null} inntektSum={getPersonInntektSum}/>
                     </Box>
 
                     {isAnnenForelder && <>
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <Heading level="2" size="small" spacing>Den forventede Iintekten til annen forelder, Test Testeson, i ({selectedYear})</Heading>
-                            <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt} setInntekt={setAnnenForelderInntekt} inntektSum={getAnnenForelderInntektSum} />
+                            <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt}
+                                        setInntekt={setAnnenForelderInntekt} inntektSum={getAnnenForelderInntektSum} forventedeInntekter={inntektResponse?.forventedeInntekter.eps ?? null}/>
                         </Box>
                     </>}
 

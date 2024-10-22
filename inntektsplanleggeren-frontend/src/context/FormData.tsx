@@ -63,6 +63,7 @@ function summerPersoninntekt(personInntekt: PersonInntekt) {
     return Object.values(personInntekt).reduce((acc, value) => acc + value, 0)
 }
 
+
 export const FormStateComponent = ({ children }: Props) => {
     const { initialViewData } = useContext(DataContext)
     const { aktuelleAar } = initialViewData;
@@ -70,6 +71,8 @@ export const FormStateComponent = ({ children }: Props) => {
     const [formData, setFormData] = useState<InntektInnfylling>(initialFormData)
     const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | null>(null);
     const [formStep, setFormStep] = useState<number>(1);
+
+
 
     const setPersoninntekt = (key: keyof PersonInntekt, value: number) => {
         setFormData((prev) => ({

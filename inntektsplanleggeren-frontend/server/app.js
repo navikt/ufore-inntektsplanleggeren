@@ -43,6 +43,26 @@ app.get(
     }
 );
 
+app.get(
+    basePath + '/api/initiate:simuleringsaar',
+    async (req, res) => {
+
+        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
+        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + "/api/inntekter", {
+            method: req.method,
+            headers: newHeaders
+        });
+
+        const body = await response.json();
+
+        const statuskode = response.status
+        res.status(statuskode).send(body)
+    }
+);
+
 
 
 
@@ -54,8 +74,6 @@ app.put(basePath + '/api/samboer/:periodeId', async (req, res) => {
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
         const periodeId = parseInt(req.params.periodeId)
-
-
         const params = {
             method: req.method,
             headers: newHeaders,
