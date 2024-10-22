@@ -92,7 +92,7 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
         return inntektData
     }
 
-    const res = await fetch(window.location.pathname + `api/inntekter?simuleringsaar=${year}`, {
+    const res = await fetch(window.location.pathname + `/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
         headers: headers
