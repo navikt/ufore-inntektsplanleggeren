@@ -27,7 +27,6 @@ export const Innfylling = () => {
 
     useEffect(() => {
         getInntekter(selectedYear).then(data => {
-            debugger
         setInntektResponse(data)});
         console.log(inntektResponse)
     }, [selectedYear]);
