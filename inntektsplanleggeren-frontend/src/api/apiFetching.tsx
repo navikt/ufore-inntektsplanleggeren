@@ -3,7 +3,8 @@ import {
 } from "@/api/model/ApiRequests";
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
 import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
-import {basePath} from "../../server/app";
+
+const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 const MOCKS_ENABLED = false;
 

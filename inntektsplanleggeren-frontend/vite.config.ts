@@ -10,12 +10,12 @@ const buildConfig = () => ({
   build: {
     outDir: "./dist",
     target: "esnext",
-    rollupOptions: {
-      input: {
-        appBorger: resolve(__dirname, "./index.html"),
-        // appVeileder: resolve(__dirname, "./index-veileder.html"),
-      },
-    },
+    // rollupOptions: {
+    //   input: {
+    //     appBorger: resolve(__dirname, "./index.html"),
+    //     // appVeileder: resolve(__dirname, "./index-veileder.html"),
+    //   },
+    // },
   },
   plugins: [react(), eslint(), stylelint({ fix: true })],
   resolve: {
