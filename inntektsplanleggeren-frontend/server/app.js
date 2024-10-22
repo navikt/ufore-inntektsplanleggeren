@@ -44,14 +44,15 @@ app.get(
 );
 
 app.get(
-    basePath + '/api/inntekter:simuleringsaar',
+    basePath + '/api/inntekter',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
         let accessToken = await getTokenValue(idToken);
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
-        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + "/api/inntekter", {
+
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/inntekter?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders
         });
