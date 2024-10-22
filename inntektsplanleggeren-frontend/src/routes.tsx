@@ -12,8 +12,7 @@ import { SelectedYearProvider } from "@/context/SelectedYear";
 
 export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-export const AppRoutes = (
-) => {
+export const AppRoutes = () => {
   //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
 
 

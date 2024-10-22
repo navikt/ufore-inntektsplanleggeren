@@ -23,7 +23,7 @@ export const mockInitiateResponse = {
     }
 }
 
-export const inntektData : InntekterResponse = {
+export const mockInntekterResponse : InntekterResponse = {
     "arbeidsinntektOgYtelserHittilIAar": [
         {
             "maned": 5,

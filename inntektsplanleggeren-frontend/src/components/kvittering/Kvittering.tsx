@@ -7,7 +7,7 @@ export const Kvittering = () => {
             <Heading level="2" size="small">Kvittering</Heading>
             <Alert variant="success">
                 <Heading spacing size="small" level="3">        Viktig informasjon      </Heading>
-                blabla
+                Søknaden din hart blitt sendt
                 {/*<BodyLong>Something</BodyLong>*/}
                 {/*<BodyLong>Something</BodyLong>*/}
             </Alert>

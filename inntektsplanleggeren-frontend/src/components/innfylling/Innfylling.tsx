@@ -1,42 +1,32 @@
 import {Box, Button, Heading, HStack, List, VStack} from "@navikt/ds-react";
-import React, {useContext, useState, useEffect} from "react";
+import React, {useContext, useState} from "react";
 import { Link } from "react-router-dom";
 import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {getInntekter, PersonInntekt, submitInntektSimulation} from "@/api/apiFetching";
+import { PersonInntekt, submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
-import {InntekterResponse} from "@/api/model/ApiRequests";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
 import {basePath} from "@/routes";
+import {DataContext} from "@/DataContextProvider";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
 
-    const { setPersoninntekt, setAnnenForelderInntekt, getPersonInntektSum, getAnnenForelderInntektSum,
-        setSimulationInntekt, formData, setFormStep } = useContext(FormStateContext);
+    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, setSimulationInntekt, setFormStep } = useContext(FormStateContext);
+    const { inntekterResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekt, string>>>({});
-    const [inntektResponse, setInntektResponse] = useState<InntekterResponse>();
 
     setFormStep(1)
 
-
-    useEffect(() => {
-        console.log("Fetching inntekt data for year", selectedYear)
-        getInntekter(selectedYear).then(data => {
-        setInntektResponse(data)});
-        console.log(inntektResponse)
-    }, [selectedYear]);
-
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        console.log(formData);
         try {
-            const result = await submitInntektSimulation(formData, selectedYear);
+            const result = await submitInntektSimulation({ brukerinntekt, annenForelderInntekt }, selectedYear);
             setSimulationInntekt(result.result);
         } catch (error) {
             console.error("Error submitting income simulation:", error);
@@ -44,17 +34,21 @@ export const Innfylling = () => {
         navigate(basePath + "/beregning");
     };
 
+    if(inntekterResponse === null) {
+        return <div>Loading...</div>
+    }
+
     return (
         <VStack className="form-container">
             <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
-            {(inntektResponse && inntektResponse.arbeidsinntektOgYtelserHittilIAar) &&
-                <DinInntektTable data={inntektResponse.arbeidsinntektOgYtelserHittilIAar}>
-                    Du har mottatt {numberFormatWithKr(belopSum(inntektResponse.arbeidsinntektOgYtelserHittilIAar))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
+            {(inntekterResponse && inntekterResponse.arbeidsinntektOgYtelserHittilIAar) &&
+                <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar}>
+                    Du har mottatt {numberFormatWithKr(belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
                 </DinInntektTable>
             }
-            {(inntektResponse && inntektResponse.pensjonFraAndreHittilIAar) &&
-                <DinInntektTable data={inntektResponse.pensjonFraAndreHittilIAar}>
-                    Du har mottatt {numberFormatWithKr(belopSum(inntektResponse.pensjonFraAndreHittilIAar))} kr i pensjoner fra andre enn folketrygden hittil i år.
+            {(inntekterResponse && inntekterResponse.pensjonFraAndreHittilIAar) &&
+                <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar}>
+                    Du har mottatt {numberFormatWithKr(belopSum(inntekterResponse.pensjonFraAndreHittilIAar))} kr i pensjoner fra andre enn folketrygden hittil i år.
                 </DinInntektTable>
             }
 
@@ -73,18 +67,18 @@ export const Innfylling = () => {
             <form onSubmit={handleSubmit}>
                 <VStack gap="4">
                     <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
-                        <Heading level="2" size="small" spacing>Din forventede intekter i ({selectedYear})</Heading>
-                        <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={setPersoninntekt} data={formData.personInntekt}
-                                    forventedeInntekter={inntektResponse?.forventedeInntekter.bruker ?? null} inntektSum={getPersonInntektSum}/>
+                        <Heading level="2" size="small" spacing>Din forventede inntekter i ({selectedYear})</Heading>
+                        <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={(field, value) => setBrukerinntekt(b => ({...b, [field]: value}))}
+                                    forventedeInntekter={inntekterResponse.forventedeInntekter.bruker} inntektSum={getBrukerinntektSum()} />
                     </Box>
 
-                    {isAnnenForelder && <>
+                    {isAnnenForelder ?
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
-                            <Heading level="2" size="small" spacing>Den forventede Iintekten til annen forelder, Test Testeson, i ({selectedYear})</Heading>
-                            <FormFields year={selectedYear} errors={errors} setErrors={setErrors} data={formData.annenForelderInntekt}
-                                        setInntekt={setAnnenForelderInntekt} inntektSum={getAnnenForelderInntektSum} forventedeInntekter={inntektResponse?.forventedeInntekter.eps ?? null}/>
-                        </Box>
-                    </>}
+                            <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>
+                            <FormFields year={selectedYear} errors={errors} setErrors={setErrors} setInntekt={(field, value) => setAnnenForelderInntekt(b => ({...b, [field]: value}))}
+                                        forventedeInntekter={inntekterResponse.forventedeInntekter.eps} inntektSum={getBrukerinntektSum()} />
+                        </Box> : null
+                    }
 
                     <HStack gap="4">
                         <Button as={Link} to={basePath} variant="secondary">

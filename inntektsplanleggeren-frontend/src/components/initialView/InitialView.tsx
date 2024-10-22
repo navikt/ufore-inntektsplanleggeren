@@ -19,6 +19,7 @@ import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 import {basePath} from "@/routes";
 import {numberFormatWithKr} from "@/common/Utils";
+import {getInntekter} from "@/api/apiFetching";
 
 export function InitialView() {
     React.useEffect(() => {
@@ -26,16 +27,20 @@ export function InitialView() {
     }, []);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {initialViewData, warningMessage} = useContext(DataContext)
-    const {selectedYear} = useContext(FormStateContext)
+    const {initialViewData, warningMessage, setInntekterResponse} = useContext(DataContext)
+    const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
     // const [enableInntektsplanlegger] = useState<boolean>(true)
 
-    const handleButtonClick = () => {
+    const handleButtonClick = async () => {
         if (!selectedYear) {
             setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
         } else {
+            const data = await getInntekter(selectedYear)
+            setInntekterResponse(data);
+            setBrukerinntekt(data.forventedeInntekter.bruker)
+            setAnnenForelderInntekt(data.forventedeInntekter.eps)
             navigate(basePath + `/forventede-inntekter`)
         }
     }
@@ -113,7 +118,7 @@ export function InitialView() {
             </section>
 
             {initialViewData.aktuelleAar && initialViewData.aktuelleAar.length > 0 && //todo figure out when inntektsplanlegger is enabled
-                <VStack>
+                <VStack gap="10">
                     <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 
                     {errorMessage && <Alert variant="error">{errorMessage}</Alert>}

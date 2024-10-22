@@ -1,12 +1,12 @@
 import {BodyLong, ExpansionCard, Label} from "@navikt/ds-react";
-import {DisplayData} from "@/api/apiFetching";
+import {InitiateData} from "@/api/apiFetching";
 import {Link} from "react-router-dom";
 import {numberFormatWithKr} from "@/common/Utils";
 
 //todo see if it is possible to reduce the number of versions
 
 export function InntektsgrenseCard(props: {
-    displayData: DisplayData
+    displayData: InitiateData
 }) {
     return (<div>
             <ExpansionCard aria-label="Demo med bare tittel">

@@ -1,16 +1,17 @@
 import {
+    ForventedeInntekter,
     InntekterResponse, SubmitInntektRequest, SubmitInntektSimulationResponse,
 } from "@/api/model/ApiRequests";
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
-import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
+import {mockInntekterResponse, mockInitiateResponse} from "@/api/model/Mocks";
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = false;
+const MOCKS_ENABLED = true;
 
 export interface GetInntektsgrenseResponse {
     messages: Message[]
-    data: DisplayData
+    data: InitiateData
 }
 
 export interface Message {
@@ -24,7 +25,7 @@ export interface StringDictionary {
     [key: string]: never;
 }
 
-export interface DisplayData {
+export interface InitiateData {
     forventetInntekt: number
     forventetInntektAnnenForelder: number | null
     inntektsgrense: number
@@ -43,16 +44,15 @@ export interface DisplayData {
 
 export interface PersonInntekt {
     arbeidsinntekt: number
-    navYtelse: number
+    andrePensjonsgivendeYtelser: number
     naeringsinntekt: number
-    inntektFraUtlandet: number
-    pensjonFraAndre: number
-    pensjonFraUtlandet: number
+    inntektUtland: number
+    pensjonUtland: number
 }
 
 export interface InntektInnfylling {
-    personInntekt: PersonInntekt
-    annenForelderInntekt: PersonInntekt
+    brukerinntekt: ForventedeInntekter
+    annenForelderInntekt: ForventedeInntekter
 }
 
 
@@ -91,7 +91,7 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
     };
 
     if (MOCKS_ENABLED) {
-        return inntektData
+        return mockInntekterResponse
     }
 
     const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {

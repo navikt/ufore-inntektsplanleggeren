@@ -1,31 +1,58 @@
-import react from "@vitejs/plugin-react";
-import eslint from "vite-plugin-eslint";
-import stylelint from "vite-plugin-stylelint";
-import { fileURLToPath } from "url";
-import { resolve } from "path";
+import react from '@vitejs/plugin-react'
+import eslint from 'vite-plugin-eslint'
+import stylelint from 'vite-plugin-stylelint'
+import {fileURLToPath} from "url";
+import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
-const buildConfig = () => ({
-  base: "/pensjon/selvbetjening/inntektsplanleggeren",
+const buildConfig = {
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
   build: {
-    outDir: "./dist",
-    target: "esnext",
-    // rollupOptions: {
-    //   input: {
-    //     appBorger: resolve(__dirname, "./index.html"),
-    //     // appVeileder: resolve(__dirname, "./index-veileder.html"),
-    //   },
-    // },
+    outDir: './dist'
   },
-  plugins: [react(), eslint(), stylelint({ fix: true })],
+  plugins: [
+    react(),
+    eslint(),
+    stylelint({ fix: true }),
+  ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
+      "@": fileURLToPath(new URL("./src", import.meta.url))
+    }
   },
-});
+}
+
+const devConfig = {
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
+  build: {
+    manifest: true,
+    rollupOptions: {
+      input: {
+        app: './index.html',
+      }
+    }
+  },
+  plugins: [
+    react(),
+    viteMockServe({
+      // default
+      mockPath: 'mock',
+      enable: true,
+    }),
+  ],
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url))
+    }
+  }
+}
 
 // https://vitejs.dev/config/
-export default () => {
-  return buildConfig();
-};
+export default ({ command }) => {
+  if(command == 'serve') {
+    console.log("ausfgu")
+    return devConfig
+  } else {
+    return buildConfig
+  }
+}
