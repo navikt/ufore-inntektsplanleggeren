@@ -104,7 +104,6 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
     }
 
     const parsed = await res.json();
-    console.log(parsed)
     return parsed;
 }
 

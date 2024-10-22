@@ -44,7 +44,7 @@ app.get(
 );
 
 app.get(
-    basePath + '/api/initiate:simuleringsaar',
+    basePath + '/api/inntekter:simuleringsaar',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();

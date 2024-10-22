@@ -140,9 +140,7 @@ function DataContextProvider(props: DataContextProviderProps) {
                     try {
                         setLoading(true)
                         const inntektsPlanleggerenResponse = await getInntektsgrense()
-                        console.log(inntektsPlanleggerenResponse)
                         setInitialViewData(inntektsPlanleggerenResponse.data)
-                        console.log(initialViewData)
                         // setInitialWarningBox(inntektsPlanleggerResponse.messages)
 
                         setLoading(false)
