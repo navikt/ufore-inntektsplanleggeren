@@ -1,5 +1,5 @@
 import {Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
-import React, {useContext, useEffect, useState} from "react";
+import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
@@ -9,7 +9,6 @@ import { submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
-import {basePath} from "@/routes";
 import {DataContext} from "@/DataContextProvider";
 import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
@@ -25,15 +24,17 @@ export const Innfylling = () => {
         setFormStep(1);
     }, [setFormStep]);
 
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();
+
         try {
             const result = await submitInntektSimulation({ brukerinntekt, annenForelderInntekt }, selectedYear);
             setSimulationInntekt(result.result);
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
-        navigate(basePath + "/beregning");
+
+        navigate("/oppsummering");
     };
 
     if(inntekterResponse === null) {
@@ -95,10 +96,10 @@ export const Innfylling = () => {
                     }
 
                     <HStack gap="4">
-                        <Button as={Link} to={basePath} variant="secondary">
+                        <Button as={Link} to="/" variant="secondary">
                             Tilbake
                         </Button>
-                        <Button type="submit" as={Link} to={basePath + "/beregning"} variant="primary" onClick={handleSubmit}>
+                        <Button type="submit" as={Link} to="/oppsummering" variant="primary" onClick={handleSubmit}>
                             Beregning
                         </Button>
                     </HStack>

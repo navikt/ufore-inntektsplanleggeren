@@ -3,7 +3,6 @@ import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/oppsummering/SimulationTable";
-import {basePath} from "@/routes";
 
 export const Oppsummering = () => {
     const { setFormStep, simulationInntekt, selectedYear } = useContext(FormStateContext);
@@ -22,10 +21,10 @@ export const Oppsummering = () => {
             </VStack>
 
             <HStack gap="4">
-                <Button as={Link} to={basePath + "/forventede-inntekter"} variant="secondary">
+                <Button as={Link} to="/forventede-inntekter" variant="secondary">
                     Tilbake
                 </Button>
-                <Button as={Link} to={basePath + "/kvittering"} variant="primary">
+                <Button as={Link} to="/kvittering" variant="primary">
                     Send inn
                 </Button>
             </HStack>

@@ -10,20 +10,19 @@ import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
 
 
-export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+const BASE_PATH = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 export const AppRoutes = () => (
-    <BrowserRouter>
+    <BrowserRouter basename={BASE_PATH}>
         <Routes>
             <Route element={<App />}>
                 {/*<Route element={<AccessControl />}>*/}
-                    <Route path={basePath} index element={<InitialView />} />
+                    <Route index element={<InitialView />} />
                     <Route element={<YearGuard />}>
                         <Route element={<FormContainer />}>
-                            <Route path={basePath + "/forventede-inntekter"} element={<Innfylling />} />
-                            <Route path={basePath + "/beregning"} element={<Oppsummering />} />
-                            <Route path={basePath + "/oppsummering"} element={<Oppsummering />} />
-                            <Route path={basePath + "/kvittering"} element={<Kvittering />} />
+                            <Route index path={"/forventede-inntekter"} element={<Innfylling />} />
+                            <Route index path={"/oppsummering"} element={<Oppsummering />} />
+                            <Route index path={"/kvittering"} element={<Kvittering />} />
                         </Route>
                     </Route>
                 {/*</Route>*/}

@@ -38,7 +38,7 @@ export function InitialView() {
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker)
             setAnnenForelderInntekt(data.forventedeInntekter.eps)
-            navigate('forventede-inntekter')
+            navigate('/forventede-inntekter')
         }
     }
 
