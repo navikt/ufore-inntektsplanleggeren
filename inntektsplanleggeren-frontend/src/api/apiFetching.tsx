@@ -3,6 +3,7 @@ import {
 } from "@/api/model/ApiRequests";
 import {InntektSimulationDefaultValue} from "@/DataContextProvider";
 import {inntektData, mockInitiateResponse} from "@/api/model/Mocks";
+import {basePath} from "../../server/app";
 
 const MOCKS_ENABLED = false;
 
@@ -66,7 +67,7 @@ export async function getInntektsgrense(): Promise<GetInntektsgrenseResponse> {
         return mockInitiateResponse
     }
 
-    const res = await fetch(window.location.pathname + `/api/initiate`, {
+    const res = await fetch(basePath + `/api/initiate`, {
         method: "GET",
         credentials: "include",
         headers: headers,
@@ -92,7 +93,7 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
         return inntektData
     }
 
-    const res = await fetch(window.location.pathname + `/api/inntekter?simuleringsaar=${year}`, {
+    const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
         headers: headers

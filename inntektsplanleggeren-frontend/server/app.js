@@ -43,8 +43,10 @@ app.get(
     }
 );
 
+pensjon/selvbetjening/inntektsplanleggeren/forventede-inntekter
+
 app.get(
-    basePath + '/api/inntekter',
+    basePath + '/forventede-inntekter/api/inntekter',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
