@@ -167,25 +167,23 @@ class InntektValidator(val inntektService: InntektService) {
             sumMaanedsinntekter(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps)
         val sumAndreYtelserHittilIAarEps = sumMaanedsinntekter(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygdenEps)
 
-        if ((inntektInput.bruker.arbeidsinntekt ?: 0) < sumInntekterHittilIAarBruker) {
+        if (inntektInput.bruker.arbeidsinntekt != null && inntektInput.bruker.arbeidsinntekt < sumInntekterHittilIAarBruker) {
             messages.add(
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
                     metadata = mapOf(
-                        MetadataKey.AFFECTED_FIELD to FieldReference.ARBEIDSINNTEKT_BRUKER.name,
-                        MetadataKey.SUM_HITTIL_I_AAR to sumInntekterHittilIAarBruker
+                        MetadataKey.AFFECTED_FIELD to FieldReference.ARBEIDSINNTEKT_BRUKER.name
                     )
                 )
             )
         }
 
-        if ((inntektInput.eps?.arbeidsinntekt ?: 0) < sumInntekterHittilIAarEps) {
+        if (inntektInput.eps?.arbeidsinntekt != null && inntektInput.eps.arbeidsinntekt < sumInntekterHittilIAarEps) {
             messages.add(
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
                     metadata = mapOf(
-                        MetadataKey.AFFECTED_FIELD to FieldReference.ARBEIDSINNTEKT_EPS.name,
-                        MetadataKey.SUM_HITTIL_I_AAR to sumInntekterHittilIAarEps
+                        MetadataKey.AFFECTED_FIELD to FieldReference.ARBEIDSINNTEKT_EPS.name
                     )
                 )
             )
@@ -196,20 +194,18 @@ class InntektValidator(val inntektService: InntektService) {
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
                     metadata = mapOf(
-                        MetadataKey.AFFECTED_FIELD to FieldReference.ANDRE_YTELSER_BRUKER.name,
-                        MetadataKey.SUM_HITTIL_I_AAR to sumAndreYtelserHittilIAarBruker
+                        MetadataKey.AFFECTED_FIELD to FieldReference.ANDRE_YTELSER_BRUKER.name
                     )
                 )
             )
         }
 
-        if ((inntektInput.eps?.andrePensjonsgivendeYtelser ?: 0) < sumAndreYtelserHittilIAarEps) {
+        if (inntektInput.eps?.andrePensjonsgivendeYtelser != null && inntektInput.eps.andrePensjonsgivendeYtelser < sumAndreYtelserHittilIAarEps) {
             messages.add(
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
                     metadata = mapOf(
-                        MetadataKey.AFFECTED_FIELD to FieldReference.ANDRE_YTELSER_EPS.name,
-                        MetadataKey.SUM_HITTIL_I_AAR to sumAndreYtelserHittilIAarEps
+                        MetadataKey.AFFECTED_FIELD to FieldReference.ANDRE_YTELSER_EPS.name
                     )
                 )
             )
