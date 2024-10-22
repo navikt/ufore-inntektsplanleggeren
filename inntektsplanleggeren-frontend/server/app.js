@@ -43,8 +43,6 @@ app.get(
     }
 );
 
-pensjon/selvbetjening/inntektsplanleggeren/forventede-inntekter
-
 app.get(
     basePath + '/forventede-inntekter/api/inntekter',
     async (req, res) => {
