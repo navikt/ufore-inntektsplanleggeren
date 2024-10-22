@@ -44,7 +44,7 @@ app.get(
 );
 
 app.get(
-    basePath + '/forventede-inntekter/api/inntekter',
+    basePath + '/api/inntekter',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
