@@ -1,4 +1,4 @@
-import {createContext, SetStateAction, useCallback, useEffect, useState} from "react";
+import {createContext, useCallback, useEffect, useState} from "react";
 import {
     InitiateData,
     getInntektsgrense,

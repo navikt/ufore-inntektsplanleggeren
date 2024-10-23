@@ -1,10 +1,9 @@
 import {Heading, VStack, Alert, BodyLong, BodyShort, HStack, Loader} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
-import {useParams} from "react-router";
 
 export const Kvittering = () => {
-    const { id } = useParams();
+    // const { id } = useParams();
 
     // TODO: Get application by ID and use creation date to determine if the user has waited long.
 
