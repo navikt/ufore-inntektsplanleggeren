@@ -49,6 +49,8 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
         }
     };
 
+    console.log(forventedeInntekter)
+
     return (
         <div>
             {Object.keys(errors).length > 0 && (
@@ -63,7 +65,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
 
             <VStack className="vstack-gap">
                 <TextField label="Arbeidsinntekt og pensjonsgivende ytelser" inputMode="numeric"  error={fieldErrors.arbeidsinntekt}
-                           value={formatInntekt(forventedeInntekter.arbeidsinntekt.belop)} onBlur={handleInputChange("arbeidsinntekt")} onChange={handleInputChange("arbeidsinntekt")} pattern="[\d\s]+" htmlSize={30} />
+                           value={formatInntekt(forventedeInntekter.arbeidsinntekt)} onBlur={handleInputChange("arbeidsinntekt")} onChange={handleInputChange("arbeidsinntekt")} pattern="[\d\s]+" htmlSize={30} />
                 <div className="description-card">
                     <ReadMore header="Denne arbeidsinnteken skal med ">
                         Legg inn lønn fra arbeidsgiver som et årsbeløp før skatt. Ta med eventuell bonus og overtidsbetaling og feriepenger som blir utbetalt i {year}.
@@ -73,7 +75,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
 
             <VStack className="vstack-gap">
                 <TextField label="Næringsinntekt" inputMode="numeric"  error={fieldErrors.naeringsinntekt}
-                           value={formatInntekt(forventedeInntekter.naeringsinntekt.belop)} onChange={handleInputChange("naeringsinntekt")} onBlur={handleInputChange("naeringsinntekt")} htmlSize={30}
+                           value={formatInntekt(forventedeInntekter.naeringsinntekt)} onChange={handleInputChange("naeringsinntekt")} onBlur={handleInputChange("naeringsinntekt")} htmlSize={30}
                            />
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt.
@@ -82,7 +84,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
 
             <VStack className="vstack-gap">
                 <TextField label="Inntekt fra utlandet, i norske kroner" inputMode="numeric"  error={fieldErrors.inntektUtland}
-                           value={formatInntekt(forventedeInntekter.inntektUtland.belop)} onChange={handleInputChange("inntektUtland")} onBlur={handleInputChange("inntektUtland")} htmlSize={30}
+                           value={formatInntekt(forventedeInntekter.inntektUtland)} onChange={handleInputChange("inntektUtland")} onBlur={handleInputChange("inntektUtland")} htmlSize={30}
                            />
                 <ReadMore header="Tekst tekst tekst">
                     Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
@@ -91,7 +93,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
 
             <VStack className="vstack-gap">
                 <TextField label="Pensjonerer og uførepensjoner fra andre enn folketrygden" inputMode="numeric"
-                           error={fieldErrors.andrePensjonsgivendeYtelser} value={formatInntekt(forventedeInntekter.andrePensjonsgivendeYtelser.belop)} onChange={handleInputChange("andrePensjonsgivendeYtelser")} onBlur={handleInputChange("andrePensjonsgivendeYtelser")} htmlSize={30}
+                           error={fieldErrors.andrePensjonsgivendeYtelser} value={formatInntekt(forventedeInntekter.andrePensjonsgivendeYtelser)} onChange={handleInputChange("andrePensjonsgivendeYtelser")} onBlur={handleInputChange("andrePensjonsgivendeYtelser")} htmlSize={30}
                            />
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss. Har du krigspensjon eller familiepleieytelse
@@ -101,7 +103,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
 
             <VStack className="vstack-gap">
                 <TextField label="Pensjoner fra utlandet, i norske kroner" inputMode="numeric"
-                           error={fieldErrors.pensjonUtland} value={formatInntekt(forventedeInntekter.pensjonUtland.belop)} onChange={handleInputChange("pensjonUtland")} onBlur={handleInputChange("pensjonUtland")} htmlSize={30}
+                           error={fieldErrors.pensjonUtland} value={formatInntekt(forventedeInntekter.pensjonUtland)} onChange={handleInputChange("pensjonUtland")} onBlur={handleInputChange("pensjonUtland")} htmlSize={30}
                            />
                 <ReadMore header="Dette skal du oppgi her">
                     Legg inn pensjoner fra utlandet som et årsbeløp før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.

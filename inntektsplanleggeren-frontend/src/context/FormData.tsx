@@ -22,22 +22,22 @@ interface FormState {
     setSimulationInntekt: (value: SetStateAction<SimulationResult | null>) => void
 }
 
-const initialPersonInntekt = {
-    arbeidsinntekt: { belop: 0 },
-    andrePensjonsgivendeYtelser: { belop: 0 },
-    naeringsinntekt: { belop: 0 },
-    inntektUtland: { belop: 0 },
-    pensjonUtland: { belop: 0 }
+const forventedeInntekterDefaultValue = {
+    arbeidsinntekt: 0,
+    andrePensjonsgivendeYtelser: 0,
+    naeringsinntekt: 0,
+    inntektUtland: 0,
+    pensjonUtland: 0
 }
 
 export const FormStateContext = createContext<FormState>({
     selectedYear: null,
     setSelectedYear: () => undefined,
 
-    brukerinntekt: initialPersonInntekt,
+    brukerinntekt: forventedeInntekterDefaultValue,
     setBrukerinntekt: () => undefined,
 
-    annenForelderInntekt: initialPersonInntekt,
+    annenForelderInntekt: forventedeInntekterDefaultValue,
     setAnnenForelderInntekt: () => undefined,
 
     getBrukerinntektSum: () => 0,
@@ -52,13 +52,7 @@ interface Props {
     children: React.ReactNode;
 }
 
-const forventedeInntekterDefaultValue = {
-    arbeidsinntekt: { belop: 0 },
-    andrePensjonsgivendeYtelser: { belop: 0 },
-    naeringsinntekt: { belop: 0 },
-    inntektUtland: { belop: 0 },
-    pensjonUtland: { belop: 0 }
-}
+
 
 export const FormStateComponent = ({ children }: Props) => {
     const { initialViewData } = useContext(DataContext);
@@ -69,8 +63,8 @@ export const FormStateComponent = ({ children }: Props) => {
     const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | null>(null);
     const [formStep, setFormStep] = useState<number>(1);
 
-    const getBrukerinntektSum = () => Object.values(brukerinntekt).reduce((acc, value) => acc + value.belop, 0);
-    const getAnnenForelderInntektSum = () => Object.values(annenForelderInntekt).reduce((acc, value) => acc + value.belop, 0);
+    const getBrukerinntektSum = () => Object.values(brukerinntekt).reduce((acc, val) => acc + val, 0);
+    const getAnnenForelderInntektSum = () => Object.values(annenForelderInntekt).reduce((acc, val) => acc + val, 0);
 
     return (
         <FormStateContext.Provider value={{

@@ -12,16 +12,12 @@ export type InntektDetaljer = {
     inntektsgivere: string[];
 };
 
-export type ForventetInntekt = {
-    belop: number;
-};
-
 export type ForventedeInntekter = {
-    arbeidsinntekt: ForventetInntekt;
-    andrePensjonsgivendeYtelser: ForventetInntekt;
-    naeringsinntekt: ForventetInntekt;
-    inntektUtland: ForventetInntekt;
-    pensjonUtland: ForventetInntekt;
+    arbeidsinntekt: number;
+    andrePensjonsgivendeYtelser: number;
+    naeringsinntekt: number;
+    inntektUtland: number;
+    pensjonUtland: number;
 };
 
 export type ForventedeInntekterResponse = {

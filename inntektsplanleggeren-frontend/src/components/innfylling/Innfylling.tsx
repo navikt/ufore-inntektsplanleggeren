@@ -15,9 +15,8 @@ import {ForventedeInntekter} from "@/api/model/ApiRequests";
 export const Innfylling = () => {
     const navigate = useNavigate()
     const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setSimulationInntekt, setFormStep } = useContext(FormStateContext);
-    const { inntekterResponse } = useContext(DataContext);
+    const { initialViewData, inntekterResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
-    const isAnnenForelder = true;
     const [errors, setErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
 
     useEffect(() => {
@@ -44,12 +43,12 @@ export const Innfylling = () => {
     return (
         <VStack className="form-container">
             <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
-            {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar) &&
+            {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar}>
                     Du har mottatt {numberFormatWithKr(belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
                 </DinInntektTable>
             }
-            {(inntekterResponse.pensjonFraAndreHittilIAar) &&
+            {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar}>
                     Du har mottatt {numberFormatWithKr(belopSum(inntekterResponse.pensjonFraAndreHittilIAar))} kr i pensjoner fra andre enn folketrygden hittil i år.
                 </DinInntektTable>
@@ -75,20 +74,20 @@ export const Innfylling = () => {
                             year={selectedYear}
                             errors={errors}
                             setErrors={setErrors}
-                            setInntekt={(field, belop) => setBrukerinntekt(b => ({...b, [field]: { belop }}))}
+                            setInntekt={(field, belop) => setBrukerinntekt(b => ({...b, [field]:  belop }))}
                             forventedeInntekter={brukerinntekt}
                             inntektSum={getBrukerinntektSum()}
                         />
                     </Box>
 
-                    {isAnnenForelder ?
+                    {initialViewData.hasBarneTilleggFellesbarn ?
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>
                             <FormFields
                                 year={selectedYear}
                                 errors={errors}
                                 setErrors={setErrors}
-                                setInntekt={(field, belop) => setAnnenForelderInntekt(b => ({...b, [field]: { belop }}))}
+                                setInntekt={(field, belop) => setAnnenForelderInntekt(b => ({...b, [field]:  belop}))}
                                 forventedeInntekter={annenForelderInntekt}
                                 inntektSum={getAnnenForelderInntektSum()}
                             />
