@@ -18,7 +18,7 @@ export function App() {
         <FormStateComponent>
             <main className="mainBody">
                 <article className="contentWrapper">
-                    <Heading size="xlarge" level="1" className="main-header">Inntektsplanneleggeren</Heading>
+                    <Heading size="xlarge" level="1" className="main-header">Inntektsplan-leggeren</Heading>
                     <Outlet />
                 </article>
             </main>

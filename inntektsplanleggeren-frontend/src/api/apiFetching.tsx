@@ -7,7 +7,7 @@ import {mockInntekterResponse, mockInitiateResponse} from "@/api/model/Mocks";
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = true;
+const MOCKS_ENABLED = false;
 
 export interface GetInntektsgrenseResponse {
     messages: Message[]

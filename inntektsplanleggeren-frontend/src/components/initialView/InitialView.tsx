@@ -34,7 +34,6 @@ export function InitialView() {
         } else {
             setIsLoading(true)
             const data = await getInntekter(selectedYear)
-            await delay(1_000);
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker)
             setAnnenForelderInntekt(data.forventedeInntekter.eps)
@@ -131,4 +130,4 @@ export function InitialView() {
     )
 }
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms)); // TODO: remove after demo.
+// const delay = (ms: number) => new Promise(res => setTimeout(res, ms)); // TODO: remove after demo.
