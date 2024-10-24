@@ -3,12 +3,13 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 import java.time.Month
 
 @Service
-class Validator(private val inntektValidator: InntektValidator) {
+class Validator(private val inntektValidator: InntektValidator,
+                private val nowProvider: NowProvider) {
     fun validateUserInitialData(pensjonsdata: Pensjonsdata?): List<InntektsplanleggerMessage> {
         if (pensjonsdata == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
@@ -50,7 +51,7 @@ class Validator(private val inntektValidator: InntektValidator) {
     }
 
     private fun validateMonth(simuleringsaar: Int): InntektsplanleggerMessage? {
-        val today = LocalDate.now()
+        val today = nowProvider.now()
         if (today.year == simuleringsaar && today.month == Month.DECEMBER) {
             return InntektsplanleggerMessage(InntektsplanleggerMessageCode.ILLEGAL_MONTH_DECEMBER_THIS_YEAR)
         }
