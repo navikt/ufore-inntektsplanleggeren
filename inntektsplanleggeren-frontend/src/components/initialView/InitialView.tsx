@@ -13,7 +13,7 @@ import {
 import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
 import { useNavigate } from "react-router-dom";
 import React, {useContext, useState} from "react";
-import {YearView} from "@/components/YearView";
+import {YearView} from "@/components/initialView/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
@@ -113,7 +113,7 @@ export function InitialView() {
                 </BodyShort>
             </section>
 
-            {initialViewData.aktuelleAar && initialViewData.aktuelleAar.length > 0 && //todo figure out when inntektsplanlegger is enabled
+            {(initialViewData?.aktuelleAar && initialViewData.aktuelleAar.length > 0) &&
                 <VStack gap="10">
                     <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 

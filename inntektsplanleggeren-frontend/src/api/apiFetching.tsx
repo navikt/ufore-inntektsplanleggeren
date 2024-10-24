@@ -1,9 +1,8 @@
 import {
     ForventedeInntekter,
-    InntekterResponse, SubmitInntektRequest, SubmitInntektSimulationResponse,
+    InntekterResponse, SimulationRequest, SimulationResponse,
 } from "@/api/model/ApiRequests";
-import {InntektSimulationDefaultValue} from "@/DataContextProvider";
-import {mockInntekterResponse, mockInitiateResponse} from "@/api/model/Mocks";
+import {mockInntekterResponse, mockInitiateResponse, InntektSimulationResponse} from "@/api/model/Mocks";
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
@@ -98,10 +97,10 @@ export async function getInntekter(year: string): Promise<InntekterResponse> {
     return res.json();
 }
 
-export async function submitInntektSimulation(formData: InntektInnfylling, year: string): Promise<SubmitInntektSimulationResponse> {
-    const request: SubmitInntektRequest = {
-        inntekt: formData,
-        year: year
+export async function submitInntektSimulation(brukerInntekter: ForventedeInntekter, epsInntekter: ForventedeInntekter | null, year: string): Promise<SimulationResponse> {
+    const request: SimulationRequest = {
+        bruker: brukerInntekter,
+        eps: epsInntekter
     }
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
@@ -118,7 +117,7 @@ export async function submitInntektSimulation(formData: InntektInnfylling, year:
         }
     }
 
-    const res = await fetch(basePath + `api/inntektsplanlegger`, {
+    const res = await fetch(basePath + `api/simuler?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
@@ -126,9 +125,8 @@ export async function submitInntektSimulation(formData: InntektInnfylling, year:
     });
 
     if (MOCKS_ENABLED) {
-        return InntektSimulationDefaultValue;
+        return InntektSimulationResponse;
     }
-
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");

@@ -1,6 +1,6 @@
 import React, {createContext, SetStateAction, useContext, useState} from "react";
 import {DataContext} from "@/DataContextProvider";
-import {ForventedeInntekter, SimulationResult} from "@/api/model/ApiRequests";
+import {ForventedeInntekter, SimulationResponse, SimulationResult} from "@/api/model/ApiRequests";
 
 
 interface FormState {
@@ -12,14 +12,11 @@ interface FormState {
     brukerinntekt: ForventedeInntekter
     setBrukerinntekt: (value: SetStateAction<ForventedeInntekter>) => void,
 
-    annenForelderInntekt: ForventedeInntekter,
-    setAnnenForelderInntekt: (value: SetStateAction<ForventedeInntekter>) => void,
+    annenForelderInntekt: ForventedeInntekter | null,
+    setAnnenForelderInntekt: (value: SetStateAction<ForventedeInntekter | null> | null) => void,
 
     getBrukerinntektSum: () => number,
-    getAnnenForelderInntektSum: () => number,
-
-    simulationInntekt: SimulationResult | null,
-    setSimulationInntekt: (value: SetStateAction<SimulationResult | null>) => void
+    getAnnenForelderInntektSum: () => number | null,
 }
 
 const forventedeInntekterDefaultValue = {
@@ -37,15 +34,13 @@ export const FormStateContext = createContext<FormState>({
     brukerinntekt: forventedeInntekterDefaultValue,
     setBrukerinntekt: () => undefined,
 
-    annenForelderInntekt: forventedeInntekterDefaultValue,
+    annenForelderInntekt: null,
     setAnnenForelderInntekt: () => undefined,
 
     getBrukerinntektSum: () => 0,
     getAnnenForelderInntektSum: () => 0,
     formStep: 1,
     setFormStep: () => undefined,
-    simulationInntekt: null,
-    setSimulationInntekt: () => undefined
 });
 
 interface Props {
@@ -55,16 +50,15 @@ interface Props {
 
 
 export const FormStateComponent = ({ children }: Props) => {
-    const { initialViewData } = useContext(DataContext);
-    const { aktuelleAar } = initialViewData;
-    const [selectedYear, setSelectedYear]  = useState<string | null>(aktuelleAar.length === 1 ? aktuelleAar[0].toString(10) : null);
+    // const { initialViewData } = useContext(DataContext);
+    // const { aktuelleAar } = initialViewData?.aktuelleAar || { aktuelleAar: [] };
+    const [selectedYear, setSelectedYear]  = useState<string | null>(null);
     const [brukerinntekt, setBrukerinntekt] = useState<ForventedeInntekter>(forventedeInntekterDefaultValue);
-    const [annenForelderInntekt, setAnnenForelderInntekt] = useState<ForventedeInntekter>(forventedeInntekterDefaultValue);
-    const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | null>(null);
+    const [annenForelderInntekt, setAnnenForelderInntekt] = useState<ForventedeInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
 
     const getBrukerinntektSum = () => Object.values(brukerinntekt).reduce((acc, val) => acc + val, 0);
-    const getAnnenForelderInntektSum = () => Object.values(annenForelderInntekt).reduce((acc, val) => acc + val, 0);
+    const getAnnenForelderInntektSum = () => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce((acc, val) => acc + val, 0) : null;
 
     return (
         <FormStateContext.Provider value={{
@@ -78,8 +72,6 @@ export const FormStateComponent = ({ children }: Props) => {
             setAnnenForelderInntekt,
             getBrukerinntektSum,
             getAnnenForelderInntektSum,
-            simulationInntekt,
-            setSimulationInntekt,
         }}>
             {children}
         </FormStateContext.Provider>

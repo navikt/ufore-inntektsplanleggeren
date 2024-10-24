@@ -13,7 +13,7 @@ export const mockInitiateResponse = {
         2025
     ],
         "hasVarigTilrettelagtArbeid": false,
-        "hasBarneTilleggFellesbarn": true,
+        "hasBarneTilleggFellesbarn": false, //show eps
         "grenseStoppAvBarnetilleggFellesbarn": 669751,
         "fribelopBarnetilleggFellesbarn": 570529,
         "hasBarnetilleggSaerkullsbarn": false,
@@ -182,4 +182,70 @@ export const mockInntekterResponse : InntekterResponse ={
     }
 },
     "uforeHeleAaret": true
+}
+
+export const InntektSimulationResponse = {
+    "messages": [],
+    "result": {
+        "uforetrygd": {
+            "monthly": {
+                "before": 30000,
+                "after": 31000
+            },
+            "yearly": {
+                "before": 353000,
+                "after": 354000
+            }
+        },
+        "forventetInntekt": {
+            "monthly": {
+                "before": 30000,
+                "after": 31000
+            },
+            "yearly": {
+                "before": 300000,
+                "after": 310000
+            }
+        },
+        "barnetilleggFellesbarn": {
+            "monthly": {
+                "before": 1000,
+                "after": 500
+            },
+            "yearly": {
+                "before": 12000,
+                "after": 6000
+            }
+        },
+        "barnetilleggSaerkullsbarn": {
+            "monthly": {
+                "before": 0,
+                "after": 0
+            },
+            "yearly": {
+                "before": 0,
+                "after": 0
+            }
+        },
+        "gjenlevendetillegg": {
+            "monthly": {
+                "before": 0,
+                "after": 0
+            },
+            "yearly": {
+                "before": 0,
+                "after": 0
+            }
+        },
+        "sum": {
+            "monthly": {
+                "before": 30000,
+                "after": 25984
+            },
+            "yearly": {
+                "before": 404534,
+                "after": 390238
+            }
+        }
+    }
 }

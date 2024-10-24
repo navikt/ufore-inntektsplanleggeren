@@ -3,9 +3,11 @@ import React, {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/oppsummering/SimulationTable";
+import {DataContext} from "@/DataContextProvider";
 
 export const Oppsummering = () => {
-    const { setFormStep, simulationInntekt, selectedYear } = useContext(FormStateContext);
+    const { setFormStep, selectedYear } = useContext(FormStateContext);
+    const { simulationResponse } = useContext(DataContext);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -19,13 +21,14 @@ export const Oppsummering = () => {
         navigate(`/${uuid}/kvittering`);
     };
 
+
     return (
         <VStack gap="4">
             <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
 
             <VStack gap="6">
                 <Heading size={"large"}>Detaljert oversikt før skatt 2024</Heading>
-                {simulationInntekt && <SimulationTable simulationResult={simulationInntekt}></SimulationTable>}
+                {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
             </VStack>
 
             <HStack gap="4">

@@ -5,7 +5,7 @@ import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import { submitInntektSimulation} from "@/api/apiFetching";
+import {getInntekter, submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
@@ -14,10 +14,11 @@ import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
-    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setSimulationInntekt, setFormStep } = useContext(FormStateContext);
-    const { initialViewData, inntekterResponse } = useContext(DataContext);
+    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
+    const { initialViewData, inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [errors, setErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
         setFormStep(1);
@@ -27,8 +28,10 @@ export const Innfylling = () => {
         e.preventDefault();
 
         try {
-            const result = await submitInntektSimulation({ brukerinntekt, annenForelderInntekt }, selectedYear);
-            setSimulationInntekt(result.result);
+            setIsLoading(true);
+            const result = await submitInntektSimulation(brukerinntekt, annenForelderInntekt, selectedYear);
+            setSimulationResponse(result);
+            navigate("/oppsummering");
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
@@ -80,25 +83,25 @@ export const Innfylling = () => {
                         />
                     </Box>
 
-                    {initialViewData.hasBarneTilleggFellesbarn ?
-                        <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
-                            <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>
-                            <FormFields
-                                year={selectedYear}
-                                errors={errors}
-                                setErrors={setErrors}
-                                setInntekt={(field, belop) => setAnnenForelderInntekt(b => ({...b, [field]:  belop}))}
-                                forventedeInntekter={annenForelderInntekt}
-                                inntektSum={getAnnenForelderInntektSum()}
-                            />
-                        </Box> : null
-                    }
+                    {/*{(initialViewData?.hasBarneTilleggFellesbarn || annenForelderInntekt != null) ?*/}
+                    {/*    <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">*/}
+                    {/*        <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>*/}
+                    {/*        <FormFields*/}
+                    {/*            year={selectedYear}*/}
+                    {/*            errors={errors}*/}
+                    {/*            setErrors={setErrors}*/}
+                    {/*            setInntekt={(field, belop) => setAnnenForelderInntekt(b => ({...b, [field]:  belop}))}*/}
+                    {/*            forventedeInntekter={annenForelderInntekt}*/}
+                    {/*            inntektSum={getAnnenForelderInntektSum()}*/}
+                    {/*        />*/}
+                    {/*    </Box> : null*/}
+                    {/*}*/}
 
                     <HStack gap="4">
                         <Button as={Link} to="/" variant="secondary">
                             Tilbake
                         </Button>
-                        <Button type="submit" as={Link} to="/oppsummering" variant="primary" onClick={handleSubmit}>
+                        <Button type="submit" variant="primary" onClick={handleSubmit} loading={isLoading}>
                             Beregning
                         </Button>
                     </HStack>
