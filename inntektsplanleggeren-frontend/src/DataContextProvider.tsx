@@ -125,7 +125,6 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [initialViewResponse, setInitialViewResponse] = useState(DataContextDefaultValue.initialViewData)
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)

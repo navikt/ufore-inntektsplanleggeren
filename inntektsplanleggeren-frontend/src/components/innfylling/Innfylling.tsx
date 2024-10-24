@@ -5,7 +5,7 @@ import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {getInntekter, submitInntektSimulation} from "@/api/apiFetching";
+import {submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
@@ -14,8 +14,8 @@ import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
-    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
-    const { initialViewData, inntekterResponse, setSimulationResponse } = useContext(DataContext);
+    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, getBrukerinntektSum, setFormStep } = useContext(FormStateContext);
+    const { inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [errors, setErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false)

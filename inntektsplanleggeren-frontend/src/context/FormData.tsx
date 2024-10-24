@@ -1,6 +1,5 @@
-import React, {createContext, SetStateAction, useContext, useState} from "react";
-import {DataContext} from "@/DataContextProvider";
-import {ForventedeInntekter, SimulationResponse, SimulationResult} from "@/api/model/ApiRequests";
+import React, {createContext, SetStateAction, useState} from "react";
+import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
 
 interface FormState {

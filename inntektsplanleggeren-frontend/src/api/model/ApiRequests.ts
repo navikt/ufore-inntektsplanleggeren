@@ -1,4 +1,4 @@
-import {InntektInnfylling} from "@/api/apiFetching";
+
 
 export type InntektDetaljer = {
     maned: number;
