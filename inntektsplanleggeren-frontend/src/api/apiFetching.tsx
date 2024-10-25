@@ -117,7 +117,7 @@ export async function submitInntektSimulation(brukerInntekter: ForventedeInntekt
         }
     }
 
-    const res = await fetch(basePath + `api/simuler?simuleringsaar=${year}`, {
+    const res = await fetch(basePath + `/api/simuler?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
