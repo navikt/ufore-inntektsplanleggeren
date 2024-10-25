@@ -67,6 +67,30 @@ app.get(
 );
 
 
+app.post(
+    basePath + '/api/simuler',
+    async (req, res) => {
+
+        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
+        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
+
+        console.log(req.query.simuleringsaar)
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/simuler?simuleringsaar=${req.query.simuleringsaar}`, {
+            method: req.method,
+            headers: newHeaders,
+            body: JSON.stringify(req.body)
+        });
+
+        const body = await response.json();
+
+        const statuskode = response.status
+        res.status(statuskode).send(body)
+    }
+);
+
+
 
 
 app.put(basePath + '/api/samboer/:periodeId', async (req, res) => {
