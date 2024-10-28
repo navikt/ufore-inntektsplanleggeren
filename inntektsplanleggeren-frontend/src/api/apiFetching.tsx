@@ -6,7 +6,7 @@ import {mockInntekterResponse, mockInitiateResponse, InntektSimulationResponse} 
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = false;
+const MOCKS_ENABLED = true;
 
 export interface GetInntektsgrenseResponse {
     messages: Message[]
@@ -24,22 +24,42 @@ export interface StringDictionary {
     [key: string]: never;
 }
 
-export interface InitiateData {
-    forventetInntekt: number
-    forventetInntektAnnenForelder: number | null
-    inntektsgrense: number
-    kompensasjonsgrad: number
-    grenseStoppAvUfoeretrygd: number
-    aktuelleAar: number[]
-    hasVarigTilrettelagtArbeid: boolean
-    hasBarneTilleggFellesbarn: boolean,
-    grenseStoppAvBarnetilleggFellesbarn: number | null,
-    fribelopBarnetilleggFellesbarn: number | null,
-    hasBarnetilleggSaerkullsbarn: boolean,
-    grenseStoppAvBarnetilleggSaerkullsbarn: number | null,
-    fribelopBarnetilleggSaerkullsbarn: number | null,
-    hasGjenlevendeTillegg: boolean
+interface BaseInitiateData {
+    forventetInntekt: number;
+    forventetInntektAnnenForelder: number | null;
+    inntektsgrense: number;
+    kompensasjonsgrad: number;
+    grenseStoppAvUfoeretrygd: number;
+    aktuelleAar: number[];
+    hasVarigTilrettelagtArbeid: boolean;
+    hasGjenlevendeTillegg: boolean;
 }
+
+interface WithBarneTilleggFellesBarn extends BaseInitiateData {
+    hasBarneTilleggFellesbarn: true;
+    grenseStoppAvBarnetilleggFellesbarn: number;
+    fribelopBarnetilleggFellesbarn: number;
+}
+
+interface WithoutBarneTilleggFellesBarn extends BaseInitiateData {
+    hasBarneTilleggFellesbarn: false;
+    grenseStoppAvBarnetilleggFellesbarn: null;
+    fribelopBarnetilleggFellesbarn: null;
+}
+
+interface WithBarnetilleggSaerkullsbarn extends BaseInitiateData {
+    hasBarnetilleggSaerkullsbarn: true,
+    grenseStoppAvBarnetilleggSaerkullsbarn: number,
+    fribelopBarnetilleggSaerkullsbarn: number,
+}
+
+interface WithoutBarnetilleggSaerkullsbarn extends BaseInitiateData {
+    hasBarnetilleggSaerkullsbarn: false,
+    grenseStoppAvBarnetilleggSaerkullsbarn: null,
+    fribelopBarnetilleggSaerkullsbarn: null,
+}
+
+export type InitiateData = (WithBarneTilleggFellesBarn | WithoutBarneTilleggFellesBarn) & (WithBarnetilleggSaerkullsbarn | WithoutBarnetilleggSaerkullsbarn);
 
 export interface InntektInnfylling {
     brukerinntekt: ForventedeInntekter

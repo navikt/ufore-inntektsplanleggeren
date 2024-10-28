@@ -1,4 +1,4 @@
-import {Alert, Heading, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
+import { Heading, List, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
 import React, {useContext} from "react";
 import {FormStateContext} from "@/context/FormData";
 
@@ -7,7 +7,7 @@ interface Props {
     infoType: number //0 default, 1 for oct/nov, 2 for dec
 }
 
-export function YearView({ availableYears, infoType }: Props) {
+export function YearView({ availableYears }: Props) {
     const {selectedYear, setSelectedYear} = useContext(FormStateContext)
 
     const [firstYear, secondYear] = availableYears;
@@ -22,24 +22,23 @@ export function YearView({ availableYears, infoType }: Props) {
         return null;
     }
 
-    if (availableYears.length === 1) {
-        return (
-            <>
-                <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekter for {firstYear}</Heading>
-
-                <Card />
-            </>
-        );
-    }
-
     return (
         <>
-            <Heading size="medium" level="2" spacing>Du kan registrere inntekter for {firstYear} og {secondYear}</Heading>
+            { availableYears.length === 1 ?
+                <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekter for {firstYear}</Heading> :
+                <Heading size="medium" level="2">Du kan registrere inntekter for {firstYear} og {secondYear}</Heading>
+            }
 
-            <VStack gap="4">
-                <Card />
 
-                {infoType === 0 ? null : <Alert variant="info">{infoMessage(infoType)}</Alert>}
+
+            <VStack gap="1">
+                <ReadMore header="Tidspunkt for å registrere inntekt">
+                        <List>
+                            <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekter for dette året.</List.Item>
+                            <List.Item>Fra 1. oktober - 30. november kan du både legge inn inntekter for dette året og neste år.</List.Item>
+                            <List.Item>Fra 1. til 31. desember kan du bare registrere inntekter for neste år, fordi endringen ikke vil påvirke utbetalingen din før til neste år.</List.Item>
+                        </List>
+                </ReadMore>
 
                 <RadioGroup legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
                     {availableYears.map(year => <Radio key={year} value={year.toString(10)}>{year}</Radio>)}
@@ -49,19 +48,5 @@ export function YearView({ availableYears, infoType }: Props) {
     )
 }
 
-const Card = () => (
-    <ReadMore header="Å legge inn inntekt for andre år">
-        Tekst Tekst Tekst Tekst Tekst
-    </ReadMore>
-);
 
-function infoMessage(infoType: number): string {
-    switch (infoType) {
-        case 1:
-            return "Hvis du ikke sender inn ny forventet inntekt for neste år, vil vi mot slutten av året registrere at du har en tilsvarende inntekt som i år.";
-        case 2:
-            return "I desember kan du se hvilke inntekter som er registrert for året vi er inne i, men bare legge inn nye inntekter for neste år. Dette er fordi endring i utbetaling av uføretrygd skjer fra måneden etter at du har meldt inn ny inntekt.";
-        default:
-            return "";
-    }
-}
+

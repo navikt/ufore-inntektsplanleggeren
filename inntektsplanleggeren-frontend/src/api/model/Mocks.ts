@@ -1,26 +1,27 @@
 import {InntekterResponse} from "@/api/model/ApiRequests";
+import {InitiateData} from "@/api/apiFetching";
 
 export const mockInitiateResponse = {
     "messages": [],
     "data": {
-    "forventetInntekt": 120000,
+        "forventetInntekt": 120000,
         "forventetInntektAnnenForelder": 800000,
         "inntektsgrense": 49611,
         "kompensasjonsgrad": 49.7,
         "grenseStoppAvUfoeretrygd": 460060,
         "aktuelleAar": [
-        2024,
-        2025
-    ],
-        "hasVarigTilrettelagtArbeid": false,
-        "hasBarneTilleggFellesbarn": false, //show eps
+            2024,
+            2025
+        ],
+        "hasVarigTilrettelagtArbeid": true,
+        "hasBarneTilleggFellesbarn": true, //show eps
         "grenseStoppAvBarnetilleggFellesbarn": 669751,
         "fribelopBarnetilleggFellesbarn": 570529,
-        "hasBarnetilleggSaerkullsbarn": false,
-        "grenseStoppAvBarnetilleggSaerkullsbarn": null,
-        "fribelopBarnetilleggSaerkullsbarn": null,
-        "hasGjenlevendeTillegg": false
-    }
+        "hasBarnetilleggSaerkullsbarn": true,
+        "grenseStoppAvBarnetilleggSaerkullsbarn": 827,
+        "fribelopBarnetilleggSaerkullsbarn": 242,
+        "hasGjenlevendeTillegg": true
+    } satisfies InitiateData
 }
 
 // export const mockInntekterResponse : InntekterResponse = {
