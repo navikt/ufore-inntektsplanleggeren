@@ -38,7 +38,8 @@ class SecurityConfiguration(
 
             authorizeRequests {
                 authorize("/actuator/**", permitAll)
-                authorize("/v3/api-docs", permitAll)
+                authorize("/v3/api-docs/**", permitAll)
+                authorize("/swagger-ui/**", permitAll)
                 authorize(DispatcherTypeRequestMatcher(DispatcherType.ERROR), authenticated)
                 authorize("/api/**", authenticated)
                 authorize(anyRequest, denyAll)
