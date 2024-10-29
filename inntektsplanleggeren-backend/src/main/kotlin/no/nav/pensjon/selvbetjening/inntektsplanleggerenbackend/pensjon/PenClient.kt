@@ -8,6 +8,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Component
 class PenClient(
@@ -24,6 +28,7 @@ class PenClient(
     private val webClient: WebClient,
     private val tokenService: TokenService
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(PenClient::class.java)
 
     fun sendInntektsendring(
         pid: String,
@@ -126,6 +131,39 @@ class PenClient(
             }
             if (HttpStatus.NOT_FOUND == e.statusCode) {
                 return null
+            }
+            throw ClientException(AppId.PEN.name, path, e.message, e)
+        } catch (e: Exception) {
+            throw ClientException(AppId.PEN.name, path, e.message, e)
+        }
+    }
+
+    fun fetchInntektsplanleggerStatus(pid: String, simuleringFom: LocalDate, innsendingsTidspunkt: LocalDateTime): StatusInnsendingResponse? {
+        val path = "/pen/api/selvbetjening/inntektsplanleggeren/status"
+        val tidspkt = innsendingsTidspunkt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        try {
+            return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
+                .let { accessToken ->
+                    webClient
+                        .get()
+                        .uri("$url$path?fom=$tidspkt&endringFom=$simuleringFom")
+                        .header("fnr", pid)
+                        .header("Authorization", "Bearer $accessToken")
+                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .bodyToMono(StatusInnsendingResponse::class.java)
+                        .block()
+                } ?: throw IllegalStateException("Unable to fetch status from PEN")
+        } catch (e: WebClientResponseException) {
+            if (HttpStatus.FORBIDDEN == e.statusCode) {
+                throw ForbiddenException(AppId.PEN.name, path, e.message, e)
+            }
+            if (HttpStatus.NOT_FOUND == e.statusCode) {
+                return null
+            }
+            if (HttpStatus.BAD_REQUEST == e.statusCode) {
+                logger.warn(e.responseBodyAsString)
             }
             throw ClientException(AppId.PEN.name, path, e.message, e)
         } catch (e: Exception) {
