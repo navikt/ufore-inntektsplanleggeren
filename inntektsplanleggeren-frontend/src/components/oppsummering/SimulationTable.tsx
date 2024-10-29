@@ -9,41 +9,41 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
         <Table>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell scope="col"></Table.HeaderCell>
-                    <Table.HeaderCell scope="col">I dag (kr)</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Med dine endringer (kr)</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">Type</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">Before</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">After</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
                 <Table.Row>
                     <Table.HeaderCell scope="row">Uføretrygd</Table.HeaderCell>
-                    <Table.DataCell>{numberFormatWithKr(uforetrygd.yearly.before)}</Table.DataCell>
-                    <Table.DataCell>{numberFormatWithKr(uforetrygd.yearly.after)}</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(uforetrygd.before)} kr</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(uforetrygd.after)} kr</Table.DataCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell scope="row">Forventet Inntekt</Table.HeaderCell>
-                    <Table.DataCell>{numberFormatWithKr(forventetInntekt.yearly.before)}</Table.DataCell>
-                    <Table.DataCell>{numberFormatWithKr(forventetInntekt.yearly.after)}</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(forventetInntekt.before)} kr</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(forventetInntekt.after)} kr</Table.DataCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell scope="row">Barnetillegg Fellesbarn</Table.HeaderCell>
-                    <Table.DataCell>{numberFormatWithKr(barnetilleggFellesbarn.yearly.before)}</Table.DataCell>
-                    <Table.DataCell>{numberFormatWithKr(barnetilleggFellesbarn.yearly.after)}</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(barnetilleggFellesbarn.before)} kr</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(barnetilleggFellesbarn.after)} kr</Table.DataCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell scope="row">Barnetillegg Særkullsbarn</Table.HeaderCell>
-                    <Table.DataCell>{numberFormatWithKr(barnetilleggSaerkullsbarn.yearly.before)}</Table.DataCell>
-                    <Table.DataCell>{numberFormatWithKr(barnetilleggSaerkullsbarn.yearly.after)}</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(barnetilleggSaerkullsbarn.before)} kr</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(barnetilleggSaerkullsbarn.after)} kr</Table.DataCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell scope="row">Gjenlevendetillegg</Table.HeaderCell>
-                    <Table.DataCell>{numberFormatWithKr(gjenlevendetillegg.yearly.before)}</Table.DataCell>
-                    <Table.DataCell>{numberFormatWithKr(gjenlevendetillegg.yearly.after)}</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(gjenlevendetillegg.before)} kr</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(gjenlevendetillegg.after)} kr</Table.DataCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell scope="row">Sum</Table.HeaderCell>
-                    <Table.DataCell>{numberFormatWithKr(sum.yearly.before)}</Table.DataCell>
-                    <Table.DataCell>{numberFormatWithKr(sum.yearly.after)}</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(sum.before)} kr</Table.DataCell>
+                    <Table.DataCell>{numberFormatWithKr(sum.after)} kr</Table.DataCell>
                 </Table.Row>
             </Table.Body>
         </Table>

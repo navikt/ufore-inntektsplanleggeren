@@ -1,12 +1,12 @@
 @import "@navikt/ds-tokens";
 
 .top-box {
-    background: var(--a-blue-50);
+    background: var(--a-bg-subtle);
+    borderColor: var(--a-border-default);
     padding: var(--a-spacing-1);
 }
 
 box-heading {
     size: var(--a-font-size-heading-xsmall);
-
-    /* size: var(--a-font-size-heading-2xlarge); */
+    /*size: var(--a-font-size-heading-2xlarge);*/
 }

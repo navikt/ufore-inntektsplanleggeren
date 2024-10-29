@@ -1,4 +1,10 @@
+import {InntektInnfylling} from "@/api/apiFetching";
 
+
+export type SubmitInntektRequest = {
+    inntekt: InntektInnfylling
+    year: string
+}
 
 export type InntektDetaljer = {
     maned: number;
@@ -6,17 +12,21 @@ export type InntektDetaljer = {
     inntektsgivere: string[];
 };
 
+export type ForventetInntekt = {
+    belop: number;
+};
+
 export type ForventedeInntekter = {
-    arbeidsinntekt: number;
-    andrePensjonsgivendeYtelser: number;
-    naeringsinntekt: number;
-    inntektUtland: number;
-    pensjonUtland: number;
+    arbeidsinntekt: ForventetInntekt;
+    andrePensjonsgivendeYtelser: ForventetInntekt;
+    naeringsinntekt: ForventetInntekt;
+    inntektUtland: ForventetInntekt;
+    pensjonUtland: ForventetInntekt;
 };
 
 export type ForventedeInntekterResponse = {
     bruker: ForventedeInntekter;
-    eps: ForventedeInntekter | null;
+    eps: ForventedeInntekter;
 };
 
 export type InntekterResponse = {
@@ -26,12 +36,7 @@ export type InntekterResponse = {
     uforeHeleAaret: boolean;
 };
 
-export type SimulationRequest = {
-    bruker: ForventedeInntekter;
-    eps: ForventedeInntekter | null;
-};
-
-export type SimulationResponse = {
+export type SubmitInntektSimulationResponse = {
     messages: Message[];
     result: SimulationResult;
 };
@@ -43,23 +48,18 @@ export type Message = {
     metadata: Record<string, unknown>;
 };
 
-export type SimulationResult = {
-    uforetrygd: SimulationDetail;
-    forventetInntekt: SimulationDetail;
-    barnetilleggFellesbarn: SimulationDetail;
-    barnetilleggSaerkullsbarn: SimulationDetail;
-    gjenlevendetillegg: SimulationDetail;
-    sum: SimulationDetail;
-};
-
-export type SimulationDetail = {
-    monthly: PayDetail;
-    yearly: PayDetail;
-};
-
-export type PayDetail = {
+export type ResultDetails = {
     before: number;
     after: number;
+};
+
+export type SimulationResult = {
+    uforetrygd: ResultDetails;
+    forventetInntekt: ResultDetails;
+    barnetilleggFellesbarn: ResultDetails;
+    barnetilleggSaerkullsbarn: ResultDetails;
+    gjenlevendetillegg: ResultDetails;
+    sum: ResultDetails;
 };
 
 
