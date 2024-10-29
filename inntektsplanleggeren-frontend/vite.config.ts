@@ -6,7 +6,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 const buildConfig = {
-  base: '/api',
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
   build: {
     outDir: './dist'
   },
@@ -23,6 +23,7 @@ const buildConfig = {
 }
 
 const devConfig = {
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
   build: {
     manifest: true,
     rollupOptions: {
@@ -49,6 +50,7 @@ const devConfig = {
 // https://vitejs.dev/config/
 export default ({ command }) => {
   if(command == 'serve') {
+    console.log("ausfgu")
     return devConfig
   } else {
     return buildConfig

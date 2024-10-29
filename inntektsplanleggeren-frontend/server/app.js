@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 
-const basePath = "/pensjon/selvbetjening/familieforhold";
+export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 const app = express();
 app.use(express.json())
@@ -23,7 +23,7 @@ const buildPath = path.resolve(__dirname, "../dist")
 app.use(basePath, express.static(buildPath));
 
 app.get(
-    basePath + '/api/familieforhold',
+    basePath + '/api/initiate',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
@@ -31,7 +31,7 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/familieforhold", {
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + "/api/initiate", {
             method: req.method,
             headers: newHeaders
         });
@@ -44,7 +44,7 @@ app.get(
 );
 
 app.get(
-    basePath + '/api/samboer',
+    basePath + '/api/inntekter',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
@@ -52,7 +52,9 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer", {
+
+        console.log(req.query.simuleringsaar)
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/inntekter?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders
         });
@@ -64,28 +66,32 @@ app.get(
     }
 );
 
-app.post(basePath + '/api/samboer', async (req, res) => {
+
+app.post(
+    basePath + '/api/simuler',
+    async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const params = {
+        console.log(req.query.simuleringsaar)
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/simuler?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders,
             body: JSON.stringify(req.body)
-        }
+        });
 
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer", params)
-        if (response.status === 400) {
-            const body = await response.json();
-            res.status(response.status).send(body)
-        }
+        const body = await response.json();
 
-        res.status(response.status).send()
+        const statuskode = response.status
+        res.status(statuskode).send(body)
     }
 );
+
+
+
 
 app.put(basePath + '/api/samboer/:periodeId', async (req, res) => {
 
@@ -95,8 +101,6 @@ app.put(basePath + '/api/samboer/:periodeId', async (req, res) => {
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
         const periodeId = parseInt(req.params.periodeId)
-
-
         const params = {
             method: req.method,
             headers: newHeaders,
@@ -174,7 +178,7 @@ async function getTokenValue(idToken) {
         return await azure.getOnBehalfOfAccessToken(
             client,
             idToken,
-            process.env.FAMILIEFORHOLD_BACKEND_SCOPE,
+            process.env.INNTEKTSPLANLEGGEREN_BACKEND_SCOPE,
             tokenEndpoint
         );
 
@@ -182,7 +186,7 @@ async function getTokenValue(idToken) {
         return await tokenx.getTokenExchangeAccessToken(
             client,
             idToken,
-            process.env.FAMILIEFORHOLD_BACKEND_AUDIENCE
+            process.env.INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE
         );
     }
 }
