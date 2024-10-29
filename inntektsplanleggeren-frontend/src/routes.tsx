@@ -1,44 +1,40 @@
-import React, {useContext, useState} from "react";
-import {Routes, Route, BrowserRouter, Outlet, Navigate} from "react-router-dom";
+import React, {useContext} from "react";
+import {Routes, Route, BrowserRouter, Outlet, Navigate } from "react-router-dom";
 import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
 import {FormContainer} from "@/form-container";
 import {Innfylling} from "@/components/innfylling/Innfylling";
-import {Beregning} from "@/components/beregning/Beregning";
 import {Oppsummering} from "@/components/oppsummering/Oppsummering";
 import {Kvittering} from "@/components/kvittering/Kvittering";
 import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
 
-export const AppRoutes = (
-) => {
-  //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
 
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route element={<App />}>
-                    {/*<Route element={<AccessControl />}>*/}
-                        <Route index element={<InitialView />} />
-                        <Route element={<YearGuard />}>
-                            <Route element={<FormContainer />}>
-                                <Route path="/forventede-inntekter" element={<Innfylling />} />
-                                <Route path="/beregning" element={<Beregning />} />
-                                <Route path="/oppsummering" element={<Oppsummering />} />
-                                <Route path="/kvittering" element={<Kvittering />} />
-                            </Route>
+const BASE_PATH = "/pensjon/selvbetjening/inntektsplanleggeren";
+
+export const AppRoutes = () => (
+    <BrowserRouter basename={BASE_PATH}>
+        <Routes>
+            <Route element={<App />}>
+                {/*<Route element={<AccessControl />}>*/}
+                    <Route index element={<InitialView />} />
+                    <Route element={<YearGuard />}>
+                        <Route element={<FormContainer />}>
+                            <Route index path={"/forventede-inntekter"} element={<Innfylling />} />
+                            <Route index path={"/oppsummering"} element={<Oppsummering />} />
+                            <Route index path={"/:id/kvittering"} element={<Kvittering />} />
                         </Route>
-                    {/*</Route>*/}
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    );
-};
+                    </Route>
+                {/*</Route>*/}
+            </Route>
+        </Routes>
+    </BrowserRouter>
+);
 
 const YearGuard = () => {
     const { selectedYear } = useContext(FormStateContext);
 
-    if (selectedYear === undefined) {
+    if (selectedYear === null) {
         return <Navigate to="/" replace />;
     }
 

@@ -1,111 +1,76 @@
-import React, {createContext, SetStateAction, useContext, useState} from "react";
-import {InntektInnfylling, PersonInntekt} from "@/api/apiFetching";
-import {DataContext, InntektSimulationDefaultValue} from "@/DataContextProvider";
-import {SimulationResult} from "@/api/model/ApiRequests";
+import React, {createContext, SetStateAction, useState} from "react";
+import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
 
 interface FormState {
     formStep: number
     setFormStep: (value: SetStateAction<number>) => void
-    selectedYear?: string;
-    setSelectedYear: (value: SetStateAction<string | undefined>) => void
+    selectedYear: string | null;
+    setSelectedYear: (value: SetStateAction<string | null>) => void
 
-    formData: InntektInnfylling;
-    setFormData: (value: SetStateAction<InntektInnfylling>) => void,
-    setPersoninntekt: (key: keyof PersonInntekt, value: number) => void,
-    setAnnenForelderInntekt: (key: keyof PersonInntekt, value: number) => void,
-    getPersonInntektSum: number,
-    getAnnenForelderInntektSum: number,
+    brukerinntekt: ForventedeInntekter
+    setBrukerinntekt: (value: SetStateAction<ForventedeInntekter>) => void,
 
-    simulationInntekt: SimulationResult | undefined,
-    setSimulationInntekt: (value: SetStateAction<SimulationResult>) => void
+    annenForelderInntekt: ForventedeInntekter | null,
+    setAnnenForelderInntekt: (value: SetStateAction<ForventedeInntekter | null> | null) => void,
+
+    getBrukerinntektSum: () => number,
+    getAnnenForelderInntektSum: () => number | null,
 }
 
-const initialFormData = {
-    personInntekt: {
-        arbeidsinntekt: 0,
-        navYtelse: 0,
-        naeringsinntekt: 0,
-        inntektFraUtlandet: 0,
-        pensjonFraAndre: 0,
-        pensjonFraUtlandet: 0
-    },
-    annenForelderInntekt: {
-        arbeidsinntekt: 0,
-        navYtelse: 0,
-        naeringsinntekt: 0,
-        inntektFraUtlandet: 0,
-        pensjonFraAndre: 0,
-        pensjonFraUtlandet: 0
-    }
+const forventedeInntekterDefaultValue = {
+    arbeidsinntekt: 0,
+    andrePensjonsgivendeYtelser: 0,
+    naeringsinntekt: 0,
+    inntektUtland: 0,
+    pensjonUtland: 0
 }
 
 export const FormStateContext = createContext<FormState>({
-    selectedYear: undefined,
+    selectedYear: null,
     setSelectedYear: () => undefined,
-    formData: initialFormData,
-    setFormData: () => undefined,
-    setPersoninntekt: () => undefined,
+
+    brukerinntekt: forventedeInntekterDefaultValue,
+    setBrukerinntekt: () => undefined,
+
+    annenForelderInntekt: null,
     setAnnenForelderInntekt: () => undefined,
-    getPersonInntektSum: 0,
-    getAnnenForelderInntektSum: 0,
+
+    getBrukerinntektSum: () => 0,
+    getAnnenForelderInntektSum: () => 0,
     formStep: 1,
     setFormStep: () => undefined,
-    simulationInntekt: undefined,
-    setSimulationInntekt: () => undefined
 });
 
 interface Props {
     children: React.ReactNode;
 }
 
-function summerPersoninntekt(personInntekt: PersonInntekt) {
-    return Object.values(personInntekt).reduce((acc, value) => acc + value, 0)
-}
+
 
 export const FormStateComponent = ({ children }: Props) => {
-    const { initialViewData } = useContext(DataContext)
-    const { aktuelleAar } = initialViewData;
-    const [year, setYear]  = useState<string | undefined>(aktuelleAar.length === 1 ? aktuelleAar[0].toString(10) : undefined);
-    const [formData, setFormData] = useState<InntektInnfylling>(initialFormData)
-    const [simulationInntekt, setSimulationInntekt] = useState<SimulationResult | undefined>();
+    // const { initialViewData } = useContext(DataContext);
+    // const { aktuelleAar } = initialViewData?.aktuelleAar || { aktuelleAar: [] };
+    const [selectedYear, setSelectedYear]  = useState<string | null>(null);
+    const [brukerinntekt, setBrukerinntekt] = useState<ForventedeInntekter>(forventedeInntekterDefaultValue);
+    const [annenForelderInntekt, setAnnenForelderInntekt] = useState<ForventedeInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
 
-    const setPersoninntekt = (key: keyof PersonInntekt, value: number) => {
-        setFormData((prev) => ({
-            ...prev,
-            personInntekt: {
-                ...prev.personInntekt,
-                [key]: value,
-            },
-        }));
-    };
-
-    const setAnnenForelderInntekt = (key: keyof PersonInntekt, value: number) => {
-        setFormData((prev) => ({
-            ...prev,
-            annenForelderInntekt: {
-                ...prev.annenForelderInntekt,
-                [key]: value,
-            },
-        }));
-    }
-
+    const getBrukerinntektSum = () => Object.values(brukerinntekt).reduce((acc, val) => acc + val, 0);
+    const getAnnenForelderInntektSum = () => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce((acc, val) => acc + val, 0) : null;
 
     return (
         <FormStateContext.Provider value={{
-            selectedYear: year,
-            setSelectedYear: setYear,
-            formData: formData,
-            setFormData: setFormData,
-            setPersoninntekt: setPersoninntekt,
-            setAnnenForelderInntekt: setAnnenForelderInntekt,
-            getPersonInntektSum: summerPersoninntekt(formData.personInntekt),
-            getAnnenForelderInntektSum: summerPersoninntekt(formData.annenForelderInntekt),
-            formStep: formStep,
-            setFormStep: setFormStep,
-            simulationInntekt: simulationInntekt,
-            setSimulationInntekt: setSimulationInntekt
+            formStep,
+            setFormStep,
+            selectedYear,
+            setSelectedYear,
+            brukerinntekt,
+            annenForelderInntekt,
+            setBrukerinntekt,
+            setAnnenForelderInntekt,
+            getBrukerinntektSum,
+            getAnnenForelderInntektSum,
         }}>
             {children}
         </FormStateContext.Provider>
