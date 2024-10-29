@@ -1,132 +1,75 @@
-import {BodyLong, Box, Button, Heading, HStack, Label, List, VStack} from "@navikt/ds-react";
-import {InitiateData} from "@/api/apiFetching";
+import {BodyLong, ExpansionCard, Label} from "@navikt/ds-react";
+import {useContext} from "react";
+import {DataContext} from "@/DataContextProvider";
+import {DisplayData} from "@/api/apiFetching";
 import {Link} from "react-router-dom";
-import {numberFormatWithKr} from "@/common/Utils";
-import React from "react";
-import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 
 //todo see if it is possible to reduce the number of versions
 
-
-
 export function InntektsgrenseCard(props: {
-    displayData: InitiateData
+    displayData: DisplayData
 }) {
-    const [isOpen, setIsOpen] = React.useState(false)
-    const [buttonText, setButtonText] = React.useState("Vis grenser og trekkprosent")
-
-    const handleButton = () => {
-        setIsOpen(!isOpen)
-        setButtonText(isOpen ? "Vis grenser og trekkprosent" : "Skjul grenser og trekkprosent" )
-    }
-
-    return (
-        <Box borderRadius="xlarge" padding="4" className="top-box">
-            <VStack gap="5">
-                <Heading size="small">Inntektsgrenser og trekkprosent</Heading>
-
-                <BodyLong >
-                    Dine inntektsgrensener sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
-                </BodyLong>
-
-                {isOpen ? <VStack gap="5">
-                    <BodyLong>
-                        Forventet inntekt kan komme fra dine tidligere registreringer, eller i noen tilfeller fra opplysninger vi har hentet. Har du nylig meldt inn ny inntekt, vil den ikke vises her før den har blitt behandlet hos oss.
+    return (<div>
+            <ExpansionCard aria-label="Demo med bare tittel">
+                <ExpansionCard.Header>
+                    <ExpansionCard.Title>Din inntektsgrense med mer</ExpansionCard.Title>
+                </ExpansionCard.Header>
+                <ExpansionCard.Content>
+                    <BodyLong spacing>
+                        Dette er grensene som avgjør hvor mye inntekt du kan ha før utbetalingen av uføretrygden din
+                        blir justert ned. Det vil likevel lønne seg å jobbe, fordi uføretrygd og inntekt er høyere enn
+                        uføretrygd alene.
                     </BodyLong>
 
-                    <section>
-                        <Label as="p">Din inntektsgrense: {numberFormatWithKr(props.displayData.inntektsgrense)}</Label>
-                        { props.displayData.hasVarigTilrettelagtArbeid ?
-                            <BodyLong>
-                                Du har tiltaket <Link to={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil numberFormatWithKr(props.displayData.inntektsgrense) (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
-                                din av beløpet du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du aldri trukket for. I de fleste tilfeller vil det lønne seg å jobbe, fordi uføretrygd og inntekt er høyere enn uføretrygd alene.
-                            </BodyLong> :
-                            <BodyLong>
-                                Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden din av beløpet du tjener over inntektsgrensen.
-                                Beløpet opp til inntektsgrensen blir du aldri trukket for.
-                            </BodyLong>
-                        }
-                    </section>
-
-                    <section>
-                        <Label as="p">Din trekkprosent (kompensasjonsgrad): {props.displayData.kompensasjonsgrad} prosent</Label>
-                        <BodyLong>
-                            Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
-                            Vi trekker {props.displayData.kompensasjonsgrad} prosent kun av det du har tjent over inntektsgrensen.
-                            Du vil fortsatt få utbetalt redusert uføretrygd i tillegg til lønnen din.
+                    <Label as="p">Din inntektsgrense: {props.displayData.inntektsgrense}kr</Label>
+                    {props.displayData.hasVarigTilrettelagtArbeid ?
+                        <BodyLong spacing>
+                            Du har tiltaket <Link to={"nav.no"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil 124 028 kroner, som tilsvarer grunnbeløpet
+                            i folketrygden. Hvis du får høyere inntekt enn dette, begynner vi å trekke en prosent av uføretrygd tilsvarende det beløpet
+                            du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du aldri trukket for.
+                        </BodyLong> :
+                        <BodyLong spacing>
+                            Hvis du får høyere inntekt enn inntektsgrensen, begynner vi å trekke en prosent av uføretrygd
+                            tilsvarende det beløpet du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du
+                            aldri trukket for.
                         </BodyLong>
-                    </section>
+                    }
+
+                    <Label as="p">Din kompensasjonsgrad: {props.displayData.kompensasjonsgrad}%</Label>
+                    <BodyLong spacing>
+                        Det betyr at hvis du tjener 1000 kr over inntektsgrensen, trekker vi 70% av 1000 kr fra
+                        uføretrygden din, det vil si at vi trekker 700 kr. Du vil fortsatt få 300 kr uføretrygd i
+                        tillegg til lønnen din.
+                    </BodyLong>
+
+                    <Label as="p">Inntekt som ikke gir deg utbetaling av uføretrygd det året: {props.displayData.grenseStoppAvUfoeretrygd}kr</Label>
+                    <BodyLong spacing>
+                        Hvis du tjener over denne summen får du ikke uføretrygd det aktuelle året. Neste vil du få
+                        uføretrygd igjen, dersom du ikke tjener for mye også det året.
+                    </BodyLong>
+
+                    { props.displayData.fribelopBarnetilleggFellesbarn ? //todo check if this condition is right!
+                        <div>
+                            <Label as="p"> Barnetillegg har egne grenser </Label>
+                            <Link to={"nav.no"}> Les om inntektsgrenser for barnetillegg.</Link>
+                            <BodyLong spacing>
+                                Hvis du tjener over denne summen får du ikke uføretrygd det aktuelle året. Neste vil du
+                                få uføretrygd igjen, dersom du ikke tjener for mye også det året.
+                            </BodyLong>
+                        </div> : <></>
+                    }
 
                     { props.displayData.hasGjenlevendeTillegg ?
-                        <section>
+                        <div>
                             <Label as="p"> Gjenlevendetillegg </Label>
-                            <BodyLong>
-                                Tjener du mer enn inntektsgrensen din, reduseres også utbetalingen av gjenlevendetillegget ditt.
+                            <BodyLong spacing>
+                                Gjenlevendetillegget reduseres i samme forhold som uføretrygden om du har inntekt over inntektsgrensen.
                             </BodyLong>
-                        </section> : null
+                        </div> : <></>
                     }
 
-                    { props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? //todo check if this condition is right!
-                        <section>
-                            <Label as="p">Barnetillegg har egne inntektsgrenser (fribeløp)</Label>
-                            <BodyLong>
-                                Fribeløpet er grensen for hva foreldre kan tjene før for barnetillegget blir mindre.
-                            </BodyLong>
-                        </section> : null
-                    }
-
-                    { props.displayData.hasBarneTilleggFellesbarn ?
-                        <section>
-                            <Label as="p">Fribeløp for felles barn</Label>
-                            <BodyLong>
-                                Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes inntekt. Derfor skal du bare
-                                fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere bor sammen.
-                                <List>
-                                    <List.Item>Tjener dere tilsammen mer enn <b>{numberFormatWithKr(props.displayData.fribelopBarnetilleggFellesbarn)}</b>,
-                                        blir barnetillegget for barn dere har sammen mindre.</List.Item>
-                                    <List.Item>Tjener dere tilsammen mer enn <b>{numberFormatWithKr(props.displayData.grenseStoppAvBarnetilleggFellesbarn)}</b>,
-                                        får du ikke utbetalt barnetillegget for barn dere har sammen.
-                                        Får dere lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
-                                    </List.Item>
-                                </List>
-                            </BodyLong>
-                        </section> : null
-                    }
-
-                    { props.displayData.hasBarnetilleggSaerkullsbarn ?
-                        <section>
-                            <Label as="p">Fribeløp for særkullsbarn</Label>
-                            <BodyLong>
-                                Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du skal kun oppgi din inntekt i inntektsplanleggeren.
-                                <List>
-                                    <List.Item>Tjener du mer enn <b>{numberFormatWithKr(props.displayData.fribelopBarnetilleggSaerkullsbarn)},</b> blir barnetillegget for særkullsbarn mindre.</List.Item>
-                                    <List.Item>Tjener du mer enn <b>{numberFormatWithKr(props.displayData.grenseStoppAvBarnetilleggSaerkullsbarn)}</b>,
-                                            får du ikke utbetalt barnetillegget for særkullsbarn. Får du lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
-                                    </List.Item>
-                                </List>
-                            </BodyLong>
-                        </section> : null
-                    }
-
-                    { props.displayData.hasBarnetilleggSaerkullsbarn ?
-                        <section>
-                            <Label as="p">Årlig inntekt som gir deg rett til 0 kr i utbetaling av uføretrygd: {numberFormatWithKr(props.displayData.grenseStoppAvUfoeretrygd)}</Label>
-                            <List>
-                                <List.Item>Tjener du over {numberFormatWithKr(props.displayData.grenseStoppAvUfoeretrygd)} har du ikke rett til utbetaling av uføretrygd det aktuelle året. </List.Item>
-                                <List.Item>Tjener du mer enn {numberFormatWithKr(props.displayData.grenseStoppAvUfoeretrygd)} et kalenderår,  må du betale tilbake det du har fått i uføretrygd det året.</List.Item>
-                                <List.Item>Du beholder likevel retten til uføretrygd. Tjener du mindre neste år, kan du igjen få utbetalt uføretrygd. </List.Item>
-                            </List>
-                        </section> : null
-                    }
-
-
-                </VStack> : null }
-
-                {/*    }*/}
-            <HStack justify="center">
-                <Button onClick={handleButton} variant="secondary-neutral" iconPosition="right" icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>{buttonText}</Button>
-            </HStack>
-            </VStack>
-        </Box>
+                </ExpansionCard.Content>
+                </ExpansionCard>
+        </div>
     )
 }

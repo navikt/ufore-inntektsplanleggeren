@@ -1,4 +1,5 @@
-import { ExpansionCard, Table } from "@navikt/ds-react";
+import { ExternalLinkIcon } from "@navikt/aksel-icons";
+import { BodyLong, ExpansionCard, Label, Link, Table } from "@navikt/ds-react";
 import "./DinInntektTable.css";
 import {InntektDetaljer} from "@/api/model/ApiRequests";
 import {Month} from "@/common/MonthEnum";

@@ -1,53 +1,41 @@
-import {Button, Heading, HStack, VStack} from "@navikt/ds-react";
-import React, {useContext, useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {BodyLong, Button, FormSummary, Heading, VStack} from "@navikt/ds-react";
+import React, {useContext} from "react";
+import {Link} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import {SimulationTable} from "@/components/oppsummering/SimulationTable";
-import {DataContext} from "@/DataContextProvider";
+import {submitInntektSimulation} from "@/api/apiFetching";
+import {SelectedYearContext} from "@/context/SelectedYear";
 
 export const Oppsummering = () => {
-    const { setFormStep, selectedYear } = useContext(FormStateContext);
-    const { simulationResponse } = useContext(DataContext);
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
-    useEffect(() => {
-        setFormStep(2)
-    }, [setFormStep]);
+    const { formData, getPersonInntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
+    const { selectedYear } = useContext(SelectedYearContext);
 
-    const onSend = async () => {
-        setIsLoading(true);
-        const uuid = await fakeApiCall(); // TODO: Replace with actual API call.
-        navigate(`/${uuid}/kvittering`);
-    };
+    const { setFormStep } = useContext(FormStateContext);
+    setFormStep(3)
 
+    const send = () => submitInntektSimulation(formData, selectedYear); // TODO: Implement.
 
     return (
-        <VStack gap="4">
-            <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
+        <VStack gap="5">
+            <BodyLong>Sjekk at opplysningene du har oppgitt er riktige. [Reskrive det neste] Opplysningene gjelder bare for uføretrygden du får fra oss.
+                Hvis du har tjenestepensjon, må du kontakte tjenestepensjonsordningen du tilhører.</BodyLong>
+            <FormSummary>
+                <FormSummary.Header>        <FormSummary.Heading level="2">Opplysningene du sender inn</FormSummary.Heading>        <FormSummary.EditLink href="#" />      </FormSummary.Header>
+                <FormSummary.Answers>
+                    <FormSummary.Answer> <FormSummary.Label>Din forventede inntekt i {selectedYear}</FormSummary.Label>  <FormSummary.Value>{getPersonInntektSum}</FormSummary.Value>        </FormSummary.Answer>
+                    <FormSummary.Answer> <FormSummary.Label>Annen forelders forventede inntekt i 2024</FormSummary.Label> <FormSummary.Value>{getAnnenForelderInntektSum}</FormSummary.Value>        </FormSummary.Answer>
+                </FormSummary.Answers>
+            </FormSummary>
 
-            <VStack gap="6">
-                <Heading size={"large"}>Detaljert oversikt før skatt 2024</Heading>
-                {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
-            </VStack>
-
-            <HStack gap="4">
-                <Button as={Link} to="/forventede-inntekter" variant="secondary">
-                    Tilbake
-                </Button>
-                <Button variant="primary" onClick={onSend} loading={isLoading}>
-                    Send inn
-                </Button>
-            </HStack>
+            <Button as={Link} to="/beregning" variant="secondary">
+                Tilbake
+            </Button>
+            <Button onClick={() => send()} as={Link} to="/kvittering" variant="primary">
+                Send
+            </Button>
         </VStack>
     );
-};
-
-// TODO: Remove API call mock.
-const fakeApiCall = async () => {
-    return new Promise<string>((resolve) => {
-        setTimeout(() => {
-            resolve(crypto.randomUUID());
-        }, 500);
-    });
 };
