@@ -23,7 +23,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                 <VStack gap="6">
                     <section>
                         <BodyLong> Din forventede inntekt: <b>{numberFormatWithKr(forventetInntekt)}</b></BodyLong>
-                        {forventetInntektAnnenForelder ?
+                        {forventetInntektAnnenForelder !== null && forventetInntektAnnenForelder !== undefined ?
                             <BodyLong> Annen forelder du bor med sin forventede inntekt: <b>{numberFormatWithKr(forventetInntektAnnenForelder)}</b></BodyLong> : <></>
                         }
                     </section>

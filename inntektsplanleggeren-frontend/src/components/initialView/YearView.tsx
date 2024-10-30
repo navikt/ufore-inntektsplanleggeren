@@ -1,5 +1,5 @@
 import { Heading, List, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import {FormStateContext} from "@/context/FormData";
 
 interface Props {
@@ -12,26 +12,24 @@ export function YearView({ availableYears }: Props) {
 
     const [firstYear, secondYear] = availableYears;
 
-    // useEffect(() => {
-    //     if (firstYear !== undefined && secondYear === undefined) {
-    //         setSelectedYear(firstYear.toString(10));
-    //     }
-    // }, [firstYear, secondYear, setSelectedYear]);
+    useEffect(() => {
+        if (firstYear !== undefined && secondYear === undefined) {
+            setSelectedYear(firstYear.toString(10));
+        }
+    }, [firstYear, secondYear, setSelectedYear]);
 
     if (availableYears.length === 0) {
         return null;
     }
 
     return (
-        <>
+        <VStack>
             { availableYears.length === 1 ?
                 <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekter for {firstYear}</Heading> :
                 <Heading size="medium" level="2">Du kan registrere inntekter for {firstYear} og {secondYear}</Heading>
             }
 
-
-
-            <VStack gap="1">
+            <VStack gap="7">
                 <ReadMore header="Tidspunkt for å registrere inntekt">
                         <List>
                             <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekter for dette året.</List.Item>
@@ -40,11 +38,13 @@ export function YearView({ availableYears }: Props) {
                         </List>
                 </ReadMore>
 
-                <RadioGroup legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
-                    {availableYears.map(year => <Radio key={year} value={year.toString(10)}>{year}</Radio>)}
-                </RadioGroup>
+                { firstYear !== undefined && secondYear !== undefined ?
+                    <RadioGroup legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
+                        {availableYears.map(year => <Radio key={year} value={year.toString(10)}>{year}</Radio>)}
+                    </RadioGroup> : null
+                }
             </VStack>
-        </>
+        </VStack>
     )
 }
 

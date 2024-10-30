@@ -14,7 +14,7 @@ export const mockInitiateResponse = {
             2025
         ],
         "hasVarigTilrettelagtArbeid": true,
-        "hasBarneTilleggFellesbarn": true, //show eps
+        "hasBarneTilleggFellesbarn": true,
         "grenseStoppAvBarnetilleggFellesbarn": 669751,
         "fribelopBarnetilleggFellesbarn": 570529,
         "hasBarnetilleggSaerkullsbarn": true,

@@ -14,8 +14,8 @@ import {ForventedeInntekter} from "@/api/model/ApiRequests";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
-    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, getBrukerinntektSum, setFormStep } = useContext(FormStateContext);
-    const { inntekterResponse, setSimulationResponse } = useContext(DataContext);
+    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
+    const { initialViewData, inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [errors, setErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -83,19 +83,19 @@ export const Innfylling = () => {
                         />
                     </Box>
 
-                    {/*{(initialViewData?.hasBarneTilleggFellesbarn || annenForelderInntekt != null) ?*/}
-                    {/*    <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">*/}
-                    {/*        <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>*/}
-                    {/*        <FormFields*/}
-                    {/*            year={selectedYear}*/}
-                    {/*            errors={errors}*/}
-                    {/*            setErrors={setErrors}*/}
-                    {/*            setInntekt={(field, belop) => setAnnenForelderInntekt(b => ({...b, [field]:  belop}))}*/}
-                    {/*            forventedeInntekter={annenForelderInntekt}*/}
-                    {/*            inntektSum={getAnnenForelderInntektSum()}*/}
-                    {/*        />*/}
-                    {/*    </Box> : null*/}
-                    {/*}*/}
+                    {(initialViewData?.forventetInntektAnnenForelder) ?
+                        <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
+                            <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>
+                            <FormFields
+                                year={selectedYear}
+                                errors={errors}
+                                setErrors={setErrors}
+                                setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
+                                forventedeInntekter={annenForelderInntekt || {} as ForventedeInntekter}
+                                inntektSum={getAnnenForelderInntektSum() || 0}
+                            />
+                        </Box> : null
+                    }
 
                     <HStack gap="4">
                         <Button as={Link} to="/" variant="secondary">

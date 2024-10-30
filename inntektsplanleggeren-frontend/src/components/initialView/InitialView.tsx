@@ -7,8 +7,9 @@ import {
     Link as NavLink,
     Alert,
     List,
-    BodyShort, GuidePanel
+    BodyShort, GuidePanel, HStack
 } from "@navikt/ds-react";
+import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
 import { useNavigate } from "react-router-dom";
 import React, {useContext, useState} from "react";
@@ -48,11 +49,11 @@ export function InitialView() {
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>
                 <BodyLong word-break: break-all>
-                    Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.
-                    For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å
-                    tjene samtidig som du får uføretrygd.
-                    Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang
-                    pause. Vi beklager for dette.
+                    <p>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</p>
+                    <p>For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å
+                    tjene samtidig som du får uføretrygd.</p>
+                    <p>Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang
+                        pause. Vi beklager for dette.</p>
                 </BodyLong>
             </GuidePanel>
 
@@ -61,9 +62,8 @@ export function InitialView() {
                     <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
                     <List.Item>melde inn forventet inntekt til oss</List.Item>
                 </List>
-
                 <BodyShort spacing>
-                    <NavLink href="#">Her finner du mer informasjon om å jobbe samtidig som du har uføretrygd.</NavLink>
+                    <NavLink href="https://www.nav.no/uforetrygd#kombinere">Her finner du mer informasjon om å jobbe samtidig som du har uføretrygd.</NavLink>
                 </BodyShort>
             </section>
 
@@ -117,38 +117,17 @@ export function InitialView() {
                 </Accordion.Item>
             </Accordion>
 
-            <section>
-                <Heading size="medium" level="2" spacing>Har du (bostøtte eller) andre ytelser i tillegg til
-                    uføretrygd? </Heading>
-
-                <BodyLong spacing>
-                    Inntektsplanleggeren påvirker kun uføretrygd, samt barnetillegg og gjenlevendetillegg på
-                    uføretrygden dersom du har det. Du ser ikke hvordan ny inntekt påvirker eventuelle andre ytelser du
-                    har fra oss, eller eventuelle ytelser du har fra andre ordninger enn NAV.
-                </BodyLong>
-
-                <BodyLong spacing>
-                    <b>Vær obs på at enkelte ytelser, for eksempel bostøtte, kan ha egne grenser for hvor mye man kan
-                        tjene før disse bortfaller. Hvis du har andre ytelser enn uføretrygd og eventuelt barnetillegg
-                        eller gjenlevendetillegg, er det viktig at du undersøker hvordan inntekt vil påvirke dem.</b>
-                </BodyLong>
-
-                <BodyShort spacing>
-                    <NavLink href="#">Har du spørsmål? Kontakt oss</NavLink>
-                </BodyShort>
-            </section>
-
             {(initialViewData?.aktuelleAar && initialViewData.aktuelleAar.length > 0) &&
                 <VStack gap="10">
                     <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 
                     {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
 
-                    <VStack>
-                        <Button onClick={handleButtonClick} variant="primary" loading={isLoading}>
+                    <HStack>
+                        <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
                             Start inntektsplanlegger
                         </Button>
-                    </VStack>
+                    </HStack>
                 </VStack>
             }
         </VStack>
