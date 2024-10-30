@@ -1,0 +1,119 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: inntektsplanleggeren-backend-q2
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+spec:
+  image: "{{ image }}"
+  port: 8080
+  ingresses:
+    - https://inntektsplanleggeren-backend-q2.intern.dev.nav.no
+  liveness:
+    path: actuator/health/liveness
+    initialDelay: 30
+  readiness:
+    path: actuator/health/readiness
+    initialDelay: 30
+  startup:
+    path: actuator/health/readiness
+    initialDelay: 30
+    failureThreshold: 30
+    periodSeconds: 5
+  azure:
+    application:
+      enabled: true
+      claims:
+        extra:
+          - "NAVident"
+          - "azp_name"
+        groups:
+          - id: "9e122ddd-e542-4cc1-a7eb-92c99140fe0e" # 0000-GA-PENSJON_BRUKERHJELPA
+          - id: "05ae245b-7b47-428a-9074-4ff6b59eddbc" # 0000-GA-Pensjon_Okonomi
+          - id: "8bb9b8d1-f46a-4ade-8ee8-5895eccdf8cf" # 0000-GA-PENSJON_SAKSBEHANDLER
+          - id: "a3f91493-1ab8-4b64-a544-0a77cbba9240" # 0000-GA-Pensjon_VEILEDER
+          - id: "02505029-3f2e-48a9-b2a8-ff274dacca52" # 0000-GA-PENSJON_KLAGEBEH
+          - id: "dbe4ad45-320b-4e9a-aaa1-73cca4ee124d" # 0000-GA-Egne_ansatte
+          - id: "ea930b6b-9397-44d9-b9e6-f4cf527a632a" # 0000-GA-Fortrolig_Adresse
+          - id: "5ef775f2-61f8-4283-bf3d-8d03f428aa14" # 0000-GA-Strengt_Fortrolig_Adresse
+  tokenx:
+    enabled: true
+  replicas:
+    min: 2
+    max: 4
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  secureLogs:
+    enabled: true
+  prometheus:
+    enabled: true
+    path: actuator/prometheus
+  accessPolicy:
+    inbound:
+      rules:
+        - application: inntektsplanleggeren-frontend-veileder-q2
+          namespace: pensjonselvbetjening
+          cluster: dev-gcp
+        - application: inntektsplanleggeren-frontend-borger-q2
+          namespace: pensjonselvbetjening
+          cluster: dev-gcp
+        - application: tokenx-token-generator
+          namespace: aura
+          cluster: dev-gcp
+        - application: azure-token-generator
+          namespace: aura
+          cluster: dev-gcp
+    outbound:
+      external:
+        - host: pdl-api.dev-fss-pub.nais.io
+        - host: pensjon-pen-q2.dev-fss-pub.nais.io
+        - host: pensjon-representasjon-q2.dev-fss-pub.nais.io
+        - host: team-inntekt-proxy.dev-fss-pub.nais.io
+        - host: ereg-services.dev-fss-pub.nais.io
+  env:
+    - name: LOGGING_CONFIG
+      value: classpath:logback-json.xml
+    - name: FULLMAKT_URL
+      value: https://pensjon-representasjon-q2.dev-fss-pub.nais.io
+    - name: FULLMAKT_SCOPE
+      value: api://dev-fss.pensjon-person.pensjon-representasjon-q2/.default
+    - name: FULLMAKT_AUDIENCE
+      value: dev-fss:pensjon-person:pensjon-representasjon-q2
+    - name: PARALLELLE_SANNHETER_URL
+      value: https://pensjon-parallelle-sannheter.intern.dev.nav.no
+    - name: PDL_URL
+      value: https://pdl-api.dev-fss-pub.nais.io/graphql
+    - name: PDL_SCOPE
+      value: api://dev-fss.pdl.pdl-api/.default
+    - name: PDL_AUDIENCE
+      value: dev-fss:pdl:pdl-api
+    - name: PEN_URL
+      value: https://pensjon-pen-q2.dev-fss-pub.nais.io
+    - name: PEN_SCOPE
+      value: api://dev-fss.pensjon-q2.pensjon-pen-q2/.default
+    - name: PEN_AUDIENCE
+      value: dev-fss:pensjon-q2:pensjon-pen-q2
+    - name: SKJERMING_URL
+      value: https://skjermede-personer-pip.intern.dev.nav.no
+    - name: SKJERMING_SCOPE
+      value: api://dev-gcp.nom.skjermede-personer-pip/.default
+    - name: SKJERMET_TILGANG_GROUP_ID
+      value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
+    - name: FORTROLIG_TILGANG_GROUP_ID
+      value: ea930b6b-9397-44d9-b9e6-f4cf527a632a
+    - name: STRENGT_FORTROLIG_TILGANG_GROUP_ID
+      value: 5ef775f2-61f8-4283-bf3d-8d03f428aa14
+    - name: INNTEKTSKOMPONENTEN_URL
+      value: https://team-inntekt-proxy.dev-fss-pub.nais.io/proxy/inntektskomponenten-q2/rs
+    - name: INNTEKTSKOMPONENTEN_SCOPE
+      value: api://dev-fss.team-inntekt.inntektskomponenten/.default
+    - name: INNTEKTSKOMPONENTEN_AUD
+      value: dev-fss.team-inntekt.inntektskomponenten
+    - name: EREG_SERVICES_URL
+      value: https://ereg-services.dev-fss-pub.nais.io
