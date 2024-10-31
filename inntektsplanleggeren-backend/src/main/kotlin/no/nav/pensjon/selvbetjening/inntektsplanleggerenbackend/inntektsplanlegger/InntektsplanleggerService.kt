@@ -174,10 +174,10 @@ class InntektsplanleggerService(
         return emptyList()
     }
 
-    private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>): List<AccumulatedMaanedsinntekt> {
+    private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>?): List<AccumulatedMaanedsinntekt> {
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()
 
-        maanedsinntekter.forEach { maanedsinntekt ->
+        maanedsinntekter?.forEach { maanedsinntekt ->
             run {
                 if (inntekterEachMonth.containsKey(maanedsinntekt.maned)) {
                     inntekterEachMonth[maanedsinntekt.maned]?.add(maanedsinntekt)

@@ -483,6 +483,72 @@ class SimuleringServiceTest {
     }
 
     @Test
+    fun `should set sum yearly uforetrygd after to sumYtelseskomponenter`() {
+        val simuleringsaar = LocalDate.now().year + 1
+        val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val forventedeInntekterOppgitt = ForventedeInntekter(
+            bruker = PersonInntekter(
+                arbeidsinntekt = 12,
+                andrePensjonsgivendeYtelser = 21,
+                naeringsinntekt = 44,
+                inntektUtland = 78,
+                pensjonUtland = 11
+            ), eps = PersonInntekter(
+                arbeidsinntekt = 5,
+                andrePensjonsgivendeYtelser = 899,
+                naeringsinntekt = 6238,
+                inntektUtland = 73619,
+                pensjonUtland = 476
+            )
+        )
+
+        val forventedeInntekterRegistrert = ForventedeInntekterSummary(
+            mostRecentForventedeInntekterRegistrertAndBenyttet = no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekter(
+                bruker = no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.PersonInntekter(
+                    null, null, null, null, null
+                ), null
+            ), sumBenyttedeInntekterBruker = 400000, sumBenyttedeInntekterEps = null
+        )
+        val expectedSimuleringsresultat = SimulerEndringUforetrygdResponse(
+            UforetrygdSummary(
+                uforetrygdYtelseskomponenter = UforetrygdYtelseskomponenter(
+                    uforetrygdOrdiner = Ytelseskomponent(33, 56),
+                    barnetilleggFellesbarn = Ytelseskomponent(30, 275),
+                    barnetilleggSaerkullsbarn = Ytelseskomponent(434, 1094),
+                    gjenlevendetillegg = Ytelseskomponent(382, 43),
+                    ektefelletillegg = Ytelseskomponent(2234, 5039)
+                ), 400000.0, 35000, 430000
+            ), UforetrygdSummary(
+                uforetrygdYtelseskomponenter = UforetrygdYtelseskomponenter(
+                    uforetrygdOrdiner = Ytelseskomponent(209, 131),
+                    barnetilleggFellesbarn = Ytelseskomponent(7463, 231),
+                    barnetilleggSaerkullsbarn = Ytelseskomponent(936, 229),
+                    gjenlevendetillegg = Ytelseskomponent(183, 22),
+                    ektefelletillegg = Ytelseskomponent(323, 0)
+                ), 500000.0, 45000, 530000
+            ), false,
+            null,
+            null,
+
+            null,
+            null,
+            LocalDate.now(),
+            false,
+            false,
+            LocalDate.now(),
+            null
+        )
+        `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
+        `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
+
+
+        val result = simuleringService.simulerInntektsendring(
+            PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
+        )
+        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.sumYtelseskomponenter, result.simuleringsresultat.sum.yearly.after)
+    }
+
+    @Test
     fun `should set monthly sums to totalbelopNetto for currentUforetrygd and simulert uforetrygd`(){
         val simuleringsaar = LocalDate.now().year
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
