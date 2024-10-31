@@ -3,6 +3,7 @@ import {
     getInntektsgrense,
 } from "@/api/apiFetching";
 import {InitiateData, InntekterResponse, Message, SimulationResponse} from "@/api/model/ApiRequests";
+import {MessageCodes} from "@/api/model/MessageCodes";
 
 export const InitialViewDefaultData: InitiateData | null = {
     forventetInntekt: 0,
@@ -26,7 +27,7 @@ export const messagesDefaultValue: Message[]  = []
 export const InntektSimulationDefaultValue = {
     "messages":[
         {
-            "messageCode": "EPS_INNTEKT_CHANGED",
+            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
             "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
             "type": "WARNING",
             "metadata": {}

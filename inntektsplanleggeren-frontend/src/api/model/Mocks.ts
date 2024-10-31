@@ -1,9 +1,10 @@
 import {InitiateData, InntekterResponse} from "@/api/model/ApiRequests";
+import {MessageCodes} from "@/api/model/MessageCodes";
 
 export const mockInitiateResponse = {
     "messages":[
         {
-            "messageCode": "EPS_INNTEKT_CHANGED",
+            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
             "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
             "type": "WARNING",
             "metadata": {}
