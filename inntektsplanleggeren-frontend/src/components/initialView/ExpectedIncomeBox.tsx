@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, VStack, BodyLong, Button, HStack} from "@navikt/ds-react";
-import { numberFormatWithKr } from "@/common/Utils";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
+import {FormatKroner} from "@/components/utils/FormatKroner";
 
 interface ExpectedIncomeBoxProps {
     forventetInntekt: number;
@@ -19,12 +19,11 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
 
     return(
         <Box borderRadius="xlarge" padding="4" className="top-box">
-            <VStack gap="1">
                 <VStack gap="6">
                     <section>
-                        <BodyLong> Din forventede inntekt: <b>{numberFormatWithKr(forventetInntekt)}</b></BodyLong>
+                        <BodyLong> Din forventede inntekt: <b><FormatKroner value={forventetInntekt} /></b></BodyLong>
                         {forventetInntektAnnenForelder !== null && forventetInntektAnnenForelder !== undefined ?
-                            <BodyLong> Annen forelder du bor med sin forventede inntekt: <b>{numberFormatWithKr(forventetInntektAnnenForelder)}</b></BodyLong> : <></>
+                            <BodyLong> Annen forelder du bor med sin forventede inntekt: <b><FormatKroner value={forventetInntektAnnenForelder} /></b></BodyLong> : <></>
                         }
                     </section>
 
@@ -36,7 +35,6 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                     <HStack justify="center">
                         <Button onClick={handleButton} variant="secondary-neutral" iconPosition="right" icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>{buttonText}</Button>
                     </HStack>
-                </VStack>
             </VStack>
         </Box>
     );

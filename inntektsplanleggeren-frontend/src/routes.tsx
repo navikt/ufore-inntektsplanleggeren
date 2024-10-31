@@ -10,7 +10,7 @@ import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
 
 
-const BASE_PATH = "/pensjon/selvbetjening/inntektsplanleggeren";
+export const BASE_PATH = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 export const AppRoutes = () => (
     <BrowserRouter basename={BASE_PATH}>

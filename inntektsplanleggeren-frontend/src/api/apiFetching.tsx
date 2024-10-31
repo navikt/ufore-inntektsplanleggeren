@@ -1,5 +1,5 @@
 import {
-    ForventedeInntekter,
+    ForventedeInntekter, GetInntektsgrenseResponse,
     InntekterResponse, SimulationRequest, SimulationResponse,
 } from "@/api/model/ApiRequests";
 import {mockInntekterResponse, mockInitiateResponse, InntektSimulationResponse} from "@/api/model/Mocks";
@@ -8,63 +8,7 @@ const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 const MOCKS_ENABLED = true;
 
-export interface GetInntektsgrenseResponse {
-    messages: Message[]
-    data: InitiateData
-}
 
-export interface Message {
-    messageCode: string,
-    details: string,
-    type: string
-    metadata: StringDictionary
-}
-
-export interface StringDictionary {
-    [key: string]: never;
-}
-
-interface BaseInitiateData {
-    forventetInntekt: number;
-    forventetInntektAnnenForelder: number | null;
-    inntektsgrense: number;
-    kompensasjonsgrad: number;
-    grenseStoppAvUfoeretrygd: number;
-    aktuelleAar: number[];
-    hasVarigTilrettelagtArbeid: boolean;
-    hasGjenlevendeTillegg: boolean;
-}
-
-interface WithBarneTilleggFellesBarn extends BaseInitiateData {
-    hasBarneTilleggFellesbarn: true;
-    grenseStoppAvBarnetilleggFellesbarn: number;
-    fribelopBarnetilleggFellesbarn: number;
-}
-
-interface WithoutBarneTilleggFellesBarn extends BaseInitiateData {
-    hasBarneTilleggFellesbarn: false;
-    grenseStoppAvBarnetilleggFellesbarn: null;
-    fribelopBarnetilleggFellesbarn: null;
-}
-
-interface WithBarnetilleggSaerkullsbarn extends BaseInitiateData {
-    hasBarnetilleggSaerkullsbarn: true,
-    grenseStoppAvBarnetilleggSaerkullsbarn: number,
-    fribelopBarnetilleggSaerkullsbarn: number,
-}
-
-interface WithoutBarnetilleggSaerkullsbarn extends BaseInitiateData {
-    hasBarnetilleggSaerkullsbarn: false,
-    grenseStoppAvBarnetilleggSaerkullsbarn: null,
-    fribelopBarnetilleggSaerkullsbarn: null,
-}
-
-export type InitiateData = (WithBarneTilleggFellesBarn | WithoutBarneTilleggFellesBarn) & (WithBarnetilleggSaerkullsbarn | WithoutBarnetilleggSaerkullsbarn);
-
-export interface InntektInnfylling {
-    brukerinntekt: ForventedeInntekter
-    annenForelderInntekt: ForventedeInntekter
-}
 
 export async function getInntektsgrense(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)

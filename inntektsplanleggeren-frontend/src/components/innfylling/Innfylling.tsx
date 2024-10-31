@@ -1,4 +1,4 @@
-import {Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
+import {BodyLong, Box, Button, Heading, HStack, Loader, VStack} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import "./innfylling.css"
@@ -8,9 +8,10 @@ import { FormFields } from "./FormFields";
 import {submitInntektSimulation} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
-import {belopSum, numberFormatWithKr} from "@/common/Utils";
+import {belopSum} from "@/common/Utils";
 import {DataContext} from "@/DataContextProvider";
 import {ForventedeInntekter} from "@/api/model/ApiRequests";
+import {FormatKroner} from "@/components/utils/FormatKroner";
 
 export const Innfylling = () => {
     const navigate = useNavigate()
@@ -45,29 +46,18 @@ export const Innfylling = () => {
 
     return (
         <VStack className="form-container">
+
             <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
             {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
-                <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar}>
-                    Du har mottatt {numberFormatWithKr(belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar))} kr i arbeidsinntekt og pensjonsgivende ytelser hittil i år.
+                <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar} type="arbeidsgiver">
+                    <BodyLong>Du har mottatt <FormatKroner value={belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar)}/> i arbeidsinntekt og pensjonsgivende ytelser hittil i år.</BodyLong>
                 </DinInntektTable>
             }
             {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
-                <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar}>
-                    Du har mottatt {numberFormatWithKr(belopSum(inntekterResponse.pensjonFraAndreHittilIAar))} kr i pensjoner fra andre enn folketrygden hittil i år.
+                <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar} type="pensjonsordning">
+                    <BodyLong>Du har mottatt <FormatKroner value={belopSum(inntekterResponse.pensjonFraAndreHittilIAar)}  /> i pensjoner fra andre enn folketrygden hittil i år.</BodyLong>
                 </DinInntektTable>
             }
-
-            <section>
-                <VStack gap="4">
-                <Heading level="2" size="medium">Oppgi forventede inntekter</Heading>
-                    <List title="Slik skal du oppgi inntekten">
-                        <List.Item>du skal kun oppgi inntekt for den perioden av året som du mottar uføretrygd
-                            før skatt </List.Item>
-                        <List.Item>det du tror du kommer til å ha tjent når året er slutt / årlig beløp</List.Item>
-                        <List.Item>alltid i norske kroner</List.Item>
-                    </List>
-                </VStack>
-            </section>
 
             <form onSubmit={handleSubmit}>
                 <VStack gap="4">
@@ -83,7 +73,7 @@ export const Innfylling = () => {
                         />
                     </Box>
 
-                    {(initialViewData?.forventetInntektAnnenForelder) ?
+                    {(initialViewData?.forventetInntektAnnenForelder !== null) ?
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <Heading level="2" size="small" spacing>Forventede inntekter for annen forelder i ({selectedYear})</Heading>
                             <FormFields
@@ -102,7 +92,7 @@ export const Innfylling = () => {
                             Tilbake
                         </Button>
                         <Button type="submit" variant="primary" onClick={handleSubmit} loading={isLoading}>
-                            Beregning
+                            Oppsummering
                         </Button>
                     </HStack>
                 </VStack>

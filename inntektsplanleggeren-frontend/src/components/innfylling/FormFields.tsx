@@ -1,8 +1,8 @@
 import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
-import {numberFormatWithKr} from "@/common/Utils";
 import {ForventedeInntekter} from "@/api/model/ApiRequests";
+import {FormatKroner} from "@/components/utils/FormatKroner";
 
 interface FormFieldsProps {
     year?: string;
@@ -113,7 +113,7 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
             <Box padding="4" background="surface-info-subtle">
                 <VStack>
                     <Heading size="small"> Din samlede forventede inntekt i {year}: </Heading>
-                    <p className="sum">{numberFormatWithKr(inntektSum)}</p>
+                    <p className="sum"><FormatKroner value={inntektSum}/></p>
                 </VStack>
             </Box>
         </div>

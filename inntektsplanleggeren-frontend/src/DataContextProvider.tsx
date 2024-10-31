@@ -1,10 +1,8 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {
-    InitiateData,
     getInntektsgrense,
-    Message,
 } from "@/api/apiFetching";
-import {InntekterResponse, SimulationResponse} from "@/api/model/ApiRequests";
+import {InitiateData, InntekterResponse, Message, SimulationResponse} from "@/api/model/ApiRequests";
 
 export const InitialViewDefaultData: InitiateData | null = {
     forventetInntekt: 0,
@@ -23,14 +21,7 @@ export const InitialViewDefaultData: InitiateData | null = {
     hasGjenlevendeTillegg: false
 }
 
-
-// export const WarningMessageDefaultValue: Message[] | null = [{
-//     messageCode: "USER_HAS_NO_LOPENDE_VEDTAK_YET",
-//     details: "Bruker kan ikke registrere inntektsendring før vedkommendes vedtak har blitt løpende",
-//     type: "ERROR"
-// }]
-
-export const WarningMessageDefaultValue: Message[] | null = null
+export const messagesDefaultValue: Message[]  = []
 
 export const InntektSimulationDefaultValue = {
     "messages":[
@@ -77,7 +68,8 @@ interface DataContextValue {
     setInntekterResponse: (value: InntekterResponse) => void;
     simulationResponse: SimulationResponse;
     setSimulationResponse: (value: SimulationResponse) => void;
-    warningMessage: Message[] | null;
+    messages: Message[];
+    setMessages: (value: Message[]) => void;
     refetch: boolean;
     setRefetch: (value: boolean) => void;
     loading: boolean;
@@ -98,7 +90,8 @@ const DataContextDefaultValue: DataContextValue = {
     setInntekterResponse: () => undefined,
     simulationResponse: InntektSimulationDefaultValue,
     setSimulationResponse: () => undefined,
-    warningMessage: WarningMessageDefaultValue,
+    messages: messagesDefaultValue,
+    setMessages: () => undefined,
     refetch: true,
     setRefetch: () => undefined,
      
@@ -126,8 +119,7 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [initialViewResponse, setInitialViewResponse] = useState(DataContextDefaultValue.initialViewData)
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)
+    const [messages, setMessages] = useState(DataContextDefaultValue.messages)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -153,6 +145,7 @@ function DataContextProvider(props: DataContextProviderProps) {
                         setLoading(true)
                         const inntektsPlanleggerenResponse = await getInntektsgrense()
                         setInitialViewResponse(inntektsPlanleggerenResponse.data)
+                        setMessages(inntektsPlanleggerenResponse.messages)
                         // setInitialWarningBox(inntektsPlanleggerResponse.messages)
 
                         setLoading(false)
@@ -176,7 +169,8 @@ function DataContextProvider(props: DataContextProviderProps) {
             setSimulationResponse,
             refetch,
             setRefetch,
-            warningMessage,
+            messages,
+            setMessages,
             loading,
             setLoading,
             error,

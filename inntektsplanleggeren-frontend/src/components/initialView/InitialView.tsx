@@ -19,10 +19,10 @@ import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
+import {MessageCodes} from "@/api/model/MessageCodes";
 
 export function InitialView() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {initialViewData, warningMessage, setInntekterResponse} = useContext(DataContext)
+    const {initialViewData, messages, setInntekterResponse} = useContext(DataContext)
     const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
@@ -41,6 +41,16 @@ export function InitialView() {
         }
     }
 
+
+    if (messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
+        return (
+            <Alert variant="warning">
+                Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
+            </Alert>
+        );
+    }
+
+
     return (
         <VStack gap="10">
             {/* warningMessage !== null && warningMessage.length > 0 ?*/}
@@ -48,7 +58,7 @@ export function InitialView() {
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>
-                <BodyLong word-break: break-all>
+                <BodyLong>
                     <p>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</p>
                     <p>For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å
                     tjene samtidig som du får uføretrygd.</p>
