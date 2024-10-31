@@ -33,7 +33,7 @@ class SetPidFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        log.info("Setter Pid på context")
+        //log.debug("Setter Pid på context")
         val authHeader = request.getHeader("Authorization")
 
         if (authHeader != null) {
