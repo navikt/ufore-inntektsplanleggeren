@@ -13,9 +13,11 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Month
 
 @Service
@@ -122,6 +124,28 @@ class InntektsplanleggerService(
             messages,
             mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, messages)
         )
+    }
+
+    fun constructStatusResponse(
+        fnr: String,
+        simuleringsAar: Int,
+        innsendingsTidspunkt: LocalDateTime
+    ): InntektsplanleggerenStatusResponse? {
+
+        val penResponse: StatusInnsendingResponse? = penClient.fetchInntektsplanleggerStatus(fnr,getSimuleringFomDato(simuleringsAar),innsendingsTidspunkt)
+        val forventetInntekt = constructInntekterResponse(fnr, simuleringsAar)
+        if (penResponse != null) {
+            return InntektsplanleggerenStatusResponse(
+                penResponse.status,
+                penResponse.sakId,
+                penResponse.maandedligeUtbetalinger?.fom?.let { MaandedligeUtbetalinger1(it,penResponse.maandedligeUtbetalinger.beloep) },
+                penResponse.endringRegistertTidspunkt,
+                penResponse.mottarBarnetilleggForFellesBarn,
+                forventetInntekt?.forventedeInntekter?.bruker?.sum(),
+                forventetInntekt?.forventedeInntekter?.eps?.sum()
+            )
+        }
+        return null
     }
 
     private fun mapInntektsplanleggerenInitialData(

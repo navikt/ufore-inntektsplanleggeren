@@ -4,10 +4,12 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("api")
@@ -75,6 +77,24 @@ class InntektsplanleggerController(
                     SecurityContextUtil.getPidFromContext(),
                     simuleringsaar,
                     forventedeInntekter
+                ), HttpStatus.OK
+            )
+        } catch (exception: Exception) {
+            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+        }
+    }
+
+    @GetMapping("status")
+    fun getStatus(
+        @RequestParam("valgtaar", required = true) valgtAr: Int,
+        @RequestParam("innsendingstidspunkt", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") innsendingsTidspunkt: LocalDateTime
+    ): ResponseEntity<InntektsplanleggerenStatusResponse> {
+        return try {
+            ResponseEntity(
+                inntektsPlanleggerService.constructStatusResponse(
+                    SecurityContextUtil.getPidFromContext(),
+                    valgtAr,
+                    innsendingsTidspunkt.minusSeconds(3)                  //juster tidspunkt noen sekunder tilbake så vi er sikker på å få med alt
                 ), HttpStatus.OK
             )
         } catch (exception: Exception) {
