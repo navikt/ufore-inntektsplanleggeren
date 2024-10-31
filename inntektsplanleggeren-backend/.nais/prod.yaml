@@ -1,0 +1,105 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: inntektsplanleggeren-backend
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+spec:
+  image: "{{{ image_backend }}}"
+  port: 8080
+  ingresses:
+    - https://inntektsplanleggeren-backend.intern.nav.no
+  liveness:
+    path: actuator/health/liveness
+    initialDelay: 30
+  readiness:
+    path: actuator/health/readiness
+    initialDelay: 30
+  startup:
+    path: actuator/health/readiness
+    initialDelay: 30
+    failureThreshold: 30
+    periodSeconds: 5
+  azure:
+    application:
+      enabled: true
+      claims:
+        extra:
+          - "NAVident"
+          - "azp_name"
+        groups:
+          - id: "0af3955f-df85-4eb0-b5b2-45bf2c8aeb9e" #SAKSBEHANDLER
+          - id: "8d5e0211-6c41-4ed3-be74-dd19a210ebab" #KLAGEBEH
+          - id: "7845a796-1516-4d14-b500-fd65c001f35c" #BRUKERHJELPA
+          - id: "959ead5b-99b5-466b-a0ff-5fdbc687517b" #VEILEDER
+          - id: "4b3ee3f4-2d6c-4418-8b1e-4d229bb2001c" #BEGRENSET_VEILEDER
+          - id: "70ef8e7f-7456-4298-95e0-b13c0ef2422b" #OKONOMI
+          - id: "f9aea83c-f483-448d-927c-b86063505ee2" #UFORE
+          - id: "7c2f2439-b67a-41c0-b50b-0abb02e3b479" #UTLAND
+          - id: "d05cd957-b330-4a68-b4d8-40fe603b5efc" #KODE6
+          - id: "6f54457a-ef15-41ab-acf6-725a978df464" #KODE7
+  tokenx:
+    enabled: true
+  replicas:
+    min: 2
+    max: 4
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  secureLogs:
+    enabled: true
+  prometheus:
+    enabled: true
+    path: actuator/prometheus
+  accessPolicy:
+    inbound:
+      rules:
+        - application: inntektsplanleggeren-frontend-veileder
+          namespace: pensjonselvbetjening
+          cluster: prod-gcp
+        - application: inntektsplanleggeren-frontend-borger
+          namespace: pensjonselvbetjening
+          cluster: prod-gcp
+    outbound:
+      external:
+        - host: pensjon-pen.prod-fss-pub.nais.io
+        - host: pensjon-representasjon.prod-fss-pub.nais.io
+        - host: pdl-api.prod-fss-pub.nais.io
+  env:
+    - name: LOGGING_CONFIG
+      value: classpath:logback-json.xml
+    - name: PEN_URL
+      value: https://pensjon-pen.prod-fss-pub.nais.io
+    - name: PEN_SCOPE
+      value: api://prod-fss.pensjondeployer.pensjon-pen/.default
+    - name: PEN_AUDIENCE
+      value: prod-fss:pensjondeployer:pensjon-pen
+    - name: FULLMAKT_URL
+      value: https://pensjon-representasjon.prod-fss-pub.nais.io
+    - name: FULLMAKT_SCOPE
+      value: api://prod-fss.pensjon-person.pensjon-representasjon/.default
+    - name: FULLMAKT_AUDIENCE
+      value: prod-fss:pensjon-person:pensjon-representasjon
+    - name: PARALLELLE_SANNHETER_URL
+      value: https://pensjon-parallelle-sannheter.intern.nav.no
+    - name: PDL_URL
+      value: https://pdl-api.prod-fss-pub.nais.io/graphql
+    - name: PDL_SCOPE
+      value: api://prod-fss.pdl.pdl-api/.default
+    - name: PDL_AUDIENCE
+      value: prod-fss:pdl:pdl-api
+    - name: SKJERMING_URL
+      value: https://skjermede-personer-pip.intern.nav.no
+    - name: SKJERMING_SCOPE
+      value: api://prod-gcp.nom.skjermede-personer-pip/.default
+    - name: SKJERMET_TILGANG_GROUP_ID
+      value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
+    - name: FORTROLIG_TILGANG_GROUP_ID
+      value: ea930b6b-9397-44d9-b9e6-f4cf527a632a
+    - name: STRENGT_FORTROLIG_TILGANG_GROUP_ID
+      value: 5ef775f2-61f8-4283-bf3d-8d03f428aa14

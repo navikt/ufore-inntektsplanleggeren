@@ -6,9 +6,9 @@ on:
       - 'main'
     paths:
       - '.nais/alderspensjon-endringssoknad-backend/alerts/**'
-      - '.nais/dinpensjon-backend/alerts/**'
-      - '.nais/dinpensjon-frontend-borger/alerts/**'
-      - '.nais/dinpensjon-frontend-veileder/alerts/**'
+      - 'dinpensjon-backend/.nais/alerts-prod.yml'
+      - 'dinpensjon-frontend-borger/.nais/alerts-prod-borger.yml'
+      - 'dinpensjon-frontend-veileder/.nais/alerts-prod-veileder.yml'
       - '.nais/familieforhold-backend/alerts/**'
       - '.nais/familieforhold-frontend-borger/alerts/**'
       - '.nais/familieforhold-frontend-veileder/alerts/**'
@@ -75,7 +75,7 @@ jobs:
       contents: read
       id-token: write
     with:
-      nais-template-production: .nais/dinpensjon-backend/alerts/alerts-prod.yml
+      nais-template-production: dinpensjon-backend/.nais/alerts-prod.yml
       production-cluster: prod-gcp
 
   deploy-dinpensjon-frontend-borger-alerts:
@@ -84,7 +84,7 @@ jobs:
       contents: read
       id-token: write
     with:
-      nais-template-production: .nais/dinpensjon-frontend-borger/alerts/alerts-prod.yml
+      nais-template-production: dinpensjon-frontend/.nais/alerts-prod-borger.yml
       production-cluster: prod-gcp
 
   deploy-dinpensjon-frontend-veileder-alerts:
@@ -93,7 +93,7 @@ jobs:
       contents: read
       id-token: write
     with:
-      nais-template-production: .nais/dinpensjon-frontend-veileder/alerts/alerts-prod.yml
+      nais-template-production: dinpensjon-frontend/.nais/alerts-prod-veileder.yml
       production-cluster: prod-gcp
 
 #  deploy-opptjening-overforomsorgsopptjening-backend-alerts:
