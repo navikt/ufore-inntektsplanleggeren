@@ -63,10 +63,10 @@ export const Oppsummering = () => {
 };
 
 // TODO: Remove API call mock.
-const fakeApiCall = async () => {
-    return new Promise<string>((resolve) => {
-        setTimeout(() => {
-            resolve(crypto.randomUUID());
-        }, 500);
-    });
-};
+// const fakeApiCall = async () => {
+//     return new Promise<string>((resolve) => {
+//         setTimeout(() => {
+//             resolve(crypto.randomUUID());
+//         }, 500);
+//     });
+// };
