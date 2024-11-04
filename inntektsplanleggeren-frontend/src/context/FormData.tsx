@@ -1,5 +1,5 @@
 import React, {createContext, SetStateAction, useState} from "react";
-import {ForventedeInntekter} from "@/api/model/ApiRequests";
+import {PersonInntekter} from "@/api/model/ApiRequests";
 
 
 interface FormState {
@@ -8,11 +8,11 @@ interface FormState {
     selectedYear: string | null;
     setSelectedYear: (value: SetStateAction<string | null>) => void
 
-    brukerinntekt: ForventedeInntekter
-    setBrukerinntekt: (value: SetStateAction<ForventedeInntekter>) => void,
+    brukerinntekt: PersonInntekter
+    setBrukerinntekt: (value: SetStateAction<PersonInntekter>) => void,
 
-    annenForelderInntekt: ForventedeInntekter | null,
-    setAnnenForelderInntekt: (value: SetStateAction<ForventedeInntekter | null> | null) => void,
+    annenForelderInntekt: PersonInntekter | null,
+    setAnnenForelderInntekt: (value: SetStateAction<PersonInntekter | null> | null) => void,
 
     getBrukerinntektSum: () => number,
     getAnnenForelderInntektSum: () => number | null,
@@ -52,8 +52,8 @@ export const FormStateComponent = ({ children }: Props) => {
     // const { initialViewData } = useContext(DataContext);
     // const { aktuelleAar } = initialViewData?.aktuelleAar || { aktuelleAar: [] };
     const [selectedYear, setSelectedYear]  = useState<string | null>(null);
-    const [brukerinntekt, setBrukerinntekt] = useState<ForventedeInntekter>(forventedeInntekterDefaultValue);
-    const [annenForelderInntekt, setAnnenForelderInntekt] = useState<ForventedeInntekter | null>(forventedeInntekterDefaultValue);
+    const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
+    const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
 
     const getBrukerinntektSum = () => Object.values(brukerinntekt).reduce((acc, val) => acc + val, 0);

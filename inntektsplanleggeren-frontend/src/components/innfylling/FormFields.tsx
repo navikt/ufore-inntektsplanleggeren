@@ -1,16 +1,16 @@
 import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
-import {ForventedeInntekter} from "@/api/model/ApiRequests";
+import {PersonInntekter} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 
 interface FormFieldsProps {
     year?: string;
-    errors: Partial<Record<keyof ForventedeInntekter, string>>;
-    setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof ForventedeInntekter, string>>>>;
-    setInntekt: (key: keyof ForventedeInntekter, value: number) => void;
+    errors: Partial<Record<keyof PersonInntekter, string>>;
+    setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof PersonInntekter, string>>>>;
+    setInntekt: (key: keyof PersonInntekter, value: number) => void;
     inntektSum: number;
-    forventedeInntekter: ForventedeInntekter
+    forventedeInntekter: PersonInntekter
 }
 
 const FORMATTER = Intl.NumberFormat('nb-NO', {
@@ -35,10 +35,10 @@ export const parseInntekt = (s: string) => {
 }
 
 export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeInntekter }: FormFieldsProps) => {
-    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
 
 
-    const handleInputChange = (field: keyof ForventedeInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (field: keyof PersonInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const numericValue = parseInntekt(target.value);
 
         if (isNaN(numericValue) || numericValue < 0) {

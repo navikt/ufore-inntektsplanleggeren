@@ -1,9 +1,15 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {
-    getInntektsgrense,
+    getInitiate,
 } from "@/api/apiFetching";
-import {InitiateData, InntekterResponse, Message, SimulationResponse} from "@/api/model/ApiRequests";
-import {MessageCodes} from "@/api/model/MessageCodes";
+import {
+    InitiateData,
+    InntekterResponse,
+    Message,
+    SendApplicationResponse,
+    SimulationResponse
+} from "@/api/model/ApiRequests";
+import {InntektSimulationDefaultValue} from "@/api/model/Mocks";
 
 export const InitialViewDefaultData: InitiateData | null = {
     forventetInntekt: 0,
@@ -24,51 +30,21 @@ export const InitialViewDefaultData: InitiateData | null = {
 
 export const messagesDefaultValue: Message[]  = []
 
-export const InntektSimulationDefaultValue = {
-    "messages":[
-        {
-            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": "WARNING",
-            "metadata": {}
-        }
-    ],
-    "result": {
-        "uforetrygd": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "forventetInntekt": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "barnetilleggFellesbarn": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "barnetilleggSaerkullsbarn": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "gjenlevendetillegg": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "sum": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        }
-    }
-}
 
 // export const WarningMessageDefaultValue: Message[] | null = []
 
 interface DataContextValue {
     initialViewData: InitiateData;
+
     inntekterResponse: InntekterResponse | null;
     setInntekterResponse: (value: InntekterResponse) => void;
+
     simulationResponse: SimulationResponse;
     setSimulationResponse: (value: SimulationResponse) => void;
+
+    sendResponse: SendApplicationResponse | null,
+    setSendResponse: (value: SendApplicationResponse) => void,
+
     messages: Message[];
     setMessages: (value: Message[]) => void;
     refetch: boolean;
@@ -87,10 +63,16 @@ interface DataContextValue {
 
 const DataContextDefaultValue: DataContextValue = {
     initialViewData: InitialViewDefaultData,
+
     inntekterResponse: null,
     setInntekterResponse: () => undefined,
+
     simulationResponse: InntektSimulationDefaultValue,
     setSimulationResponse: () => undefined,
+
+    sendResponse: null,
+    setSendResponse: () => undefined,
+
     messages: messagesDefaultValue,
     setMessages: () => undefined,
     refetch: true,
@@ -120,6 +102,7 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [initialViewResponse, setInitialViewResponse] = useState(DataContextDefaultValue.initialViewData)
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
+    const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
     const [messages, setMessages] = useState(DataContextDefaultValue.messages)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
@@ -144,7 +127,7 @@ function DataContextProvider(props: DataContextProviderProps) {
                 if (refetch) {
                     try {
                         setLoading(true)
-                        const inntektsPlanleggerenResponse = await getInntektsgrense()
+                        const inntektsPlanleggerenResponse = await getInitiate()
                         setInitialViewResponse(inntektsPlanleggerenResponse.data)
                         setMessages(inntektsPlanleggerenResponse.messages)
                         // setInitialWarningBox(inntektsPlanleggerResponse.messages)
@@ -168,6 +151,8 @@ function DataContextProvider(props: DataContextProviderProps) {
             setInntekterResponse,
             simulationResponse,
             setSimulationResponse,
+            sendResponse,
+            setSendResponse,
             refetch,
             setRefetch,
             messages,

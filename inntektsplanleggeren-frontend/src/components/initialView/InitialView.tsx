@@ -12,7 +12,7 @@ import {
 import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
 import { useNavigate } from "react-router-dom";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {YearView} from "@/components/initialView/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
@@ -27,6 +27,12 @@ export function InitialView() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (selectedYear !== null) {
+            setErrorMessage(null)
+        }
+    }, [selectedYear]);
 
     const handleButtonClick = async () => {
         if (!selectedYear) {
@@ -129,9 +135,7 @@ export function InitialView() {
 
             {(initialViewData?.aktuelleAar && initialViewData.aktuelleAar.length > 0) &&
                 <VStack gap="10">
-                    <YearView availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
-
-                    {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
+                    <YearView error={errorMessage} availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
 
                     <HStack>
                         <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>

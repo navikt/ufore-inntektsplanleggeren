@@ -5,9 +5,10 @@ import {FormStateContext} from "@/context/FormData";
 interface Props {
     availableYears: number[],
     infoType: number //0 default, 1 for oct/nov, 2 for dec
+    error: string | null;
 }
 
-export function YearView({ availableYears }: Props) {
+export function YearView({ availableYears, error }: Props) {
     const {selectedYear, setSelectedYear} = useContext(FormStateContext)
 
     const [firstYear, secondYear] = availableYears;
@@ -39,7 +40,7 @@ export function YearView({ availableYears }: Props) {
                 </ReadMore>
 
                 { firstYear !== undefined && secondYear !== undefined ?
-                    <RadioGroup legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
+                    <RadioGroup error={error} legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
                         {availableYears.map(year => <Radio key={year} value={year.toString(10)}>{year}</Radio>)}
                     </RadioGroup> : null
                 }

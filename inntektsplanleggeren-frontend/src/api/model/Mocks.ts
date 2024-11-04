@@ -1,5 +1,6 @@
-import {InitiateData, InntekterResponse} from "@/api/model/ApiRequests";
+import {InitiateData, InntekterResponse, SendApplicationResponse, StatusResponse} from "@/api/model/ApiRequests";
 import {MessageCodes} from "@/api/model/MessageCodes";
+import {StatusCodes} from "@/api/model/StatusCodes";
 
 export const mockInitiateResponse = {
     "messages":[
@@ -120,6 +121,44 @@ export const mockInntekterResponse : InntekterResponse = {
     "uforeHeleAaret": false
 };
 
+export const InntektSimulationDefaultValue = {
+    "messages":[
+        {
+            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": "WARNING",
+            "metadata": {}
+        }
+    ],
+    "result": {
+        "uforetrygd": {
+            "monthly": {"before": 0, "after": 0},
+            "yearly": {"before": 0, "after": 0}
+        },
+        "forventetInntekt": {
+            "monthly": {"before": 0, "after": 0},
+            "yearly": {"before": 0, "after": 0}
+        },
+        "barnetilleggFellesbarn": {
+            "monthly": {"before": 0, "after": 0},
+            "yearly": {"before": 0, "after": 0}
+        },
+        "barnetilleggSaerkullsbarn": {
+            "monthly": {"before": 0, "after": 0},
+            "yearly": {"before": 0, "after": 0}
+        },
+        "gjenlevendetillegg": {
+            "monthly": {"before": 0, "after": 0},
+            "yearly": {"before": 0, "after": 0}
+        },
+        "sum": {
+            "monthly": {"before": 0, "after": 0},
+            "yearly": {"before": 0, "after": 0}
+        }
+    }
+}
+
+
 // export const mockInntekterResponse : InntekterResponse ={
 //     "arbeidsinntektOgYtelserHittilIAar": [
 //     {
@@ -199,7 +238,7 @@ export const mockInntekterResponse : InntekterResponse = {
 //     "uforeHeleAaret": true
 // }
 
-export const InntektSimulationResponse = {
+export const mockInntektSimulationResponse = {
     "messages": [],
     "result": {
         "uforetrygd": {
@@ -263,4 +302,33 @@ export const InntektSimulationResponse = {
             }
         }
     }
+}
+
+export const mockSendApplicationResponse: SendApplicationResponse = {
+    "messages": [
+    {
+        "messageCode": MessageCodes.USER_HAS_NO_UFORE,
+        "details": "string",
+        "type": "ERROR",
+        "metadata": {
+            "additionalProp1": {},
+            "additionalProp2": {},
+            "additionalProp3": {}
+        }
+    }
+],
+    "status": "AUTOMATISK_BEHANDLING"
+}
+
+export const mockSendResponse : StatusResponse = {
+    "registeringsTidspunktEndring": "2024-11-04T14:21:24.804Z",
+    "status": StatusCodes.BEHANDLET_MEDFOERER_ENDRING,
+    "sakId": 0,
+    "maandedligeUtbetalinger": {
+    "fom": "2024-11-04",
+        "beloep": 0
+},
+    "mottarBarnetilleggForFellesBarn": true,
+    "forventetAarligInntekt": 0,
+    "forventetAarligInntektEps": 0
 }

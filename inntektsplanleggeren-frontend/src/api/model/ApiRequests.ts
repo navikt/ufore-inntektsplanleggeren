@@ -1,4 +1,5 @@
 import {MessageCodes} from "@/api/model/MessageCodes";
+import {StatusCodes} from "@/api/model/StatusCodes";
 
 export type Message = {
     messageCode: MessageCodes;
@@ -54,8 +55,8 @@ export interface WithoutBarnetilleggSaerkullsbarn extends BaseInitiateData {
 export type InitiateData = (WithBarneTilleggFellesBarn | WithoutBarneTilleggFellesBarn) & (WithBarnetilleggSaerkullsbarn | WithoutBarnetilleggSaerkullsbarn);
 
 export interface InntektInnfylling {
-    brukerinntekt: ForventedeInntekter
-    annenForelderInntekt: ForventedeInntekter
+    brukerinntekt: PersonInntekter
+    annenForelderInntekt: PersonInntekter
 }
 
 export type InntektDetaljer = {
@@ -64,7 +65,7 @@ export type InntektDetaljer = {
     inntektsgivere: string[];
 };
 
-export type ForventedeInntekter = {
+export type PersonInntekter = {
     arbeidsinntekt: number;
     andrePensjonsgivendeYtelser: number;
     naeringsinntekt: number;
@@ -73,8 +74,8 @@ export type ForventedeInntekter = {
 };
 
 export type ForventedeInntekterResponse = {
-    bruker: ForventedeInntekter;
-    eps: ForventedeInntekter | null;
+    bruker: PersonInntekter;
+    eps: PersonInntekter | null;
 };
 
 export type InntekterResponse = {
@@ -84,9 +85,9 @@ export type InntekterResponse = {
     uforeHeleAaret: boolean;
 };
 
-export type SimulationRequest = {
-    bruker: ForventedeInntekter;
-    eps: ForventedeInntekter | null;
+export type SubmitInntekterRequest = {
+    bruker: PersonInntekter;
+    eps: PersonInntekter | null;
 };
 
 export type SimulationResponse = {
@@ -103,6 +104,11 @@ export type SimulationResult = {
     sum: SimulationDetail;
 };
 
+export type SendApplicationResponse = {
+    messages: Message[];
+    status: string;
+};
+
 export type SimulationDetail = {
     monthly: PayDetail;
     yearly: PayDetail;
@@ -112,5 +118,18 @@ export type PayDetail = {
     before: number;
     after: number;
 };
+
+export type StatusResponse = {
+    "registeringsTidspunktEndring": string | null,
+    "status": StatusCodes,
+    "sakId": number | null,
+    "maandedligeUtbetalinger": {
+    "fom": string,
+        "beloep": number
+} | null,
+    "mottarBarnetilleggForFellesBarn": boolean,
+    "forventetAarligInntekt": number | null,
+    "forventetAarligInntektEps": number | null
+}
 
 

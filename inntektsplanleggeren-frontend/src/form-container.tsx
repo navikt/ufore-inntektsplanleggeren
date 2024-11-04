@@ -30,14 +30,16 @@ export const FormContainer = () => {
 
 export enum PageNames {
     "Forventede inntekter" = 1,
-    "Oppsummering før innsending" = 2,
-    "Beregning" = 3
+    "Beregning" = 2,
+    "Oppsummering" = 3,
+    "Kvittering" = 4
 }
 
 export enum PageLinks {
     "/" = 0,
     "/forventede-inntekter" = 1,
-    "/oppsummering" = 2,
-    "/beregning" = 3,
+    "/beregning" = 2,
+    "/oppsummering" = 3,
+    "/kvittering" = 4
 }
 

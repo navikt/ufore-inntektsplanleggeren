@@ -90,82 +90,25 @@ app.post(
     }
 );
 
-
-
-
-app.put(basePath + '/api/samboer/:periodeId', async (req, res) => {
-
-        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
-        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
-
-        const periodeId = parseInt(req.params.periodeId)
-        const params = {
-            method: req.method,
-            headers: newHeaders,
-            body: JSON.stringify(req.body)
-        }
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer/" + periodeId, params)
-        if (response.status === 400) {
-            const body = await response.json();
-            res.status(response.status).send(body)
-        }
-
-        res.status(response.status).send()
-    }
-);
-
-app.delete(basePath + '/api/samboer/:periodeId', async (req, res) => {
-
-        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
-        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
-
-        const periodeId = parseInt(req.params.periodeId)
-
-        const params = {
-            method: req.method,
-            headers: newHeaders,
-        }
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer/" + periodeId, params)
-        if (response.status === 400) {
-            const body = await response.json();
-            res.status(response.status).send(body)
-        }
-
-        res.status(response.status).send()
-    }
-);
-
-app.all(
-    basePath + '/api/samboer/**',
+app.post(
+    basePath + '/api/send',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const params = {
+        console.log(req.query.simuleringsaar)
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/simuler?send=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders,
-        }
+            body: JSON.stringify(req.body)
+        });
 
-        if (req.body) {
-            params["body"] = JSON.stringify(req.body)
-        }
+        const body = await response.json();
 
-        console.log(req.params)
-        console.log(req.body)
-        console.log(JSON.stringify(req.body))
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + req.path, params)
         const statuskode = response.status
-        const body = await response.text()
         res.status(statuskode).send(body)
     }
 );

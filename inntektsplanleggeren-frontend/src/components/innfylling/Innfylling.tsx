@@ -5,12 +5,12 @@ import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {submitInntektSimulation} from "@/api/apiFetching";
+import {simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum} from "@/common/Utils";
 import {DataContext} from "@/DataContextProvider";
-import {ForventedeInntekter} from "@/api/model/ApiRequests";
+import {PersonInntekter} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 
 export const Innfylling = () => {
@@ -18,7 +18,7 @@ export const Innfylling = () => {
     const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
     const { initialViewData, inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
-    const [errors, setErrors] = useState<Partial<Record<keyof ForventedeInntekter, string>>>({});
+    const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export const Innfylling = () => {
 
         try {
             setIsLoading(true);
-            const result = await submitInntektSimulation(brukerinntekt, annenForelderInntekt, selectedYear);
+            const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             setSimulationResponse(result);
             navigate("/oppsummering");
         } catch (error) {
@@ -81,7 +81,7 @@ export const Innfylling = () => {
                                 errors={errors}
                                 setErrors={setErrors}
                                 setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
-                                forventedeInntekter={annenForelderInntekt || {} as ForventedeInntekter}
+                                forventedeInntekter={annenForelderInntekt || {} as PersonInntekter}
                                 inntektSum={getAnnenForelderInntektSum() || 0}
                             />
                         </Box> : null
