@@ -172,7 +172,8 @@ class InntektValidator(val inntektService: InntektService) {
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
                     metadata = mapOf(
-                        MetadataKey.AFFECTED_FIELD to FieldReference.ARBEIDSINNTEKT_BRUKER.name
+                        MetadataKey.AFFECTED_FIELD to FieldReference.ARBEIDSINNTEKT_BRUKER.name,
+                        MetadataKey.SUM_HITTIL_I_AAR to sumInntekterHittilIAarBruker
                     )
                 )
             )
@@ -194,7 +195,8 @@ class InntektValidator(val inntektService: InntektService) {
                 InntektsplanleggerMessage(
                     messageCode = InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
                     metadata = mapOf(
-                        MetadataKey.AFFECTED_FIELD to FieldReference.ANDRE_YTELSER_BRUKER.name
+                        MetadataKey.AFFECTED_FIELD to FieldReference.ANDRE_YTELSER_BRUKER.name,
+                        MetadataKey.SUM_HITTIL_I_AAR to sumAndreYtelserHittilIAarBruker
                     )
                 )
             )

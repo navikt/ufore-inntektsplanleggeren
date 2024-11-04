@@ -585,6 +585,10 @@ class InntektValidatorTest {
             FieldReference.ARBEIDSINNTEKT_BRUKER.name,
             result[0].metadata[MetadataKey.AFFECTED_FIELD]
         )
+        assertEquals(
+            151200.0,
+            result[0].metadata[MetadataKey.SUM_HITTIL_I_AAR]
+        )
 
         assertEquals(InntektsplanleggerMessageType.ERROR, result[0].type)
     }
@@ -684,6 +688,10 @@ class InntektValidatorTest {
         assertEquals(
             InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
             result[0].messageCode
+        )
+        assertEquals(
+            46686.0,
+            result[0].metadata[MetadataKey.SUM_HITTIL_I_AAR]
         )
         assertEquals(
             FieldReference.ANDRE_YTELSER_BRUKER.name,
