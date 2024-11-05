@@ -7,6 +7,7 @@ import {DataContext} from "@/DataContextProvider";
 import {submit} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
+import {MessageTypes} from "@/api/model/MessageCodes";
 
 export const Oppsummering = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
@@ -40,12 +41,10 @@ export const Oppsummering = () => {
         navigate(PageLinks[4]);
     }
 
-
-
     return (
         <VStack gap="4">
             { simulationResponse?.messages.map((message, index) => (
-                <Alert key={index} variant="error">{message.details}</Alert>
+                <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
             ))}
 
             <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>

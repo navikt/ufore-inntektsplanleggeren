@@ -1,10 +1,10 @@
-import {MessageCodes} from "@/api/model/MessageCodes";
+import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {StatusCodes} from "@/api/model/StatusCodes";
 
 export type Message = {
     messageCode: MessageCodes;
     details: string;
-    type: string;
+    type: MessageTypes;
     metadata: Record<string, unknown>;
 };
 
