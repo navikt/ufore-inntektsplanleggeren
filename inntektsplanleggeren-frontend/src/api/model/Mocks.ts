@@ -1,5 +1,5 @@
 import {InitiateData, InntekterResponse, SendApplicationResponse, StatusResponse} from "@/api/model/ApiRequests";
-import {MessageCodes} from "@/api/model/MessageCodes";
+import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {StatusCodes} from "@/api/model/StatusCodes";
 
 export const mockInitiateResponse = {
@@ -7,7 +7,7 @@ export const mockInitiateResponse = {
         {
             "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
             "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": "WARNING",
+            "type": MessageTypes.WARNING,
             "metadata": {}
         },
         // {
@@ -126,7 +126,7 @@ export const InntektSimulationDefaultValue = {
         {
             "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
             "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": "WARNING",
+            "type": MessageTypes.WARNING,
             "metadata": {}
         }
     ],
@@ -309,7 +309,7 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
     {
         "messageCode": MessageCodes.USER_HAS_NO_UFORE,
         "details": "string",
-        "type": "ERROR",
+        "type": MessageTypes.ERROR,
         "metadata": {
             "additionalProp1": {},
             "additionalProp2": {},
