@@ -31,7 +31,7 @@ class InntektService(
 
         return InntekterHittilIAar(
             arbeidsinntektOgPensjonsgivendeYtelser = arbeidsinntekterOgPensjonsgivendeYtelser[pid] ?: emptyList(),
-            pensjonerFraAndreEnnFolketrygden = pensjonFraAndreEnnFolketrygden[pid] ?: emptyList(),
+            pensjonerFraAndreEnnFolketrygden = pensjonFraAndreEnnFolketrygden[pid],
             arbeidsinntektOgPensjonsgivendeYtelserEps = arbeidsinntekterOgPensjonsgivendeYtelser[pensjonsdata.epsPid],
             pensjonerFraAndreEnnFolketrygdenEps = pensjonFraAndreEnnFolketrygden[pensjonsdata.epsPid]
         )

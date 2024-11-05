@@ -12,9 +12,9 @@ import java.time.LocalDate
 
 @Service
 class SimuleringService(
-    val penClient: PenClient,
-    val validator: SimuleringValidator,
-    val tokenService: TokenService
+    private val penClient: PenClient,
+    private val validator: SimuleringValidator,
+    private val tokenService: TokenService
 ) {
     fun simulerInntektsendring(
         pid: String,
