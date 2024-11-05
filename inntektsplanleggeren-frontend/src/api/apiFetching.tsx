@@ -11,7 +11,7 @@ import {
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = true;
+const MOCKS_ENABLED = false;
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)
