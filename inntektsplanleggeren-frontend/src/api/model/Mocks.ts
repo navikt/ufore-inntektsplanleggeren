@@ -104,7 +104,7 @@ export const mockInntekterResponse : InntekterResponse = {
     ],
     "forventedeInntekter": {
         "bruker": {
-            "arbeidsinntekt": 32456,
+            "arbeidsinntekt": null,
             "andrePensjonsgivendeYtelser": 22144,
             "naeringsinntekt": 23543,
             "inntektUtland": 1009,

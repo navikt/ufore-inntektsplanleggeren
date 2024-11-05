@@ -66,11 +66,11 @@ export type InntektDetaljer = {
 };
 
 export type PersonInntekter = {
-    arbeidsinntekt: number;
-    andrePensjonsgivendeYtelser: number;
-    naeringsinntekt: number;
-    inntektUtland: number;
-    pensjonUtland: number;
+    arbeidsinntekt: number | null;
+    andrePensjonsgivendeYtelser: number | null;
+    naeringsinntekt: number | null;
+    inntektUtland: number | null;
+    pensjonUtland: number | null;
 };
 
 export type ForventedeInntekterResponse = {
