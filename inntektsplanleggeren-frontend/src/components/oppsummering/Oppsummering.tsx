@@ -1,4 +1,4 @@
-import {Button, Heading, HStack, VStack} from "@navikt/ds-react";
+import {Alert, Button, Heading, HStack, VStack} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
@@ -41,8 +41,13 @@ export const Oppsummering = () => {
     }
 
 
+
     return (
         <VStack gap="4">
+            { simulationResponse?.messages.map((message, index) => (
+                <Alert key={index} variant="error">{message.details}</Alert>
+            ))}
+
             <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
 
             <VStack gap="6">
