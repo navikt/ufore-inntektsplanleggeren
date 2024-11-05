@@ -26,6 +26,10 @@ export const Oppsummering = () => {
     //     navigate(`/${uuid}/kvittering`);
     // };
 
+    simulationResponse.messages.forEach((message) => {
+        console.log("message", message);
+    });
+
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();
 
