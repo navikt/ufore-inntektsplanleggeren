@@ -13,8 +13,9 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,7 +27,8 @@ class InntektsplanleggerService(
     private val validator: Validator,
     private val inntektService: InntektService,
     private val simuleringService: SimuleringService,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val nowProvider: NowProvider
 ) {
 
     fun sendInntektsendring(
@@ -101,6 +103,7 @@ class InntektsplanleggerService(
             pensjonsdata,
             simuleringsaar
         )
+
         return InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
@@ -182,7 +185,7 @@ class InntektsplanleggerService(
         hasLopendeUforeVedtakThisYear: Boolean,
         hasLopendeUforeVedtakNextYear: Boolean
     ): List<Int> {
-        val today = LocalDate.now()
+        val today = nowProvider.now()
         val isMonthBeforeOctober = today.month.value < Month.OCTOBER.value
 
         if (isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
@@ -197,10 +200,10 @@ class InntektsplanleggerService(
         return emptyList()
     }
 
-    private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>): List<AccumulatedMaanedsinntekt> {
+    private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>?): List<AccumulatedMaanedsinntekt> {
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()
 
-        maanedsinntekter.forEach { maanedsinntekt ->
+        maanedsinntekter?.forEach { maanedsinntekt ->
             run {
                 if (inntekterEachMonth.containsKey(maanedsinntekt.maned)) {
                     inntekterEachMonth[maanedsinntekt.maned]?.add(maanedsinntekt)
@@ -220,7 +223,7 @@ class InntektsplanleggerService(
     }
 
     private fun getSimuleringFomDato(simuleringsaar: Int): LocalDate =
-        if (simuleringsaar > LocalDate.now().year)
+        if (simuleringsaar > nowProvider.now().year)
             LocalDate.of(simuleringsaar, Month.JANUARY, 1)
         else
             LocalDate.now().plusMonths(1).withDayOfMonth(1)

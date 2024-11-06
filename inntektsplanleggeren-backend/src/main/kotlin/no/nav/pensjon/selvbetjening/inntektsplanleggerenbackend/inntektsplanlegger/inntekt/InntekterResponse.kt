@@ -3,7 +3,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 data class InntekterResponse(
     val arbeidsinntektOgYtelserHittilIAar: List<AccumulatedMaanedsinntekt>,
-    val pensjonFraAndreHittilIAar: List<AccumulatedMaanedsinntekt>,
+    val pensjonFraAndreHittilIAar: List<AccumulatedMaanedsinntekt>?,
     val forventedeInntekter: ForventedeInntekter,
     val uforeHeleAaret: Boolean
 )
