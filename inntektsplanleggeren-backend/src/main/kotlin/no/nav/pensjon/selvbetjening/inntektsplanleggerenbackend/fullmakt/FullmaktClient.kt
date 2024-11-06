@@ -2,7 +2,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt
 
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

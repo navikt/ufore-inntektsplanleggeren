@@ -4,7 +4,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.audit.Auditor
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.slf4j.Logger

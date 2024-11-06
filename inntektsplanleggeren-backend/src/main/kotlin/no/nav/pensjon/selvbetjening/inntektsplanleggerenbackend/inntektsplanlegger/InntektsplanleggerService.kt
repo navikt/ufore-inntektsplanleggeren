@@ -27,7 +27,6 @@ class InntektsplanleggerService(
     private val validator: Validator,
     private val inntektService: InntektService,
     private val simuleringService: SimuleringService,
-    private val auditor: Auditor,
     private val tokenService: TokenService
 ) {
 
