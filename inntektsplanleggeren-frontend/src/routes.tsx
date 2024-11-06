@@ -22,7 +22,7 @@ export const AppRoutes = () => (
                         <Route element={<FormContainer />}>
                             <Route index path={"/forventede-inntekter"} element={<Innfylling />} />
                             <Route index path={"/oppsummering"} element={<Oppsummering />} />
-                            <Route index path={"/:id/kvittering"} element={<Kvittering />} />
+                            <Route index path={"/kvittering"} element={<Kvittering />} />
                         </Route>
                     </Route>
                 {/*</Route>*/}

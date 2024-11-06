@@ -55,8 +55,6 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
         }
     };
 
-    console.log(forventedeInntekter)
-
     return (
         <div>
             {Object.keys(errors).length > 0 && (

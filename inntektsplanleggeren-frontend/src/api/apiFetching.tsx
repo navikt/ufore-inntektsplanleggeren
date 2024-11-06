@@ -1,17 +1,17 @@
 import {
     PersonInntekter, GetInntektsgrenseResponse,
-    InntekterResponse, SubmitInntekterRequest, SimulationResponse, SendApplicationResponse,
+    InntekterResponse, SubmitInntekterRequest, SimulationResponse, SendApplicationResponse, StatusResponse,
 } from "@/api/model/ApiRequests";
 import {
     mockInntekterResponse,
     mockInitiateResponse,
-    mockInntektSimulationResponse,
-    mockSendApplicationResponse
+    mockSimulationResponse,
+    mockSendApplicationResponse, mockStatusResponse
 } from "@/api/model/Mocks";
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = false;
+const MOCKS_ENABLED = true;
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -92,7 +92,7 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
     });
 
     if (MOCKS_ENABLED) {
-        return mockInntektSimulationResponse;
+        return mockSimulationResponse;
     }
 
     if (!res.ok) {
@@ -102,7 +102,7 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
     return res.json();
 }
 
-export async function submit(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: string): Promise<SendApplicationResponse> {
+export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: string): Promise<SendApplicationResponse> {
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
         eps: epsInntekter
@@ -110,6 +110,7 @@ export async function submit(brukerInntekter: PersonInntekter, epsInntekter: Per
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
     let headers;
+
 
     if (pid) {
         headers =  {
@@ -140,7 +141,7 @@ export async function submit(brukerInntekter: PersonInntekter, epsInntekter: Per
     return res.json();
 }
 
-export async function getStatus(valgtaar: string, innsendingstidspunkt: Date): Promise<SendApplicationResponse> {
+export async function getStatus(valgtaar: string, innsendingstidspunkt: Date): Promise<StatusResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
     let headers;
@@ -156,14 +157,14 @@ export async function getStatus(valgtaar: string, innsendingstidspunkt: Date): P
         }
     }
 
-    const res = await fetch(basePath + `/api/send?valgtaar=${valgtaar}?innsendingstidspunkt=${innsendingstidspunkt}`, {
+    const res = await fetch(basePath + `/api/send?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
     });
 
     if (MOCKS_ENABLED) {
-        return mockSendApplicationResponse;
+        return mockStatusResponse;
     }
 
     if (!res.ok) {

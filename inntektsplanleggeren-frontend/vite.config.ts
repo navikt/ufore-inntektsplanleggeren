@@ -50,7 +50,6 @@ const devConfig = {
 // https://vitejs.dev/config/
 export default ({ command }) => {
   if(command == 'serve') {
-    console.log("ausfgu")
     return devConfig
   } else {
     return buildConfig

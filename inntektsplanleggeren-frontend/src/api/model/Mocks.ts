@@ -120,45 +120,6 @@ export const mockInntekterResponse : InntekterResponse = {
     },
     "uforeHeleAaret": false
 };
-
-export const InntektSimulationDefaultValue = {
-    "messages":[
-        {
-            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            "metadata": {}
-        }
-    ],
-    "result": {
-        "uforetrygd": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "forventetInntekt": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "barnetilleggFellesbarn": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "barnetilleggSaerkullsbarn": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "gjenlevendetillegg": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        },
-        "sum": {
-            "monthly": {"before": 0, "after": 0},
-            "yearly": {"before": 0, "after": 0}
-        }
-    }
-}
-
-
 // export const mockInntekterResponse : InntekterResponse ={
 //     "arbeidsinntektOgYtelserHittilIAar": [
 //     {
@@ -238,7 +199,7 @@ export const InntektSimulationDefaultValue = {
 //     "uforeHeleAaret": true
 // }
 
-export const mockInntektSimulationResponse = {
+export const mockSimulationResponse = {
     "messages": [],
     "result": {
         "uforetrygd": {
@@ -320,15 +281,15 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
     "status": "AUTOMATISK_BEHANDLING"
 }
 
-export const mockSendResponse : StatusResponse = {
-    "registeringsTidspunktEndring": "2024-11-04T14:21:24.804Z",
+export const mockStatusResponse : StatusResponse = {
+    "registeringsTidspunktEndring": "2024-11-06T09:06:38.971Z",
     "status": StatusCodes.BEHANDLET_MEDFOERER_ENDRING,
-    "sakId": 0,
+    "sakId": 2112,
     "maandedligeUtbetalinger": {
-    "fom": "2024-11-04",
-        "beloep": 0
-},
+        "fom": "2024-11-06",
+        "beloep": 8
+    },
     "mottarBarnetilleggForFellesBarn": true,
-    "forventetAarligInntekt": 0,
-    "forventetAarligInntektEps": 0
+    "forventetAarligInntekt": 1,
+    "forventetAarligInntektEps": 2
 }

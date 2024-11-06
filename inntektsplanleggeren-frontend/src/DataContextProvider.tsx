@@ -7,9 +7,8 @@ import {
     InntekterResponse,
     Message,
     SendApplicationResponse,
-    SimulationResponse
+    SimulationResponse, StatusResponse
 } from "@/api/model/ApiRequests";
-import {InntektSimulationDefaultValue} from "@/api/model/Mocks";
 
 export const InitialViewDefaultData: InitiateData | null = {
     forventetInntekt: 0,
@@ -39,11 +38,14 @@ interface DataContextValue {
     inntekterResponse: InntekterResponse | null;
     setInntekterResponse: (value: InntekterResponse) => void;
 
-    simulationResponse: SimulationResponse;
+    simulationResponse: SimulationResponse | null;
     setSimulationResponse: (value: SimulationResponse) => void;
 
     sendResponse: SendApplicationResponse | null,
     setSendResponse: (value: SendApplicationResponse) => void,
+
+    statusResponse: StatusResponse | null,
+    setStatusResponse: (value: StatusResponse) => void,
 
     messages: Message[];
     setMessages: (value: Message[]) => void;
@@ -67,11 +69,14 @@ const DataContextDefaultValue: DataContextValue = {
     inntekterResponse: null,
     setInntekterResponse: () => undefined,
 
-    simulationResponse: InntektSimulationDefaultValue,
+    simulationResponse: null,
     setSimulationResponse: () => undefined,
 
     sendResponse: null,
     setSendResponse: () => undefined,
+
+    statusResponse: null,
+    setStatusResponse: () => undefined,
 
     messages: messagesDefaultValue,
     setMessages: () => undefined,
@@ -103,6 +108,7 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
     const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
+    const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
     const [messages, setMessages] = useState(DataContextDefaultValue.messages)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
@@ -147,12 +153,19 @@ function DataContextProvider(props: DataContextProviderProps) {
     return (
         <DataContext.Provider value={{
             initialViewData: initialViewResponse,
+
             inntekterResponse,
             setInntekterResponse,
+
             simulationResponse,
             setSimulationResponse,
+
             sendResponse,
             setSendResponse,
+
+            statusResponse,
+            setStatusResponse,
+
             refetch,
             setRefetch,
             messages,

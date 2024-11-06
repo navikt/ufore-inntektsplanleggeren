@@ -1,6 +1,8 @@
-import {Heading, VStack, Alert, BodyLong, BodyShort, HStack, Loader} from "@navikt/ds-react";
+import {Heading, VStack, Alert, BodyLong, BodyShort, HStack, Loader, List} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
+import { DataContext } from "@/DataContextProvider";
+import {Link} from "react-router-dom";
 
 export const Kvittering = () => {
     // const { id } = useParams();
@@ -10,12 +12,14 @@ export const Kvittering = () => {
     const [isWaiting, setIsWaiting] = useState(true);
     const [hasWaitedLong, setHasWaitedLong] = useState(false);
     const { setFormStep } = useContext(FormStateContext);
+    const { sendResponse } = useContext(DataContext);
 
     useEffect(() => {
         setFormStep(3);
     }, [setFormStep]);
 
     useEffect(() => {
+        console.log("sendResponse", sendResponse);
         const longWaitTimer = setTimeout(() => {
             setHasWaitedLong(true);
         }, 10_000);
@@ -85,24 +89,35 @@ export const Kvittering = () => {
             {/*    <BodyShort>Søknaden din hart blitt sendt</BodyShort>*/}
             {/*</Alert>*/}
 
-            <Heading size={"medium"}>Husk å oppdatere skattekortet</Heading>
+            <Heading size={"large"}>Etteroppgjør</Heading>
             <BodyLong>
-                Hvis du har fått endret inntekt kan det være at skattekortet ditt må oppdateres.
-                Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane).
+                Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant annet Skatteetaten.
+                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles etteroppgjør. <Link to={"/"}>Les mer om etteroppgjøret (åpnes i ny fane).</Link>
             </BodyLong>
 
-            <Heading size={"medium"}>Hvis du tjener mer eller mindre enn du tror nå</Heading>
+            <Heading size={"large"}>Hvis inntekten din endrer seg</Heading>
             <BodyLong>
-                Hvis du senere ser at inntekten din kommer til å bli blir høyere eller lavere enn det du meldte inn i inntektsplanleggeren, bør du sende inn en endring.
-                Du sender inn opplysninger om ny forventet inntekt gjennom inntektsplanleggeren.
+                Ser du at inntekten din blir annerledes enn det du meldte inn her, bør du melde inn ny inntekt så fort som mulig. Det gir mindre risiko for stor tilbakebetaling i etteroppgjøret.
+                Du kan melde ny endring i inntektsplanleggeren så mange ganger du trenger i løpet av året.
             </BodyLong>
 
-            <Heading size={"medium"}>Etteroppgjør</Heading>
+            <Heading size={"large"}>Husk å oppdatere skattekortet</Heading>
             <BodyLong>
-                På høsten får vi inntektsopplysninger fra Skatteetaten for året før. Da ser vi hvor mye du faktisk hadde i inntekt opp mot den forventede inntekten og hvor
-                mye uføretrygden eventuelt ble redusert. Dersom du har fått for mye eller for lite utbetalt uføretrygd det året, vil du få en etterbetaling eller et krav om tilbakebetaling.
-                Les om etteroppgjøret (åpnes i ny fane).
+                Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres.
+                <Link to={"/"}> Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane)</Link>
             </BodyLong>
+
+            <Heading size={"large"}>Må du melde fra til flere?</Heading>
+            <BodyLong>
+                Får du andre utbetalinger fra Nav eller pengestøtter fra andre, kan det hende at du må melde om endring i inntekt til disse også. Det kan for eksempel gjelde
+                <List>
+                    <List.Item>økonomisk sosialhjelp</List.Item>
+                    <List.Item>uførepensjon fra en pensjonskasse eller forsikringsordning</List.Item>
+                    <List.Item>bostøtte fra Husbanken</List.Item>
+                </List>
+            </BodyLong>
+
+
         </VStack>
     );
 };

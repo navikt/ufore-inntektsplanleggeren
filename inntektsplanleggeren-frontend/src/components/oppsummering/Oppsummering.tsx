@@ -4,7 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/oppsummering/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
-import {submit} from "@/api/apiFetching";
+import {send} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
 import {MessageTypes} from "@/api/model/MessageCodes";
@@ -35,7 +35,7 @@ export const Oppsummering = () => {
 
         try {
             setIsLoading(true);
-            const result = await submit(brukerinntekt, annenForelderInntekt, selectedYear);
+            const result = await send(brukerinntekt, annenForelderInntekt, selectedYear);
             setSendResponse(result);
             navigate(PageLinks[4]);
         } catch (error) {
