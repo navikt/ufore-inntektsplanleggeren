@@ -22,11 +22,14 @@ class Auditor {
         audit.info(cefEntryCreate(userId, "NAV-ansatt", onBehalfOfPid, "audit:create").format())
     }
 
-    /*
-    fun auditFullmakt(fullmektigPid: String, onBehalfOfPid: String) {
-        audit.info(cefEntry(fullmektigPid, "Fullmektig", onBehalfOfPid).format())
+    fun auditFullmaktRead(fullmektigPid: String, onBehalfOfPid: String) {
+        audit.info(cefEntryRead(fullmektigPid, "Fullmektig", onBehalfOfPid, "audit:read").format())
     }
-  */
+
+    fun auditFullmaktCreate(fullmektigPid: String, onBehalfOfPid: String) {
+        audit.info(cefEntryRead(fullmektigPid, "Fullmektig", onBehalfOfPid, "audit:create").format())
+    }
+
     companion object {
         private val audit: Logger = LoggerFactory.getLogger("AUDIT_LOGGER")
 
@@ -36,7 +39,7 @@ class Auditor {
                 Level.INFO,
                 event,
                 "Datahenting paa vegne av",
-                "$userType henter inntekter for innbygger",
+                "$userType henter data for innbygger",
                 userId,
                 onBehalfOfPid
             )

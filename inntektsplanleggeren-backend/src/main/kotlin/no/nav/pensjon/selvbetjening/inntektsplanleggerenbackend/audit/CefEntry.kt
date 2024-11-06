@@ -53,7 +53,7 @@ class CefEntry(
         private const val CEF_VERSION = 0
         private const val PREAMBLE = "CEF:"
         private const val SEPARATOR = "|"
-        private const val DEVICE_VENDOR = "ufore"       //TODO: ufore eller pensjon ???
+        private const val DEVICE_VENDOR = "Ufoere"
         private const val DEVICE_PRODUCT = "inntektsplanleggeren-backend"
         private const val DEVICE_VERSION = "1.0"
     }

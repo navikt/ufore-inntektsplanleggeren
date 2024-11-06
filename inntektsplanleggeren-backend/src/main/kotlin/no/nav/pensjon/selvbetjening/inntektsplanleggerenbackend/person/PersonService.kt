@@ -3,54 +3,20 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.ParallelleSannheterService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class PersonService(
-    val pdlClient: PdlClient,
-    val parallelleSannheterService: ParallelleSannheterService,
-    val tokenService: TokenService
+    private val pdlClient: PdlClient,
+    private val parallelleSannheterService: ParallelleSannheterService,
+    private val tokenService: TokenService
 ) {
 
     fun getFodselsdato(pid: String): LocalDate {
         val fodselsdato = pdlClient.performQuery(PdlQueryBuilder.getFoedselQuery(pid)).foedsel
         return parallelleSannheterService.decideFodselsdato(fodselsdato)
             ?: throw IllegalStateException("Not able to determine fodselsdato for user")
-    }
-
-    fun getPersondataForFullmaktsgiver(pidFullmaktsgiver: String): Persondata {
-        val person = pdlClient.performQuery(PdlQueryBuilder.getPersondataQuery(pidFullmaktsgiver))
-        return mapPdlPersonToPersondata(pidFullmaktsgiver, person)
-    }
-
-    fun getPersondataForMottaker(pidMottaker: String): Persondata? {
-        val person: PdlPerson
-        try {
-            val adressebeskyttelse = getAdressebeskyttelsesgrad(pidMottaker)
-            if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                person = if (isUgradert(adressebeskyttelse)
-                    || isStrengtFortroligAndSaksbehandlerHasAccess(adressebeskyttelse)
-                    || isFortroligAndSaksbehandlerHasAccess(adressebeskyttelse)
-                ) {
-                    //User logged in as saksbehandler, mottaker is either ugradert or saksbehandler has necessary access
-                    pdlClient.performQuery(PdlQueryBuilder.getPersondataQuery(pidMottaker))
-                } else {
-                    //User logged in as saksbehandler, mottaker is adressebeskyttet and saksbehandler lacks access
-                    return Persondata(pidMottaker, getFodselsdatoWithElevatedPriveleges(pidMottaker), Navn(null, null, null))
-                }
-            } else if (isUgradert(adressebeskyttelse)) {
-                //User logged in as borger, and mottaker not adressebeskyttet
-                person = pdlClient.performQueryWithElevatedPriveleges(PdlQueryBuilder.getPersondataQuery(pidMottaker))
-            } else {
-                //User logged in as borger, and mottaker is adressebeskyttet
-                return Persondata(pidMottaker, getFodselsdatoWithElevatedPriveleges(pidMottaker), Navn(null, null, null))
-            }
-        } catch (exception: PersonNotFoundException) {
-            return null
-        }
-        return mapPdlPersonToPersondata(pidMottaker, person)
     }
 
     fun getAgeAtYear(fodselsdato: LocalDate, year: Int): Int {
@@ -67,20 +33,12 @@ class PersonService(
                 || isFortroligAndSaksbehandlerHasAccess(adressebeskyttelse))
     }
 
-    private fun mapPdlPersonToPersondata(pid: String, pdlPerson: PdlPerson): Persondata{
-        val fodselsdato = parallelleSannheterService.decideFodselsdato(pdlPerson.foedsel)
-        val navn = parallelleSannheterService.decideNavn(pdlPerson.navn)
-        if (navn == null || fodselsdato == null) {
-            throw IllegalStateException("Could not determine navn or fodselsdato for person")
+    fun hasAdressebeskyttelse(pid: String): Boolean {
+        val adressebeskyttelsesgrad = getAdressebeskyttelsesgrad(pid)
+        if (adressebeskyttelsesgrad == null || adressebeskyttelsesgrad == PdlAdressebeskyttelsesgradering.UGRADERT) {
+            return false
         }
-
-        return Persondata(pid, fodselsdato, Navn(navn.fornavn, navn.mellomnavn, navn.etternavn))
-    }
-
-    private fun getFodselsdatoWithElevatedPriveleges(pid: String): LocalDate {
-        val fodselsdato = pdlClient.performQueryWithElevatedPriveleges(PdlQueryBuilder.getFoedselQuery(pid)).foedsel
-        return parallelleSannheterService.decideFodselsdato(fodselsdato)
-            ?: throw IllegalStateException("Not able to determine fodselsdato for user")
+        return true
     }
 
     private fun isUgradert(adressebeskyttelse: PdlAdressebeskyttelsesgradering?) =
@@ -99,16 +57,3 @@ class PersonService(
         return parallelleSannheterService.decideAdressebeskyttelse(adressebeskyttelse)?.gradering
     }
 }
-
-data class Persondata(val pid: String, val fodselsdato: LocalDate, val navn: Navn){
-    fun fulltNavn(): String? {
-        if (navn.fornavn == null || navn.etternavn == null) {
-            return null
-        } else if (navn.mellomnavn == null) {
-            return "${navn.fornavn} ${navn.etternavn}"
-        }
-        return "${navn.fornavn} ${navn.mellomnavn} ${navn.etternavn}"
-    }
-}
-
-data class Navn(val fornavn: String?, val mellomnavn: String?, val etternavn: String?)

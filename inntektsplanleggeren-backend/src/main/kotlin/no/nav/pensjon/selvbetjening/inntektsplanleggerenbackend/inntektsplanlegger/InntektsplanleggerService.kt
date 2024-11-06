@@ -103,9 +103,6 @@ class InntektsplanleggerService(
             pensjonsdata,
             simuleringsaar
         )
-        if (tokenService.isUserLoggedInAsSaksbehandler()) {
-            auditor.auditInternalUserRead("Z990000", pid)
-        }
         return InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),

@@ -8,6 +8,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -24,12 +25,47 @@ class FullmaktClient(
     private val webClient: WebClient,
     private val tokenService: TokenService
 ) {
-    fun hasValidRepresentasjonsforhold(fullmaktsgiverPid: String, fullmektigPid: String): FullmaktsforholdDto? {
+
+    fun harBprofFullmaktmottager(fullmektigPid: String): HarBprofFullmaktmottakereResponse? {
         return try {
             tokenService.getEgressToken(scope, audience, fullmektigPid, AppId.PENSJON_FULLMAKT).let {
                 webClient
                     .get()
-                    .uri(url())
+                    .uri(urlHarBprofFullmaktmottakere())
+                    .headers { headers: HttpHeaders ->
+                        headers.setBearerAuth(it!!)
+                        headers[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_JSON_VALUE
+                        headers[HttpHeaders.ACCEPT] = MediaType.APPLICATION_JSON_VALUE
+                        headers[NAV_CALL_ID] = MDC.get(NAV_CALL_ID)
+                    }
+                    .retrieve()
+                    .bodyToMono(HarBprofFullmaktmottakereResponse::class.java)
+                    .block()
+            }
+
+        } catch (e: WebClientResponseException) {
+            logger.error("Kall til fullmaktstjenesten feilet med melding: ${e.responseBodyAsString}")
+            throw FullmaktException(
+                SERVICE,
+                "harBprofFullmaktmottager",
+                "Failed to call service: " + e.responseBodyAsString,
+                e
+            )
+        } catch (e: ResponseStatusException) {
+            logger.error("Kall til fullmaktstjenesten feilet med statuskode ${e.statusCode}: ${e.message}")
+            throw FullmaktException(SERVICE, "harBprofFullmaktmottager", "Failed to call service", e)
+        } catch (e: RuntimeException) { // e.g. when connection broken
+            logger.error("Kall til fullmaktstjenesten feilet: ${e.message}")
+            throw FullmaktException(SERVICE, "harBprofFullmaktmottager", "Failed to call service", e)
+        }
+    }
+
+    fun hasValidRepresentasjonsforhold(fullmaktsgiverPid: String, fullmektigPid: String): RepresentasjonsforholdValidity? {
+        return try {
+            tokenService.getEgressToken(scope, audience, fullmektigPid, AppId.PENSJON_FULLMAKT).let {
+                webClient
+                    .get()
+                    .uri(urlValidRepresentasjonsforhold())
                     .headers { headers: HttpHeaders ->
                         headers.setBearerAuth(it!!)
                         headers[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_JSON_VALUE
@@ -38,7 +74,7 @@ class FullmaktClient(
                         headers[FULLMAKTSGIVER_PID] = fullmaktsgiverPid
                     }
                     .retrieve()
-                    .bodyToMono(FullmaktsforholdDto::class.java)
+                    .bodyToMono(RepresentasjonsforholdValidity::class.java)
                     .block()
             }
 
@@ -46,35 +82,97 @@ class FullmaktClient(
             logger.error("Kall til fullmaktstjenesten feilet med melding: ${e.responseBodyAsString}")
             throw FullmaktException(
                 SERVICE,
-                "harFullmaktsforhold",
+                "hasValidRepresentasjonsforhold",
                 "Failed to call service: " + e.responseBodyAsString,
                 e
             )
         } catch (e: ResponseStatusException) {
             logger.error("Kall til fullmaktstjenesten feilet med statuskode ${e.statusCode}: ${e.message}")
-            throw FullmaktException(SERVICE, "harFullmaktsforhold", "Failed to call service", e)
+            throw FullmaktException(SERVICE, "hasValidRepresentasjonsforhold", "Failed to call service", e)
         } catch (e: RuntimeException) { // e.g. when connection broken
             logger.error("Kall til fullmaktstjenesten feilet: ${e.message}")
-            throw FullmaktException(SERVICE, "harFullmaktsforhold", "Failed to call service", e)
+            throw FullmaktException(SERVICE, "hasValidRepresentasjonsforhold", "Failed to call service", e)
         }
     }
 
-    private fun url(): String {
+    fun findAllRepresentasjonsforhold(fullmektigPid: String): List<Representasjonsforhold> {
+        return try {
+            tokenService.getEgressToken(scope, audience, fullmektigPid, AppId.PENSJON_FULLMAKT).let {
+                webClient
+                    .get()
+                    .uri(urlFindRepresentasjonsforhold())
+                    .headers { headers: HttpHeaders ->
+                        headers.setBearerAuth(it!!)
+                        headers[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_JSON_VALUE
+                        headers[HttpHeaders.ACCEPT] = MediaType.APPLICATION_JSON_VALUE
+                        headers[NAV_CALL_ID] = MDC.get(NAV_CALL_ID)
+                    }
+                    .retrieve()
+                    .bodyToMono(object : ParameterizedTypeReference<List<Representasjonsforhold>>() {})
+                    .block() ?: emptyList()
+            }
+
+        } catch (e: WebClientResponseException) {
+            logger.error("Kall til fullmaktstjenesten feilet med melding: ${e.responseBodyAsString}")
+            throw FullmaktException(
+                SERVICE,
+                "findAllRepresentasjonsforhold",
+                "Failed to call service: " + e.responseBodyAsString,
+                e
+            )
+        } catch (e: ResponseStatusException) {
+            logger.error("Kall til fullmaktstjenesten feilet med statuskode ${e.statusCode}: ${e.message}")
+            throw FullmaktException(SERVICE, "findAllRepresentasjonsforhold", "Failed to call service", e)
+        } catch (e: RuntimeException) { // e.g. when connection broken
+            logger.error("Kall til fullmaktstjenesten feilet: ${e.message}")
+            throw FullmaktException(SERVICE, "findAllRepresentasjonsforhold", "Failed to call service", e)
+        }
+    }
+
+    private fun urlValidRepresentasjonsforhold(): String {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
-            .path(PATH_HARFULLMAKTSFORHOLD)
+            .path(PATH_HASREPRESENTASJONSFORHOLD)
             .queryParam(VALID_REPRESENTASJONSTYPER_KEY, VALID_REPRESENTASJONSTYPER)
+            .queryParam(INCLUDE_NAVN_KEY, false)
+            .build()
+            .toUriString()
+    }
+
+    private fun urlHarBprofFullmaktmottakere(): String {
+        return UriComponentsBuilder.fromHttpUrl(baseUrl)
+            .path(PATH_HASBPROFFULLMAKTMOTTAKERE)
+            .build()
+            .toUriString()
+    }
+
+    private fun urlFindRepresentasjonsforhold(): String {
+        return UriComponentsBuilder.fromHttpUrl(baseUrl)
+            .path(PATH_FINDREPRESENTASJONSFORHOLD)
             .build()
             .toUriString()
     }
 
     companion object {
         private const val SERVICE = "Fullmakt"
-        private const val PATH_HARFULLMAKTSFORHOLD = "/representasjon/hasValidRepresentasjonsforhold"
+        private const val PATH_HASREPRESENTASJONSFORHOLD = "/representasjon/hasValidRepresentasjonsforhold"
+        private const val PATH_FINDREPRESENTASJONSFORHOLD = "/representasjon/findAllRepresentasjonsforhold"
+        private const val PATH_HASBPROFFULLMAKTMOTTAKERE = "/representasjon/bprof/harFullmaktmottakere"
 
         const val NAV_CALL_ID = "Nav-Call-Id"
         const val FULLMAKTSGIVER_PID = "fullmaktsgiverPid"
+        const val INCLUDE_NAVN_KEY = "includeFullmaktsgiverNavn"
         const val VALID_REPRESENTASJONSTYPER_KEY = "validRepresentasjonstyper"
-        private val VALID_REPRESENTASJONSTYPER = setOf("PENSJON_FULLSTENDIG", "PENSJON_SKRIV", "PENSJON_VERGE", "PENSJON_VERGE_PENGEMOTTAKER")
+        private val VALID_REPRESENTASJONSTYPER = setOf(
+            "PENSJON_FULLSTENDIG",
+            "PENSJON_BEGRENSET",
+            "PENSJON_SKRIV",
+            "PENSJON_KOMMUNISER",
+            "PENSJON_LES",
+            "PENSJON_VERGE",
+            "PENSJON_SAMHANDLER",
+            "PENSJON_SAMHANDLER_ADMIN",
+            "PENSJON_SUPERADMIN",
+            "PENSJON_VERGE_PENGEMOTTAKER")
 
         private val logger: Logger = LoggerFactory.getLogger(FullmaktClient::class.java)
 
