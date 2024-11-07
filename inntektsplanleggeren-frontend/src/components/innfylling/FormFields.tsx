@@ -1,5 +1,5 @@
 import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading} from "@navikt/ds-react";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./FormFields.css";
 import {PersonInntekter} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
@@ -42,7 +42,17 @@ export const FormFields = ({ year, errors, setInntekt,  inntektSum, forventedeIn
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
 
 
+
+
+
     const handleInputChange = (field: keyof PersonInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+        // Sjekker tom input
+        if (target.value === '') {
+            setInputData((prev) => ({ ...prev, [field]: target.value }));
+            setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+            setInntekt(field, 0);
+            return;
+        }
         const numericValue = parseInntekt(target.value);
 
         if (isNaN(numericValue) || numericValue < 0) {

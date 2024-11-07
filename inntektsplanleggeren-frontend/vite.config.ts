@@ -44,6 +44,15 @@ const devConfig = {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url))
     }
+  },
+  server: {
+    port: 8061,
+    proxy: {
+      '/api': {
+        target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no/pensjon/selvbetjening/inntektsplanleggeren/api',
+        changeOrigin: true,
+      },
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import {BodyLong, Box, Button, Heading, HStack, Loader, VStack} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
@@ -19,7 +19,7 @@ export const Innfylling = () => {
     const { initialViewData, inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setFormStep(1);

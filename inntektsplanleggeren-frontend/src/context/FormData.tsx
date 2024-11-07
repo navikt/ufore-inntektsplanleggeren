@@ -1,5 +1,6 @@
 import React, { createContext, SetStateAction, useState } from "react";
 import { PersonInntekter } from "@/api/model/ApiRequests";
+import {useLocation} from "react-router-dom";
 
 interface FormState {
     formStep: number;
@@ -42,14 +43,18 @@ interface Props {
     children: React.ReactNode;
 }
 
+const YEAR_REGEX = /^\d{4}$/;
+
 export const FormStateComponent = ({ children }: Props) => {
-    const [selectedYear, setSelectedYear] = useState<string | null>(null);
+    const { state } = useLocation();
+    const storedSelectedYear = state?.selectedYear ?? null;
+    const [selectedYear, setSelectedYear] = useState<string | null>(typeof storedSelectedYear === 'string' && YEAR_REGEX.test(storedSelectedYear) ? storedSelectedYear : null);
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
 
-    const getBrukerinntektSum = () => 0 //Object.values(brukerinntekt).reduce((acc, val) => acc + (val || 0), 0);
-    const getAnnenForelderInntektSum = () => 0// annenForelderInntekt ? Object.values(annenForelderInntekt).reduce((acc, val) => acc + (val || 0), 0) : 0; //todo fix
+    const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
+    const getAnnenForelderInntektSum = (): number => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : 0; //todo fix
 
     return (
         <FormStateContext.Provider value={{
