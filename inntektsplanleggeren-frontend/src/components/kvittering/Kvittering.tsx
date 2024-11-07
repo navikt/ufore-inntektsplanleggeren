@@ -18,23 +18,23 @@ export const Kvittering = () => {
         setFormStep(3);
     }, [setFormStep]);
 
-    useEffect(() => {
-        console.log("sendResponse", sendResponse);
-        const longWaitTimer = setTimeout(() => {
-            setHasWaitedLong(true);
-        }, 10_000);
-
-        // TODO: Remove fake API timer.
-        const fakeProcessTimer = setTimeout(() => {
-            setIsWaiting(false);
-            clearTimeout(longWaitTimer);
-        }, 5_000);
-
-        return () => {
-            clearTimeout(fakeProcessTimer);
-            clearTimeout(longWaitTimer);
-        };
-    }, []);
+    // useEffect(() => {
+    //     console.log("sendResponse", sendResponse);
+    //     const longWaitTimer = setTimeout(() => {
+    //         setHasWaitedLong(true);
+    //     }, 10_000);
+    //
+    //     // TODO: Remove fake API timer.
+    //     const fakeProcessTimer = setTimeout(() => {
+    //         setIsWaiting(false);
+    //         clearTimeout(longWaitTimer);
+    //     }, 5_000);
+    //
+    //     return () => {
+    //         clearTimeout(fakeProcessTimer);
+    //         clearTimeout(longWaitTimer);
+    //     };
+    // }, []);
 
     if (isWaiting) {
         return (
