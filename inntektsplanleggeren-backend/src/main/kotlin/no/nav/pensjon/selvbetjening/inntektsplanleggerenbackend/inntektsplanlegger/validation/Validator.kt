@@ -8,15 +8,32 @@ import org.springframework.stereotype.Service
 import java.time.Month
 
 @Service
-class Validator(private val inntektValidator: InntektValidator,
-                private val nowProvider: NowProvider) {
-    fun validateUserInitialData(pensjonsdata: Pensjonsdata?): List<InntektsplanleggerMessage> {
+class Validator(
+    private val inntektValidator: InntektValidator,
+    private val nowProvider: NowProvider
+) {
+    fun validateUserInitialData(
+        pensjonsdata: Pensjonsdata?,
+        aktuelleAar: List<Int>? = null
+    ): List<InntektsplanleggerMessage> {
         if (pensjonsdata == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
         }
 
         if (!pensjonsdata.hasLopendeUforeVedtakNextYear && !pensjonsdata.hasLopendeUforeVedtakThisYear) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET))
+        }
+
+        val thisYear = nowProvider.now().year
+
+        if (aktuelleAar != null && aktuelleAar.contains(thisYear + 1)) {
+            if (!aktuelleAar.contains(thisYear)) {
+                return listOf(
+                    InntektsplanleggerMessage(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO),
+                    InntektsplanleggerMessage(InntektsplanleggerMessageCode.CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR)
+                )
+            }
+            return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO))
         }
         return emptyList()
     }

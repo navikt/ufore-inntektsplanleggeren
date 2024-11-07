@@ -78,6 +78,15 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
     SIMULERING_CONTAINS_MOTREGNING(
         InntektsplanleggerMessageType.WARNING,
         "Simuleringen inneholder en eller flere ytelseskomponenter som har en motregning. Dette kan bety at simuleringsresultatet blir misvisende å vise til bruker."
+    ),
+    FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO(
+        InntektsplanleggerMessageType.INFO,
+        "Hvis bruker ikke sender inn ny forventet inntekt for neste år, brukes brukers forventede inntekt som er registrert for i år. Inntekten oppjusteres ved årsskiftet hvis det ikke meldes inn inntekt for neste år."
+    ),
+    CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR(
+        InntektsplanleggerMessageType.INFO,
+        "I desember kan bruker se hvilke inntekter som er registrert for dette året. Bruker kan også legge inn nye inntekter for neste år, men kan ikke legge til endring i inntekt for inneværende år, fordi endring i utbetalingen ikke vil skje før til neste år." +
+                "Heading"
     )
 }
 

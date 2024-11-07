@@ -121,7 +121,11 @@ class InntektsplanleggerService(
         simuleringsaar: Int
     ): InntektsplanleggerenInitialResponse {
         val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
-        val messages = validator.validateUserInitialData(pensjonsdata)
+        val aktuelleAar = pensjonsdata?.let{getAktuelleAar(
+            it.hasLopendeUforeVedtakThisYear,
+            it.hasLopendeUforeVedtakNextYear)
+        }
+        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
         return InntektsplanleggerenInitialResponse(
             messages,
             mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, messages)
