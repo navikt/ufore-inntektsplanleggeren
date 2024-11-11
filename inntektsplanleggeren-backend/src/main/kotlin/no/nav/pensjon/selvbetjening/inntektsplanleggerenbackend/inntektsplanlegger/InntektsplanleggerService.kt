@@ -51,9 +51,11 @@ class InntektsplanleggerService(
                     BehandlingStatus.AUTOMATISK_BEHANDLING.name -> {
                         InnsendingStatus.AUTOMATISK_BEHANDLING
                     }
+
                     BehandlingStatus.INNTEKT_LAGRET.name -> {
                         InnsendingStatus.INNTEKT_LAGRET_INGEN_BEHANDLING
                     }
+
                     else -> InnsendingStatus.IKKE_SENDT
                 }
             return InntektsplanleggerenSendResponse(simulering.messages, status)
@@ -121,7 +123,13 @@ class InntektsplanleggerService(
         simuleringsaar: Int
     ): InntektsplanleggerenInitialResponse {
         val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
-        val messages = validator.validateUserInitialData(pensjonsdata)
+        val aktuelleAar = pensjonsdata?.let {
+            getAktuelleAar(
+                it.hasLopendeUforeVedtakThisYear,
+                it.hasLopendeUforeVedtakNextYear
+            )
+        }
+        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
         return InntektsplanleggerenInitialResponse(
             messages,
             mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, messages)
@@ -134,13 +142,19 @@ class InntektsplanleggerService(
         innsendingsTidspunkt: LocalDateTime
     ): InntektsplanleggerenStatusResponse? {
 
-        val penResponse: StatusInnsendingResponse? = penClient.fetchInntektsplanleggerStatus(fnr,getSimuleringFomDato(simuleringsAar),innsendingsTidspunkt)
+        val penResponse: StatusInnsendingResponse? =
+            penClient.fetchInntektsplanleggerStatus(fnr, getSimuleringFomDato(simuleringsAar), innsendingsTidspunkt)
         val forventetInntekt = constructInntekterResponse(fnr, simuleringsAar)
         if (penResponse != null) {
             return InntektsplanleggerenStatusResponse(
                 penResponse.status,
                 penResponse.sakId,
-                penResponse.maandedligeUtbetalinger?.fom?.let { MaandedligeUtbetalinger1(it,penResponse.maandedligeUtbetalinger.beloep) },
+                penResponse.maandedligeUtbetalinger?.fom?.let {
+                    MaandedligeUtbetalinger1(
+                        it,
+                        penResponse.maandedligeUtbetalinger.beloep
+                    )
+                },
                 penResponse.endringRegistertTidspunkt,
                 penResponse.mottarBarnetilleggForFellesBarn,
                 forventetInntekt?.forventedeInntekter?.bruker?.sum(),

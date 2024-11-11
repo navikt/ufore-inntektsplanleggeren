@@ -76,6 +76,41 @@ class ValidatorTest {
         assertTrue(result.any { InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET == it.messageCode })
     }
 
+    @Test
+    fun `should return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO only when this year and next year in aktuelleAar`() {
+        val today = LocalDate.now()
+        `when`(nowProvider.now()).thenReturn(LocalDate.now())
+
+        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(today.year, today.year + 1))
+
+        assertEquals(1, messages.size)
+        assertEquals(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO, messages[0].messageCode)
+        assertEquals(InntektsplanleggerMessageType.INFO, messages[0].type)
+    }
+
+    @Test
+    fun `should return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO and CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR when only next year in aktuelleAar`() {
+        val today = LocalDate.now()
+        `when`(nowProvider.now()).thenReturn(LocalDate.now())
+
+        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(today.year + 1))
+
+        assertEquals(2, messages.size)
+        assertEquals(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO, messages[0].messageCode)
+        assertEquals(InntektsplanleggerMessageType.INFO, messages[0].type)
+        assertEquals(InntektsplanleggerMessageCode.CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR, messages[1].messageCode)
+        assertEquals(InntektsplanleggerMessageType.INFO, messages[1].type)
+    }
+
+    @Test
+    fun `should not return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO or CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR when aktuelleAar is null`() {
+        `when`(nowProvider.now()).thenReturn(LocalDate.now())
+
+        val messages = validator.validateUserInitialData(pensjonsdata(true, true))
+
+        assertTrue(messages.isEmpty())
+    }
+
     private fun pensjonsdata(hasLopendeVedtakThisYear: Boolean, hasLopvedtakNextYear: Boolean) =
         Pensjonsdata(
             0,
