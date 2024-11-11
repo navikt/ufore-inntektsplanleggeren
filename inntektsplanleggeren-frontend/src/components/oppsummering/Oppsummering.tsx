@@ -20,16 +20,6 @@ export const Oppsummering = () => {
         setFormStep(2)
     }, [setFormStep]);
 
-    // const onSend = async () => {
-    //     setIsLoading(true);
-    //     const uuid = await fakeApiCall(); // TODO: Replace with actual API call.
-    //     navigate(`/${uuid}/kvittering`);
-    // };
-
-    simulationResponse.messages.forEach((message) => {
-        console.log("message", message);
-    });
-
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();
 
@@ -37,12 +27,12 @@ export const Oppsummering = () => {
             setIsLoading(true);
             const result = await send(brukerinntekt, annenForelderInntekt, selectedYear);
             setSendResponse(result);
-            navigate(PageLinks[4]);
+            navigate(PageLinks.KVITTERING);
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
 
-        navigate(PageLinks[4]);
+        navigate(PageLinks.KVITTERING);
     }
 
     return (

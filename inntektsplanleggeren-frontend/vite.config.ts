@@ -46,12 +46,12 @@ const devConfig = {
     }
   },
   server: {
-    port: 8061,
+    port: 3000,
     proxy: {
-      '/api': {
-        target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no/pensjon/selvbetjening/inntektsplanleggeren/api',
+      '/pensjon/selvbetjening/inntektsplanleggeren/api': {
+        target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no',
         changeOrigin: true,
-      },
+      }
     }
   }
 }

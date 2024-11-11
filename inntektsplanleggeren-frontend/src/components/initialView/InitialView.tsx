@@ -43,7 +43,8 @@ export function InitialView() {
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker)
             setAnnenForelderInntekt(data.forventedeInntekter.eps)
-            navigate('/forventede-inntekter', { state: { selectedYear } })
+            sessionStorage.setItem("selectedYear", selectedYear)
+            navigate('/forventede-inntekter')
         }
     }
 
@@ -83,8 +84,10 @@ export function InitialView() {
                 </BodyShort>
             </section>
 
+            { initialViewData !== null &&
             <ExpectedIncomeBox forventetInntekt={initialViewData.forventetInntekt}
                                forventetInntektAnnenForelder={initialViewData.forventetInntektAnnenForelder}/>
+            }
 
             <section>
                 <BodyLong>

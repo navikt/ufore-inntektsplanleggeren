@@ -5,23 +5,19 @@ import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
 import {BASE_PATH} from "@/routes";
 
-
-
 export const FormContainer = () => {
-
-
     const { formStep } = useContext(FormStateContext);
 
     return (
         <VStack gap="5">
             <HStack>
-                <Button as={Link} to={PageLinks[formStep-1]} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
+                <Button as={Link} to={getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
             </HStack>
-            <Heading level="1" size="large">{PageNames[formStep]}</Heading>
+            <Heading level="1" size="large">{getPageName(formStep)}</Heading>
             <FormProgress totalSteps={3} activeStep={formStep} interactiveSteps={false}>
-                <FormProgress.Step href={BASE_PATH + PageLinks[1]} completed>{PageNames[1]}</FormProgress.Step>
-                <FormProgress.Step href={BASE_PATH + PageLinks[2]}>{PageNames[2]}</FormProgress.Step>
-                <FormProgress.Step href={BASE_PATH + PageLinks[3]}>{PageNames[3]}</FormProgress.Step>
+                <FormProgress.Step href={BASE_PATH + PageLinks.FORVENTEDE_INNTEKTER} completed>{getPageName(1)}</FormProgress.Step>
+                <FormProgress.Step href={BASE_PATH + PageLinks.BEREGNING}>{getPageName(2)}</FormProgress.Step>
+                <FormProgress.Step href={BASE_PATH + PageLinks.OPPSUMMERING}>{getPageName(3)}</FormProgress.Step>
             </FormProgress>
             <Outlet/>
         </VStack>
@@ -29,17 +25,56 @@ export const FormContainer = () => {
 };
 
 export enum PageNames {
-    "Forventede inntekter" = 1,
-    "Beregning" = 2,
-    "Oppsummering" = 3,
-    "Kvittering" = 4
+    FORVENTEDE_INNTEKTER = "Forventede inntekter",
+    BEREGNING = "Beregning",
+    OPPSUMMERING = "Oppsummering",
+    KVIITTERING = "Kvittering"
+}
+
+const getPageName = (index: number): string => {
+    switch (index) {
+        case 1:
+            return PageNames.FORVENTEDE_INNTEKTER;
+        case 2:
+            return PageNames.BEREGNING;
+        case 3:
+            return PageNames.OPPSUMMERING;
+        case 4:
+            return PageNames.KVIITTERING;
+        default:
+            return PageNames.FORVENTEDE_INNTEKTER;
+    }
 }
 
 export enum PageLinks {
-    "/" = 0,
-    "/forventede-inntekter" = 1,
-    "/beregning" = 2,
-    "/oppsummering" = 3,
-    "/kvittering" = 4
+    INDEX = "/",
+    FORVENTEDE_INNTEKTER = "/forventede-inntekter",
+    BEREGNING = "/beregning",
+    OPPSUMMERING = "/oppsummering",
+    KVITTERING = "/kvittering"
 }
 
+export const PAGE_LINKS = {
+    0: "/",
+    1: "/forventede-inntekter",
+    2: "/beregning",
+    3: "/oppsummering",
+    4: "/kvittering"
+};
+
+const getPage = (index: number): string => {
+    switch (index) {
+        case 1:
+            return PAGE_LINKS[1];
+        case 2:
+            return PAGE_LINKS[2];
+        case 3:
+            return PAGE_LINKS[3];
+        case 4:
+            return PAGE_LINKS[4];
+        default:
+            return PAGE_LINKS[0];
+    }
+}
+
+const getPreviousPage = (index: number): string => getPage(index - 1);

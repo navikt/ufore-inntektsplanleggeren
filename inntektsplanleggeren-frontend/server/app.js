@@ -4,6 +4,7 @@ import azure from "./azureAd.js";
 import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
+import {getToken, validateToken, parseIdportenToken} from "@navikt/oasis";
 
 export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
@@ -21,6 +22,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const buildPath = path.resolve(__dirname, "../dist")
 app.use(basePath, express.static(buildPath));
+
+app.post(basePath + '/frontend/year', async (req, res) => {
+    const token = getToken(req);
+
+    if (token === undefined) {
+        res.status(401).send('Token mangler');
+        return;
+    }
+
+    if (!validateToken(token)) {
+        res.status(403).send('Token er ugyldig');
+        return;
+    }
+
+    const parsed = await parseIdportenToken(token);
+
+    if (!parsed.ok) {
+        res.status(403).send('Token er ugyldig');
+        return;
+    }
+
+    res.status(200).send(`Hello, ${parsed.pid}`);
+});
 
 app.get(
     basePath + '/api/initiate',

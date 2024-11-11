@@ -49,12 +49,14 @@ export const FormStateComponent = ({ children }: Props) => {
     const { state } = useLocation();
     const storedSelectedYear = state?.selectedYear ?? null;
     const [selectedYear, setSelectedYear] = useState<string | null>(typeof storedSelectedYear === 'string' && YEAR_REGEX.test(storedSelectedYear) ? storedSelectedYear : null);
+
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
 
+
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
-    const getAnnenForelderInntektSum = (): number => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : 0; //todo fix
+    const getAnnenForelderInntektSum = (): number => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : 0;
 
     return (
         <FormStateContext.Provider value={{
