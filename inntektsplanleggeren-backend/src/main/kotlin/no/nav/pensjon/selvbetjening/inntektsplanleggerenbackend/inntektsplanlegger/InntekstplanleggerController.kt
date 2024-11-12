@@ -25,7 +25,10 @@ class InntektsplanleggerController(
     private val logger: Logger = LoggerFactory.getLogger(InntektsplanleggerController::class.java)
 
     @GetMapping("initiate")
-    fun getInntektsplanleggerenInitialData(): ResponseEntity<InntektsplanleggerenInitialResponse> {
+    fun getInntektsplanleggerenInitialData(
+        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @CookieValue("nav-obo", required=false) navObocookie: String
+    ): ResponseEntity<InntektsplanleggerenInitialResponse> {
         val response:ResponseEntity<InntektsplanleggerenInitialResponse>
         try {
             response =  ResponseEntity(
@@ -45,10 +48,9 @@ class InntektsplanleggerController(
 
     @GetMapping("inntekter")
     fun getInntekter(
-        @RequestParam(
-            "simuleringsaar",
-            required = true
-        ) simuleringsaar: Int
+        @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
+        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @CookieValue("nav-obo", required=false) navObocookie: String
     ): ResponseEntity<InntekterResponse> {
         return try {
             ResponseEntity(
@@ -65,7 +67,9 @@ class InntektsplanleggerController(
     @PostMapping("simuler")
     fun simuler(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestBody forventedeInntekter: ForventedeInntekter
+        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @RequestBody forventedeInntekter: ForventedeInntekter,
+        @CookieValue("nav-obo", required=false) navObocookie: String
     ): ResponseEntity<SimuleringResponse> {
         return try {
             ResponseEntity(
@@ -83,7 +87,9 @@ class InntektsplanleggerController(
     @PostMapping("send")
     fun send(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestBody forventedeInntekter: ForventedeInntekter
+        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @RequestBody forventedeInntekter: ForventedeInntekter,
+        @CookieValue("nav-obo", required=false) navObocookie: String
     ): ResponseEntity<InntektsplanleggerenSendResponse> {
         val response :ResponseEntity<InntektsplanleggerenSendResponse>
         try {
@@ -108,7 +114,9 @@ class InntektsplanleggerController(
     @GetMapping("status")
     fun getStatus(
         @RequestParam("valgtaar", required = true) valgtAr: Int,
-        @RequestParam("innsendingstidspunkt", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") innsendingsTidspunkt: LocalDateTime
+        @RequestParam("innsendingstidspunkt", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") innsendingsTidspunkt: LocalDateTime,
+        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @CookieValue("nav-obo", required=false) navObocookie: String
     ): ResponseEntity<InntektsplanleggerenStatusResponse> {
         return try {
             ResponseEntity(
