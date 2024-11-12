@@ -14,12 +14,23 @@ class TokenService(
     @Value("\${strengt-fortrolig-tilgang.group.id}") private val strengtFortroligAdresseGroupId: String,
     @Value("\${fortrolig-tilgang.group.id}") private val fortroligAdresseGroupId: String,
     @Value("\${skjermet-tilgang.group.id}") private val skjermetGroupId: String,
+ //   @Value("\${okonomi.group.id}") private val okonomiGroupId: String,
+//    @Value("\${saksbehandler.group.id}") private val saksbehandlerAdresseGroupId: String,
+//    @Value("\${veileder.group.id}") private val veilederGroupId: String,
+//    @Value("\${brukerhjelpa.group.id}") private val brukerhjelpaGroupId: String,
+ //   @Value("\${klagebehandler.group.id}") private val klagebehandlerGroupId: String,
     private val azureAdService: AzureAdService,
     private val tokenXService: TokenXService,
 ) {
 
     enum class TokenType {
         AZURE_AD_CLIENT_CREDENTIALS, AZURE_AD_ON_BEHALF_OF, TOKEN_X
+    }
+    enum class Innloggingstype {
+        LEVEL4,
+        LEVEL3,
+        NAV,
+        SYSTEM
     }
 
     fun getEgressToken(scope: String, audience: String? = null, pid: String, appId: AppId): String? =
@@ -28,13 +39,39 @@ class TokenService(
             val scopes = listOf(scope)
 
             when (typeOf(token, pid, appId)) {
-                TokenType.AZURE_AD_ON_BEHALF_OF -> azureAdService.exchangeIngressTokenToEgressToken(token.tokenValue, scopes)
+                TokenType.AZURE_AD_ON_BEHALF_OF -> azureAdService.exchangeIngressTokenToEgressToken(
+                    token.tokenValue,
+                    scopes
+                )
+
                 TokenType.AZURE_AD_CLIENT_CREDENTIALS -> azureAdService.retrieveClientCredentialsToken(scopes)
                 TokenType.TOKEN_X -> audience?.let { audience ->
                     tokenXService.exchangeIngressTokenToEgressToken(token.tokenValue, audience)
                 } ?: throw EgressAudienceMissingException()
             }
         }
+
+    fun getInnloggingstype(): Innloggingstype {
+        if (isUserLoggedInAsSaksbehandler()) {
+            return Innloggingstype.NAV
+        }
+        if (isUserLoggedInAsPerson()) {
+            SecurityContextHolder.getContext().authentication.let {
+                val token = (it as JwtAuthenticationToken).token
+                val acr = token.getClaim<String>("acr")
+                if ("Level4" == acr || "idporten-loa-high" == acr) {
+                    return Innloggingstype.LEVEL4
+                }
+                if ("Level3" == acr || "idporten-loa-substantial" == acr) {
+                    return Innloggingstype.LEVEL3
+                }
+            }
+        }
+        return Innloggingstype.SYSTEM
+    }
+
+    fun isUserLoggedInAsPerson(): Boolean =
+        determineTokenType() == TokenType.TOKEN_X
 
     fun isUserLoggedInAsSaksbehandler(): Boolean =
         determineTokenType() == TokenType.AZURE_AD_ON_BEHALF_OF
@@ -56,15 +93,6 @@ class TokenService(
         }
     }
 
-    fun determineRequestingPid(): String {
-        SecurityContextHolder.getContext().authentication.let {
-            if (determineTokenType() == TokenType.TOKEN_X) {
-                return it.name
-            }
-            return ""
-        }
-    }
-
     fun determineLoggedInUser(): String {
         SecurityContextHolder.getContext().authentication.let {
             val token = (it as JwtAuthenticationToken).token
@@ -77,11 +105,28 @@ class TokenService(
         return "SYSTEM"
     }
 
+    fun isLoginLevelHigh(): Boolean = getInnloggingstype() == Innloggingstype.LEVEL4
+
+    fun determineRequestingPid(): String {
+        SecurityContextHolder.getContext().authentication.let {
+            if (determineTokenType() == TokenType.TOKEN_X) {
+                return it.name
+            }
+            return ""
+        }
+    }
+
     fun isUserInStrengtFortroligGroup(): Boolean = getGroups().contains(strengtFortroligAdresseGroupId)
 
     fun isUserInFortroligGroup(): Boolean = getGroups().contains(fortroligAdresseGroupId)
 
     fun isUserInSkjermetGroup(): Boolean = getGroups().contains(skjermetGroupId)
+
+//    fun isUserInSaksbehandlerGroup(): Boolean = getGroups().contains(saksbehandlerAdresseGroupId)
+//    fun isUserInVeilederGroup(): Boolean = getGroups().contains(veilederGroupId)
+//    fun isUserInBrukerhjelpaGroup(): Boolean = getGroups().contains(brukerhjelpaGroupId)
+//    fun isUserInOkonomiGroup(): Boolean = getGroups().contains(okonomiGroupId)
+//    fun isUserInKlagebehandlerGroup(): Boolean = getGroups().contains(klagebehandlerGroupId)
 
     private fun getGroups(): List<String> {
         SecurityContextHolder.getContext().authentication.let {
