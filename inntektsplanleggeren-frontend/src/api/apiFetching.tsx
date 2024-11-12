@@ -1,6 +1,6 @@
 import {
     PersonInntekter, GetInntektsgrenseResponse,
-    InntekterResponse, SubmitInntekterRequest, SimulationResponse, SendApplicationResponse, StatusResponse,
+    InntekterResponse, SubmitInntekterRequest, SimulationResponse, SendApplicationResponse, StatusResponse, FormState,
 } from "@/api/model/ApiRequests";
 import {
     mockInntekterResponse,
@@ -11,16 +11,71 @@ import {
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = false;
+const MOCKS_ENABLED = true;
+
+const headers = {
+    'Content-Type': 'application/json'
+}
+
+export async function getState(): Promise<FormState> {
+    const res = await fetch(basePath + `/persistance/inntekter`, {
+        method: "GET",
+        credentials: "include",
+        headers: headers,
+    });
+
+    // if (MOCKS_ENABLED) {
+    //     return {
+    //         brukerInntekter: {
+    //             arbeidsinntekt: 0,
+    //             pensjon: 0,
+    //             trygdeytelser: 0,
+    //             andreInntekter: 0,
+    //             andreYtelser: 0
+    //         },
+    //         epsInntekter: {
+    //             arbeidsinntekt: 0,
+    //             pensjon: 0,
+    //             trygdeytelser: 0,
+    //             andreInntekter: 0,
+    //             andreYtelser: 0
+    //         }
+    //     }
+    // }
+
+    if (!res.ok) {
+        throw new Error("Fikk ikke 2xx respons fra server");
+    }
+
+    return res.json();
+}
+
+export async function saveState(state: FormState): Promise<void> {
+    const res = await fetch(basePath + `/persistance/inntekter`, {
+        method: "POST",
+        credentials: "include",
+        headers: headers,
+        body: JSON.stringify(state)
+    });
+
+    if (!res.ok) {
+        throw new Error("Fikk ikke 2xx respons fra server");
+    }
+}
+
+export async function deleteState(): Promise<void> {
+    const res = await fetch(basePath + '/persistance/inntekter', {
+        method: "DELETE",
+        credentials: "include",
+        headers: headers,
+    });
+
+    if (!res.ok) {
+        throw new Error("Fikk ikke 2xx respons fra server");
+    }
+}
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-    const headers = {
-        'Content-Type': 'application/json',
-        ...(pid && { 'pid': pid })
-    };
-
     const res = await fetch(basePath + `/api/initiate`, {
         method: "GET",
         credentials: "include",
@@ -38,14 +93,9 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
     return res.json();
 }
 
-export async function getInntekter(year: string): Promise<InntekterResponse> {
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-    const headers = {
-        'Content-Type': 'application/json',
-        ...(pid && {'pid': pid})
-    };
 
+
+export async function getInntekter(year: string): Promise<InntekterResponse> {
     const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
@@ -68,20 +118,6 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
         eps: epsInntekter
-    }
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-    let headers;
-
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
     }
 
     const res = await fetch(basePath + `/api/simuler?simuleringsaar=${year}`, {
@@ -107,21 +143,6 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
         bruker: brukerInntekter,
         eps: epsInntekter
     }
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-    let headers;
-
-
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    }
 
     const res = await fetch(basePath + `/api/send?simuleringsaar=${year}`, {
         method: "POST",
@@ -142,21 +163,6 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
 }
 
 export async function getStatus(valgtaar: string, innsendingstidspunkt: Date): Promise<StatusResponse> {
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-    let headers;
-
-    if (pid) {
-        headers =  {
-            'Content-Type': 'application/json',
-            'pid': pid
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json'
-        }
-    }
-
     const res = await fetch(basePath + `/api/send?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`, {
         method: "POST",
         credentials: "include",

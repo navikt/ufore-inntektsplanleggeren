@@ -5,7 +5,7 @@ import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {simulate} from "@/api/apiFetching";
+import {getState, simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum} from "@/common/Utils";
@@ -24,6 +24,20 @@ export const Innfylling = () => {
     useEffect(() => {
         setFormStep(1);
     }, [setFormStep]);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const state = await getState();
+                console.log(state);
+            } catch (error) {
+                console.error("Error fetching state:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();

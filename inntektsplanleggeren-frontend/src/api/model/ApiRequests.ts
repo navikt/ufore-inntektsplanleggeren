@@ -1,6 +1,7 @@
 import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {StatusCodes} from "@/api/model/StatusCodes";
 
+
 export type Message = {
     messageCode: MessageCodes;
     details: string;
@@ -53,11 +54,6 @@ export interface WithoutBarnetilleggSaerkullsbarn extends BaseInitiateData {
 }
 
 export type InitiateData = (WithBarneTilleggFellesBarn | WithoutBarneTilleggFellesBarn) & (WithBarnetilleggSaerkullsbarn | WithoutBarnetilleggSaerkullsbarn);
-
-export interface InntektInnfylling {
-    brukerinntekt: PersonInntekter
-    annenForelderInntekt: PersonInntekter
-}
 
 export type InntektDetaljer = {
     maned: number;
@@ -130,6 +126,12 @@ export type StatusResponse = {
     "mottarBarnetilleggForFellesBarn": boolean,
     "forventetAarligInntekt": number | null,
     "forventetAarligInntektEps": number | null
+}
+
+export type FormState = {
+    year : string | null;
+    brukerinntekter: PersonInntekter | null;
+    epsInntekter: PersonInntekter | null;
 }
 
 

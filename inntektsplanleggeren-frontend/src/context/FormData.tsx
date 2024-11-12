@@ -1,6 +1,7 @@
-import React, { createContext, SetStateAction, useState } from "react";
+import React, {createContext, SetStateAction, useEffect, useState} from "react";
 import { PersonInntekter } from "@/api/model/ApiRequests";
 import {useLocation} from "react-router-dom";
+import {deleteState, saveState} from "@/api/apiFetching";
 
 interface FormState {
     formStep: number;
@@ -49,7 +50,6 @@ export const FormStateComponent = ({ children }: Props) => {
     const { state } = useLocation();
     const storedSelectedYear = state?.selectedYear ?? null;
     const [selectedYear, setSelectedYear] = useState<string | null>(typeof storedSelectedYear === 'string' && YEAR_REGEX.test(storedSelectedYear) ? storedSelectedYear : null);
-
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);

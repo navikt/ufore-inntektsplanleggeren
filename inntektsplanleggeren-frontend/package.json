@@ -18,6 +18,7 @@
     "jsonwebtoken": "^9.0.0",
     "node-jose": "^2.2.0",
     "openid-client": "5.6.5",
+    "redis": "^4.7.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

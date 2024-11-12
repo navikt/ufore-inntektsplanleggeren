@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 import {getToken, validateToken, parseIdportenToken} from "@navikt/oasis";
+import {initRedis, isRedisReady, redisClient} from "./redis.js";
 
 export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
@@ -23,7 +24,53 @@ const __dirname = path.dirname(__filename);
 const buildPath = path.resolve(__dirname, "../dist")
 app.use(basePath, express.static(buildPath));
 
-app.post(basePath + '/frontend/year', async (req, res) => {
+/**
+ * @param {object|null} data
+ * @returns {boolean}
+ */
+const isInntekterPayload = (data) => {
+    if (data === null || typeof data !== 'object') {
+        return false;
+    }
+
+    if (!Object.hasOwn(data, 'year') || !Object.hasOwn(data, 'brukerInntekter') || !Object.hasOwn(data, 'epsInntekter')) {
+        return false;
+    }
+
+    return isInntektObject(data.brukerInntekter) && isInntektObject(data.epsInntekter);
+};
+
+/**
+ * @param {object|null} data
+ * @returns {boolean}
+ */
+const isInntektObject = (data) => data !== null &&
+    hasInntektValue(data, 'arbeidsinntekt') &&
+    hasInntektValue(data, 'andrePensjonsgivendeYtelser') &&
+    hasInntektValue(data, 'naeringsinntekt') &&
+    hasInntektValue(data, 'inntektUtland') &&
+    hasInntektValue(data, 'pensjonUtland');
+
+/**
+ * @param {Object} data
+ * @param {string} key
+ * @returns {boolean}
+ */
+const hasInntektValue = (data, key) => Object.hasOwn(data, key) && isInntektValue(data.inntekter[key]);
+
+/**
+ * @param {Object} data
+ * @returns {boolean}
+ */
+const isInntektValue = (data) => data === null || (typeof data === 'number' && data >= 0);
+
+/**
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ * @returns {Promise<void>}
+ */
+const authMiddleware = async (req, res, next) => {
     const token = getToken(req);
 
     if (token === undefined) {
@@ -31,11 +78,21 @@ app.post(basePath + '/frontend/year', async (req, res) => {
         return;
     }
 
-    if (!validateToken(token)) {
+    if (!await validateToken(token)) {
         res.status(403).send('Token er ugyldig');
         return;
     }
 
+    next();
+};
+
+/**
+ * @param {string} pid
+ */
+const getRedisKey = (pid) => pid;
+
+app.post(basePath + '/persistance/inntekter', authMiddleware, async (req, res) => {
+    const token = getToken(req);
     const parsed = await parseIdportenToken(token);
 
     if (!parsed.ok) {
@@ -43,7 +100,63 @@ app.post(basePath + '/frontend/year', async (req, res) => {
         return;
     }
 
-    res.status(200).send(`Hello, ${parsed.pid}`);
+    const data = req.body;
+
+    if (!isInntekterPayload(data)) {
+        res.status(400).send('Ugyldig data');
+        return;
+    }
+
+    try {
+        await redisClient.set(getRedisKey(parsed.pid), JSON.stringify(data));
+
+        res.status(200).send();
+    } catch (e) {
+        res.status(500).send('Noe gikk galt');
+    }
+});
+
+app.delete(basePath + '/persistance/inntekter', authMiddleware, async (req, res) => {
+    const token = getToken(req);
+    const parsed = await parseIdportenToken(token);
+
+    if (!parsed.ok) {
+        res.status(403).send('Token er ugyldig');
+        return;
+    }
+
+    try {
+        await redisClient.del(getRedisKey(parsed.pid));
+
+        res.status(200).send();
+    } catch (e) {
+        res.status(500).send('Noe gikk galt');
+    }
+});
+
+app.get(basePath + '/persistance/inntekter', authMiddleware, async (req, res) => {
+    const token = getToken(req);
+    const parsed = await parseIdportenToken(token);
+
+    if (!parsed.ok) {
+        res.status(403).send('Token er ugyldig');
+        return;
+    }
+
+    try {
+        const data = await redisClient.get(getRedisKey(parsed.pid));
+
+        console.log("data", data)
+
+        if (data === null) {
+            res.status(404).send('Data ikke funnet');
+            return;
+        }
+
+        res.status(200).contentType("application/json").send(data);
+    } catch (e) {
+        res.status(500).send('Noe gikk galt');
+    }
 });
 
 app.get(
@@ -188,6 +301,12 @@ app.get('/internal/health/liveness', (req, res) => {
 });
 
 app.get('/internal/health/readiness', (req, res) => {
+    if (!isRedisReady()) {
+        res.status(418).send({
+            "status": "NOT_READY"
+        });
+    }
+
     res.send({
         "status": "UP"
     });
@@ -197,4 +316,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 
-app.listen(PORT, () => console.log("Server started"));
+app.listen(PORT, () => {
+    console.log("Server started");
+    initRedis();
+});
