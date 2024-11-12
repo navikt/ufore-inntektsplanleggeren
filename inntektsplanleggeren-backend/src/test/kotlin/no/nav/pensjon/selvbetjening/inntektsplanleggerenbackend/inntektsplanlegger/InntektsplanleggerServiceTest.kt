@@ -15,6 +15,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pens
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
@@ -98,7 +99,7 @@ class InntektsplanleggerServiceTest {
                 expectedForventetInntektEps
             )
         )
-        `when`(validator.validateUserInitialData(pensjonsdata)).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
 
@@ -121,6 +122,24 @@ class InntektsplanleggerServiceTest {
     }
 
     @Test
+    fun `should not set InntektsplanleggerInitialData when error in validation`(){
+        val year = LocalDate.now().year
+        val expectedMessages = listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL))
+
+        val pensjonsdata = pensjonsdata()
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+
+        assertEquals(expectedMessages, initialData.messages)
+        assertNull(initialData.data)
+
+    }
+
+    @Test
     fun `should set aktuelleAar to current year only when before october and hasLopendeUforeVedtakThisYear`() {
         val year = LocalDate.now().year
 
@@ -132,7 +151,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(pensjonsdata)).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.SEPTEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
@@ -152,7 +171,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(pensjonsdata)).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
@@ -173,7 +192,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(pensjonsdata)).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
@@ -190,12 +209,45 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+        assertNull(initialData.data)
+        assertEquals(expectedMessages, initialData.messages)
+    }
+
+    @Test
+    fun `should set data to null when pensjonsdata is null`() {
+        val year = LocalDate.now().year
+
+        val pensjonsdata = null
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+        assertNull(initialData.data)
+        assertTrue(initialData.messages.isEmpty())
+    }
+
+    @Test
+    fun `should not set data to null when validation returns info or warning`() {
+        val year = LocalDate.now().year
+        val expectedMessages = listOf(InntektsplanleggerMessage(
+            InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO),
+            InntektsplanleggerMessage(InntektsplanleggerMessageCode.EPS_INNTEKT_CHANGED))
+
+        val pensjonsdata = pensjonsdata()
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
-        assertNull(initialData.data)
+        assertNotNull(initialData.data)
         assertEquals(expectedMessages, initialData.messages)
     }
 
