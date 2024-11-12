@@ -170,7 +170,7 @@ class InntektsplanleggerService(
         simuleringsaar: Int,
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
-        if (pensjonsdata != null && messages.isEmpty()) {
+        if (pensjonsdata != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val forventedeInntekter = inntektService.getForventedeInntekter(pid, pensjonsdata, simuleringsaar)
             return InntektsplanleggerenInitialData(
                 forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
