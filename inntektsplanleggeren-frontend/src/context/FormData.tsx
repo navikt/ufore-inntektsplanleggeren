@@ -1,7 +1,6 @@
-import React, {createContext, SetStateAction, useEffect, useState} from "react";
+import React, {createContext, SetStateAction, useState} from "react";
 import { PersonInntekter } from "@/api/model/ApiRequests";
 import {useLocation} from "react-router-dom";
-import {deleteState, saveState} from "@/api/apiFetching";
 
 interface FormState {
     formStep: number;
