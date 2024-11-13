@@ -36,6 +36,7 @@ class InntektsplanleggerService(
         simuleringsaar: Int,
         oppgitteInntekter: ForventedeInntekter
     ): InntektsplanleggerenSendResponse {
+        val innsendingsTidspunkt = LocalDateTime.now()
         val simulering = simulerInntektsendring(pid, simuleringsaar, oppgitteInntekter)
         if (simulering.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val initiertAv = tokenService.determineLoggedInUser()
@@ -58,9 +59,9 @@ class InntektsplanleggerService(
 
                     else -> InnsendingStatus.IKKE_SENDT
                 }
-            return InntektsplanleggerenSendResponse(simulering.messages, status)
+            return InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
         }
-        return InntektsplanleggerenSendResponse(simulering.messages, InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET)
+        return InntektsplanleggerenSendResponse(simulering.messages, InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET, innsendingsTidspunkt)
     }
 
     fun simulerInntektsendring(
