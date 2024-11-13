@@ -116,11 +116,11 @@ export type PayDetail = {
 };
 
 export type StatusResponse = {
-    "registeringsTidspunktEndring": string | null,
+    "registeringsTidspunktEndring": Date,
     "status": StatusCodes,
     "sakId": number | null,
     "maandedligeUtbetalinger": {
-    "fom": string,
+    "fom": Date,
         "beloep": number
 } | null,
     "mottarBarnetilleggForFellesBarn": boolean,

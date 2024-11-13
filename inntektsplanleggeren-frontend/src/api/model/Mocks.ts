@@ -282,11 +282,11 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
 }
 
 export const mockStatusResponse : StatusResponse = {
-    "registeringsTidspunktEndring": "2024-11-06T09:06:38.971Z",
-    "status": StatusCodes.BEHANDLET_MEDFOERER_ENDRING,
+    "registeringsTidspunktEndring": new Date("2024-06-02T09:06:38.971Z"),
+    "status": StatusCodes.TIL_BEHANDLING,
     "sakId": 2112,
     "maandedligeUtbetalinger": {
-        "fom": "2024-11-06",
+        "fom": new Date("2024-06-01"),
         "beloep": 8
     },
     "mottarBarnetilleggForFellesBarn": true,

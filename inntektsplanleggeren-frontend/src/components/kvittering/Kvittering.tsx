@@ -1,4 +1,4 @@
-import {Heading, VStack, Alert, BodyLong, BodyShort, HStack, Loader, List} from "@navikt/ds-react";
+import {Heading, VStack, Alert, BodyLong, BodyShort, HStack, Loader, List, Button} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
 import { DataContext } from "@/DataContextProvider";
@@ -12,7 +12,6 @@ export const Kvittering = () => {
     // TODO: Get application by ID and use creation date to determine if the user has waited long.
 
     const [isWaiting, setIsWaiting] = useState(true);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [hasWaitedLong, setHasWaitedLong] = useState(false);
     const { setFormStep } = useContext(FormStateContext);
     const { sendResponse, statusResponse, setStatusResponse } = useContext(DataContext);
@@ -23,28 +22,29 @@ export const Kvittering = () => {
 
 
     useEffect(() => {
-
-
-
-        console.log("sendResponse", sendResponse);
-        const longWaitTimer = setTimeout(() => {
-            setHasWaitedLong(true);
-        }, 10_000);
-
-        // TODO: Remove fake API timer.
-        const fakeProcessTimer = setTimeout(() => {
-            setIsWaiting(false);
-            clearTimeout(longWaitTimer);
-        }, 5_000);
+        let attempts = 0;
+        setIsWaiting(true);
+        const intervalId = setInterval(() => {
+            if (attempts >= 5) {
+                console.log("attempts exceeded", attempts);
+                setIsWaiting(false);
+                clearInterval(intervalId);
+                return;
+            }
+            getStatus("", new Date()).then(result => { //todo id ??
+                setStatusResponse(result);
+                if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
+                    setIsWaiting(false);
+                    clearInterval(intervalId);
+                }
+            });
+            attempts++;
+        }, 1_000);
 
         return () => {
-            clearTimeout(fakeProcessTimer);
-            clearTimeout(longWaitTimer);
-            getStatus("", new Date()).then(result => {
-                setStatusResponse(result);
-            });
+            clearInterval(intervalId);
         };
-    }, [sendResponse, setStatusResponse]);
+    }, []);
 
     if (isWaiting) {
         return (
@@ -80,25 +80,15 @@ export const Kvittering = () => {
 
     return (
         <VStack className="form-container">
-            {/*{hasWaitedLong ? <Alert variant="info">*/}
-            {/*    <Heading spacing size="small" level="3">Nav har mottatt opplysninger om inntekten din </Heading>*/}
-            {/*    <BodyShort>*/}
-            {/*        Din registrerte forventede inntekt i 2024: 100 000 kr*/}
-            {/*    </BodyShort>*/}
-            {/*    <BodyShort>*/}
-            {/*        Endringen er sendt til behandling. I de fleste tilfeller vil saken være ferdig behandlet i løpet av 14 dager.*/}
-            {/*    </BodyShort>*/}
-            {/*</Alert> : null}*/}
-
             <Heading level="2" size="large">Kvittering</Heading>
 
             {statusResponse ?
-                <KvitteringStatusBox statusResponse={statusResponse} /> : null}
+                <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={10} epsRegisteredInntekt={10} /> : null}
 
             <Heading size={"large"}>Etteroppgjør</Heading>
             <BodyLong>
                 Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant annet Skatteetaten.
-                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles etteroppgjør. <Link to={"/"}>Les mer om etteroppgjøret (åpnes i ny fane).</Link>
+                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles etteroppgjør. <Link to={"/"}>Les mer om etteroppgjøret (åpnes i ny fane).</Link> {/* TODO open in new tab! */}
             </BodyLong>
 
             <Heading size={"large"}>Hvis inntekten din endrer seg</Heading>
@@ -122,6 +112,10 @@ export const Kvittering = () => {
                     <List.Item>bostøtte fra Husbanken</List.Item>
                 </List>
             </BodyLong>
+
+            <HStack gap="4">
+            <Button as={Link} to={"/"} variant="primary">Din uføretrygd</Button>{/*    todo link */}
+            </HStack>
         </VStack>
     );
 };
