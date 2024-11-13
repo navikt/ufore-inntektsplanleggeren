@@ -6,4 +6,6 @@ Set the following env variables:
 * AZURE_APP_CLIENT_SECRET
 * TOKEN_X_PRIVATE_JWK
 
+Or use EnvFile - se fetch-secrets.sh
+
 URL: http://localhost:8080/api/..
