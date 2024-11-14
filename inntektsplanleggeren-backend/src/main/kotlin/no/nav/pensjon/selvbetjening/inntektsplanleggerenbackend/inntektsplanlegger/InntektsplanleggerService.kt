@@ -131,7 +131,7 @@ class InntektsplanleggerService(
                 it?.hasLopendeUforeVedtakNextYear
             )
         }
-        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar, simuleringsaar)
+        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
         return InntektsplanleggerenInitialResponse(
             messages,
             mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, aktuelleAar, messages)

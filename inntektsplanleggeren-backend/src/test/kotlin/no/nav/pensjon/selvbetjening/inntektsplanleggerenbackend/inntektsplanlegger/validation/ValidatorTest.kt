@@ -24,7 +24,7 @@ class ValidatorTest {
     fun `should return USER_HAS_NO_UFORE when pensjonsdata is null`() {
         assertEquals(
             InntektsplanleggerMessageCode.USER_HAS_NO_UFORE,
-            validator.validateUserInitialData(null, listOf(thisYear), thisYear)[0].messageCode
+            validator.validateUserInitialData(null, listOf(thisYear))[0].messageCode
         )
     }
 
@@ -32,8 +32,7 @@ class ValidatorTest {
     fun `should return USER_HAS_NO_LOPENDE_VEDTAK_YET no lopende uforevedtak this year and next year`() {
         val result = validator.validateUserInitialData(
             pensjonsdata(false, false),
-            listOf(thisYear),
-            thisYear
+            listOf(thisYear)
         )
         assertEquals(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET, result[0].messageCode)
     }
@@ -83,7 +82,7 @@ class ValidatorTest {
     fun `should return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO only when this year and next year in aktuelleAar`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
 
-        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear, thisYear + 1), thisYear)
+        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear, thisYear + 1))
 
         assertEquals(1, messages.size)
         assertEquals(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO, messages[0].messageCode)
@@ -94,7 +93,7 @@ class ValidatorTest {
     fun `should return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO and CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR when only next year in aktuelleAar`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
 
-        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear + 1), thisYear + 1)
+        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear + 1))
 
         assertEquals(2, messages.size)
         assertEquals(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO, messages[0].messageCode)
@@ -107,7 +106,7 @@ class ValidatorTest {
     fun `should not return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO or CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR when aktuelleAar is null`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
 
-        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear), thisYear)
+        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear))
 
         assertTrue(messages.isEmpty())
     }
@@ -115,7 +114,15 @@ class ValidatorTest {
     @Test
     fun `should return ILLEGAL_SIMULERINGSAAR when simuleringsaar not in aktuelleAar`(){
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withYear(2021).withDayOfYear(1))
-        val messages = validator.validateUserInitialData(pensjonsdata(true, false), listOf(2020, 2021), 2022)
+
+        val messages = validator.validateUserAndInputBeforeSimulering(
+            pensjonsdata(true, false),
+            ForventedeInntekter(PersonInntekter(null, null, null, null, null), null),
+            null,
+            "",
+            2022,
+            listOf(2020, 2021))
+
         assertEquals(1, messages.size)
         assertEquals(InntektsplanleggerMessageCode.ILLEGAL_SIMULERINGSAAR, messages[0].messageCode)
         assertEquals(InntektsplanleggerMessageType.ERROR, messages[0].type)
@@ -124,7 +131,13 @@ class ValidatorTest {
     @Test
     fun `should not return ILLEGAL_SIMULERINGSAAR when simuleringsaar in aktuelleAar`(){
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withYear(2021).withDayOfYear(1))
-        val messages = validator.validateUserInitialData(pensjonsdata(true, false), listOf(2020, 2021), 2020)
+        val messages = validator.validateUserAndInputBeforeSimulering(
+            pensjonsdata(true, false),
+            ForventedeInntekter(PersonInntekter(null, null, null, null, null), null),
+            null,
+            "",
+            2020,
+            listOf(2020, 2021))
         assertTrue(messages.isEmpty())
     }
 

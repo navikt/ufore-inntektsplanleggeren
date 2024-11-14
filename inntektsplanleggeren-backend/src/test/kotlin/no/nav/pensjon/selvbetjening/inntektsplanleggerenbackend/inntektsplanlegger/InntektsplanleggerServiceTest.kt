@@ -99,7 +99,7 @@ class InntektsplanleggerServiceTest {
                 expectedForventetInntektEps
             )
         )
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
 
@@ -130,7 +130,7 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(expectedMessages)
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
 
@@ -151,7 +151,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.SEPTEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
@@ -171,7 +171,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
@@ -192,7 +192,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
@@ -209,7 +209,7 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(expectedMessages)
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertNull(initialData.data)
@@ -224,7 +224,7 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(emptyList())
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertNull(initialData.data)
@@ -243,7 +243,7 @@ class InntektsplanleggerServiceTest {
             pensjonsdata
         )
         `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(any(), any(), anyInt())).thenReturn(expectedMessages)
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)

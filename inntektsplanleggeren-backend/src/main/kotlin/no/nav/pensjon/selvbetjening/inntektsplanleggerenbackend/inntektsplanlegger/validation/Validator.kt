@@ -14,8 +14,7 @@ class Validator(
 ) {
     fun validateUserInitialData(
         pensjonsdata: Pensjonsdata?,
-        aktuelleAar: List<Int>,
-        simuleringsaar: Int
+        aktuelleAar: List<Int>
     ): List<InntektsplanleggerMessage> {
         if (pensjonsdata == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
@@ -25,7 +24,7 @@ class Validator(
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET))
         }
 
-        return validateAktuelleAar(aktuelleAar, simuleringsaar)
+        return validateAktuelleAar(aktuelleAar)
     }
 
     fun validateUserAndInputBeforeSimulering(
@@ -41,7 +40,12 @@ class Validator(
             return listOf(monthValidation)
         }
         val validationMessages = mutableListOf<InntektsplanleggerMessage>()
-        validationMessages.addAll(validateUserInitialData(pensjonsdata, aktuelleAar, simuleringsaar))
+        validationMessages.addAll(validateUserInitialData(pensjonsdata, aktuelleAar))
+
+        if (!aktuelleAar.contains(simuleringsaar)) {
+            validationMessages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.ILLEGAL_SIMULERINGSAAR))
+        }
+
         if (pensjonsdata != null) {
             validationMessages.addAll(
                 inntektValidator.validateInntekter(
@@ -54,11 +58,10 @@ class Validator(
             )
         }
 
-
         return validationMessages
     }
 
-    private fun validateAktuelleAar(aktuelleAar: List<Int>, simuleringsaar: Int): List<InntektsplanleggerMessage>{
+    private fun validateAktuelleAar(aktuelleAar: List<Int>): List<InntektsplanleggerMessage>{
         val messages = mutableListOf<InntektsplanleggerMessage>()
         val thisYear = nowProvider.now().year
 
@@ -67,10 +70,6 @@ class Validator(
             if (!aktuelleAar.contains(thisYear)) {
                 messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR))
             }
-        }
-
-        if (!aktuelleAar.contains(simuleringsaar)) {
-            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.ILLEGAL_SIMULERINGSAAR))
         }
         return messages
     }
