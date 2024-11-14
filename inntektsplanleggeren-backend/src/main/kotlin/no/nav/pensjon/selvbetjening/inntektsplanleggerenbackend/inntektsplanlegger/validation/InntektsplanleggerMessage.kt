@@ -87,6 +87,10 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
         InntektsplanleggerMessageType.INFO,
         "I desember kan bruker se hvilke inntekter som er registrert for dette året. Bruker kan også legge inn nye inntekter for neste år, men kan ikke legge til endring i inntekt for inneværende år, fordi endring i utbetalingen ikke vil skje før til neste år." +
                 "Heading"
+    ),
+    ILLEGAL_SIMULERINGSAAR(
+        InntektsplanleggerMessageType.ERROR,
+        "Valgt simuleringsår er ikke et gyldig valg på nåværende tidspunkt."
     )
 }
 

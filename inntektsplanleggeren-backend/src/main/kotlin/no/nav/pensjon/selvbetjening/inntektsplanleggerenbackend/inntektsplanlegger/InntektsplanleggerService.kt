@@ -77,7 +77,8 @@ class InntektsplanleggerService(
             oppgitteInntekter,
             gjeldendeForventedeInntekter,
             pid,
-            simuleringsAar
+            simuleringsAar,
+            getAktuelleAar(pensjonsdata?.hasLopendeUforeVedtakThisYear, pensjonsdata?.hasLopendeUforeVedtakNextYear)
         )
 
         if (validationResult.none { it.type == InntektsplanleggerMessageType.ERROR }) {
@@ -124,16 +125,16 @@ class InntektsplanleggerService(
         simuleringsaar: Int
     ): InntektsplanleggerenInitialResponse {
         val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
-        val aktuelleAar = pensjonsdata?.let {
+        val aktuelleAar = pensjonsdata.let {
             getAktuelleAar(
-                it.hasLopendeUforeVedtakThisYear,
-                it.hasLopendeUforeVedtakNextYear
+                it?.hasLopendeUforeVedtakThisYear,
+                it?.hasLopendeUforeVedtakNextYear
             )
         }
-        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
+        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar, simuleringsaar)
         return InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, messages)
+            mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, aktuelleAar, messages)
         )
     }
 
@@ -169,6 +170,7 @@ class InntektsplanleggerService(
         pid: String,
         pensjonsdata: Pensjonsdata?,
         simuleringsaar: Int,
+        aktuelleAar: List<Int>,
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
         if (pensjonsdata != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
@@ -187,22 +189,22 @@ class InntektsplanleggerService(
                 grenseStoppAvBarnetilleggSaerkullsbarn = pensjonsdata.grenseStoppAvBarnetilleggSaerkullsbarn,
                 fribelopBarnetilleggSaerkullsbarn = pensjonsdata.fribelopBarnetilleggSaerkullsbarn,
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
-                aktuelleAar = getAktuelleAar(
-                    pensjonsdata.hasLopendeUforeVedtakThisYear,
-                    pensjonsdata.hasLopendeUforeVedtakNextYear
-                )
+                aktuelleAar = aktuelleAar
             )
         }
         return null
     }
 
     private fun getAktuelleAar(
-        hasLopendeUforeVedtakThisYear: Boolean,
-        hasLopendeUforeVedtakNextYear: Boolean
+        hasLopendeUforeVedtakThisYear: Boolean?,
+        hasLopendeUforeVedtakNextYear: Boolean?
     ): List<Int> {
         val today = nowProvider.now()
         val isMonthBeforeOctober = today.month.value < Month.OCTOBER.value
 
+        if (hasLopendeUforeVedtakThisYear == null || hasLopendeUforeVedtakNextYear == null) {
+            return emptyList()
+        }
         if (isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
             return listOf(today.year)
         }

@@ -14,7 +14,8 @@ class Validator(
 ) {
     fun validateUserInitialData(
         pensjonsdata: Pensjonsdata?,
-        aktuelleAar: List<Int>? = null
+        aktuelleAar: List<Int>,
+        simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
         if (pensjonsdata == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
@@ -24,18 +25,7 @@ class Validator(
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET))
         }
 
-        val thisYear = nowProvider.now().year
-
-        if (aktuelleAar != null && aktuelleAar.contains(thisYear + 1)) {
-            if (!aktuelleAar.contains(thisYear)) {
-                return listOf(
-                    InntektsplanleggerMessage(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO),
-                    InntektsplanleggerMessage(InntektsplanleggerMessageCode.CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR)
-                )
-            }
-            return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO))
-        }
-        return emptyList()
+        return validateAktuelleAar(aktuelleAar, simuleringsaar)
     }
 
     fun validateUserAndInputBeforeSimulering(
@@ -43,14 +33,15 @@ class Validator(
         oppgitteForventedeInntekter: ForventedeInntekter,
         registrerteForventedeInntekter: ForventedeInntekterSummary?,
         pid: String,
-        simuleringsaar: Int
+        simuleringsaar: Int,
+        aktuelleAar: List<Int>
     ): List<InntektsplanleggerMessage> {
         val monthValidation = validateMonth(simuleringsaar)
         if (monthValidation != null) {
             return listOf(monthValidation)
         }
         val validationMessages = mutableListOf<InntektsplanleggerMessage>()
-        validationMessages.addAll(validateUserInitialData(pensjonsdata))
+        validationMessages.addAll(validateUserInitialData(pensjonsdata, aktuelleAar, simuleringsaar))
         if (pensjonsdata != null) {
             validationMessages.addAll(
                 inntektValidator.validateInntekter(
@@ -65,6 +56,23 @@ class Validator(
 
 
         return validationMessages
+    }
+
+    private fun validateAktuelleAar(aktuelleAar: List<Int>, simuleringsaar: Int): List<InntektsplanleggerMessage>{
+        val messages = mutableListOf<InntektsplanleggerMessage>()
+        val thisYear = nowProvider.now().year
+
+        if (aktuelleAar.contains(thisYear + 1)) {
+            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO))
+            if (!aktuelleAar.contains(thisYear)) {
+                messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR))
+            }
+        }
+
+        if (!aktuelleAar.contains(simuleringsaar)) {
+            messages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.ILLEGAL_SIMULERINGSAAR))
+        }
+        return messages
     }
 
     private fun validateMonth(simuleringsaar: Int): InntektsplanleggerMessage? {
