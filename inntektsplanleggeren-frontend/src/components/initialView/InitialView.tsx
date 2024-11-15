@@ -17,13 +17,13 @@ import {YearView} from "@/components/initialView/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
-import {deleteState, getInntekter} from "@/api/apiFetching";
+import {deleteState, getInntekter, getState, saveState} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
 
 export function InitialView() {
     const {initialViewData, messages, setInntekterResponse} = useContext(DataContext)
-    const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
+    const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt, brukerinntekt, annenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -33,6 +33,8 @@ export function InitialView() {
     }, []);
     
     useEffect(() => {
+        const state = getState()
+        console.log("state", state)
         if (selectedYear !== null) {
             setErrorMessage(null)
         }

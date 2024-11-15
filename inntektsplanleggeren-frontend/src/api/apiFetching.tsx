@@ -18,7 +18,7 @@ const headers = {
 }
 
 export async function getState(): Promise<FormState> {
-    const res = await fetch(basePath + `/persistence/inntekter`, {
+    const res = await fetch(basePath + `/persistence`, {
         method: "GET",
         credentials: "include",
         headers: headers,
@@ -51,12 +51,14 @@ export async function getState(): Promise<FormState> {
 }
 
 export async function saveState(state: FormState): Promise<void> {
-    const res = await fetch(basePath + `/persistence/inntekter`, {
+    const res = await fetch(basePath + `/persistence`, {
         method: "POST",
         credentials: "include",
         headers: headers,
         body: JSON.stringify(state)
     });
+
+    console.log("save state", state)
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
@@ -64,7 +66,7 @@ export async function saveState(state: FormState): Promise<void> {
 }
 
 export async function deleteState(): Promise<void> {
-    const res = await fetch(basePath + '/persistence/inntekter', {
+    const res = await fetch(basePath + '/persistence', {
         method: "DELETE",
         credentials: "include",
         headers: headers,

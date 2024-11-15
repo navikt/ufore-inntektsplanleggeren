@@ -5,7 +5,7 @@ import "./innfylling.css"
 import {useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
-import {getState, simulate} from "@/api/apiFetching";
+import {getState, saveState, simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum} from "@/common/Utils";
@@ -27,6 +27,8 @@ export const Innfylling = () => {
 
 
     useEffect(() => {
+        const state = getState();
+        console.log("got state", state);
         const fetchData = async () => {
             try {
                 const state = await getState();
@@ -43,6 +45,7 @@ export const Innfylling = () => {
         e.preventDefault();
 
         try {
+            saveState({ brukerinntekter: brukerinntekt, epsInntekter: annenForelderInntekt, year: selectedYear });
             setIsLoading(true);
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             setSimulationResponse(result);
