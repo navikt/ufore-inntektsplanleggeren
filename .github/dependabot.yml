@@ -21,7 +21,11 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
-
+  - package-ecosystem: maven
+    directory: "/uforetrygd-backend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
 #### NPM ####
   - package-ecosystem: npm
     directory: "/familieforhold-frontend/"
@@ -75,6 +79,11 @@ updates:
     open-pull-requests-limit: 10
   - package-ecosystem: npm
     directory: "/dinpensjon-frontend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: "/uforetrygd-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
