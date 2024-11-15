@@ -15,7 +15,7 @@ export function YearView({ availableYears, error }: Props) {
 
     useEffect(() => {
         if (firstYear !== undefined && secondYear === undefined) {
-            setSelectedYear(firstYear.toString(10));
+            setSelectedYear(firstYear);
         }
     }, [firstYear, secondYear, setSelectedYear]);
 
@@ -41,7 +41,7 @@ export function YearView({ availableYears, error }: Props) {
 
                 { firstYear !== undefined && secondYear !== undefined ?
                     <RadioGroup error={error} legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
-                        {availableYears.map(year => <Radio key={year} value={year.toString(10)}>{year}</Radio>)}
+                        {availableYears.map(year => <Radio key={year} value={year}>{year.toString(10)}</Radio>)}
                     </RadioGroup> : null
                 }
             </VStack>

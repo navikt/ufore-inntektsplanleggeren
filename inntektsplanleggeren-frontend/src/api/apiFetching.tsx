@@ -97,7 +97,7 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
 
 
 
-export async function getInntekter(year: string): Promise<InntekterResponse> {
+export async function getInntekter(year: number): Promise<InntekterResponse> {
     const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",

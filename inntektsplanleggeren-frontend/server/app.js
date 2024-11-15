@@ -5,7 +5,8 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 import {getToken, validateToken, parseIdportenToken} from "@navikt/oasis";
-import {initRedis, isRedisReady, redisClient} from "./redis.js";
+import {initRedis, isRedisReady, redisClient} from "./redis";
+import { isInntekterPayload } from "./validators";
 
 export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
@@ -23,46 +24,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const buildPath = path.resolve(__dirname, "../dist")
 app.use(basePath, express.static(buildPath));
-
-/**
- * @param {object|null} data
- * @returns {boolean}
- */
-const isInntekterPayload = (data) => {
-    if (data === null || typeof data !== 'object') {
-        return false;
-    }
-
-    if (!Object.hasOwn(data, 'year') || !Object.hasOwn(data, 'brukerInntekter') || !Object.hasOwn(data, 'epsInntekter')) {
-        return false;
-    }
-
-    return isInntektObject(data.brukerInntekter) && isInntektObject(data.epsInntekter);
-};
-
-/**
- * @param {object|null} data
- * @returns {boolean}
- */
-const isInntektObject = (data) => data !== null &&
-    hasInntektValue(data, 'arbeidsinntekt') &&
-    hasInntektValue(data, 'andrePensjonsgivendeYtelser') &&
-    hasInntektValue(data, 'naeringsinntekt') &&
-    hasInntektValue(data, 'inntektUtland') &&
-    hasInntektValue(data, 'pensjonUtland');
-
-/**
- * @param {Object} data
- * @param {string} key
- * @returns {boolean}
- */
-const hasInntektValue = (data, key) => Object.hasOwn(data, key) && isInntektValue(data.inntekter[key]);
-
-/**
- * @param {Object} data
- * @returns {boolean}
- */
-const isInntektValue = (data) => data === null || (typeof data === 'number' && data >= 0);
 
 /**
  * @param {express.Request} req

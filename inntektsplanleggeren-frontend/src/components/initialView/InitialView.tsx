@@ -49,7 +49,7 @@ export function InitialView() {
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker)
             setAnnenForelderInntekt(data.forventedeInntekter.eps)
-            sessionStorage.setItem("selectedYear", selectedYear)
+            sessionStorage.setItem("selectedYear", selectedYear.toString(10))
             navigate('/forventede-inntekter')
         }
     }

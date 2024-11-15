@@ -1,12 +1,11 @@
-import React, {createContext, SetStateAction, useState} from "react";
+import React, {createContext, SetStateAction, useEffect, useState} from "react";
 import { PersonInntekter } from "@/api/model/ApiRequests";
-import {useLocation} from "react-router-dom";
 
 interface FormState {
     formStep: number;
     setFormStep: (value: SetStateAction<number>) => void;
-    selectedYear: string | null;
-    setSelectedYear: (value: SetStateAction<string | null>) => void;
+    selectedYear: number | null;
+    setSelectedYear: (value: SetStateAction<number | null>) => void;
 
     brukerinntekt: PersonInntekter;
     setBrukerinntekt: (value: SetStateAction<PersonInntekter>) => void;
@@ -43,16 +42,22 @@ interface Props {
     children: React.ReactNode;
 }
 
-const YEAR_REGEX = /^\d{4}$/;
+
 
 export const FormStateComponent = ({ children }: Props) => {
-    const { state } = useLocation();
-    const storedSelectedYear = state?.selectedYear ?? null;
-    const [selectedYear, setSelectedYear] = useState<string | null>(typeof storedSelectedYear === 'string' && YEAR_REGEX.test(storedSelectedYear) ? storedSelectedYear : null);
+    const storedSelectedYear = sessionStorage.getItem("selectedYear");
+    const [selectedYear, setSelectedYear] = useState<number | null>(storedSelectedYear === null ? null : Number.parseInt(storedSelectedYear, 10));
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
 
+    useEffect(() => {
+        if (selectedYear === null) {
+            return;
+        }
+        
+        sessionStorage.setItem("selectedYear", selectedYear.toString(10));
+    }, [selectedYear]);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
     const getAnnenForelderInntektSum = (): number => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : 0;
