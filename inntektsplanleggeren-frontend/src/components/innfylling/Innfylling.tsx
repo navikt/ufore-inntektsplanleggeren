@@ -31,7 +31,6 @@ export const Innfylling = () => {
         console.log("got state", state);
         const fetchData = async () => {
             try {
-                const state = await getState();
                 console.log(state);
             } catch (error) {
                 console.error("Error fetching state:", error);
@@ -45,7 +44,7 @@ export const Innfylling = () => {
         e.preventDefault();
 
         try {
-            saveState({ brukerinntekter: brukerinntekt, epsInntekter: annenForelderInntekt, year: selectedYear });
+            saveState({ brukerInntekter: brukerinntekt, epsInntekter: annenForelderInntekt, year: selectedYear });
             setIsLoading(true);
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             setSimulationResponse(result);

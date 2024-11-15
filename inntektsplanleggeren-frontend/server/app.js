@@ -5,8 +5,8 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 import {getToken, validateToken, parseIdportenToken} from "@navikt/oasis";
-import {initRedis, isRedisReady, redisClient} from "./redis";
-import { isInntekterPayload } from "./validators";
+import {initRedis, isRedisReady, redisClient} from "./redis.js";
+import { isInntekterPayload } from "./validators.js";
 
 export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
@@ -54,7 +54,7 @@ const getRedisKey = (pid) => pid;
 
 app.post(basePath + '/persistence', authMiddleware, async (req, res) => {
     const token = getToken(req);
-    const parsed = await parseIdportenToken(token);
+    const parsed = parseIdportenToken(token);
 
     if (!parsed.ok) {
         res.status(403).send('Token er ugyldig');
@@ -79,7 +79,7 @@ app.post(basePath + '/persistence', authMiddleware, async (req, res) => {
 
 app.delete(basePath + '/persistence', authMiddleware, async (req, res) => {
     const token = getToken(req);
-    const parsed = await parseIdportenToken(token);
+    const parsed = parseIdportenToken(token);
 
     if (!parsed.ok) {
         res.status(403).send('Token er ugyldig');
@@ -97,7 +97,7 @@ app.delete(basePath + '/persistence', authMiddleware, async (req, res) => {
 
 app.get(basePath + '/persistence', authMiddleware, async (req, res) => {
     const token = getToken(req);
-    const parsed = await parseIdportenToken(token);
+    const parsed = parseIdportenToken(token);
 
     if (!parsed.ok) {
         res.status(403).send('Token er ugyldig');

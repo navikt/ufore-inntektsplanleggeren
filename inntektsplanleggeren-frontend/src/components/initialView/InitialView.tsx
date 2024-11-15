@@ -17,7 +17,7 @@ import {YearView} from "@/components/initialView/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
-import {deleteState, getInntekter, getState} from "@/api/apiFetching";
+import {deleteState, getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
 
@@ -33,8 +33,6 @@ export function InitialView() {
     }, []);
     
     useEffect(() => {
-        const state = getState()
-        console.log("state", state)
         if (selectedYear !== null) {
             setErrorMessage(null)
         }
