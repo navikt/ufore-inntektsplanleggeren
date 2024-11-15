@@ -51,6 +51,10 @@ const devConfig = {
       '/pensjon/selvbetjening/inntektsplanleggeren/api': {
         target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no',
         changeOrigin: true,
+      },
+      '/pensjon/selvbetjening/inntektsplanleggeren/persistence': {
+        target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no',
+        changeOrigin: true,
       }
     }
   }

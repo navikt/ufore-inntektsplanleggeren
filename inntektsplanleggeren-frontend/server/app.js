@@ -91,7 +91,7 @@ const authMiddleware = async (req, res, next) => {
  */
 const getRedisKey = (pid) => pid;
 
-app.post(basePath + '/persistance/inntekter', authMiddleware, async (req, res) => {
+app.post(basePath + '/persistence/inntekter', authMiddleware, async (req, res) => {
     const token = getToken(req);
     const parsed = await parseIdportenToken(token);
 
@@ -116,7 +116,7 @@ app.post(basePath + '/persistance/inntekter', authMiddleware, async (req, res) =
     }
 });
 
-app.delete(basePath + '/persistance/inntekter', authMiddleware, async (req, res) => {
+app.delete(basePath + '/persistence/inntekter', authMiddleware, async (req, res) => {
     const token = getToken(req);
     const parsed = await parseIdportenToken(token);
 
@@ -134,7 +134,7 @@ app.delete(basePath + '/persistance/inntekter', authMiddleware, async (req, res)
     }
 });
 
-app.get(basePath + '/persistance/inntekter', authMiddleware, async (req, res) => {
+app.get(basePath + '/persistence/inntekter', authMiddleware, async (req, res) => {
     const token = getToken(req);
     const parsed = await parseIdportenToken(token);
 

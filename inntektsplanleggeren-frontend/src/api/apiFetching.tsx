@@ -18,7 +18,7 @@ const headers = {
 }
 
 export async function getState(): Promise<FormState> {
-    const res = await fetch(basePath + `/persistance/inntekter`, {
+    const res = await fetch(basePath + `/persistence/inntekter`, {
         method: "GET",
         credentials: "include",
         headers: headers,
@@ -51,7 +51,7 @@ export async function getState(): Promise<FormState> {
 }
 
 export async function saveState(state: FormState): Promise<void> {
-    const res = await fetch(basePath + `/persistance/inntekter`, {
+    const res = await fetch(basePath + `/persistence/inntekter`, {
         method: "POST",
         credentials: "include",
         headers: headers,
@@ -64,7 +64,7 @@ export async function saveState(state: FormState): Promise<void> {
 }
 
 export async function deleteState(): Promise<void> {
-    const res = await fetch(basePath + '/persistance/inntekter', {
+    const res = await fetch(basePath + '/persistence/inntekter', {
         method: "DELETE",
         credentials: "include",
         headers: headers,
