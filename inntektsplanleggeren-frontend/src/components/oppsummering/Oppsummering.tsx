@@ -1,4 +1,4 @@
-import {Alert, BodyShort, Button, Heading, HStack, ReadMore, VStack} from "@navikt/ds-react";
+import {Alert, Button, Heading, HStack, ReadMore, VStack} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";

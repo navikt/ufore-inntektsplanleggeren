@@ -5,7 +5,6 @@ import {FormatKroner} from "@/components/utils/FormatKroner";
 import {useContext} from "react";
 import {FormStateContext} from "@/context/FormData";
 import {Link} from "react-router-dom";
-import {format} from "date-fns";
 import {FormatDate, FormatDateTime} from "@/components/utils/FormatDate";
 
 interface Props {

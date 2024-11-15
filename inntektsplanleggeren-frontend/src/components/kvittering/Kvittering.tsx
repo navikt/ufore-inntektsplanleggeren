@@ -12,9 +12,8 @@ export const Kvittering = () => {
     // TODO: Get application by ID and use creation date to determine if the user has waited long.
 
     const [isWaiting, setIsWaiting] = useState(true);
-    const [hasWaitedLong, setHasWaitedLong] = useState(false);
     const { setFormStep } = useContext(FormStateContext);
-    const { sendResponse, statusResponse, setStatusResponse } = useContext(DataContext);
+    const { statusResponse, setStatusResponse } = useContext(DataContext);
 
     useEffect(() => {
         setFormStep(3);

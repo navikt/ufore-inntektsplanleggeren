@@ -1,5 +1,5 @@
-import {PersonInntekter, SimulationResult} from "@/api/model/ApiRequests";
-import {BodyShort, Table, VStack} from "@navikt/ds-react";
+import {PersonInntekter} from "@/api/model/ApiRequests";
+import {BodyShort, VStack} from "@navikt/ds-react";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 
 export const InputSummary = (props: { inntekter: PersonInntekter }) => {
