@@ -31,7 +31,7 @@ export function InitialView() {
     useEffect(() => {
         deleteState()
     }, []);
-
+    
     useEffect(() => {
         if (selectedYear !== null) {
             setErrorMessage(null)
@@ -69,13 +69,11 @@ export function InitialView() {
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>
-                <BodyLong>
-                    <p>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</p>
-                    <p>For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å
-                    tjene samtidig som du får uføretrygd.</p>
-                    <p>Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang
-                        pause. Vi beklager for dette.</p>
-                </BodyLong>
+                    <BodyShort spacing>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</BodyShort>
+                    <BodyShort spacing>For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å
+                    tjene samtidig som du får uføretrygd.</BodyShort>
+                    <BodyShort>Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang
+                        pause. Vi beklager for dette.</BodyShort>
             </GuidePanel>
 
             <section>

@@ -1,4 +1,4 @@
-import {Alert, Button, Heading, HStack, VStack} from "@navikt/ds-react";
+import {Alert, BodyShort, Button, Heading, HStack, ReadMore, VStack} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
@@ -8,6 +8,8 @@ import {send} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
 import {MessageTypes} from "@/api/model/MessageCodes";
+import {Graph} from "@/components/oppsummering/Graph";
+import {InputSummary} from "@/components/oppsummering/InputSummary";
 
 export const Oppsummering = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
@@ -41,7 +43,15 @@ export const Oppsummering = () => {
                 <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
             ))}
 
-            <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
+            <Heading size={"medium"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
+
+            <ReadMore header="Inntekten du har lagt inn">
+                <InputSummary inntekter={brukerinntekt}></InputSummary>
+            </ReadMore>
+
+            <Graph></Graph>
+
+
 
             <VStack gap="6">
                 <Heading size={"large"}>Detaljert oversikt før skatt 2024</Heading>

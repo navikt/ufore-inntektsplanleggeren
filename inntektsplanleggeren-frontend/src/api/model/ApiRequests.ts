@@ -94,9 +94,9 @@ export type SimulationResponse = {
 export type SimulationResult = {
     uforetrygd: SimulationDetail;
     forventetInntekt: SimulationDetail;
-    barnetilleggFellesbarn: SimulationDetail;
-    barnetilleggSaerkullsbarn: SimulationDetail;
-    gjenlevendetillegg: SimulationDetail;
+    barnetilleggFellesbarn: SimulationDetail | null;
+    barnetilleggSaerkullsbarn: SimulationDetail | null;
+    gjenlevendetillegg: SimulationDetail | null;
     sum: SimulationDetail;
 };
 

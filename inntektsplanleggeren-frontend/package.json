@@ -16,6 +16,8 @@
     "date-fns": "^3.6.0",
     "dotenv": "16.3.1",
     "express": "^4.21.1",
+    "highcharts": "^11.4.8",
+    "highcharts-react-official": "^3.2.1",
     "jsonwebtoken": "^9.0.0",
     "node-jose": "^2.2.0",
     "openid-client": "5.6.5",
