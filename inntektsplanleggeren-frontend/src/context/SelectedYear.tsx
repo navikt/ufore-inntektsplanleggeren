@@ -1,15 +1,15 @@
 import React, {createContext} from "react";
 
 interface SelectedYear {
-    selectedYear: string;
+    selectedYear: number;
 }
 
 export const SelectedYearContext = createContext<SelectedYear>({
-    selectedYear: ""
+    selectedYear: 0
 });
 
 interface Props {
-    selectedYear: string;
+    selectedYear: number;
     children: React.ReactNode;
 }
 

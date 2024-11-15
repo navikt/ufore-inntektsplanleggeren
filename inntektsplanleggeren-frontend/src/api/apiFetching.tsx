@@ -116,7 +116,7 @@ export async function getInntekter(year: number): Promise<InntekterResponse> {
     return res.json();
 }
 
-export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: string): Promise<SimulationResponse> {
+export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SimulationResponse> {
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
         eps: epsInntekter
@@ -140,7 +140,7 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
     return res.json();
 }
 
-export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: string): Promise<SendApplicationResponse> {
+export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SendApplicationResponse> {
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
         eps: epsInntekter

@@ -5,7 +5,7 @@ import { PersonInntekter } from "@/api/model/ApiRequests";
 import { FormatKroner } from "@/components/utils/FormatKroner";
 
 interface FormFieldsProps {
-    year?: string;
+    year?: number;
     errors: Partial<Record<keyof PersonInntekter, string>>;
     setErrors: React.Dispatch<React.SetStateAction<Partial<Record<keyof PersonInntekter, string>>>>;
     setInntekt: (key: keyof PersonInntekter, value: number) => void;

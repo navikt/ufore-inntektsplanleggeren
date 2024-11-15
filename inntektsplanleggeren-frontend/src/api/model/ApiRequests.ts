@@ -129,7 +129,7 @@ export type StatusResponse = {
 }
 
 export type FormState = {
-    year : string | null;
+    year : number | null;
     brukerinntekter: PersonInntekter | null;
     epsInntekter: PersonInntekter | null;
 }
