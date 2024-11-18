@@ -2,7 +2,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.ParallelleSannheterService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.*
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.assertj.core.util.Lists
 import org.junit.jupiter.api.Test
 
@@ -15,9 +14,8 @@ class PersonServiceTest {
 
     private val pdlClient = Mockito.mock(PdlClient::class.java)
     private val parallelleSannheterService = Mockito.mock(ParallelleSannheterService::class.java)
-    private val tokenService = Mockito.mock(TokenService::class.java)
 
-    private val personService = PersonService(pdlClient, parallelleSannheterService, tokenService)
+    private val personService = PersonService(pdlClient, parallelleSannheterService)
 
     @Test
     fun getFodselsdato() {
