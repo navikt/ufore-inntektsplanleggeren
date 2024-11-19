@@ -81,8 +81,8 @@ class SetPidFilter(
             } else {
                 val pid = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
-                authorizationService.hasVeilederTilgangTilInnbygger(pid)
                 log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
+                authorizationService.checkVeilederTilgangTilInnbygger(pid)
                 authenticatedUserDetails = AuthenticatedUserDetails(pid, false)
             }
             (SecurityContextHolder.getContext().authentication as JwtAuthenticationToken).details =

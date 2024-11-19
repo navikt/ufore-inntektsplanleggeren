@@ -16,7 +16,6 @@ class AuthorizationService(
     @Value("\${pensjon-saksbehandler-tilgang.group.id}") private val pensjonSaksbehandlerGroupId: String,
     @Value("\${pensjon-veileder-tilgang.group.id}") private val pensjonVeilederGroupId: String,
     @Value("\${pensjon-brukerhjelpa-tilgang.group.id}") private val pensjonBrukerhjelpaGroupId: String,
-    @Value("\${pensjon-okonomi-tilgang.group.id}") private val pensjonOkonomiGroupId: String,
     @Value("\${pensjon-klagebeh-tilgang.group.id}") private val pensjonKlagebehandlerGroupId: String,
     @Value("\${pensjon-ufoere-tilgang.group.id}") private val pensjonUfoereGroupId: String,
     private val tokenService: TokenService,
@@ -26,7 +25,7 @@ class AuthorizationService(
 
     private val log: Logger = LoggerFactory.getLogger(AuthorizationService::class.java)
 
-    fun hasVeilederTilgangTilInnbygger(pid: String) {
+    fun checkVeilederTilgangTilInnbygger(pid: String) {
         checkBasisTilgang()
         checkSkjermetAnsatt(pid)
         checkAdressebeskyttetInnbygger(pid)
@@ -36,24 +35,23 @@ class AuthorizationService(
         val adGroups = tokenService.getGroups()
 
         if (!adGroups.contains(pensjonUfoereGroupId)) {
-            log.info("Saksbehandler/veileder mangler basis autorisering for ufore. Nekter tilgang.")
+            log.info("Veileder/saksbehandler mangler basis rolle for ufore. Nekter tilgang.")
             throw VeilederUnauthorizedException()
         }
         if (adGroups.contains(pensjonSaksbehandlerGroupId) ||
             adGroups.contains(pensjonVeilederGroupId) ||
             adGroups.contains(pensjonBrukerhjelpaGroupId) ||
-            adGroups.contains(pensjonOkonomiGroupId) ||
             adGroups.contains(pensjonKlagebehandlerGroupId)) {
             return
         } else {
-            log.info("Saksbehandler/veileder mangler basis rolle for pensjon. Nekter tilgang.")
+            log.info("Veileder/saksbehandler mangler basis rolle for pensjon. Nekter tilgang.")
             throw VeilederUnauthorizedException()
         }
     }
 
     private fun checkSkjermetAnsatt(pid: String) {
         if (skjermingClient.isSkjermet(pid) && !tokenService.getGroups().contains(skjermetGroupId)) {
-            log.info("Bruker skjermet, saksbehandler mangler autorisering. Nekter tilgang.")
+            log.info("Bruker skjermet, veileder/saksbehandler mangler autorisering. Nekter tilgang.")
             throw VeilederUnauthorizedException()
         }
     }
@@ -83,5 +81,4 @@ class AuthorizationService(
             else -> {}
         }
     }
-
 }
