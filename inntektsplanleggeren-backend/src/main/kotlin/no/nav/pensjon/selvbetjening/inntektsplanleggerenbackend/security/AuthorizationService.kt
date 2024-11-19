@@ -50,7 +50,7 @@ class AuthorizationService(
     }
 
     private fun checkSkjermetAnsatt(pid: String) {
-        if (skjermingClient.isSkjermet(pid) && !tokenService.getGroups().contains(skjermetGroupId)) {
+        if (!tokenService.getGroups().contains(skjermetGroupId) && skjermingClient.isSkjermet(pid)) {
             log.info("Bruker skjermet, veileder/saksbehandler mangler autorisering. Nekter tilgang.")
             throw VeilederUnauthorizedException()
         }
