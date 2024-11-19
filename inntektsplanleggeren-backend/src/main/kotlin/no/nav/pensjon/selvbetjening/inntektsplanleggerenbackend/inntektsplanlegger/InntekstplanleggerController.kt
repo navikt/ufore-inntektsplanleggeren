@@ -26,8 +26,8 @@ class InntektsplanleggerController(
 
     @GetMapping("initiate")
     fun getInntektsplanleggerenInitialData(
-        @RequestHeader("pid", required=false) pidFromHeader:String,
-        @CookieValue("nav-obo", required=false) navObocookie: String
+        @RequestHeader("pid", required=false) pidFromHeader:String?,
+        @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntektsplanleggerenInitialResponse> {
         val response:ResponseEntity<InntektsplanleggerenInitialResponse>
         try {
@@ -49,8 +49,8 @@ class InntektsplanleggerController(
     @GetMapping("inntekter")
     fun getInntekter(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestHeader("pid", required=false) pidFromHeader:String,
-        @CookieValue("nav-obo", required=false) navObocookie: String
+        @RequestHeader("pid", required=false) pidFromHeader:String?,
+        @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntekterResponse> {
         return try {
             ResponseEntity(
@@ -67,9 +67,9 @@ class InntektsplanleggerController(
     @PostMapping("simuler")
     fun simuler(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @RequestHeader("pid", required=false) pidFromHeader:String?,
         @RequestBody forventedeInntekter: ForventedeInntekter,
-        @CookieValue("nav-obo", required=false) navObocookie: String
+        @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<SimuleringResponse> {
         return try {
             ResponseEntity(
@@ -87,9 +87,9 @@ class InntektsplanleggerController(
     @PostMapping("send")
     fun send(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestHeader("pid", required=false) pidFromHeader:String,
+        @RequestHeader("pid", required=false) pidFromHeader:String?,
         @RequestBody forventedeInntekter: ForventedeInntekter,
-        @CookieValue("nav-obo", required=false) navObocookie: String
+        @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntektsplanleggerenSendResponse> {
         val response :ResponseEntity<InntektsplanleggerenSendResponse>
         try {
@@ -115,8 +115,8 @@ class InntektsplanleggerController(
     fun getStatus(
         @RequestParam("valgtaar", required = true) valgtAr: Int,
         @RequestParam("innsendingstidspunkt", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") innsendingsTidspunkt: LocalDateTime,
-        @RequestHeader("pid", required=false) pidFromHeader:String,
-        @CookieValue("nav-obo", required=false) navObocookie: String
+        @RequestHeader("pid", required=false) pidFromHeader:String?,
+        @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntektsplanleggerenStatusResponse> {
         return try {
             ResponseEntity(
