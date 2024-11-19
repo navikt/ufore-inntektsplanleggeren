@@ -1,7 +1,7 @@
-import {BodyLong, Box, Button, Heading, HStack, List, Loader, VStack, Link, Alert} from "@navikt/ds-react";
+import {BodyLong, Box, Button, Heading, HStack, List, Loader, VStack, Alert, Link} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import "./innfylling.css"
-import {useNavigate} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFields } from "./FormFields";
 import {getState, saveState, simulate} from "@/api/apiFetching";
@@ -12,8 +12,8 @@ import {DataContext} from "@/DataContextProvider";
 import {PersonInntekter} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
-import {BASE_PATH} from "@/routes";
 import {PageLinks} from "@/form-container";
+
 
 export const Innfylling = () => {
     const navigate = useNavigate()
@@ -130,7 +130,7 @@ export const Innfylling = () => {
                     }
 
                     <HStack gap="4">
-                        <Button as={Link} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                        <Button as={RouterLink} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                             Tilbake
                         </Button>
                         <Button type="submit" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>

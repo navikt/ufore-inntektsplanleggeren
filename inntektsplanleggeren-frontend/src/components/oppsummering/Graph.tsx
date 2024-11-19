@@ -1,5 +1,5 @@
 import { VStack } from "@navikt/ds-react";
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import Highcharts, {Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { DataContext } from "@/DataContextProvider";
@@ -9,8 +9,7 @@ const GRAPH_DATA: Options = {
         type: 'column'
     },
     title: {
-        text: 'Din inntekt',
-        align: 'left'
+        text: undefined
     },
     xAxis: {
         categories: ['I dag', 'Med dine endringer']
@@ -44,12 +43,11 @@ export const Graph = () => {
 
     return (
         <VStack>
-            <h1>Graph</h1>
             <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA, tooltip, series: [{
                     name: 'Uføretrygd inkludert gjenlevendetillegg',
                     data: [
-                        simulationResponse?.result?.uforetrygd.yearly.before ?? 0,
-                        simulationResponse?.result?.uforetrygd.yearly.after ?? 0]
+                        (simulationResponse?.result?.uforetrygd.yearly.before ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.before ?? 0),
+                        (simulationResponse?.result?.uforetrygd.yearly.after ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.after ?? 0)]
                 }, {
                     name: 'Din forventede inntekt',
                     data: [
@@ -62,13 +60,6 @@ export const Graph = () => {
                         (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.before ?? 0),
                         (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.after ?? 0)]
                 } : undefined,
-                    simulationResponse?.result?.gjenlevendetillegg ? {
-                        name: 'Gjenlevendetillegg',
-                        data: [
-                            simulationResponse.result.gjenlevendetillegg.yearly.before,
-                            simulationResponse.result.gjenlevendetillegg.yearly.after
-                        ]
-                    } : undefined
                 ].filter(isNotUndefined)}} />
         </VStack>
     )

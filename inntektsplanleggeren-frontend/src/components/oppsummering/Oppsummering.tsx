@@ -46,9 +46,21 @@ export const Oppsummering = () => {
             <Heading size={"medium"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
 
             <ReadMore header="Inntekten du har lagt inn">
-                <InputSummary inntekter={brukerinntekt}></InputSummary>
+
+                <VStack gap="3">
+                    <VStack gap="3">
+                        <Heading size="small">Dine forventede inntekter i {selectedYear}</Heading>
+                        <InputSummary inntekter={brukerinntekt}></InputSummary>
+                    </VStack>
+                    {annenForelderInntekt ?
+                        <VStack gap="3">
+                            <Heading size="small">Dine forventede inntekter i {selectedYear}</Heading>
+                            <InputSummary inntekter={annenForelderInntekt}></InputSummary>
+                        </VStack> : null }
+                    </VStack>
             </ReadMore>
 
+            <Heading size={"medium"}>Oversikt i graf</Heading>
             <Graph></Graph>
 
 
