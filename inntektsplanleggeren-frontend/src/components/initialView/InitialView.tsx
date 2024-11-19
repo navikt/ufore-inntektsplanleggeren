@@ -12,7 +12,7 @@ import {
 import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
 import { useNavigate } from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {YearView} from "@/components/initialView/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
@@ -29,26 +29,25 @@ export function InitialView() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        deleteState()
+        deleteState();
     }, []);
     
     useEffect(() => {
         if (selectedYear !== null) {
-            setErrorMessage(null)
+            setErrorMessage(null);
         }
     }, [selectedYear]);
 
     const handleButtonClick = async () => {
         if (!selectedYear) {
-            setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.")
+            setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.");
         } else {
-            setIsLoading(true)
-            const data = await getInntekter(selectedYear)
+            setIsLoading(true);
+            const data = await getInntekter(selectedYear);
             setInntekterResponse(data);
-            setBrukerinntekt(data.forventedeInntekter.bruker)
-            setAnnenForelderInntekt(data.forventedeInntekter.eps)
-            sessionStorage.setItem("selectedYear", selectedYear.toString(10))
-            navigate('/forventede-inntekter')
+            setBrukerinntekt(data.forventedeInntekter.bruker);
+            setAnnenForelderInntekt(data.forventedeInntekter.eps);
+            navigate('/forventede-inntekter');
         }
     }
 

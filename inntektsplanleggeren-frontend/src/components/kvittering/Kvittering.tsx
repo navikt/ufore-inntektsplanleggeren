@@ -87,7 +87,7 @@ export const Kvittering = () => {
             <Heading size={"large"}>Etteroppgjør</Heading>
             <BodyLong>
                 Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant annet Skatteetaten.
-                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles etteroppgjør. <Link to={"/"}>Les mer om etteroppgjøret (åpnes i ny fane).</Link> {/* TODO open in new tab! */}
+                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles etteroppgjør. <Link to={"/"} target="_blank">Les mer om etteroppgjøret (åpnes i ny fane).</Link> {/* TODO link? */}
             </BodyLong>
 
             <Heading size={"large"}>Hvis inntekten din endrer seg</Heading>

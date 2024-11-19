@@ -42,11 +42,10 @@ interface Props {
     children: React.ReactNode;
 }
 
-
+const SELECTED_YEAR_STORAGE_KEY = "selectedYear";
 
 export const FormStateComponent = ({ children }: Props) => {
-    const storedSelectedYear = sessionStorage.getItem("selectedYear");
-    const [selectedYear, setSelectedYear] = useState<number | null>(storedSelectedYear === null ? null : Number.parseInt(storedSelectedYear, 10));
+    const [selectedYear, setSelectedYear] = useState<number | null>(getStoredYear());
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
@@ -56,7 +55,7 @@ export const FormStateComponent = ({ children }: Props) => {
             return;
         }
         
-        sessionStorage.setItem("selectedYear", selectedYear.toString(10));
+        sessionStorage.setItem(SELECTED_YEAR_STORAGE_KEY, selectedYear.toString(10));
     }, [selectedYear]);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
@@ -79,3 +78,15 @@ export const FormStateComponent = ({ children }: Props) => {
         </FormStateContext.Provider>
     );
 };
+
+const getStoredYear = (): number | null => {
+    const storedYear = sessionStorage.getItem(SELECTED_YEAR_STORAGE_KEY);
+
+    if (storedYear === null) {
+        return null;
+    }
+
+    const parsed = Number.parseInt(storedYear, 10);
+
+    return isNaN(parsed) ? null : parsed;
+}

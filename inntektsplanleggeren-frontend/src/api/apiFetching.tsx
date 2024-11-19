@@ -13,9 +13,12 @@ const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 const MOCKS_ENABLED = true;
 
+const searchParams = new URLSearchParams(document.location.search)
+
 const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
 }
+
 
 export async function getState(): Promise<FormState> {
     const res = await fetch(basePath + `/persistence`, {
@@ -78,10 +81,26 @@ export async function deleteState(): Promise<void> {
 }
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
     const res = await fetch(basePath + `/api/initiate`, {
         method: "GET",
         credentials: "include",
-        headers: headers,
+        headers: headers
     });
 
     if (MOCKS_ENABLED) {
@@ -98,6 +117,22 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
 
 
 export async function getInntekter(year: number): Promise<InntekterResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
     const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
@@ -117,6 +152,22 @@ export async function getInntekter(year: number): Promise<InntekterResponse> {
 }
 
 export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SimulationResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
         eps: epsInntekter
@@ -141,6 +192,22 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
 }
 
 export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SendApplicationResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
         eps: epsInntekter
@@ -165,6 +232,22 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
 }
 
 export async function getStatus(valgtaar: string, innsendingstidspunkt: Date): Promise<StatusResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers;
+
+    if (pid) {
+        headers =  {
+            'Content-Type': 'application/json',
+            'pid': pid
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json'
+        }
+    }
+
     const res = await fetch(basePath + `/api/send?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`, {
         method: "POST",
         credentials: "include",

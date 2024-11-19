@@ -4,7 +4,8 @@ import {InntektDetaljer} from "@/api/model/ApiRequests";
 import {Month} from "@/common/MonthEnum";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
 import React, {useEffect, useState} from "react";
-import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons"; // Import the CSS file
+import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
+import {FormatKroner} from "@/components/utils/FormatKroner"; // Import the CSS file
 
 
 interface DinInntektTableProps {
@@ -41,7 +42,7 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
                 {children}
 
                 {isOpen ?
-                    isDesktop ? <Innhold data={data} type={type}/> : <InnholdMobile data={data}/>
+                    isDesktop ? <Innhold data={data} type={type}/> : <InnholdMobile data={data} type={type}/>
                     : null
                 }
 
@@ -67,13 +68,13 @@ const Innhold = (props: { data: InntektDetaljer[], type?: string }) => {
                 {props.data.map(({ maned, belop, inntektsgivere }, i) => (
             <Table.Row key={i} className="table-row">
                 <Table.DataCell scope="row">{Month[maned]}</Table.DataCell>
-                <Table.DataCell>{ belop > 0 ? numberFormatWithKr(belop) : "Ikke mottatt"} </Table.DataCell>
+                <Table.DataCell><FormatKroner value={belop}/></Table.DataCell>
                 <Table.DataCell>{inntektsgivere.join(", ")}</Table.DataCell>
             </Table.Row>
             ))}
             <Table.Row>
                     <Table.HeaderCell scope="row">Sum hittil i år</Table.HeaderCell>
-                    <Table.DataCell><b>{numberFormatWithKr(belopSum(props.data))}</b></Table.DataCell>
+                    <Table.DataCell><b><FormatKroner value={belopSum(props.data)}/></b></Table.DataCell>
                     <Table.DataCell></Table.DataCell>
             </Table.Row>
             </Table.Body>
@@ -81,7 +82,7 @@ const Innhold = (props: { data: InntektDetaljer[], type?: string }) => {
     );
 };
 
-const InnholdMobile = (props: { data: InntektDetaljer[] }) => {
+const InnholdMobile = (props: { data: InntektDetaljer[], type?: string }) => {
     return (
         <Table>
             <Table.Body>
@@ -90,8 +91,8 @@ const InnholdMobile = (props: { data: InntektDetaljer[] }) => {
                         <Table.DataCell>
                             <div>
                                 <b>{Month[maned]}</b>
-                                <div>Beløp per måned: {belop > 0 ? numberFormatWithKr(belop) : "Ikke mottatt"}</div>
-                                {inntektsgivere.length > 0 ? <div>Arbeidsgiver: {inntektsgivere.join(", ")}</div> : null}
+                                <div><FormatKroner value={belop}/></div>
+                                {inntektsgivere.length > 0 ? <div>{props.type === "pensjonsordning" ? "Pensjonsordning" : "Arbeidsgiver"}: {inntektsgivere.join(", ")}</div> : null}
                             </div>
                         </Table.DataCell>
                     </Table.Row>

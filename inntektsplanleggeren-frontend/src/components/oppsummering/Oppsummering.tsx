@@ -69,12 +69,3 @@ export const Oppsummering = () => {
         </VStack>
     );
 };
-
-// TODO: Remove API call mock.
-// const fakeApiCall = async () => {
-//     return new Promise<string>((resolve) => {
-//         setTimeout(() => {
-//             resolve(crypto.randomUUID());
-//         }, 500);
-//     });
-// };
