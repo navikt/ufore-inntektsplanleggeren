@@ -33,18 +33,26 @@ const GRAPH_DATA: Options = {
             formatter: ({value}) => NUMBER_FORMATTER.format(typeof value === "string" ? Number.parseInt(value, 10) : value),
         }
     },
-
     plotOptions: {
         column: {
             stacking: 'normal',
             dataLabels: {
                 enabled: true
             },
-            
-
         }
     },
-};
+    legend: {
+        symbolHeight: 15, //size of legend circle
+        itemStyle: {
+            color: '#010B18AD',
+            fontSize: '17px', // TODO: how to use stantdard nav font?
+            newLine: true
+        },
+        itemDistance: 40,
+        // itemWidth: 250,
+        }
+
+    };
 
 export const Graph = () => {
     const { simulationResponse } = useContext(DataContext);

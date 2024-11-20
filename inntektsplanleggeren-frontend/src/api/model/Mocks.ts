@@ -104,18 +104,18 @@ export const mockInntekterResponse : InntekterResponse = {
     ],
     "forventedeInntekter": {
         "bruker": {
-            "arbeidsinntekt": 123,
-            "andrePensjonsgivendeYtelser": 22144,
-            "naeringsinntekt": 23543,
-            "inntektUtland": null,
-            "pensjonUtland": null
+            "arbeidsinntekt": 1,
+            "andrePensjonsgivendeYtelser": 2,
+            "naeringsinntekt": 3,
+            "inntektUtland": 4,
+            "pensjonUtland": 5
         },
         "eps": {
-            "arbeidsinntekt": 10,
-            "andrePensjonsgivendeYtelser": 10,
-            "naeringsinntekt": 2341024,
-            "inntektUtland": 4553,
-            "pensjonUtland": 3323,
+            "arbeidsinntekt": 6,
+            "andrePensjonsgivendeYtelser": 7,
+            "naeringsinntekt": 8,
+            "inntektUtland": 9,
+            "pensjonUtland": 10,
         }
     },
     "uforeHeleAaret": false,
@@ -233,16 +233,7 @@ export const mockSimulationResponse = {
                 "after": 6000
             }
         },
-        "barnetilleggSaerkullsbarn": {
-            "monthly": {
-                "before": 0,
-                "after": 0
-            },
-            "yearly": {
-                "before": 0,
-                "after": 0
-            }
-        },
+        "barnetilleggSaerkullsbarn": null,
         "gjenlevendetillegg": {
             "monthly": {
                 "before": 0,
