@@ -4,15 +4,22 @@ import Highcharts, {Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { DataContext } from "@/DataContextProvider";
 
+const NUMBER_FORMATTER = new Intl.NumberFormat('nb-NO', { style: 'decimal', useGrouping: true });
+
 const GRAPH_DATA: Options = {
     chart: {
         type: 'column'
     },
-    title: {
-        text: undefined
-    },
+    title: undefined,
+    credits: undefined,
     xAxis: {
-        categories: ['I dag', 'Med dine endringer']
+        categories: ['I dag', 'Med dine endringer'],
+        labels: {
+            style: {
+                fontWeight: 'bold'
+            }
+        },
+        
     },
     yAxis: {
         min: 0,
@@ -21,14 +28,20 @@ const GRAPH_DATA: Options = {
         },
         stackLabels: {
             enabled: true
+        },
+        labels: {
+            formatter: ({value}) => NUMBER_FORMATTER.format(typeof value === "string" ? Number.parseInt(value, 10) : value),
         }
     },
+
     plotOptions: {
         column: {
             stacking: 'normal',
             dataLabels: {
                 enabled: true
-            }
+            },
+            
+
         }
     },
 };
@@ -44,23 +57,35 @@ export const Graph = () => {
     return (
         <VStack>
             <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA, tooltip, series: [{
-                    name: 'Uføretrygd inkludert gjenlevendetillegg',
-                    data: [
-                        (simulationResponse?.result?.uforetrygd.yearly.before ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.before ?? 0),
-                        (simulationResponse?.result?.uforetrygd.yearly.after ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.after ?? 0)]
-                }, {
-                    name: 'Din forventede inntekt',
-                    data: [
-                        simulationResponse?.result?.forventetInntekt.yearly.before ?? 0,
-                        simulationResponse?.result?.forventetInntekt.yearly.after ?? 0]
+                name: 'Uføretrygd inkludert gjenlevendetillegg',
+                dataLabels: {
+                enabled: false
                 },
-                    simulationResponse?.result.barnetilleggFellesbarn || simulationResponse?.result.barnetilleggSaerkullsbarn ? {
-                    name: 'Barnetillegg',
-                    data: [
-                        (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.before ?? 0),
-                        (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.after ?? 0)]
-                } : undefined,
-                ].filter(isNotUndefined)}} />
+                data: [
+                (simulationResponse?.result?.uforetrygd.yearly.before ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.before ?? 0),
+                (simulationResponse?.result?.uforetrygd.yearly.after ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.after ?? 0)],
+                color: "var(--a-deepblue-500)"
+            }, {
+                name: 'Din forventede inntekt',
+                dataLabels: {
+                enabled: false
+                },
+                data: [
+                simulationResponse?.result?.forventetInntekt.yearly.before ?? 0,
+                simulationResponse?.result?.forventetInntekt.yearly.after ?? 0],
+                color: "var(--a-purple-400)"
+            },
+                simulationResponse?.result.barnetilleggFellesbarn || simulationResponse?.result.barnetilleggSaerkullsbarn ? {
+                name: 'Barnetillegg',
+                dataLabels: {
+                enabled: false
+                },
+                data: [
+                (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.before ?? 0),
+                (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.after ?? 0)],
+                color: "var(--a-green-200)"
+            } : undefined,
+            ].filter(isNotUndefined)}} />
         </VStack>
     )
 }

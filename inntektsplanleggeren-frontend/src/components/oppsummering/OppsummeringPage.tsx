@@ -1,6 +1,6 @@
-import {Alert, Button, Heading, HStack, ReadMore, VStack} from "@navikt/ds-react";
+import {Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/oppsummering/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
@@ -10,8 +10,9 @@ import {PageLinks} from "@/form-container";
 import {MessageTypes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/oppsummering/Graph";
 import {InputSummary} from "@/components/oppsummering/InputSummary";
+import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 
-export const Oppsummering = () => {
+export const OppsummeringPage = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
     const { simulationResponse, setSendResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
@@ -47,14 +48,14 @@ export const Oppsummering = () => {
 
             <ReadMore header="Inntekten du har lagt inn">
 
-                <VStack gap="3">
-                    <VStack gap="3">
+                <VStack gap="7">
+                    <VStack>
                         <Heading size="small">Dine forventede inntekter i {selectedYear}</Heading>
                         <InputSummary inntekter={brukerinntekt}></InputSummary>
                     </VStack>
                     {annenForelderInntekt ?
-                        <VStack gap="3">
-                            <Heading size="small">Dine forventede inntekter i {selectedYear}</Heading>
+                        <VStack>
+                            <Heading size="small">Annen forelder forventet inntekt i {selectedYear}</Heading>
                             <InputSummary inntekter={annenForelderInntekt}></InputSummary>
                         </VStack> : null }
                     </VStack>
@@ -70,12 +71,17 @@ export const Oppsummering = () => {
                 {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
             </VStack>
 
+            <BodyLong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt:</BodyLong>
+            {/*TODO what here?*/}
+            
+            <BodyLong><strong>Har du spørsmål? <Link href={PageLinks.KONTAKT} target="_blank">Kontakt oss (åpnes i ny fane)</Link></strong></BodyLong>
+
             <HStack gap="4">
-                <Button as={Link} to="/forventede-inntekter" variant="secondary">
-                    Tilbake
+                <Button as={RouterLink} to={PageLinks.FORVENTEDE_INNTEKTER} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                    Endre beløp i beregning
                 </Button>
-                <Button variant="primary" onClick={handleSubmit} loading={isLoading}>
-                    Send inn
+                <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}onClick={handleSubmit} loading={isLoading}>
+                    Gå til innsending
                 </Button>
             </HStack>
         </VStack>

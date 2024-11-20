@@ -118,7 +118,8 @@ export const mockInntekterResponse : InntekterResponse = {
             "pensjonUtland": 3323,
         }
     },
-    "uforeHeleAaret": false
+    "uforeHeleAaret": false,
+    "epsPid": "1234"
 };
 // export const mockInntekterResponse : InntekterResponse ={
 //     "arbeidsinntektOgYtelserHittilIAar": [
@@ -228,7 +229,7 @@ export const mockSimulationResponse = {
                 "after": 500
             },
             "yearly": {
-                "before": 12000,
+                "before": 500000,
                 "after": 6000
             }
         },

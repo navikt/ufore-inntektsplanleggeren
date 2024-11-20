@@ -51,7 +51,10 @@ export enum PageLinks {
     FORVENTEDE_INNTEKTER = "/forventede-inntekter",
     BEREGNING = "/beregning",
     OPPSUMMERING = "/oppsummering",
-    KVITTERING = "/kvittering"
+    KVITTERING = "/kvittering",
+
+    KONTAKT = "https://www.nav.no/kontaktoss",
+    DIN_UFORE = "/" //TODO actual link?
 }
 
 export const PAGE_LINKS = {

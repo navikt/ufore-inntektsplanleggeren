@@ -15,10 +15,10 @@ import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {PageLinks} from "@/form-container";
 
 
-export const Innfylling = () => {
+export const InnfyllingPage = () => {
     const navigate = useNavigate()
     const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
-    const { initialViewData, inntekterResponse, setSimulationResponse } = useContext(DataContext);
+    const { inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,17 +50,19 @@ export const Innfylling = () => {
             setIsLoading(true);
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             setSimulationResponse(result);
-            navigate("/oppsummering");
+            navigate(PageLinks.OPPSUMMERING);
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
 
-        navigate("/oppsummering");
+        navigate(PageLinks.OPPSUMMERING);
     };
 
     if(inntekterResponse === null) {
         return <Loader />;
     }
+
+    // { console.log("uforehelerret", inntekterResponse.uforeHeleAaret); }
 
     return (
         <VStack className="form-container">
@@ -94,7 +96,8 @@ export const Innfylling = () => {
                         <VStack gap="4">
                             <Heading level="2" size="small" spacing>Din inntekt {selectedYear}</Heading>
                             <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
-                            <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert>
+                            { !inntekterResponse.uforeHeleAaret ?
+                                <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert> : null }
                             {/*todo link? open in new tab?*/}
                             <FormFields
                                 year={selectedYear}
@@ -107,16 +110,18 @@ export const Innfylling = () => {
                         </VStack>
                     </Box>
 
-                    {(initialViewData?.forventetInntektAnnenForelder !== null) ?
+                    {inntekterResponse?.forventedeInntekter.eps ?
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <VStack gap="4">
                                 <Heading level="2" size="small" spacing>Annen forelders inntekt {selectedYear}</Heading>
                                 <BodyLong>Fordi du mottar barnetillegg til uføretrygden, må du også registrere den forventede inntekten til forelderen som du bor sammen med.</BodyLong>
-                                <BodyLong><strong>Du skal oppgi inntekten til forelder med fødselsnummer [dato ikke tilgjengelig]</strong></BodyLong>
+                                <BodyLong><strong>Du skal oppgi inntekten til forelder med fødselsnummer {inntekterResponse.epsPid}</strong></BodyLong>
                                 <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Inntekten til den andre forelderen har bare betydning for størrelsen på
                                     barnetillegget ditt. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
-                                <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert>
-                                {/*todo link? open in new tab?*/}
+
+                                { !inntekterResponse.uforeHeleAaret ?
+                                    <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert> : null }
+                                todo link? open in new tab?
                                 <FormFields
                                     year={selectedYear}
                                     errors={errors}

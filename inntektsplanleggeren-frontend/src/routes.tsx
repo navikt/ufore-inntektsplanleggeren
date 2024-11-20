@@ -3,9 +3,9 @@ import {Routes, Route, BrowserRouter, Outlet, Navigate } from "react-router-dom"
 import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
 import {FormContainer} from "@/form-container";
-import {Innfylling} from "@/components/innfylling/Innfylling";
-import {Oppsummering} from "@/components/oppsummering/Oppsummering";
-import {Kvittering} from "@/components/kvittering/Kvittering";
+import {InnfyllingPage} from "@/components/innfylling/InnfyllingPage";
+import {OppsummeringPage} from "@/components/oppsummering/OppsummeringPage";
+import {KvitteringPage} from "@/components/kvittering/KvitteringPage";
 import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
 
@@ -20,9 +20,9 @@ export const AppRoutes = () => (
                     <Route index element={<InitialView />} />
                     <Route element={<YearGuard />}>
                         <Route element={<FormContainer />}>
-                            <Route index path={"/forventede-inntekter"} element={<Innfylling />} />
-                            <Route index path={"/oppsummering"} element={<Oppsummering />} />
-                            <Route index path={"/kvittering"} element={<Kvittering />} />
+                            <Route index path={"/forventede-inntekter"} element={<InnfyllingPage />} />
+                            <Route index path={"/oppsummering"} element={<OppsummeringPage />} />
+                            <Route index path={"/kvittering"} element={<KvitteringPage />} />
                         </Route>
                     </Route>
                 {/*</Route>*/}

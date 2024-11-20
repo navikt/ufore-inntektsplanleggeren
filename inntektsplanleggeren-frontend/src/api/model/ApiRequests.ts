@@ -79,6 +79,7 @@ export type InntekterResponse = {
     pensjonFraAndreHittilIAar: InntektDetaljer[];
     forventedeInntekter: ForventedeInntekterResponse;
     uforeHeleAaret: boolean;
+    epsPid: string | null;
 };
 
 export type SubmitInntekterRequest = {

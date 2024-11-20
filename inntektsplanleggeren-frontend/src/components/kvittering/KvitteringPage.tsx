@@ -5,8 +5,9 @@ import { DataContext } from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
+import {PageLinks} from "@/form-container";
 
-export const Kvittering = () => {
+export const KvitteringPage = () => {
     // const { id } = useParams();
 
     // TODO: Get application by ID and use creation date to determine if the user has waited long.
@@ -113,7 +114,7 @@ export const Kvittering = () => {
             </BodyLong>
 
             <HStack gap="4">
-            <Button as={Link} to={"/"} variant="primary">Din uføretrygd</Button>{/*    todo link */}
+            <Button as={Link} to={PageLinks.DIN_UFORE} variant="primary">Din uføretrygd</Button>{/*    todo link */}
             </HStack>
         </VStack>
     );

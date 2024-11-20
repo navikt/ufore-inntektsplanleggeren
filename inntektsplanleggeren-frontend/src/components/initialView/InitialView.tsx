@@ -20,6 +20,7 @@ import {FormStateContext} from "@/context/FormData";
 import {deleteState, getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
+import {PageLinks} from "@/form-container";
 
 export function InitialView() {
     const {initialViewData, messages, setInntekterResponse} = useContext(DataContext)
@@ -29,7 +30,7 @@ export function InitialView() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        deleteState();
+        deleteState(); //todo bring it back?
     }, []);
     
     useEffect(() => {
@@ -47,7 +48,7 @@ export function InitialView() {
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker);
             setAnnenForelderInntekt(data.forventedeInntekter.eps);
-            navigate('/forventede-inntekter');
+            navigate(PageLinks.FORVENTEDE_INNTEKTER);
         }
     }
 
