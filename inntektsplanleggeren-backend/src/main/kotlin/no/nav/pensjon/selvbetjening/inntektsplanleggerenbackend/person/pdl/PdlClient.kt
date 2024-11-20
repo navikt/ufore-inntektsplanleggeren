@@ -89,6 +89,6 @@ class PdlClient(
         const val PDL_BEHANDLINGSNUMMER_KEY = "Behandlingsnummer"
         const val PDL_API = "pdl-api"
 
-        private val logger: Logger = LoggerFactory.getLogger(PdlClient::class.java)
+        private val logger: Logger = LoggerFactory.getLogger("console")
     }
 }

@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+<!-- Console Logging -->
+<appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <customFields>{"applicationVersion":"@project.version@"}</customFields>
+    </encoder>
+</appender>
 
-    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"applicationVersion":"@project.version@"}</customFields>
-        </encoder>
-    </appender>
+<!-- naudit logging -->
+<appender name="AuditLogger" class="com.papertrailapp.logback.Syslog4jAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>%m%n%xEx</pattern>
+    </layout>
 
-    <appender name="auditLogger" class="com.papertrailapp.logback.Syslog4jAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%m%n%xEx</pattern>
-        </layout>
+    <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
+        <host>audit.nais</host>
+        <port>6514</port>
+        <ident>inntektsplanleggeren-backend</ident>
+        <maxMessageLength>128000</maxMessageLength>
+    </syslogConfig>
+</appender>
 
-        <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
-            <host>audit.nais</host>
-            <port>6514</port>
-            <ident>inntektsplanleggeren-backend</ident>
-            <maxMessageLength>128000</maxMessageLength>
-        </syslogConfig>
-    </appender>
+<!-- Only audit logs goes to AuditLogger (naudit) -->
+<logger name="AUDIT_LOGGER" level="info">
+    <appender-ref ref="AuditLogger" />
+</logger>
 
-
-    <logger name="no.nav.pensjon.selvbetjening.inntektsplanleggeren" level="INFO"/>
-
-    <logger name="auditLogger" level="INFO" additivity="false">
-        <appender-ref ref="${AUDIT_LOG_APPENDER}"/>
-    </logger>
-
-    <root level="INFO">
-        <appender-ref ref="JSON_CONSOLE"/>
-    </root>
-
+<!-- Only console logs goes to Console -->
+<logger name="console" level="info">
+    <appender-ref ref="JSON_CONSOLE" />
+</logger>
 </configuration>

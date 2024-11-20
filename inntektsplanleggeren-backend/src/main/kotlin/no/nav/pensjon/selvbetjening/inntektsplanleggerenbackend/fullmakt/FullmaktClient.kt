@@ -79,7 +79,7 @@ class FullmaktClient(
         private val VALID_REPRESENTASJONSTYPER = setOf(
             "UFORETRYGD_SKRIV")
 
-        private val logger: Logger = LoggerFactory.getLogger(FullmaktClient::class.java)
+        private val logger: Logger = LoggerFactory.getLogger("console")
 
     }
 }

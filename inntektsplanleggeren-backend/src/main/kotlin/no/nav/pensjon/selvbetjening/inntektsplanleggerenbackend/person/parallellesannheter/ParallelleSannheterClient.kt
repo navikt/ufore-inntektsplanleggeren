@@ -19,7 +19,7 @@ import org.springframework.web.reactive.function.client.awaitBody
 class ParallelleSannheterClient(private val webClient: WebClient,
                                 @Value("\${parallellesannheter.endpoint.url}") private val url: String) {
 
-    private val logger: Logger = LoggerFactory.getLogger(ParallelleSannheterClient::class.java)
+    private val logger: Logger = LoggerFactory.getLogger("console")
 
     fun decideFoedsel(foedselSannheter: FoedselParallelleSannheterContainer): FoedselParallelleSannheterContainer {
         val path = "/api/foedsel"

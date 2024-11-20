@@ -7,10 +7,13 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE_PLAIN"/>
-    </root>
+    <!-- audit logs goes to console when running locally -->
+    <logger name="AUDIT_LOGGER" level="info">
+        <appender-ref ref="CONSOLE_PLAIN" />
+    </logger>
 
-    <logger name="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend" level="INFO"/>
-
+    <!-- Only console logs goes to Console -->
+    <logger name="console" level="info">
+        <appender-ref ref="CONSOLE_PLAIN" />
+    </logger>
 </configuration>

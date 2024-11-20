@@ -77,7 +77,7 @@ class InntektskomponentClientTest: WebClientTest()  {
 
     @Test
     fun `should throw ClientException when 400 from inntektskomponenten when fetching AbonnerteInntekterBolk`(){
-        val logger: Logger = LoggerFactory.getLogger(InntektskomponentClient::class.java) as Logger
+        val logger: Logger = LoggerFactory.getLogger("console") as Logger
         val listAppender = ListAppender<ILoggingEvent>()
         listAppender.start()
         logger.addAppender(listAppender)

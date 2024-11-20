@@ -23,7 +23,7 @@ class AuthorizationService(
     private val personService: PersonService
 ) {
 
-    private val log: Logger = LoggerFactory.getLogger(AuthorizationService::class.java)
+    private val log: Logger = LoggerFactory.getLogger("console")
 
     fun checkVeilederTilgangTilInnbygger(pid: String) {
         checkBasisTilgang()
