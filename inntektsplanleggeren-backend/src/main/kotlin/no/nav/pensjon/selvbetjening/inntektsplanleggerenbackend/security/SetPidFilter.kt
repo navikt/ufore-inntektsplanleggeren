@@ -8,7 +8,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.Fullmak
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming.SkjermingClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -24,8 +23,8 @@ import java.time.LocalDateTime
 class SetPidFilter(
     private val fullmaktClient: FullmaktClient,
     private val tokenService: TokenService,
-    private val skjermingClient: SkjermingClient,
-    private val personService: PersonService
+    private val personService: PersonService,
+    private val authorizationService: AuthorizationService
 ): OncePerRequestFilter() {
 
     private val log: Logger = LoggerFactory.getLogger(SetPidFilter::class.java)
@@ -82,8 +81,8 @@ class SetPidFilter(
             } else {
                 val pid = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
-                checkVeilederAuthorization(pid)
                 log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
+                authorizationService.checkVeilederTilgangTilInnbygger(pid)
                 authenticatedUserDetails = AuthenticatedUserDetails(pid, false)
             }
             (SecurityContextHolder.getContext().authentication as JwtAuthenticationToken).details =
@@ -138,14 +137,4 @@ class SetPidFilter(
         }
     }
 
-    private fun checkVeilederAuthorization(pid: String) {
-        if (!tokenService.isUserInSkjermetGroup() && skjermingClient.isSkjermet(pid)) {
-            log.info("Bruker skjermet, saksbehandler mangler autorisering. Nekter tilgang.")
-            throw VeilederUnauthorizedException()
-        }
-        if (!personService.hasSaksbehandlerAccessToPid(pid)){
-            log.info("Bruker adressebeskyttet, saksbehandler mangler autorisering. Nekter tilgang.")
-            throw VeilederUnauthorizedException()
-        }
-    }
 }

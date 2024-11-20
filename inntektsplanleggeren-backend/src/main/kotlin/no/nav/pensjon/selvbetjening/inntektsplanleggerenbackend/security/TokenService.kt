@@ -11,14 +11,6 @@ import org.springframework.stereotype.Service
 class TokenService(
     @Value("\${oauth2.azureAd.issuer}") private val azureAdIssuer: String,
     @Value("\${oauth2.tokenX.issuer}") private val tokenXIssuer: String,
-    @Value("\${strengt-fortrolig-tilgang.group.id}") private val strengtFortroligAdresseGroupId: String,
-    @Value("\${fortrolig-tilgang.group.id}") private val fortroligAdresseGroupId: String,
-    @Value("\${skjermet-tilgang.group.id}") private val skjermetGroupId: String,
- //   @Value("\${okonomi.group.id}") private val okonomiGroupId: String,
-//    @Value("\${saksbehandler.group.id}") private val saksbehandlerAdresseGroupId: String,
-//    @Value("\${veileder.group.id}") private val veilederGroupId: String,
-//    @Value("\${brukerhjelpa.group.id}") private val brukerhjelpaGroupId: String,
- //   @Value("\${klagebehandler.group.id}") private val klagebehandlerGroupId: String,
     private val azureAdService: AzureAdService,
     private val tokenXService: TokenXService,
 ) {
@@ -116,19 +108,7 @@ class TokenService(
         }
     }
 
-    fun isUserInStrengtFortroligGroup(): Boolean = getGroups().contains(strengtFortroligAdresseGroupId)
-
-    fun isUserInFortroligGroup(): Boolean = getGroups().contains(fortroligAdresseGroupId)
-
-    fun isUserInSkjermetGroup(): Boolean = getGroups().contains(skjermetGroupId)
-
-//    fun isUserInSaksbehandlerGroup(): Boolean = getGroups().contains(saksbehandlerAdresseGroupId)
-//    fun isUserInVeilederGroup(): Boolean = getGroups().contains(veilederGroupId)
-//    fun isUserInBrukerhjelpaGroup(): Boolean = getGroups().contains(brukerhjelpaGroupId)
-//    fun isUserInOkonomiGroup(): Boolean = getGroups().contains(okonomiGroupId)
-//    fun isUserInKlagebehandlerGroup(): Boolean = getGroups().contains(klagebehandlerGroupId)
-
-    private fun getGroups(): List<String> {
+    fun getGroups(): List<String> {
         SecurityContextHolder.getContext().authentication.let {
             val token = (it as JwtAuthenticationToken).token
             val groups = token.claims["groups"] as List<*>
