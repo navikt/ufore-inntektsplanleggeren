@@ -36,9 +36,9 @@ class InntektsplanleggerController(
                 HttpStatus.OK
             )
             if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                auditor.auditInternalUserRead(tokenService.determineLoggedInUser(), SecurityContextUtil.getPidFromContext())
+                auditor.auditInternalUserRead(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
             } else if (SecurityContextUtil.isFullmakt()) {
-                auditor.auditFullmaktRead(tokenService.determineLoggedInUser(), SecurityContextUtil.getPidFromContext())
+                auditor.auditFullmaktRead(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
             }
             return response
         } catch (exception: Exception) {
@@ -101,9 +101,9 @@ class InntektsplanleggerController(
                 ), HttpStatus.OK
             )
             if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                auditor.auditInternalUserCreate(tokenService.determineLoggedInUser(), SecurityContextUtil.getPidFromContext())
+                auditor.auditInternalUserCreate(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
             } else if (SecurityContextUtil.isFullmakt()) {
-                auditor.auditFullmaktCreate(tokenService.determineLoggedInUser(), SecurityContextUtil.getPidFromContext())
+                auditor.auditFullmaktCreate(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
             }
             return response
         } catch (exception: Exception) {

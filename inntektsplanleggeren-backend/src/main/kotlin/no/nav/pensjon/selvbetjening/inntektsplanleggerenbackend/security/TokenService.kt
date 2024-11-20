@@ -97,6 +97,19 @@ class TokenService(
         return "SYSTEM"
     }
 
+    fun determineLoggedInUserId(): String {
+        SecurityContextHolder.getContext().authentication.let {
+            val token = (it as JwtAuthenticationToken).token
+            if (determineTokenType() == TokenType.TOKEN_X) {
+                return token.getClaim("pid")
+            } else if (determineTokenType() == TokenType.AZURE_AD_ON_BEHALF_OF) {
+                return token.getClaim("NAVident")
+            } else if (determineTokenType() == TokenType.AZURE_AD_CLIENT_CREDENTIALS) {
+                return token.getClaim("azp_name")
+            }
+        }
+        throw RuntimeException("Unknown token type")
+    }
     fun isLoginLevelHigh(): Boolean = getInnloggingstype() == Innloggingstype.LEVEL4
 
     fun determineRequestingPid(): String {
