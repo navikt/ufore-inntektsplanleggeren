@@ -28,11 +28,6 @@
         <appender-ref ref="AuditLogger" />
     </logger>
 
-    <!-- Only console logs goes to Console -->
-    <logger name="no.nav.pensjon.selvbetjening.inntektsplanleggeren" level="info">
-        <appender-ref ref="JSON_CONSOLE" />
-    </logger>
-
     <root level="INFO">
         <appender-ref ref="JSON_CONSOLE"/>
     </root>
