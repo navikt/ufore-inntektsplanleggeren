@@ -29,7 +29,7 @@
 </logger>
 
 <!-- Only console logs goes to Console -->
-<logger name="console" level="info">
+<logger name="no.nav.pensjon.selvbetjening.inntektsplanleggeren" level="info">
     <appender-ref ref="JSON_CONSOLE" />
 </logger>
 </configuration>
