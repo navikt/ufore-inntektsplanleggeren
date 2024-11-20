@@ -61,7 +61,11 @@ class InntektsplanleggerService(
                 }
             return InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
         }
-        return InntektsplanleggerenSendResponse(simulering.messages, InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET, innsendingsTidspunkt)
+        return InntektsplanleggerenSendResponse(
+            simulering.messages,
+            InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
+            innsendingsTidspunkt
+        )
     }
 
     fun simulerInntektsendring(
@@ -116,7 +120,8 @@ class InntektsplanleggerService(
                 pensjonsdata,
                 simuleringsaar
             ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto(),
-            uforeHeleAaret = pensjonsdata.uforeHeleAaret
+            uforeHeleAaret = pensjonsdata.uforeHeleAaret,
+            epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
         )
     }
 

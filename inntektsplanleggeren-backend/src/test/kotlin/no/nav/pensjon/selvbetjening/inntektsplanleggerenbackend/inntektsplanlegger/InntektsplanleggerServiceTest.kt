@@ -315,7 +315,37 @@ class InntektsplanleggerServiceTest {
         assertEquals(10, inntektData.forventedeInntekter.eps?.pensjonUtland)
 
         assertTrue(inntektData.uforeHeleAaret)
+    }
 
+    @Test
+    fun `should include masked epsPid in InntekterResponse when eps present on uforetrygd sak`(){
+        val year = LocalDate.now().year
+        val pensjonsdata = pensjonsdata(epsPid = "01130101011")
+
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(inntektService.getInntekterHittilIAar(PID, pensjonsdata, year)).thenReturn(
+            InntekterHittilIAar(
+                arbeidsinntektOgPensjonsgivendeYtelser = listOf(
+                    Maanedsinntekt(3, 20.0, "Arbeidsgiveren")
+                ),
+                pensjonerFraAndreEnnFolketrygden = listOf(
+                    Maanedsinntekt(4, 50.0, "Nav")
+                ),
+                arbeidsinntektOgPensjonsgivendeYtelserEps = listOf(
+                    Maanedsinntekt(6, 5054.0, "Nav")
+                ),
+                pensjonerFraAndreEnnFolketrygdenEps = listOf(
+                    Maanedsinntekt(1, 50343.0, "Nav")
+                ),
+            )
+        )
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+
+        val inntektData = inntektsplanleggerService.constructInntekterResponse(PID, year)
+
+        assertEquals("011301*****", inntektData?.epsPid)
     }
 
     @Test
