@@ -2,34 +2,38 @@
 
 
 <configuration>
-<!-- Console Logging -->
-<appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-        <customFields>{"applicationVersion":"@project.version@"}</customFields>
-    </encoder>
-</appender>
+    <!-- Console Logging -->
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"applicationVersion":"@project.version@"}</customFields>
+        </encoder>
+    </appender>
 
-<!-- naudit logging -->
-<appender name="AuditLogger" class="com.papertrailapp.logback.Syslog4jAppender">
-    <layout class="ch.qos.logback.classic.PatternLayout">
-        <pattern>%m%n%xEx</pattern>
-    </layout>
+    <!-- naudit logging -->
+    <appender name="AuditLogger" class="com.papertrailapp.logback.Syslog4jAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%m%n%xEx</pattern>
+        </layout>
 
-    <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
-        <host>audit.nais</host>
-        <port>6514</port>
-        <ident>inntektsplanleggeren-backend</ident>
-        <maxMessageLength>128000</maxMessageLength>
-    </syslogConfig>
-</appender>
+        <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
+            <host>audit.nais</host>
+            <port>6514</port>
+            <ident>inntektsplanleggeren-backend</ident>
+            <maxMessageLength>128000</maxMessageLength>
+        </syslogConfig>
+    </appender>
 
-<!-- Only audit logs goes to AuditLogger (naudit) -->
-<logger name="AUDIT_LOGGER" level="info">
-    <appender-ref ref="AuditLogger" />
-</logger>
+    <!-- Only audit logs goes to AuditLogger (naudit) -->
+    <logger name="AUDIT_LOGGER" level="info">
+        <appender-ref ref="AuditLogger" />
+    </logger>
 
-<!-- Only console logs goes to Console -->
-<logger name="no.nav.pensjon.selvbetjening.inntektsplanleggeren" level="info">
-    <appender-ref ref="JSON_CONSOLE" />
-</logger>
+    <!-- Only console logs goes to Console -->
+    <logger name="no.nav.pensjon.selvbetjening.inntektsplanleggeren" level="info">
+        <appender-ref ref="JSON_CONSOLE" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE"/>
+    </root>
 </configuration>
