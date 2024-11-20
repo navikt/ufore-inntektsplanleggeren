@@ -27,7 +27,7 @@ class SetPidFilter(
     private val authorizationService: AuthorizationService
 ): OncePerRequestFilter() {
 
-    private val log: Logger = LoggerFactory.getLogger("console")
+    private val log: Logger = LoggerFactory.getLogger(SetPidFilter::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
