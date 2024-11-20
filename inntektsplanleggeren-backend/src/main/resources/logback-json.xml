@@ -23,8 +23,8 @@
         </syslogConfig>
     </appender>
 
-    <!-- Only audit logs goes to AuditLogger (naudit) -->
-    <logger name="AUDIT_LOGGER" level="info">
+    <!-- Only audit logs goes to AuditLogger and not JSON_CONSOLE  -->
+    <logger name="AUDIT_LOGGER" level="info" additivity="false">
         <appender-ref ref="AuditLogger" />
     </logger>
 
