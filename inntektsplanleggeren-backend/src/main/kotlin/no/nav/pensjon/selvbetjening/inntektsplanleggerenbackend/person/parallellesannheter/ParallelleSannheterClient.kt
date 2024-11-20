@@ -13,13 +13,12 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.reactive.function.client.awaitBody
 
 @Component
 class ParallelleSannheterClient(private val webClient: WebClient,
                                 @Value("\${parallellesannheter.endpoint.url}") private val url: String) {
 
-    private val logger: Logger = LoggerFactory.getLogger("console")
+    private val logger: Logger = LoggerFactory.getLogger(ParallelleSannheterClient::class.java)
 
     fun decideFoedsel(foedselSannheter: FoedselParallelleSannheterContainer): FoedselParallelleSannheterContainer {
         val path = "/api/foedsel"

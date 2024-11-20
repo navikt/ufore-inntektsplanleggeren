@@ -28,7 +28,7 @@ class PenClient(
     private val webClient: WebClient,
     private val tokenService: TokenService
 ) {
-    private val logger: Logger = LoggerFactory.getLogger("console")
+    private val logger: Logger = LoggerFactory.getLogger(PenClient::class.java)
 
     fun sendInntektsendring(
         pid: String,

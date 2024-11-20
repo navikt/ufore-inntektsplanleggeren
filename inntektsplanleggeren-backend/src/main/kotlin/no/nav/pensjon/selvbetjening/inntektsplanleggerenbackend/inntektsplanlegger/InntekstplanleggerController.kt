@@ -22,7 +22,7 @@ class InntektsplanleggerController(
     private val auditor: Auditor,
     private val tokenService: TokenService
 ) {
-    private val logger: Logger = LoggerFactory.getLogger("console")
+    private val logger: Logger = LoggerFactory.getLogger(InntektsplanleggerController::class.java)
 
     @GetMapping("initiate")
     fun getInntektsplanleggerenInitialData(

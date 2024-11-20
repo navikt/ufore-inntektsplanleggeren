@@ -29,7 +29,7 @@ class InntektskomponentClient(
     private val webClient: WebClient,
     private val tokenService: TokenService,
 ) {
-    private val logger: Logger = LoggerFactory.getLogger("console")
+    private val logger: Logger = LoggerFactory.getLogger(InntektskomponentClient::class.java)
 
     fun hentForventetInntekt(
         pid: String,

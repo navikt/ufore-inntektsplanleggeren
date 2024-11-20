@@ -39,7 +39,7 @@ data class ErrorResponse(val message: String, val callId: String)
 
 class ErrorHandler {
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger("console")
+        private val logger: Logger = LoggerFactory.getLogger(ErrorHandler::class.java)
 
         fun handleResponseStatusException(
             statusCode: HttpStatus,

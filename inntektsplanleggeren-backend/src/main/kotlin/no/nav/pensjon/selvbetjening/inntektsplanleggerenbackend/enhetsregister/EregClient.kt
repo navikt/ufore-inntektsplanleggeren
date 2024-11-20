@@ -22,7 +22,7 @@ class EregClient(
     @Value("\${ereg-services.endpoint.url}") private val url: String,
     private val webClient: WebClient,
 ) {
-    private val logger: Logger = LoggerFactory.getLogger("console")
+    private val logger: Logger = LoggerFactory.getLogger(EregClient::class.java)
 
     fun hentOrganisasjonsnavn(organisasjonsnummer: String, gyldigDato: LocalDate? = null): String {
         val path = "/api/v2/organisasjon/$organisasjonsnummer/noekkelinfo"
