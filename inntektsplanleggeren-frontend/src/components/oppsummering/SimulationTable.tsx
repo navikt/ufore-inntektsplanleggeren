@@ -2,7 +2,6 @@ import { SimulationResult } from "@/api/model/ApiRequests";
 import {BodyShort, Table, VStack} from "@navikt/ds-react";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import React, {useEffect, useState} from "react";
-import {Month} from "@/common/MonthEnum";
 
 export const SimulationTable = (props: { simulationResult: SimulationResult }) => {
     const { uforetrygd, forventetInntekt, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, gjenlevendetillegg, sum } = props.simulationResult;
