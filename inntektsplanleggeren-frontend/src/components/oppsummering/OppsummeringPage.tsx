@@ -45,7 +45,7 @@ export const OppsummeringPage = () => {
                 <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
             ))}
 
-            <Heading size={"medium"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
+            <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
 
             <ReadMore header="Inntekten du har lagt inn">
 
@@ -62,15 +62,17 @@ export const OppsummeringPage = () => {
                     </VStack>
             </ReadMore>
 
-            <Heading size={"medium"}>Oversikt i graf</Heading>
-            <Graph></Graph>
+            <VStack gap="3">
+                <Heading size={"medium"}>Oversikt i graf</Heading>
+                <Graph/>
+            </VStack>
 
-            <VStack gap="6">
-                <Heading size={"large"}>Detaljert oversikt før skatt 2024</Heading>
+            <VStack>
+                <Heading size={"medium"}>Oversikt i tabell</Heading>
                 {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
             </VStack>
 
-            <BodyLong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt:</BodyLong>
+            <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt: <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
             {/*TODO what here?*/}
 
             <ReadMore header="Månedsbeløp spesifisert">

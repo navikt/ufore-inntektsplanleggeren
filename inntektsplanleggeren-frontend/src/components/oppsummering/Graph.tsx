@@ -70,8 +70,8 @@ export const Graph = () => {
                 enabled: false
                 },
                 data: [
-                (simulationResponse?.result?.uforetrygd.yearly.before ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.before ?? 0),
-                (simulationResponse?.result?.uforetrygd.yearly.after ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.after ?? 0)],
+                    (simulationResponse?.result?.uforetrygd.yearly.before ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.before ?? 0),
+                    (simulationResponse?.result?.uforetrygd.yearly.after ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.after ?? 0)],
                 color: "var(--a-deepblue-500)"
             }, {
                 name: 'Din forventede inntekt',
@@ -79,9 +79,9 @@ export const Graph = () => {
                 enabled: false
                 },
                 data: [
-                simulationResponse?.result?.forventetInntekt.yearly.before ?? 0,
-                simulationResponse?.result?.forventetInntekt.yearly.after ?? 0],
-                color: "var(--a-purple-400)"
+                    simulationResponse?.result?.forventetInntekt.yearly.before ?? 0,
+                    simulationResponse?.result?.forventetInntekt.yearly.after ?? 0],
+                color: "var(--a-green-200)"
             },
                 simulationResponse?.result.barnetilleggFellesbarn || simulationResponse?.result.barnetilleggSaerkullsbarn ? {
                 name: 'Barnetillegg',
@@ -89,9 +89,9 @@ export const Graph = () => {
                 enabled: false
                 },
                 data: [
-                (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.before ?? 0),
-                (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.after ?? 0)],
-                color: "var(--a-green-200)"
+                    (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.before ?? 0),
+                    (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.after ?? 0)],
+                color: "var(--a-purple-400)"
             } : undefined,
             ].filter(isNotUndefined)}} />
         </VStack>
