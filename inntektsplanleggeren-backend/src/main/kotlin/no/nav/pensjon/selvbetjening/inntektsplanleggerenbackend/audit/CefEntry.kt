@@ -1,7 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.audit
 
 import org.slf4j.event.Level
-import java.util.List
 
 
 /**
@@ -18,7 +17,7 @@ class CefEntry(
     private val destinationUserId: String
 ) {
     fun format(): String {
-        val elements = List.of(
+        val elements = listOf(
             PREAMBLE + CEF_VERSION,
             DEVICE_VENDOR,
             DEVICE_PRODUCT,
@@ -53,7 +52,7 @@ class CefEntry(
         private const val CEF_VERSION = 0
         private const val PREAMBLE = "CEF:"
         private const val SEPARATOR = "|"
-        private const val DEVICE_VENDOR = "Ufoere"
+        private const val DEVICE_VENDOR = "Uføre"
         private const val DEVICE_PRODUCT = "inntektsplanleggeren-backend"
         private const val DEVICE_VERSION = "1.0"
     }
