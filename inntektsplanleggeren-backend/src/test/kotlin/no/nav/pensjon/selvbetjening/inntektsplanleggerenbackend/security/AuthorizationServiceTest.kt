@@ -1,14 +1,15 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
+import jakarta.servlet.http.Cookie
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebeskyttelsesgradering
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming.SkjermingClient
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import kotlin.test.assertEquals
-
 
 class AuthorizationServiceTest {
 
@@ -24,9 +25,10 @@ class AuthorizationServiceTest {
 
     private val VeilederUnauthorizedExceptionName = "no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.VeilederUnauthorizedException"
 
-    private val tokenService = Mockito.mock(TokenService::class.java)
-    private val skjermingClient = Mockito.mock(SkjermingClient::class.java)
-    private val personService = Mockito.mock(PersonService::class.java)
+    private val tokenService = mock(TokenService::class.java)
+    private val skjermingClient = mock(SkjermingClient::class.java)
+    private val personService = mock(PersonService::class.java)
+    private val fullmaktClient = mock(FullmaktClient::class.java)
 
     private val authorizationService = AuthorizationService(
         strengtFortroligAdresseGroupId,
@@ -39,10 +41,12 @@ class AuthorizationServiceTest {
         pensjonUfoereGroupId,
         tokenService,
         skjermingClient,
-        personService
+        personService,
+        fullmaktClient
     )
-
-    //---------------
+    //---------------------------
+    // -- Veileder/saksbehandler
+    //----------------------------
     //- Basic access
     //---------------
     @Test
@@ -217,5 +221,90 @@ class AuthorizationServiceTest {
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
         assertEquals(VeilederUnauthorizedExceptionName,exception.toString())
+    }
+
+    //---------------------------
+    // -- Borger
+    //----------------------------
+    // -- Normal - ingen fullmakt
+    //----------------------------
+    @Test
+    fun `should return pid and no isFullmakt=false when borger with no addressebekyttelse access himself login level high`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
+        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(false)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        assertEquals(pid,authenticatedUserDetails.pid)
+        assertEquals(false,authenticatedUserDetails.isFullmakt)
+    }
+
+    @Test
+    fun `should return pid and no isFullmakt=false when borger with no addressebekyttelse access himself login level substantial`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
+        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(false)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        assertEquals(pid,authenticatedUserDetails.pid)
+        assertEquals(false,authenticatedUserDetails.isFullmakt)
+    }
+
+    @Test
+    fun `should return pid and no isFullmakt=false when borger with addressebekyttelse access himself login level high`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
+        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(true)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        assertEquals(pid,authenticatedUserDetails.pid)
+        assertEquals(false,authenticatedUserDetails.isFullmakt)
+    }
+
+    @Test
+    fun `should return Exception when borger withaddressebekyttelse access himself login level substantial`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
+        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(true)
+        assertThrows<LoginLevelTooLowException> { authorizationService.checkBorgerTilgang(null) }
+    }
+
+    //----------------------------
+    // -- fullmakt
+    //----------------------------
+    @Test
+    fun `should return fullmaktsgiver pid and no isFullmakt=true when borger with no addressebekyttelse is accessed by fullmaktshaver med gyldig fullmakt`() {
+        val subjectPid = "12345678901"
+        val resourcePid = "12345678905"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie",resourcePid)
+        `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
+        `when` (fullmaktClient.hasValidRepresentasjonsforhold(resourcePid, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum"))
+        `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(navOnBehalfOfCCookie)
+        assertEquals(resourcePid,authenticatedUserDetails.pid)
+        assertEquals(true,authenticatedUserDetails.isFullmakt)
+    }
+
+    @Test
+    fun `should return Exception when borger with addressebekyttelse is accessed by fullmaktshaver med gyldig fullmakt`() {
+        val subjectPid = "12345678901"
+        val resourcePid = "12345678905"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie",resourcePid)
+        `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
+        `when` (fullmaktClient.hasValidRepresentasjonsforhold(resourcePid, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum"))
+        `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(true)
+        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(navOnBehalfOfCCookie) }
+    }
+
+    @Test
+    fun `should return Exception when borger with no addressebekyttelse is accessed by fullmaktshaver uten gyldig fullmakt`() {
+        val subjectPid = "12345678901"
+        val resourcePid = "12345678905"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie",resourcePid)
+        `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
+        `when` (fullmaktClient.hasValidRepresentasjonsforhold(resourcePid, subjectPid)).thenReturn(RepresentasjonsforholdValidity(false,null))
+        `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
+        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(navOnBehalfOfCCookie) }
     }
 }

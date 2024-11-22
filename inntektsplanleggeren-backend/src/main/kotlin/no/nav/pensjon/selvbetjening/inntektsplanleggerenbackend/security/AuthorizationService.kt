@@ -1,5 +1,9 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
+import jakarta.servlet.http.Cookie
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebeskyttelsesgradering
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming.SkjermingClient
@@ -20,7 +24,8 @@ class AuthorizationService(
     @Value("\${pensjon-ufoere-tilgang.group.id}") private val pensjonUfoereGroupId: String,
     private val tokenService: TokenService,
     private val skjermingClient: SkjermingClient,
-    private val personService: PersonService
+    private val personService: PersonService,
+    private val fullmaktClient: FullmaktClient
 ) {
 
     private val log: Logger = LoggerFactory.getLogger(AuthorizationService::class.java)
@@ -29,6 +34,18 @@ class AuthorizationService(
         checkBasisTilgang()
         checkSkjermetAnsatt(pid)
         checkAdressebeskyttetInnbygger(pid)
+    }
+
+    fun checkBorgerTilgang(navOnBehalfOfCookie: Cookie?) : AuthenticatedUserDetails {
+        val requestingPid = tokenService.determineRequestingPid()
+        if (isFullmaktsCase(navOnBehalfOfCookie, requestingPid)) {
+            val fullmaktsgiverPid = navOnBehalfOfCookie!!.value
+            haandterFullmakt(fullmaktsgiverPid, requestingPid)
+            return AuthenticatedUserDetails(fullmaktsgiverPid, true)
+        }else {
+            checkAdressebeskyttelseAndLoginLevel(requestingPid)
+            return AuthenticatedUserDetails(requestingPid, false)
+        }
     }
 
     private fun checkBasisTilgang() {
@@ -79,6 +96,45 @@ class AuthorizationService(
                 }
             }
             else -> {}
+        }
+    }
+
+    private fun checkAdressebeskyttelseAndLoginLevel(requestingPid: String) {
+        if (!tokenService.isLoginLevelHigh() && personService.hasAdressebeskyttelse(requestingPid)) {
+            log.info("Bruker adressebeskyttet, innloggingsnivå for lavt. Nekter adgang")
+            throw LoginLevelTooLowException()
+        }
+    }
+
+    private fun isFullmaktsCase(navOnBehalfOfCookie: Cookie?, requestingPid: String): Boolean {
+        if (navOnBehalfOfCookie != null) {
+            log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
+            val fullmaktsgiverPid = navOnBehalfOfCookie.value
+            if (requestingPid != "" && requestingPid != fullmaktsgiverPid) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun haandterFullmakt(fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
+        try {
+            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(fullmaktsgiverPid, requestingPid)
+            if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
+                log.info("Fullmaktsforhold er ikke funnet. Nekter adgang")
+                throw NoFullmaktPresentException()
+            }
+
+            if(personService.hasAdressebeskyttelse(fullmaktsgiverPid)) {
+                log.info("Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang")
+                throw NoFullmaktPresentException()
+            }
+
+            return harGyldigFullmakt
+        } catch (e: FullmaktException) {
+            log.error("Noe gikk galt ved kall til fullmakt. Nekter adgang")
+            log.warn("FullmaktException: ${e.message}")
+            throw NoFullmaktPresentException()
         }
     }
 }

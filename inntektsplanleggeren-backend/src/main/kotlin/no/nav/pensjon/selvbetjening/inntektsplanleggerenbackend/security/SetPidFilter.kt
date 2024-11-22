@@ -4,10 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktException
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,9 +17,7 @@ import java.time.LocalDateTime
 
 @Component
 class SetPidFilter(
-    private val fullmaktClient: FullmaktClient,
     private val tokenService: TokenService,
-    private val personService: PersonService,
     private val authorizationService: AuthorizationService
 ): OncePerRequestFilter() {
 
@@ -58,26 +52,8 @@ class SetPidFilter(
             val authenticatedUserDetails: AuthenticatedUserDetails
             if (tokenService.determineTokenType() == TokenService.TokenType.TOKEN_X) {
                 log.info("Borger context")
-                val requestingPid = tokenService.determineRequestingPid()
-
                 val navOnBehalfOfCookie = request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }
-                authenticatedUserDetails = if (navOnBehalfOfCookie != null) {
-                    log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
-                    val fullmaktsgiverPid = navOnBehalfOfCookie.value
-                    if (requestingPid != "" && requestingPid != fullmaktsgiverPid) {
-                        haandterFullmakt(fullmaktsgiverPid, requestingPid)
-                        AuthenticatedUserDetails(
-                            fullmaktsgiverPid, true
-                        )
-                    } else {
-                        checkAdressebeskyttelseAndLoginLevel(requestingPid)
-                        AuthenticatedUserDetails(requestingPid, false)
-                    }
-                } else {
-                    checkAdressebeskyttelseAndLoginLevel(requestingPid)
-                    AuthenticatedUserDetails(requestingPid, false)
-                }
-
+                authenticatedUserDetails = authorizationService.checkBorgerTilgang(navOnBehalfOfCookie)
             } else {
                 val pid = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
@@ -106,34 +82,6 @@ class SetPidFilter(
             status = forbiddenStatus
             setHeader("Content-Type", "application/json")
             writer.write(mapper.writeValueAsString(errorResponse))
-        }
-    }
-
-    private fun checkAdressebeskyttelseAndLoginLevel(requestingPid: String) {
-            if (!tokenService.isLoginLevelHigh() && personService.hasAdressebeskyttelse(requestingPid)) {
-                log.info("Bruker adressebeskyttet, innloggingsnivå for lavt. Nekter adgang")
-                throw LoginLevelTooLowException()
-        }
-    }
-
-    private fun haandterFullmakt(fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
-        try {
-            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(fullmaktsgiverPid, requestingPid)
-            if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
-                log.info("Fullmaktsforhold er ikke funnet. Nekter adgang")
-                throw NoFullmaktPresentException()
-            }
-
-            if(personService.hasAdressebeskyttelse(fullmaktsgiverPid)) {
-                log.info("Fullmaktsforhold for bruker med diskresjon. Nekter adgang")
-                throw NoFullmaktPresentException()
-            }
-
-            return harGyldigFullmakt
-        } catch (e: FullmaktException) {
-            log.error("Noe gikk galt ved kall til fullmakt. Nekter adgang")
-            log.warn("FullmaktException: ${e.message}")
-            throw NoFullmaktPresentException()
         }
     }
 
