@@ -37,7 +37,7 @@ export const parseInntekt = (s: string) => {
     return Number(s.replace(/\s+/g, ''));
 };
 
-export const FormFields = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
+export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
 
@@ -86,10 +86,10 @@ export const FormFields = ({ year, errors, setInntekt, inntektSum, forventedeInn
                         htmlSize={30}
                     />
                     <div className="description-card">
-                        <ReadMore header="Innteker som skal meldes inn">
+                        <ReadMore header="Innteker du skal legge inn">
                             Legg inn lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året.
-                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad,
-                            overgangsstønad, omsorgs-, pleie- eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
+                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, omsorgs-,
+                            pleie- eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetatennad, overgangsstønad, omsorgs-,
                         </ReadMore>
                     </div>
                 </VStack>
@@ -106,9 +106,8 @@ export const FormFields = ({ year, errors, setInntekt, inntektSum, forventedeInn
                         onBlur={handleInputChange("naeringsinntekt")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Næringsinntekt som skal meldes inn">
-                        Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt. Er du usikker på hva som regnes som
-                        pensjonsgivende næringsinntekt kan du kontakte Skatteetaten.
+                    <ReadMore header="Næringsinntekt du skal legge inn">
+                        Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt. Er du usikker på hva som regnes som pensjonsgivende næringsinntekt kan du kontakte Skatteetaten.
                     </ReadMore>
                 </VStack>
             )}
@@ -125,7 +124,7 @@ export const FormFields = ({ year, errors, setInntekt, inntektSum, forventedeInn
                         onBlur={handleInputChange("inntektUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekter som skal meldes inn">
+                    <ReadMore header="Inntekter du skal legge inn">
                         Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                     </ReadMore>
                 </VStack>
@@ -144,8 +143,8 @@ export const FormFields = ({ year, errors, setInntekt, inntektSum, forventedeInn
                         htmlSize={30}
                     />
                     <ReadMore header="Pensjoner skal meldes inn">
-                        Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger.
-                        Dette inkluderer også uførepensjon fra andre enn oss. Ikke oppgi alderspensjon du får fra oss. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
+                        Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss.
+                        Ikke oppgi alderspensjon du får fra oss. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
                     </ReadMore>
                 </VStack>
             )}
@@ -162,7 +161,7 @@ export const FormFields = ({ year, errors, setInntekt, inntektSum, forventedeInn
                         onBlur={handleInputChange("pensjonUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner som skal meldes inn">
+                    <ReadMore header="Pensjoner du skal legge inn">
                         Legg inn pensjoner fra utlandet som et årsbeløp før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
                     </ReadMore>
                 </VStack>

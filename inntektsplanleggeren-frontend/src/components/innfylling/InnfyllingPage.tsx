@@ -3,7 +3,7 @@ import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "rea
 import "./innfylling.css"
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import { FormFields } from "./FormFields";
+import { FormFieldsUser } from "./FormFieldsUser";
 import {getState, saveState, simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
@@ -13,6 +13,7 @@ import {PersonInntekter} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {PageLinks} from "@/form-container";
+import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
 
 
 export const InnfyllingPage = () => {
@@ -62,11 +63,9 @@ export const InnfyllingPage = () => {
         return <Loader />;
     }
 
-    // { console.log("uforehelerret", inntekterResponse.uforeHeleAaret); }
 
     return (
         <VStack className="form-container">
-
             <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
             <BodyLong> Under kan du se hvilke inntekter som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for hele året til oss.
                 Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.</BodyLong>
@@ -99,7 +98,7 @@ export const InnfyllingPage = () => {
                             { !inntekterResponse.uforeHeleAaret ?
                                 <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert> : null }
                             {/*todo link? open in new tab?*/}
-                            <FormFields
+                            <FormFieldsUser
                                 year={selectedYear}
                                 errors={errors}
                                 setErrors={setErrors}
@@ -122,7 +121,7 @@ export const InnfyllingPage = () => {
                                 { !inntekterResponse.uforeHeleAaret ?
                                     <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert> : null }
                                 todo link? open in new tab?
-                                <FormFields
+                                <FormFieldsEps
                                     year={selectedYear}
                                     errors={errors}
                                     setErrors={setErrors}

@@ -8,7 +8,8 @@ const NUMBER_FORMATTER = new Intl.NumberFormat('nb-NO', { style: 'decimal', useG
 
 const GRAPH_DATA: Options = {
     chart: {
-        type: 'column'
+        type: 'column',
+        marginTop: 40
     },
     title: undefined,
     credits: undefined,
@@ -24,7 +25,14 @@ const GRAPH_DATA: Options = {
     yAxis: {
         min: 0,
         title: {
-            text: 'kroner'
+            align: 'high',
+            offset: 15,
+            text: 'Kroner',
+            rotation: 0,
+            y: -30,
+            style: {
+                fontSize: '15px',
+            }
         },
         stackLabels: {
             enabled: true

@@ -9,6 +9,11 @@ export type Message = {
     metadata: Record<string, unknown>;
 };
 
+export interface InitiateResponse {
+    messages: Message[];
+    data: InitiateData;
+}
+
 export interface GetInntektsgrenseResponse {
     messages: Message[]
     data: InitiateData

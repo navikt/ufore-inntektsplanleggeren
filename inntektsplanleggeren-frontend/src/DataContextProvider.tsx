@@ -3,7 +3,7 @@ import {
     getInitiate,
 } from "@/api/apiFetching";
 import {
-    InitiateData,
+    InitiateData, InitiateResponse,
     InntekterResponse,
     Message,
     SendApplicationResponse,
@@ -33,7 +33,8 @@ export const messagesDefaultValue: Message[]  = []
 // export const WarningMessageDefaultValue: Message[] | null = []
 
 interface DataContextValue {
-    initialViewData: InitiateData;
+    initiateResponse: InitiateResponse | null;
+    setInitiateResponse: (value: InitiateResponse) => void;
 
     inntekterResponse: InntekterResponse | null;
     setInntekterResponse: (value: InntekterResponse) => void;
@@ -64,7 +65,8 @@ interface DataContextValue {
 }
 
 const DataContextDefaultValue: DataContextValue = {
-    initialViewData: InitialViewDefaultData,
+    initiateResponse: null,
+    setInitiateResponse: () => undefined,
 
     inntekterResponse: null,
     setInntekterResponse: () => undefined,
@@ -104,7 +106,7 @@ interface DataContextProviderProps {
 
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
-    const [initialViewResponse, setInitialViewResponse] = useState(DataContextDefaultValue.initialViewData)
+    const [initiateResponse, setInitiateResponse] = useState(DataContextDefaultValue.initiateResponse)
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
     const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
@@ -133,11 +135,10 @@ function DataContextProvider(props: DataContextProviderProps) {
                 if (refetch) {
                     try {
                         setLoading(true)
+
                         const inntektsPlanleggerenResponse = await getInitiate()
-                        setInitialViewResponse(inntektsPlanleggerenResponse.data)
-                        console.log(inntektsPlanleggerenResponse.data)
-                        setMessages(inntektsPlanleggerenResponse.messages)
-                        // setInitialWarningBox(inntektsPlanleggerResponse.messages)
+                        console.log(initiateResponse)
+                        setInitiateResponse(inntektsPlanleggerenResponse)
 
                         setLoading(false)
                     } catch (e) {
@@ -153,7 +154,8 @@ function DataContextProvider(props: DataContextProviderProps) {
 
     return (
         <DataContext.Provider value={{
-            initialViewData: initialViewResponse,
+            initiateResponse,
+            setInitiateResponse,
 
             inntekterResponse,
             setInntekterResponse,

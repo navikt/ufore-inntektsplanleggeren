@@ -12,18 +12,18 @@ import {
 import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
 import { useNavigate } from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {YearView} from "@/components/initialView/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 import {deleteState, getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
-import {MessageCodes} from "@/api/model/MessageCodes";
+import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
 
 export function InitialView() {
-    const {initialViewData, messages, setInntekterResponse} = useContext(DataContext)
+    const {initiateResponse, messages, setInntekterResponse} = useContext(DataContext)
     const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
@@ -60,12 +60,15 @@ export function InitialView() {
             </Alert>
         );
     }
-
+    if(initiateResponse === null) {
+        return null;
+    }
 
     return (
         <VStack gap="10">
-            {/* warningMessage !== null && warningMessage.length > 0 ?*/}
-            {/* <Alert variant="warning">{warningMessage[0].details}</Alert> :*/}
+            { initiateResponse?.messages.map((message, index) => (
+                <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
+            ))}
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>
@@ -86,9 +89,9 @@ export function InitialView() {
                 </BodyShort>
             </section>
 
-            { initialViewData !== null &&
-            <ExpectedIncomeBox forventetInntekt={initialViewData.forventetInntekt}
-                               forventetInntektAnnenForelder={initialViewData.forventetInntektAnnenForelder}/>
+            { initiateResponse.data !== null &&
+            <ExpectedIncomeBox forventetInntekt={initiateResponse.data.forventetInntekt}
+                               forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}/>
             }
 
             <section>
@@ -98,7 +101,7 @@ export function InitialView() {
                 </BodyLong>
             </section>
 
-            <InntektsgrenseCard displayData={initialViewData}/>
+            <InntektsgrenseCard displayData={initiateResponse.data}/>
 
 
             <Accordion>
@@ -138,9 +141,9 @@ export function InitialView() {
                 </Accordion.Item>
             </Accordion>
 
-            {(initialViewData?.aktuelleAar && initialViewData.aktuelleAar.length > 0) &&
+            {(initiateResponse.data?.aktuelleAar && initiateResponse.data.aktuelleAar.length > 0) &&
                 <VStack gap="10">
-                    <YearView error={errorMessage} availableYears={initialViewData.aktuelleAar} infoType={1}></YearView>
+                    <YearView error={errorMessage} availableYears={initiateResponse.data.aktuelleAar} infoType={1}></YearView>
 
                     <HStack>
                         <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
