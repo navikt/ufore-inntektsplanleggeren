@@ -1,0 +1,52 @@
+== Tilgangskontroll
+=== Veileder/saksbehandler
+Tar utgangspunkt i:
+
+https://navno.sharepoint.com/sites/fag-og-ytelser-pesys/SitePages/Tilgangsstyring-i-Pesys.aspx
+https://confluence.adeo.no/display/SIK/Forretningspolicyer
+
+==== Basis tilgang:
+Veileder/saksbehandler må være i en av følgende AD-grupper:
+
+* 0000-GA-Pensjon_VEILEDER
+* 0000-GA-PENSJON_SAKSBEHANDLER
+* 0000-GA-PENSJON_KLAGEBEH
+* 0000-GA-PENSJON_BRUKERHJELPA
+
+I tillegg må man være med i:
+
+* 0000-ga-pensjon_ufore
+
+Det skilles ikke mellom lese og skrive tilgang.
+
+==== Personer med adressebeskyttelse
+Krever medlemskap i gruppe:
+
+* 0000-GA-Fortrolig_Adresse
+* 0000-GA-Strengt_Fortrolig_Adresse
+
+==== Skjermede NAV ansatte
+Krever medlemskap i gruppe:
+
+* 0000-GA-Egne_ansatte
+
+==== Geografi
+Ingen begrensninger basert på geografi
+
+==== Annet
+Det kreves tilgang for å hente ut inntektsdata (dette sjekkes ikke inntektsplanleggeren, men inntektskomponeten), må være medlem i følgende grupper:
+
+* 0000-GA-INNTK
+* 0000-GA-INNTK_UFOERE
+
+=== Innbygger/Borger
+
+==== Innloggingsnivå
+Det kreves innloggingsnivå ‘substantial’ og ‘high’ for å kunne bruke tjenesten.
+
+==== Adressebeskyttelse
+Dersom innbygger har adressebeskyttelse (Strengt Fortrolig, Strengt Fortrolig Utland, Fortrolig) kreves innloggingsnivå ‘high’.
+
+==== Fullmakt
+Dersom det foreligger et gyldig fullmaktsforhold, kan en fullmaktsmottaker få tilgang.
+Dette gjelder ikke dersom innbygger har adressebeskyttelse.

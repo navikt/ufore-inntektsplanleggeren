@@ -1,0 +1,2 @@
+== Beskrivelse
+Inntekstkomponenten brukes av uføre for å planlegge inntekter som kommer i tillegg til trygd, dette for å unngå brutale etteroppgjør.

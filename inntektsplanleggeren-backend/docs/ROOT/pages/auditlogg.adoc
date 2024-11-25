@@ -1,0 +1,5 @@
+== Audit logging
+Det logges til audit logg ved initielt kall til backend, og ved innsending av ny inntektsplan.
+
+Det logges når applikasjon brukes av veileder/saksbehandler eller fullmektig (fullmaktsmottaker)
+
