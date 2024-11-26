@@ -30,7 +30,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                     </Table.Header>
                     <Table.Body>
                         <Table.Row>
-                            <Table.HeaderCell scope="row">Uføretrygd inkludert gjenlevendetillegg</Table.HeaderCell>
+                            <Table.HeaderCell scope="row">{gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg" : "Uføretrygd"}</Table.HeaderCell>
                             <Table.DataCell align="right"><FormatKroner value={uforetrygd.yearly.before + (gjenlevendetillegg?.yearly.before ?? 0)}/></Table.DataCell>
                             <Table.DataCell align="right"><FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)}/></Table.DataCell>
                         </Table.Row>

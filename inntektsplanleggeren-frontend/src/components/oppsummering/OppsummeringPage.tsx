@@ -39,7 +39,7 @@ export const OppsummeringPage = () => {
         navigate(PageLinks.KVITTERING);
     }
 
-    return (
+    if (simulationResponse?.result) return (
         <VStack gap="4">
             { simulationResponse?.messages.map((message, index) => (
                 <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
@@ -64,7 +64,7 @@ export const OppsummeringPage = () => {
 
             <VStack gap="3">
                 <Heading size={"medium"}>Oversikt i graf</Heading>
-                <Graph/>
+                <Graph simulationResult={simulationResponse?.result}/>
             </VStack>
 
             <VStack>
@@ -77,7 +77,8 @@ export const OppsummeringPage = () => {
 
             <ReadMore header="Månedsbeløp spesifisert">
                 <VStack>
-                    <BodyLong>Uføretrygd inkludert gjenlevendetillegg: <FormatKroner value={(simulationResponse?.result.uforetrygd?.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
+                    <BodyLong>{ simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
+                        <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
                     { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
                     { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
                     { simulationResponse?.result.gjenlevendetillegg !== null ?

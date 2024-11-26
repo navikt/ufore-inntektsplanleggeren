@@ -1,8 +1,7 @@
 import { VStack } from "@navikt/ds-react";
-import {useContext} from 'react';
 import Highcharts, {Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { DataContext } from "@/DataContextProvider";
+import {SimulationResult} from "@/api/model/ApiRequests";
 
 const NUMBER_FORMATTER = new Intl.NumberFormat('nb-NO', { style: 'decimal', useGrouping: true });
 
@@ -62,9 +61,7 @@ const GRAPH_DATA: Options = {
 
     };
 
-export const Graph = () => {
-    const { simulationResponse } = useContext(DataContext);
-
+export const Graph = (props : { simulationResult : SimulationResult}) => {
     const tooltip: Options['tooltip'] = {
         headerFormat: '<b>{point.x}</b><br/>',
             pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
@@ -73,13 +70,13 @@ export const Graph = () => {
     return (
         <VStack>
             <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA, tooltip, series: [{
-                name: 'Uføretrygd inkludert gjenlevendetillegg',
+                name: props.simulationResult.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd',
                 dataLabels: {
                 enabled: false
                 },
                 data: [
-                    (simulationResponse?.result?.uforetrygd.yearly.before ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.before ?? 0),
-                    (simulationResponse?.result?.uforetrygd.yearly.after ?? 0) + (simulationResponse?.result?.gjenlevendetillegg?.yearly.after ?? 0)],
+                    (props.simulationResult.uforetrygd.yearly.before ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0),
+                    (props.simulationResult.uforetrygd.yearly.after ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0)],
                 color: "var(--a-deepblue-500)"
             }, {
                 name: 'Din forventede inntekt',
@@ -87,18 +84,18 @@ export const Graph = () => {
                 enabled: false
                 },
                 data: [
-                    simulationResponse?.result?.forventetInntekt.yearly.before ?? 0,
-                    simulationResponse?.result?.forventetInntekt.yearly.after ?? 0],
+                    props.simulationResult.forventetInntekt.yearly.before ?? 0,
+                    props.simulationResult.forventetInntekt.yearly.after ?? 0],
                 color: "var(--a-green-200)"
             },
-                simulationResponse?.result.barnetilleggFellesbarn || simulationResponse?.result.barnetilleggSaerkullsbarn ? {
+                    props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn ? {
                 name: 'Barnetillegg',
                 dataLabels: {
                 enabled: false
                 },
                 data: [
-                    (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.before ?? 0),
-                    (simulationResponse?.result?.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (simulationResponse?.result?.barnetilleggFellesbarn?.yearly.after ?? 0)],
+                    (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0),
+                    (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.after ?? 0)],
                 color: "var(--a-purple-400)"
             } : undefined,
             ].filter(isNotUndefined)}} />
