@@ -96,6 +96,33 @@ jobs:
       nais-template-production: dinpensjon-frontend/.nais/alerts-prod-veileder.yml
       production-cluster: prod-gcp
 
+  deploy-uforetrygd-backend-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: uforetrygd-backend/.nais/alerts-prod.yml
+      production-cluster: prod-gcp
+
+  deploy-uforetrygd-frontend-borger-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: uforetrygd-frontend/.nais/alerts-prod-borger.yml
+      production-cluster: prod-gcp
+
+  deploy-uforetrygd-frontend-veileder-alerts:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      nais-template-production: uforetrygd-frontend/.nais/alerts-prod-veileder.yml
+      production-cluster: prod-gcp
+
 #  deploy-opptjening-overforomsorgsopptjening-backend-alerts:
 #    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy-alerts.yml@main
 #    permissions:
