@@ -53,7 +53,7 @@ class CefEntry(
         private const val PREAMBLE = "CEF:"
         private const val SEPARATOR = "|"
         private const val DEVICE_VENDOR = "Uføre"
-        private const val DEVICE_PRODUCT = "inntektsplanleggeren-backend"
+        private const val DEVICE_PRODUCT = "inntektsplanleggeren"
         private const val DEVICE_VERSION = "1.0"
     }
 }
