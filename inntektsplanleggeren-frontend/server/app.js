@@ -221,7 +221,8 @@ app.get(
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
         console.log(req.query.simuleringsaar)
-        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/status?valgtaar=${req.query.valtaar}&innsendingstidspunkt=${req.query.innsendingstidspunkt}`, {
+        const url = process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/status?valgtaar=${req.query.valtaar}&innsendingstidspunkt=${req.query.innsendingstidspunkt}`
+        const response = await fetch(encodeURI(url), {
             method: req.method,
             headers: newHeaders,
             body: JSON.stringify(req.body)
