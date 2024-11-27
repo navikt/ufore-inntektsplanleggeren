@@ -23,7 +23,7 @@ import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
 
 export function InitialView() {
-    const {initiateResponse, messages, setInntekterResponse} = useContext(DataContext)
+    const {initiateResponse, setInntekterResponse} = useContext(DataContext)
     const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const navigate = useNavigate()
@@ -52,23 +52,27 @@ export function InitialView() {
         }
     }
 
+    if(!initiateResponse) {
+        return null;
+    }
 
-    if (messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
+    if (initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
         return (
             <Alert variant="warning">
                 Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
             </Alert>
         );
     }
-    if(initiateResponse === null) {
-        return null;
-    }
+
+
 
     return (
         <VStack gap="10">
-            { initiateResponse?.messages.map((message, index) => (
-                <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
-            ))}
+            { initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ?
+                <Alert variant="warning">
+                    Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
+                </Alert> : null
+            }
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>

@@ -13,7 +13,7 @@ export const KvitteringPage = () => {
     // TODO: Get application by ID and use creation date to determine if the user has waited long.
 
     const [isWaiting, setIsWaiting] = useState(true);
-    const { setFormStep } = useContext(FormStateContext);
+    const { setFormStep, getBrukerinntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
     const { statusResponse, setStatusResponse } = useContext(DataContext);
 
     useEffect(() => {
@@ -63,27 +63,12 @@ export const KvitteringPage = () => {
         );
     }
 
-    if (isWaiting) {
-        return (
-            <VStack className="form-container">
-                <Heading level="2" size="small">Vent mens vi behandler innsendingen</Heading>
-                <HStack gap="10">
-                    <Loader size="3xlarge" title="Venter..." />
-                    <VStack>
-                        <Heading spacing size="small" level="3">Vi forsøker automatisk behandling </Heading>
-                        <BodyShort>Dette kan ta opptil ett minutt. Hvis vi ikke kan behandle innsendingen din automatisk, blir den behandlet av en saksbehandler.</BodyShort>
-                    </VStack>
-                </HStack>
-            </VStack>
-        );
-    }
-
     return (
         <VStack className="form-container">
             <Heading level="2" size="large">Kvittering</Heading>
 
             {statusResponse ?
-                <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={10} epsRegisteredInntekt={10} /> : null}
+                <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={getBrukerinntektSum()} epsRegisteredInntekt={getAnnenForelderInntektSum()} /> : null}
 
             <Heading size={"large"}>Etteroppgjør</Heading>
             <BodyLong>

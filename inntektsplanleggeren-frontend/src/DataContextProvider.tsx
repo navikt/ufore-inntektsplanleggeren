@@ -48,8 +48,6 @@ interface DataContextValue {
     statusResponse: StatusResponse | null,
     setStatusResponse: (value: StatusResponse) => void,
 
-    messages: Message[];
-    setMessages: (value: Message[]) => void;
     refetch: boolean;
     setRefetch: (value: boolean) => void;
     loading: boolean;
@@ -80,8 +78,6 @@ const DataContextDefaultValue: DataContextValue = {
     statusResponse: null,
     setStatusResponse: () => undefined,
 
-    messages: messagesDefaultValue,
-    setMessages: () => undefined,
     refetch: true,
     setRefetch: () => undefined,
      
@@ -111,7 +107,6 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
     const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
     const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
-    const [messages, setMessages] = useState(DataContextDefaultValue.messages)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -171,8 +166,7 @@ function DataContextProvider(props: DataContextProviderProps) {
 
             refetch,
             setRefetch,
-            messages,
-            setMessages,
+
             loading,
             setLoading,
             error,

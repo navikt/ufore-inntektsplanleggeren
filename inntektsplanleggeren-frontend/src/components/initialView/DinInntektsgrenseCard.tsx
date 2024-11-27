@@ -27,10 +27,6 @@ export function InntektsgrenseCard(props: {
                 </BodyLong>
 
                 {isOpen ? <VStack gap="5">
-                    <BodyLong word-break:break-all>
-                        Forventet inntekt kan komme fra dine tidligere registreringer, eller i noen tilfeller fra opplysninger vi har hentet. Har du nylig meldt inn ny inntekt, vil den ikke vises her før den har blitt behandlet hos oss.
-                    </BodyLong>
-
                     <section>
                         <Label as="p">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Label>
                         { props.displayData.hasVarigTilrettelagtArbeid ?

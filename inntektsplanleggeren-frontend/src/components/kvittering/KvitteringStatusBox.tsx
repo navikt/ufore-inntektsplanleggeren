@@ -66,7 +66,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                 <VStack gap="5">
                     <Alert variant="info">
                         <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
-                        <BodyShort>Din registrerte inntekt i {selectedYear}: <FormatKroner value={registeredInntekt}/> (før skatt)</BodyShort>
+                        <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
                         { epsRegisteredInntekt && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
                             value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
                     </Alert>

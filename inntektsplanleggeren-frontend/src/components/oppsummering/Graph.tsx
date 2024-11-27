@@ -78,7 +78,18 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                     (props.simulationResult.uforetrygd.yearly.before ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0),
                     (props.simulationResult.uforetrygd.yearly.after ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0)],
                 color: "var(--a-deepblue-500)"
-            }, {
+            },
+                props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn ? {
+                    name: 'Barnetillegg uføretrygd',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    data: [
+                        (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0),
+                        (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.after ?? 0)],
+                    color: "var(--a-purple-400)"
+                    } : undefined,
+            {
                 name: 'Din forventede inntekt',
                 dataLabels: {
                 enabled: false
@@ -87,17 +98,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                     props.simulationResult.forventetInntekt.yearly.before ?? 0,
                     props.simulationResult.forventetInntekt.yearly.after ?? 0],
                 color: "var(--a-green-200)"
-            },
-                    props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn ? {
-                name: 'Barnetillegg',
-                dataLabels: {
-                enabled: false
-                },
-                data: [
-                    (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0),
-                    (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.after ?? 0)],
-                color: "var(--a-purple-400)"
-            } : undefined,
+            }
             ].filter(isNotUndefined)}} />
         </VStack>
     )

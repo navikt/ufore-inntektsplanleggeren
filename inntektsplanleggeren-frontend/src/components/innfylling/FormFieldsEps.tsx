@@ -52,7 +52,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
 
         if (isNaN(numericValue) || numericValue < 0) {
             setInputData((prev) => ({ ...prev, [field]: target.value }));
-            setFieldErrors((prev) => ({ ...prev, [field]: 'Du kan ikke skrive mellomrom, bokstaver eller tegn.tr' }));
+            setFieldErrors((prev) => ({ ...prev, [field]: 'Du kan ikke skrive mellomrom, bokstaver eller tegn' }));
         } else {
             setInputData((prev) => ({ ...prev, [field]: undefined }));
             setFieldErrors((prev) => ({ ...prev, [field]: undefined }));

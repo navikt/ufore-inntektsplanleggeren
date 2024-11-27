@@ -4,15 +4,21 @@ import {StatusCodes} from "@/api/model/StatusCodes";
 
 export const mockInitiateResponse = {
     "messages":[
-        {
-            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            "metadata": {}
-        },
+        // {
+        //     "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
+        //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": MessageTypes.WARNING,
+        //     "metadata": {}
+        // },
         // {
         //     "messageCode": "USER_HAS_NO_UFORE",
         //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": "WARNING",
+        //     "metadata": {}
+        // }
+        // {
+        //     "messageCode": "USER_HAS_NO_LOPENDE_VEDTAK_YET",
+        //     "details": "",
         //     "type": "WARNING",
         //     "metadata": {}
         // }

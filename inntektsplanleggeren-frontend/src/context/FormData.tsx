@@ -14,7 +14,7 @@ interface FormState {
     setAnnenForelderInntekt: (value: SetStateAction<PersonInntekter | null> | null) => void;
 
     getBrukerinntektSum: () => number;
-    getAnnenForelderInntektSum: () => number;
+    getAnnenForelderInntektSum: () => number | null;
 }
 
 const forventedeInntekterDefaultValue = {
@@ -33,7 +33,7 @@ export const FormStateContext = createContext<FormState>({
     annenForelderInntekt: null,
     setAnnenForelderInntekt: () => undefined,
     getBrukerinntektSum: () => 0,
-    getAnnenForelderInntektSum: () => 0,
+    getAnnenForelderInntektSum: () => null,
     formStep: 1,
     setFormStep: () => undefined,
 });
@@ -59,7 +59,7 @@ export const FormStateComponent = ({ children }: Props) => {
     }, [selectedYear]);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
-    const getAnnenForelderInntektSum = (): number => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : 0;
+    const getAnnenForelderInntektSum = (): number | null => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : null;
 
     return (
         <FormStateContext.Provider value={{

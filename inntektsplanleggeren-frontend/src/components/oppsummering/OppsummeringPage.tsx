@@ -7,7 +7,7 @@ import {DataContext} from "@/DataContextProvider";
 import {send} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
-import {MessageTypes} from "@/api/model/MessageCodes";
+import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/oppsummering/Graph";
 import {InputSummary} from "@/components/oppsummering/InputSummary";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
@@ -40,10 +40,12 @@ export const OppsummeringPage = () => {
     }
 
     if (simulationResponse?.result) return (
-        <VStack gap="4">
-            { simulationResponse?.messages.map((message, index) => (
-                <Alert key={index} variant={message.details === MessageTypes.ERROR ? "error" : "warning"}>{message.details}</Alert>
-            ))}
+        <VStack gap="5">
+            { simulationResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ?
+                <Alert variant="warning">
+                    Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
+                </Alert> : null
+            }
 
             <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
 
