@@ -109,6 +109,7 @@ export type SimulationResult = {
 export type SendApplicationResponse = {
     messages: Message[];
     status: string;
+    innsendingsTidspunkt: string
 };
 
 export type SimulationDetail = {

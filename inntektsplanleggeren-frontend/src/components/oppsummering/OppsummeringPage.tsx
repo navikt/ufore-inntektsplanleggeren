@@ -83,8 +83,6 @@ export const OppsummeringPage = () => {
                         <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
                     { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
                     { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                    { simulationResponse?.result.gjenlevendetillegg !== null ?
-                        <BodyLong>Gjenlevendetillegg: <FormatKroner value={simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0}/></BodyLong> : null }
                 </VStack>
             </ReadMore>
             

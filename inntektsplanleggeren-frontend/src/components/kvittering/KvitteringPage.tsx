@@ -13,8 +13,8 @@ export const KvitteringPage = () => {
     // TODO: Get application by ID and use creation date to determine if the user has waited long.
 
     const [isWaiting, setIsWaiting] = useState(true);
-    const { setFormStep, getBrukerinntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
-    const { statusResponse, setStatusResponse } = useContext(DataContext);
+    const { setFormStep, getBrukerinntektSum, getAnnenForelderInntektSum, selectedYear } = useContext(FormStateContext);
+    const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext);
 
     useEffect(() => {
         setFormStep(3);
@@ -31,13 +31,15 @@ export const KvitteringPage = () => {
                 clearInterval(intervalId);
                 return;
             }
-            getStatus("", new Date()).then(result => { //todo id ??
-                setStatusResponse(result);
-                if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
-                    setIsWaiting(false);
-                    clearInterval(intervalId);
-                }
-            });
+            if (selectedYear && sendResponse?.innsendingsTidspunkt) {
+                getStatus(selectedYear, sendResponse.innsendingsTidspunkt).then(result => {
+                    setStatusResponse(result);
+                    if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
+                        setIsWaiting(false);
+                        clearInterval(intervalId);
+                    }
+                });
+            }
             attempts++;
         }, 1_000);
 

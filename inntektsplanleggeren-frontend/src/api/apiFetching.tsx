@@ -229,7 +229,7 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
     return res.json();
 }
 
-export async function getStatus(valgtaar: string, innsendingstidspunkt: Date): Promise<StatusResponse> {
+export async function getStatus(valgtaar: number, innsendingstidspunkt: string): Promise<StatusResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 

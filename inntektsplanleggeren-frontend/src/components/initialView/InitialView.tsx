@@ -21,6 +21,7 @@ import {deleteState, getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
+import {Warnings} from "@/components/common/Warnings";
 
 export function InitialView() {
     const {initiateResponse, setInntekterResponse} = useContext(DataContext)
@@ -68,11 +69,7 @@ export function InitialView() {
 
     return (
         <VStack gap="10">
-            { initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ?
-                <Alert variant="warning">
-                    Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
-                </Alert> : null
-            }
+            <Warnings messages={initiateResponse.messages}/>
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>

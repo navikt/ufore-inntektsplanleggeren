@@ -276,7 +276,8 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
         }
     }
 ],
-    "status": "AUTOMATISK_BEHANDLING"
+    "status": "AUTOMATISK_BEHANDLING",
+    "innsendingsTidspunkt":"2024-11-27 11:50:44"
 }
 
 export const mockStatusResponse : StatusResponse = {
