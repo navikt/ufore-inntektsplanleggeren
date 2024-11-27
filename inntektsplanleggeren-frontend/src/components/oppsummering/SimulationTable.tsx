@@ -35,7 +35,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                             <Table.DataCell align="right"><FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)}/></Table.DataCell>
                         </Table.Row>
                         <Table.Row>
-                            <Table.HeaderCell scope="row">Forventet Inntekt</Table.HeaderCell>
+                            <Table.HeaderCell scope="row">Forventet inntekt</Table.HeaderCell>
                             <Table.DataCell align="right"><FormatKroner value={forventetInntekt.yearly.before}/></Table.DataCell>
                             <Table.DataCell align="right"><FormatKroner value={forventetInntekt.yearly.after}/></Table.DataCell>
                         </Table.Row>

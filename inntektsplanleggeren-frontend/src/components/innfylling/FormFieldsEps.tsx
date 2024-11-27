@@ -185,7 +185,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
 
             <Box padding="4" background="surface-info-subtle">
                 <VStack>
-                    <Heading size="small"> Din samlede forventede inntekt i {year}: </Heading>
+                    <Heading size="small"> Annen forelder sin samlede inntekt i {year}: </Heading>
                     <BodyShort className="sum"><FormatKroner value={inntektSum}/> før skatt</BodyShort>
                 </VStack>
             </Box>
