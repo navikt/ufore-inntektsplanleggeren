@@ -7,7 +7,7 @@ import {DataContext} from "@/DataContextProvider";
 import {send} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
-import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
+import {MessageCodes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/oppsummering/Graph";
 import {InputSummary} from "@/components/oppsummering/InputSummary";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";

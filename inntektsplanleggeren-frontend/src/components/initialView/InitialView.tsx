@@ -19,7 +19,7 @@ import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 import {deleteState, getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
-import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
+import {MessageCodes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
 
 export function InitialView() {
