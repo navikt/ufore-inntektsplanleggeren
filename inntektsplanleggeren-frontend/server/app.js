@@ -211,7 +211,7 @@ app.post(
     }
 );
 
-app.post(
+app.get(
     basePath + '/api/status',
     async (req, res) => {
 

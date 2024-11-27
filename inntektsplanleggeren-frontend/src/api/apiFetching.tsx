@@ -248,7 +248,7 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
 
     const url = basePath + `/api/send?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`
     const res = await fetch(encodeURI(url), {
-        method: "POST",
+        method: "GET",
         credentials: "include",
         headers: headers,
     });
