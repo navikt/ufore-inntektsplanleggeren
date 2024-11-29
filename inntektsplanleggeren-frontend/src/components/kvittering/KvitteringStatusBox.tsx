@@ -19,6 +19,20 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
 
     return (
         <VStack>
+            { !statusResponse || statusResponse.status === StatusCodes.TIL_BEHANDLING ?
+                <VStack gap="5">
+                    <Alert variant="info">
+                        <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
+                        <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
+                        { epsRegisteredInntekt && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
+                            value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
+                    </Alert>
+                    <VStack>
+                        <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring}/></BodyShort>  {/*    todo display date in nice format*/}
+                        <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
+                    </VStack>
+                </VStack>: null
+            }
 
 
             { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING ?
@@ -37,7 +51,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                         <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
                     </VStack>
                     <BodyLong>
-                        Vi har behandlet saken din og du vil snart motta et vedtaksbrev i <Link to="/">Din innboks (åpnes i ny fane)</Link>.  {/* TODO open in new tab!   */}
+                        Vi har behandlet saken din og du vil snart motta et vedtaksbrev i <Link target="_blank" to="/">Din innboks (åpnes i ny fane)</Link>.  {/* TODO link?   */}
                     </BodyLong>
                 </VStack>: null }
 
@@ -62,20 +76,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                 </VStack>: null
             }
 
-            { statusResponse.status === StatusCodes.TIL_BEHANDLING ?
-                <VStack gap="5">
-                    <Alert variant="info">
-                        <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
-                        <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
-                        { epsRegisteredInntekt && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
-                            value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
-                    </Alert>
-                    <VStack>
-                        <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring}/></BodyShort>  {/*    todo display date in nice format*/}
-                        <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
-                    </VStack>
-                </VStack>: null
-            }
+
         </VStack>
     )
 

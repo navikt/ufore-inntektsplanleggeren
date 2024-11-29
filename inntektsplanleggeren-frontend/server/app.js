@@ -197,7 +197,6 @@ app.post(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        console.log(req.query.simuleringsaar)
         const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/send?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders,
@@ -220,12 +219,10 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        console.log(req.query.simuleringsaar)
         const url = process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/status?valgtaar=${req.query.valtaar}&innsendingstidspunkt=${req.query.innsendingstidspunkt}`
         const response = await fetch(encodeURI(url), {
             method: req.method,
             headers: newHeaders,
-            body: JSON.stringify(req.body)
         });
 
         const body = await response.json();

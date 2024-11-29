@@ -69,8 +69,8 @@ export const KvitteringPage = () => {
         <VStack className="form-container">
             <Heading level="2" size="large">Kvittering</Heading>
 
-            {statusResponse ?
-                <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={getBrukerinntektSum()} epsRegisteredInntekt={getAnnenForelderInntektSum()} /> : null}
+
+            { statusResponse ? <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={getBrukerinntektSum()} epsRegisteredInntekt={getAnnenForelderInntektSum()} /> : null }
 
             <Heading size={"large"}>Etteroppgjør</Heading>
             <BodyLong>
