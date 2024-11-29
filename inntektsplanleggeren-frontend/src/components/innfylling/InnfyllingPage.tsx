@@ -14,6 +14,7 @@ import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {PageLinks} from "@/form-container";
 import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
+import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 
 
 export const InnfyllingPage = () => {
@@ -140,6 +141,9 @@ export const InnfyllingPage = () => {
                         <Button type="submit" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>
                             Gå videre og se resultat
                         </Button>
+                    </HStack>
+                    <HStack>
+                        <CancelConfirmationModal/>
                     </HStack>
                 </VStack>
             </form>

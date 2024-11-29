@@ -12,6 +12,7 @@ import {Graph} from "@/components/oppsummering/Graph";
 import {InputSummary} from "@/components/oppsummering/InputSummary";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
+import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 
 export const OppsummeringPage = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
@@ -95,6 +96,9 @@ export const OppsummeringPage = () => {
                 <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}onClick={handleSubmit} loading={isLoading}>
                     Gå til innsending
                 </Button>
+            </HStack>
+            <HStack>
+                <CancelConfirmationModal/>
             </HStack>
         </VStack>
     );

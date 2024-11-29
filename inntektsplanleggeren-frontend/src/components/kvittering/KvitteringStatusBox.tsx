@@ -61,9 +61,9 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                         <VStack gap="3">
                             <Heading size="small">Nye inntekter er registrert, og de påvirker ikke utbetalingen din</Heading>
                             <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
-                            { epsRegisteredInntekt && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
-                                value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
-                            { statusResponse.maandedligeUtbetalinger && <BodyShort>Du får månedlig utbetalt: <strong><FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep}/> (før skatt)</strong></BodyShort> }
+                            { epsRegisteredInntekt ? <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
+                                value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> : null}
+                            { statusResponse.maandedligeUtbetalinger ? <BodyShort>Du får månedlig utbetalt: <strong><FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep}/> (før skatt)</strong></BodyShort> : null}
                         </VStack>
                     </Alert>
                     <VStack>

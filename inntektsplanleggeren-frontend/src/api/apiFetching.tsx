@@ -11,7 +11,7 @@ import {
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = false;
+const MOCKS_ENABLED = true;
 
 const headers = {
     'Content-Type': 'application/json',
