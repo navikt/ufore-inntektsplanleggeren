@@ -58,7 +58,7 @@ export const OppsummeringPage = () => {
                     </VStack>
                     {annenForelderInntekt ?
                         <VStack>
-                            <Heading size="small">Annen forelder forventet inntekt i {selectedYear}</Heading>
+                            <Heading size="small">Annen forelders forventede inntekt i {selectedYear}</Heading>
                             <InputSummary inntekter={annenForelderInntekt}></InputSummary>
                         </VStack> : null }
                     </VStack>

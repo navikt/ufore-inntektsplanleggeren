@@ -11,7 +11,7 @@ export const InputSummary = (props: { inntekter: PersonInntekter }) => {
         <BodyShort>Inntekt fra utlandet: <FormatKroner value={props.inntekter.inntektUtland ?? 0}/></BodyShort>
         <BodyShort>Pensjoner og uførepensjon fra andre enn Folketrygden: <FormatKroner value={props.inntekter.andrePensjonsgivendeYtelser ?? 0}/></BodyShort>
         <BodyShort>Pensjoner fra utlandet: <FormatKroner value={props.inntekter.pensjonUtland ?? 0}/></BodyShort>
-    <BodyShort><strong>Sum forventede inntekt: <FormatKroner value={(props.inntekter.arbeidsinntekt ?? 0) + (props.inntekter.naeringsinntekt ?? 0) + (props.inntekter.inntektUtland ?? 0) + (props.inntekter.andrePensjonsgivendeYtelser ?? 0) + (props.inntekter.pensjonUtland ?? 0)}/></strong></BodyShort>
+    <BodyShort><strong>Sum forventede inntekter: <FormatKroner value={(props.inntekter.arbeidsinntekt ?? 0) + (props.inntekter.naeringsinntekt ?? 0) + (props.inntekter.inntektUtland ?? 0) + (props.inntekter.andrePensjonsgivendeYtelser ?? 0) + (props.inntekter.pensjonUtland ?? 0)}/></strong></BodyShort>
 </VStack>
 
     );
