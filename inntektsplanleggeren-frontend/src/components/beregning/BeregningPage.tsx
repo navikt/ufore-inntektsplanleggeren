@@ -2,19 +2,19 @@ import {Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link} from "
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import {SimulationTable} from "@/components/oppsummering/SimulationTable";
+import {SimulationTable} from "@/components/beregning/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
 import {send} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
 import {MessageCodes} from "@/api/model/MessageCodes";
-import {Graph} from "@/components/oppsummering/Graph";
-import {InputSummary} from "@/components/oppsummering/InputSummary";
+import {Graph} from "@/components/beregning/Graph";
+import {InputSummary} from "@/components/beregning/InputSummary";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 
-export const OppsummeringPage = () => {
+export const BeregningPage = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
     const { simulationResponse, setSendResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);

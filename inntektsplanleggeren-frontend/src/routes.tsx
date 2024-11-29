@@ -4,7 +4,7 @@ import {InitialView} from "@/components/initialView/InitialView";
 import App from "@/App";
 import {FormContainer} from "@/form-container";
 import {InnfyllingPage} from "@/components/innfylling/InnfyllingPage";
-import {OppsummeringPage} from "@/components/oppsummering/OppsummeringPage";
+import {BeregningPage} from "@/components/beregning/BeregningPage";
 import {KvitteringPage} from "@/components/kvittering/KvitteringPage";
 import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
@@ -21,7 +21,7 @@ export const AppRoutes = () => (
                     <Route element={<YearGuard />}>
                         <Route element={<FormContainer />}>
                             <Route index path={"/forventede-inntekter"} element={<InnfyllingPage />} />
-                            <Route index path={"/oppsummering"} element={<OppsummeringPage />} />
+                            <Route index path={"/oppsummering"} element={<BeregningPage />} />
                             <Route index path={"/kvittering"} element={<KvitteringPage />} />
                         </Route>
                     </Route>
