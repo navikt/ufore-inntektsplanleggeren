@@ -6,6 +6,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Ytelseskomponent
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -40,15 +41,10 @@ class SimuleringService(
         )
         return SimuleringData(
             valideringsresultat = valideringsresultat, simuleringsresultat = Simuleringsresultat(
-                uforetrygd = SimuleringAmounts(
-                    yearly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerYear,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerYear
-                    ), monthly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerMonth,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner.amountPerMonth
-                    )
-                ),
+                uforetrygd = convertYtelseskomponenterToSimuleringAmounts(
+                    simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner,
+                    simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.uforetrygdOrdiner
+                )!!,
                 forventetInntekt = SimuleringAmounts(
                     yearly = BeforeAndAfterValues(
                         before = forventedeInntekter.sumBenyttedeInntekterBruker,
@@ -58,44 +54,17 @@ class SimuleringService(
                         after = forventedeInntekterOppgitt.bruker.sum() / 12
                     )
                 ),
-                barnetilleggFellesbarn = SimuleringAmounts(
-                    yearly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerYear
-                            ?: 0,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerYear
-                            ?: 0
-                    ), monthly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerMonth
-                            ?: 0,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn?.amountPerMonth
-                            ?: 0
-                    )
+                barnetilleggFellesbarn = convertYtelseskomponenterToSimuleringAmounts(
+                    simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn,
+                    simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggFellesbarn
                 ),
-                barnetilleggSaerkullsbarn = SimuleringAmounts(
-                    yearly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerYear
-                            ?: 0,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerYear
-                            ?: 0
-                    ), monthly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerMonth
-                            ?: 0,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn?.amountPerMonth
-                            ?: 0
-                    )
+                barnetilleggSaerkullsbarn = convertYtelseskomponenterToSimuleringAmounts(
+                    simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn,
+                    simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.barnetilleggSaerkullsbarn
                 ),
-                gjenlevendetillegg = SimuleringAmounts(
-                    yearly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerYear
-                            ?: 0,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerYear
-                            ?: 0
-                    ), monthly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerMonth
-                            ?: 0,
-                        after = simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg?.amountPerMonth
-                            ?: 0
-                    )
+                gjenlevendetillegg = convertYtelseskomponenterToSimuleringAmounts(
+                    simuleringsresultat.currentUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg,
+                    simuleringsresultat.simulertUforetrygdSummary.uforetrygdYtelseskomponenter.gjenlevendetillegg
                 ),
                 sum = SimuleringAmounts(
                     yearly = BeforeAndAfterValues(
@@ -109,6 +78,27 @@ class SimuleringService(
             )
         )
     }
+
+    private fun convertYtelseskomponenterToSimuleringAmounts(
+        ytelseskomponentBefore: Ytelseskomponent?,
+        ytelseskomponentAfter: Ytelseskomponent?
+    ): SimuleringAmounts? {
+
+        if (ytelseskomponentBefore == null && ytelseskomponentAfter == null) {
+            return null
+        }
+        return SimuleringAmounts(
+            yearly = BeforeAndAfterValues(
+                before = ytelseskomponentBefore?.amountPerYear ?: 0,
+                after = ytelseskomponentAfter?.amountPerYear ?: 0
+            ),
+            monthly = BeforeAndAfterValues(
+                before = ytelseskomponentBefore?.amountPerMonth ?: 0,
+                after = ytelseskomponentAfter?.amountPerMonth ?: 0
+            )
+        )
+    }
+
 
     private fun getSumArligUforetrygd(simuleringsresultat: SimulerEndringUforetrygdResponse, simuleringsaar: Int): Int {
         return if (simuleringsresultat.gjeldendeBeregningFom?.year == simuleringsaar) {
