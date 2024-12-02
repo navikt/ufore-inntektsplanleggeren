@@ -10,15 +10,15 @@ import {
     BodyShort, GuidePanel, HStack
 } from "@navikt/ds-react";
 import { ArrowRightIcon } from '@navikt/aksel-icons';
-import {InntektsgrenseCard} from "@/components/initialView/DinInntektsgrenseCard";
+import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
 import { useNavigate } from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
-import {YearView} from "@/components/initialView/YearView";
+import {YearView} from "@/components/initial/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 import {deleteState, getInntekter} from "@/api/apiFetching";
-import {ExpectedIncomeBox} from "@/components/initialView/ExpectedIncomeBox";
+import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
 import {Warnings} from "@/components/common/Warnings";

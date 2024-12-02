@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {Routes, Route, BrowserRouter, Outlet, Navigate } from "react-router-dom";
-import {InitialView} from "@/components/initialView/InitialView";
+import {InitialView} from "@/components/initial/InitialView";
 import App from "@/App";
 import {FormContainer, PageLinks} from "@/form-container";
 import {InnfyllingPage} from "@/components/innfylling/InnfyllingPage";

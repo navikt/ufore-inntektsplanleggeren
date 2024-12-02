@@ -17,7 +17,7 @@ export const KvitteringPage = () => {
     const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext);
 
     useEffect(() => {
-        setFormStep(null);
+        setFormStep(4);
     }, [setFormStep]);
 
 
@@ -50,17 +50,12 @@ export const KvitteringPage = () => {
 
     if (isWaiting) {
         return (
-            <VStack className="form-container">
-                <Heading level="2" size="small">Vent mens vi behandler innsendingen</Heading>
-                <Alert variant="info">
-                    <HStack gap="10">
-                        <Loader size="3xlarge" title="Venter..." />
+            <VStack className="form-container" align="center" gap="20">
+                    <Heading level="2" size="large">Vent mens vi sender inn</Heading>
+                        <Loader size="3xlarge"/>
                         <VStack>
-                            <Heading spacing size="small" level="3">Vi forsøker automatisk behandling </Heading>
-                            <BodyShort>Dette kan ta opptil ett minutt. Hvis vi ikke kan behandle innsendingen din automatisk, blir den behandlet av en saksbehandler.</BodyShort>
+                            <BodyShort>Dette kan ta opptil ett minutt.</BodyShort>
                         </VStack>
-                    </HStack>
-                </Alert>
             </VStack>
         );
     }
@@ -86,8 +81,7 @@ export const KvitteringPage = () => {
 
             <Heading size={"large"}>Husk å oppdatere skattekortet</Heading>
             <BodyLong>
-                Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres.
-                <Link to={"/"}> Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane)</Link>
+                Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres. <Link to={"/"}>Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane)</Link>
             </BodyLong>
 
             <Heading size={"large"}>Må du melde fra til flere?</Heading>
@@ -101,7 +95,7 @@ export const KvitteringPage = () => {
             </BodyLong>
 
             <HStack gap="4">
-            <Button as={Link} to={PageLinks.DIN_UFORE} variant="primary">Din uføretrygd</Button>{/*    todo link */}
+            <Button as={Link} to={PageLinks.DIN_UFORE} variant="primary">Din uføretrygd</Button>
             </HStack>
         </VStack>
     );

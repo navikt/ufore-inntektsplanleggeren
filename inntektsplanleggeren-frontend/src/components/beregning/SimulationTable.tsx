@@ -61,7 +61,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                             <VStack gap="1">
                                 <BodyShort><strong>Uføretrygd inkludert gjenlevendetillegg</strong></BodyShort>
                                 <BodyShort>I dag: <FormatKroner value={uforetrygd.yearly.before + (gjenlevendetillegg?.yearly.before ?? 0)}/></BodyShort>
-                                <BodyShort>Med dine engringer: <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)}/></BodyShort>
+                                <BodyShort>Med dine endringer: <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)}/></BodyShort>
                             </VStack>
                             </Table.DataCell>
                         </Table.Row>
@@ -70,7 +70,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                             <VStack gap="1">
                                 <BodyShort><strong>Forventet Inntekt</strong></BodyShort>
                                 <BodyShort>I dag: <FormatKroner value={forventetInntekt.yearly.before}/></BodyShort>
-                                <BodyShort>Med dine engringer: <FormatKroner value={forventetInntekt.yearly.after}/></BodyShort>
+                                <BodyShort>Med dine endringer: <FormatKroner value={forventetInntekt.yearly.after}/></BodyShort>
                             </VStack>
                             </Table.DataCell>
                         </Table.Row>
@@ -80,7 +80,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                                     <VStack gap="1">
                                         <BodyShort><strong>Barnetillegg</strong></BodyShort>
                                         <BodyShort>I dag: <FormatKroner value={(barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)}/></BodyShort>
-                                        <BodyShort>Med dine engringer: <FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}/></BodyShort>
+                                        <BodyShort>Med dine endringer: <FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}/></BodyShort>
                                     </VStack>
                                 </Table.DataCell>
                             </Table.Row> : null }
@@ -89,7 +89,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                                 <VStack gap="1">
                                     <BodyShort><strong>Sum årlig</strong></BodyShort>
                                     <BodyShort>I dag: <FormatKroner value={sum.yearly.before}/></BodyShort>
-                                    <BodyShort>Med dine engringer: <FormatKroner value={sum.yearly.after}/></BodyShort>
+                                    <BodyShort>Med dine endringer: <FormatKroner value={sum.yearly.after}/></BodyShort>
                                 </VStack>
                             </Table.DataCell>
                         </Table.Row>

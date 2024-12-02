@@ -10,7 +10,7 @@ export const FormContainer = () => {
 
     return (
         <VStack gap="5">
-            { formStep >= 1 && formStep <= 3 ?
+            { (formStep >= 1 && formStep <= 3) ?
                 <HStack>
                     <Button as={Link} to={getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
                 </HStack> : null }
