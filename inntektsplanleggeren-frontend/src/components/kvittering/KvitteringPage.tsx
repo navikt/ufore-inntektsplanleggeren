@@ -17,7 +17,7 @@ export const KvitteringPage = () => {
     const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext);
 
     useEffect(() => {
-        setFormStep(3);
+        setFormStep(null);
     }, [setFormStep]);
 
 

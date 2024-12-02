@@ -52,12 +52,12 @@ export const InnfyllingPage = () => {
             setIsLoading(true);
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             setSimulationResponse(result);
-            navigate(PageLinks.OPPSUMMERING);
+            navigate(PageLinks.BEREGNING);
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
 
-        navigate(PageLinks.OPPSUMMERING);
+        navigate(PageLinks.BEREGNING);
     };
 
     if(inntekterResponse === null) {

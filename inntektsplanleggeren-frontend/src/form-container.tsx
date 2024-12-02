@@ -10,15 +10,16 @@ export const FormContainer = () => {
 
     return (
         <VStack gap="5">
-            <HStack>
-                <Button as={Link} to={getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
-            </HStack>
+            { formStep >= 1 && formStep <= 3 ?
+                <HStack>
+                    <Button as={Link} to={getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
+                </HStack> : null }
             <Heading level="1" size="large">{getPageName(formStep)}</Heading>
-            <FormProgress totalSteps={3} activeStep={formStep} interactiveSteps={false}>
+            { formStep ? <FormProgress totalSteps={3} activeStep={formStep} interactiveSteps={false}>
                 <FormProgress.Step href={BASE_PATH + PageLinks.FORVENTEDE_INNTEKTER} completed>{getPageName(1)}</FormProgress.Step>
                 <FormProgress.Step href={BASE_PATH + PageLinks.BEREGNING}>{getPageName(2)}</FormProgress.Step>
                 <FormProgress.Step href={BASE_PATH + PageLinks.OPPSUMMERING}>{getPageName(3)}</FormProgress.Step>
-            </FormProgress>
+            </FormProgress> : null }
             <Outlet/>
         </VStack>
     );
@@ -27,7 +28,7 @@ export const FormContainer = () => {
 export enum PageNames {
     FORVENTEDE_INNTEKTER = "Forventede inntekter",
     BEREGNING = "Beregning",
-    OPPSUMMERING = "Oppsummering",
+    OPPSUMMERING = "Oppsummering - se over før du sender inn",
     KVIITTERING = "Kvittering"
 }
 

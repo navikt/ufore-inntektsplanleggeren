@@ -27,17 +27,7 @@ export const BeregningPage = () => {
 
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();
-
-        try {
-            setIsLoading(true);
-            const result = await send(brukerinntekt, annenForelderInntekt, selectedYear);
-            setSendResponse(result);
-            navigate(PageLinks.KVITTERING);
-        } catch (error) {
-            console.error("Error submitting income simulation:", error);
-        }
-
-        navigate(PageLinks.KVITTERING);
+        navigate(PageLinks.OPPSUMMERING);
     }
 
     if (simulationResponse?.result) return (

@@ -123,91 +123,20 @@ export const mockInntekterResponse : InntekterResponse = {
             "inntektUtland": 9,
             "pensjonUtland": 10,
         }
+        // eps: null
     },
     "uforeHeleAaret": false,
     "epsPid": "1234"
 };
-// export const mockInntekterResponse : InntekterResponse ={
-//     "arbeidsinntektOgYtelserHittilIAar": [
-//     {
-//         "maned": 1,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 2,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 3,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 4,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 5,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 6,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 7,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     },
-//     {
-//         "maned": 8,
-//         "belop": 4500,
-//         "inntektsgivere": [
-//             "BESK KAFFE"
-//         ]
-//     }
-// ],
-//     "pensjonFraAndreHittilIAar": [],
-//     "forventedeInntekter": {
-//     "bruker": {
-//         "arbeidsinntekt": 75000,
-//             "andrePensjonsgivendeYtelser": 0,
-//             "naeringsinntekt": 0,
-//             "inntektUtland": 0,
-//             "pensjonUtland": 0
-//     },
-//     "eps": {
-//         "arbeidsinntekt": 0,
-//             "andrePensjonsgivendeYtelser": 0,
-//             "naeringsinntekt": 0,
-//             "inntektUtland": 0,
-//             "pensjonUtland": 0
-//     }
-// },
-//     "uforeHeleAaret": true
-// }
 
 export const mockSimulationResponse = {
-    "messages": [],
+    "messages":  [
+        {
+        "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
+        "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        "type": MessageTypes.WARNING,
+        "metadata": {}
+    }],
     "result": {
         "uforetrygd": {
             "monthly": {
