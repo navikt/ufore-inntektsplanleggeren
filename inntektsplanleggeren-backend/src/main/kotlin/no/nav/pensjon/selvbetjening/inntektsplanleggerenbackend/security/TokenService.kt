@@ -132,9 +132,9 @@ class TokenService(
     private fun typeOf(jwt: Jwt, pid: String, appId: AppId): TokenType {
         val issuer = jwt.getClaim<String>("iss")
         if (issuer == azureAdIssuer) {
-            if ((jwt.getClaim<String>("roles") == null) && appId.useAzureOBo) {
+            if ((jwt.getClaim<String>("roles") == null)) {
                 return TokenType.AZURE_AD_ON_BEHALF_OF
-            } else if ((jwt.getClaim<String>("sub") == jwt.getClaim<String>("oid")) || !appId.useAzureOBo) {
+            } else if ((jwt.getClaim<String>("sub") == jwt.getClaim<String>("oid"))) {
                 return TokenType.AZURE_AD_CLIENT_CREDENTIALS
             }
         } else if (issuer == tokenXIssuer) {
