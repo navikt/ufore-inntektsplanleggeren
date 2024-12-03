@@ -50,10 +50,10 @@ class SimuleringService(
                 )!!,
                 forventetInntekt = SimuleringAmounts(
                     yearly = BeforeAndAfterValues(
-                        before = forventedeInntekter.sumBenyttedeInntekterBruker,
+                        before = if (isSimuleringsaarThisYear(simuleringsaar)) forventedeInntekter.sumBenyttedeInntekterBruker else null,
                         after = forventedeInntekterOppgitt.bruker.sum()
                     ), monthly = BeforeAndAfterValues(
-                        before = forventedeInntekter.sumBenyttedeInntekterBruker / 12,
+                        before = if (isSimuleringsaarThisYear(simuleringsaar)) forventedeInntekter.sumBenyttedeInntekterBruker / 12 else null,
                         after = forventedeInntekterOppgitt.bruker.sum() / 12
                     )
                 ),
@@ -77,7 +77,7 @@ class SimuleringService(
                         before = getSumArligUforetrygd(simuleringsresultat, simuleringsaar),
                         after = getSumArligUforetrygdSimulert(simuleringsresultat)
                     ), monthly = BeforeAndAfterValues(
-                        before = simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0,
+                        before = getSumMaanedligUforetrygd(simuleringsresultat, simuleringsaar),
                         after = simuleringsresultat.simulertUforetrygdSummary.totalbelopNetto ?: 0
                     )
                 )
@@ -96,21 +96,29 @@ class SimuleringService(
         }
         return SimuleringAmounts(
             yearly = BeforeAndAfterValues(
-                before = if (simuleringsaar > nowProvider.now().year) null else ytelseskomponentBefore?.amountPerYear
-                    ?: 0,
+                before = if (isSimuleringsaarThisYear(simuleringsaar)) ytelseskomponentBefore?.amountPerYear
+                    ?: 0 else null,
                 after = ytelseskomponentAfter?.amountPerYear ?: 0
             ),
             monthly = BeforeAndAfterValues(
-                before = if (simuleringsaar > nowProvider.now().year) null else ytelseskomponentBefore?.amountPerMonth
-                    ?: 0,
+                before = if (isSimuleringsaarThisYear(simuleringsaar)) ytelseskomponentBefore?.amountPerMonth
+                    ?: 0 else null,
                 after = ytelseskomponentAfter?.amountPerMonth ?: 0
             )
         )
     }
 
+    private fun getSumMaanedligUforetrygd(simuleringsresultat: SimulerEndringUforetrygdResponse, simuleringsaar: Int) =
+        if (isSimuleringsaarThisYear(simuleringsaar))
+            simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0
+        else
+            null
 
-    private fun getSumArligUforetrygd(simuleringsresultat: SimulerEndringUforetrygdResponse, simuleringsaar: Int): Int? {
-        return if (simuleringsresultat.gjeldendeBeregningFom?.year == simuleringsaar) {
+    private fun getSumArligUforetrygd(
+        simuleringsresultat: SimulerEndringUforetrygdResponse,
+        simuleringsaar: Int
+    ): Int? {
+        return if (isSimuleringsaarThisYear(simuleringsaar)) {
             simuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter ?: 0
         } else {
             null
@@ -120,4 +128,7 @@ class SimuleringService(
     private fun getSumArligUforetrygdSimulert(simuleringsresultat: SimulerEndringUforetrygdResponse): Int {
         return simuleringsresultat.simulertUforetrygdSummary.sumYtelseskomponenter ?: 0
     }
+
+    private fun isSimuleringsaarThisYear(simuleringsaar: Int) =
+        simuleringsaar == nowProvider.now().year
 }
