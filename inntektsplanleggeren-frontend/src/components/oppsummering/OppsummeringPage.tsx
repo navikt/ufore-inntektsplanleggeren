@@ -1,4 +1,4 @@
-import {Alert, Button, FormSummary, HStack, Link, VStack} from "@navikt/ds-react";
+import {Alert, Button, FormSummary, HStack, VStack} from "@navikt/ds-react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {PageLinks} from "@/form-container";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";

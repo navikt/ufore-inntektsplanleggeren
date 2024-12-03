@@ -22,6 +22,7 @@ import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
 import {Warnings} from "@/components/common/Warnings";
+import {LoadingBox} from "@/components/initial/LoadingBox";
 
 export function InitialView() {
     const {initiateResponse, setInntekterResponse} = useContext(DataContext)
@@ -54,7 +55,7 @@ export function InitialView() {
     }
 
     if(!initiateResponse) {
-        return null;
+        return <LoadingBox/>
     }
 
     if (initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
@@ -64,8 +65,6 @@ export function InitialView() {
             </Alert>
         );
     }
-
-
 
     return (
         <VStack gap="10">

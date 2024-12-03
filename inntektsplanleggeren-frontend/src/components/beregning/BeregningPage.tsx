@@ -1,10 +1,9 @@
 import {Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link} from "@navikt/ds-react";
-import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
+import React, {FormEvent, MouseEvent, useContext, useEffect} from "react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/beregning/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
-import {send} from "@/api/apiFetching";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {PageLinks} from "@/form-container";
 import {MessageCodes} from "@/api/model/MessageCodes";
@@ -16,10 +15,9 @@ import {CancelConfirmationModal} from "@/components/common/CancelConfirmationMod
 
 export const BeregningPage = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
-    const { simulationResponse, setSendResponse } = useContext(DataContext);
+    const { simulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         setFormStep(2)
@@ -83,7 +81,7 @@ export const BeregningPage = () => {
                 <Button as={RouterLink} to={PageLinks.FORVENTEDE_INNTEKTER} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Endre beløp i beregning
                 </Button>
-                <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}onClick={handleSubmit} loading={isLoading}>
+                <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}onClick={handleSubmit}>
                     Gå til innsending
                 </Button>
             </HStack>

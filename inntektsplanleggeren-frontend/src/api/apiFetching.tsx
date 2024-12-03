@@ -11,7 +11,7 @@ import {
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = true;
+const MOCKS_ENABLED = false;
 
 const headers = {
     'Content-Type': 'application/json',
@@ -95,15 +95,17 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
         }
     }
 
+    if (MOCKS_ENABLED) {
+        return mockInitiateResponse
+    }
+
     const res = await fetch(basePath + `/api/initiate`, {
         method: "GET",
         credentials: "include",
         headers: headers
     });
 
-    if (MOCKS_ENABLED) {
-        return mockInitiateResponse
-    }
+
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
