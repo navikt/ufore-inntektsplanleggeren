@@ -5,7 +5,7 @@ import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/beregning/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
 import {SelectedYearContext} from "@/context/SelectedYear";
-import {PageLinks} from "@/form-container";
+import {PageLinks} from "@/formContainer";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/beregning/Graph";
 import {InputSummary} from "@/components/beregning/InputSummary";

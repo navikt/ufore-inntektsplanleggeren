@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
 import {Routes, Route, BrowserRouter, Outlet, Navigate } from "react-router-dom";
-import {InitialView} from "@/components/initial/InitialView";
+import {InitialPage} from "@/components/initial/InitialPage";
 import App from "@/App";
-import {FormContainer, PageLinks} from "@/form-container";
+import {FormContainer, PageLinks} from "@/formContainer";
 import {InnfyllingPage} from "@/components/innfylling/InnfyllingPage";
 import {BeregningPage} from "@/components/beregning/BeregningPage";
 import {KvitteringPage} from "@/components/kvittering/KvitteringPage";
@@ -18,7 +18,7 @@ export const AppRoutes = () => (
         <Routes>
             <Route element={<App />}>
                 {/*<Route element={<AccessControl />}>*/}
-                    <Route index element={<InitialView />} />
+                    <Route index element={<InitialPage />} />
                     <Route element={<YearGuard />}>
                         <Route element={<FormContainer />}>
                             <Route index path={PageLinks.FORVENTEDE_INNTEKTER} element={<InnfyllingPage />} />

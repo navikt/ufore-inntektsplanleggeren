@@ -20,11 +20,11 @@ import {FormStateContext} from "@/context/FormData";
 import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
-import {PageLinks} from "@/form-container";
+import {PageLinks} from "@/formContainer";
 import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
 
-export function InitialView() {
+export function InitialPage() {
     const {initiateResponse, setInntekterResponse} = useContext(DataContext)
     const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)

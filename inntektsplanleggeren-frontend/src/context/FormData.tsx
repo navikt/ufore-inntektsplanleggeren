@@ -2,8 +2,8 @@ import React, {createContext, SetStateAction, useState} from "react";
 import { PersonInntekter } from "@/api/model/ApiRequests";
 
 interface FormState {
-    formStep: number;
-    setFormStep: (value: SetStateAction<number>) => void;
+    formStep: number | null;
+    setFormStep: (value: SetStateAction<number | null>) => void;
     selectedYear: number | null;
     setSelectedYear: (value: SetStateAction<number | null>) => void;
 
@@ -47,7 +47,7 @@ export const FormStateComponent = ({ children }: Props) => {
     const [selectedYear, setSelectedYear] = useState<number | null>(null);
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
-    const [formStep, setFormStep] = useState<number>(1);
+    const [formStep, setFormStep] = useState<number | null>(null);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
     const getAnnenForelderInntektSum = (): number | null => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : null;

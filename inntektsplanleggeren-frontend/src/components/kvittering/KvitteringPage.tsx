@@ -5,7 +5,7 @@ import { DataContext } from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
-import {PageLinks} from "@/form-container";
+import {PageLinks} from "@/formContainer";
 
 export const KvitteringPage = () => {
     // const { id } = useParams();
@@ -17,7 +17,7 @@ export const KvitteringPage = () => {
     const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext);
 
     useEffect(() => {
-        setFormStep(4);
+        setFormStep(null);
     }, [setFormStep]);
 
 

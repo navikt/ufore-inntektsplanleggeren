@@ -13,7 +13,7 @@ export function CancelConfirmationModal() {
                 </Button>
             </HStack>
 
-            <Modal open={open} onClose={() => setOpen(false)} header={{heading: "Er du sikker?"}} closeOnBackdropClick width="small">
+            <Modal open={open} onClose={() => setOpen(false)} header={{heading: "Er du sikker?"}} closeOnBackdropClick width="medium">
                 <Modal.Body>
                     <BodyLong>
                         Hvis du avbryter nå lagres ikke dine opplysninger, og inntektsendringen sendes ikke inn til oss. Ønsker du å avbryte?

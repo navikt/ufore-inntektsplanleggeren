@@ -10,11 +10,11 @@ export const FormContainer = () => {
 
     return (
         <VStack gap="5">
-            { (formStep >= 1 && formStep <= 3) ?
+            { (formStep !== null) ?
                 <HStack>
                     <Button as={Link} to={getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
+                    <Heading level="1" size="large">{getPageName(formStep)}</Heading>
                 </HStack> : null }
-            <Heading level="1" size="large">{getPageName(formStep)}</Heading>
             { formStep ? <FormProgress totalSteps={3} activeStep={formStep} interactiveSteps={false}>
                 <FormProgress.Step href={BASE_PATH + PageLinks.FORVENTEDE_INNTEKTER} completed>{getPageName(1)}</FormProgress.Step>
                 <FormProgress.Step href={BASE_PATH + PageLinks.BEREGNING}>{getPageName(2)}</FormProgress.Step>

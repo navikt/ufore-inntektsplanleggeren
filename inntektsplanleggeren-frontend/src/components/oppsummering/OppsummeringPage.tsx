@@ -1,6 +1,6 @@
 import {Alert, Button, FormSummary, HStack, VStack} from "@navikt/ds-react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import {PageLinks} from "@/form-container";
+import {PageLinks} from "@/formContainer";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";

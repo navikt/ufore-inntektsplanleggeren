@@ -12,7 +12,7 @@ import {DataContext} from "@/DataContextProvider";
 import {PersonInntekter} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
-import {PageLinks} from "@/form-container";
+import {PageLinks} from "@/formContainer";
 import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 
