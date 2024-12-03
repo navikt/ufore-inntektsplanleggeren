@@ -4,9 +4,6 @@ import azure from "./azureAd.js";
 import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
-import {getToken, validateToken, parseIdportenToken} from "@navikt/oasis";
-import {initRedis, isRedisReady, redisClient} from "./redis.js";
-import { isInntekterPayload } from "./validators.js";
 
 export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
@@ -24,101 +21,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const buildPath = path.resolve(__dirname, "../dist")
 app.use(basePath, express.static(buildPath));
-
-/**
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns {Promise<void>}
- */
-const authMiddleware = async (req, res, next) => {
-    const token = getToken(req);
-
-    if (token === undefined) {
-        res.status(401).send('Token mangler');
-        return;
-    }
-
-    if (!await validateToken(token)) {
-        res.status(403).send('Token er ugyldig');
-        return;
-    }
-
-    next();
-};
-
-/**
- * @param {string} pid
- */
-const getRedisKey = (pid) => pid;
-
-app.post(basePath + '/persistence', authMiddleware, async (req, res) => {
-    const token = getToken(req);
-    const parsed = parseIdportenToken(token);
-
-    if (!parsed.ok) {
-        res.status(403).send('Token er ugyldig');
-        return;
-    }
-
-    const data = req.body;
-
-    if (!isInntekterPayload(data)) {
-        res.status(400).send('Ugyldig data');
-        return;
-    }
-
-    try {
-        await redisClient.set(getRedisKey(parsed.pid), JSON.stringify(data));
-
-        res.status(200).send();
-    } catch (e) {
-        res.status(500).send('Noe gikk galt');
-    }
-});
-
-app.delete(basePath + '/persistence', authMiddleware, async (req, res) => {
-    const token = getToken(req);
-    const parsed = parseIdportenToken(token);
-
-    if (!parsed.ok) {
-        res.status(403).send('Token er ugyldig');
-        return;
-    }
-
-    try {
-        await redisClient.del(getRedisKey(parsed.pid));
-
-        res.status(200).send();
-    } catch (e) {
-        res.status(500).send('Noe gikk galt');
-    }
-});
-
-app.get(basePath + '/persistence', authMiddleware, async (req, res) => {
-    const token = getToken(req);
-    const parsed = parseIdportenToken(token);
-
-    if (!parsed.ok) {
-        res.status(403).send('Token er ugyldig');
-        return;
-    }
-
-    try {
-        const data = await redisClient.get(getRedisKey(parsed.pid));
-
-        console.log("data", data)
-
-        if (data === null) {
-            res.status(404).send('Data ikke funnet');
-            return;
-        }
-
-        res.status(200).contentType("application/json").send(data);
-    } catch (e) {
-        res.status(500).send('Noe gikk galt');
-    }
-});
 
 app.get(
     basePath + '/api/initiate',
@@ -260,12 +162,6 @@ app.get('/internal/health/liveness', (req, res) => {
 });
 
 app.get('/internal/health/readiness', (req, res) => {
-    if (!isRedisReady()) {
-        res.status(418).send({
-            "status": "NOT_READY"
-        });
-    }
-
     res.send({
         "status": "UP"
     });
@@ -277,5 +173,4 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () => {
     console.log("Server started");
-    initRedis();
 });

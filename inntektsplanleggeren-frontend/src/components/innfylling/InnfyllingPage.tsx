@@ -4,7 +4,7 @@ import "./innfylling.css"
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import { FormFieldsUser } from "./FormFieldsUser";
-import {getState, saveState, simulate} from "@/api/apiFetching";
+import {simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum} from "@/common/Utils";
@@ -30,25 +30,10 @@ export const InnfyllingPage = () => {
     }, [setFormStep]);
 
 
-    useEffect(() => {
-        const state = getState();
-        console.log("got state", state);
-        const fetchData = async () => {
-            try {
-                console.log(state);
-            } catch (error) {
-                console.error("Error fetching state:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();
 
         try {
-            saveState({ brukerInntekter: brukerinntekt, epsInntekter: annenForelderInntekt, year: selectedYear });
             setIsLoading(true);
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             setSimulationResponse(result);

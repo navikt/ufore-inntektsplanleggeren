@@ -17,7 +17,7 @@ import {YearView} from "@/components/initial/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
-import {deleteState, getInntekter} from "@/api/apiFetching";
+import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {PageLinks} from "@/form-container";
@@ -31,9 +31,6 @@ export function InitialView() {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    useEffect(() => {
-        deleteState(); //todo bring it back?
-    }, []);
     
     useEffect(() => {
         if (selectedYear !== null) {
