@@ -1,4 +1,4 @@
-import React, {createContext, SetStateAction, useEffect, useState} from "react";
+import React, {createContext, SetStateAction, useState} from "react";
 import { PersonInntekter } from "@/api/model/ApiRequests";
 
 interface FormState {
@@ -42,21 +42,12 @@ interface Props {
     children: React.ReactNode;
 }
 
-const SELECTED_YEAR_STORAGE_KEY = "selectedYear";
 
 export const FormStateComponent = ({ children }: Props) => {
-    const [selectedYear, setSelectedYear] = useState<number | null>(getStoredYear());
+    const [selectedYear, setSelectedYear] = useState<number | null>(null);
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number>(1);
-
-    useEffect(() => {
-        if (selectedYear === null) {
-            return;
-        }
-        
-        sessionStorage.setItem(SELECTED_YEAR_STORAGE_KEY, selectedYear.toString(10));
-    }, [selectedYear]);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
     const getAnnenForelderInntektSum = (): number | null => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : null;
@@ -79,14 +70,3 @@ export const FormStateComponent = ({ children }: Props) => {
     );
 };
 
-const getStoredYear = (): number | null => {
-    const storedYear = sessionStorage.getItem(SELECTED_YEAR_STORAGE_KEY);
-
-    if (storedYear === null) {
-        return null;
-    }
-
-    const parsed = Number.parseInt(storedYear, 10);
-
-    return isNaN(parsed) ? null : parsed;
-}
