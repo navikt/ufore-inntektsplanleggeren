@@ -234,7 +234,7 @@ class AuthorizationServiceTest {
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
         `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(false)
-        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang("GET", null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
     }
@@ -245,7 +245,7 @@ class AuthorizationServiceTest {
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
         `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(false)
-        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang("GET", null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
     }
@@ -256,7 +256,7 @@ class AuthorizationServiceTest {
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
         `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(true)
-        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang("GET", null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
     }
@@ -267,7 +267,7 @@ class AuthorizationServiceTest {
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
         `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(true)
-        assertThrows<LoginLevelTooLowException> { authorizationService.checkBorgerTilgang(null) }
+        assertThrows<LoginLevelTooLowException> { authorizationService.checkBorgerTilgang("GET", null) }
     }
 
     //----------------------------
@@ -277,11 +277,13 @@ class AuthorizationServiceTest {
     fun `should return fullmaktsgiver pid and no isFullmakt=true when borger with no addressebekyttelse is accessed by fullmaktshaver med gyldig fullmakt`() {
         val subjectPid = "12345678901"
         val resourcePid = "12345678905"
-        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie",resourcePid)
+        val resourcePidKryptert = "fnr_kryptert"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
+        val httpMethod = "GET"
         `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
-        `when` (fullmaktClient.hasValidRepresentasjonsforhold(resourcePid, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum"))
+        `when` (fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
-        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(navOnBehalfOfCCookie)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie)
         assertEquals(resourcePid,authenticatedUserDetails.pid)
         assertEquals(true,authenticatedUserDetails.isFullmakt)
     }
@@ -290,21 +292,25 @@ class AuthorizationServiceTest {
     fun `should return Exception when borger with addressebekyttelse is accessed by fullmaktshaver med gyldig fullmakt`() {
         val subjectPid = "12345678901"
         val resourcePid = "12345678905"
-        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie",resourcePid)
+        val resourcePidKryptert = "fnr_kryptert"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
+        val httpMethod = "GET"
         `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
-        `when` (fullmaktClient.hasValidRepresentasjonsforhold(resourcePid, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum"))
+        `when` (fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(true)
-        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(navOnBehalfOfCCookie) }
+        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
     }
 
     @Test
     fun `should return Exception when borger with no addressebekyttelse is accessed by fullmaktshaver uten gyldig fullmakt`() {
         val subjectPid = "12345678901"
         val resourcePid = "12345678905"
-        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie",resourcePid)
+        val resourcePidKryptert = "fnr_kryptert"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
+        val httpMethod = "GET"
         `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
-        `when` (fullmaktClient.hasValidRepresentasjonsforhold(resourcePid, subjectPid)).thenReturn(RepresentasjonsforholdValidity(false,null))
+        `when` (fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(false,null, resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
-        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(navOnBehalfOfCCookie) }
+        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
     }
 }
