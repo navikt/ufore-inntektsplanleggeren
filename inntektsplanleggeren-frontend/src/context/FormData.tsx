@@ -50,9 +50,18 @@ export const FormStateComponent = ({ children }: Props) => {
     const [formStep, setFormStep] = useState<number | null>(null);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
-    const getAnnenForelderInntektSum = (): number | null => annenForelderInntekt ? Object.values(annenForelderInntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0) : null;
+    const getAnnenForelderInntektSum = (): number | null => {
+        if (!annenForelderInntekt) {
+            return null;
+        }
+        const values = Object.values(annenForelderInntekt);
+        const sum = values.reduce<number>((acc, val) => acc + (val || 0), 0);
 
-    return (
+        return sum;
+};
+
+
+return (
         <FormStateContext.Provider value={{
             formStep,
             setFormStep,
