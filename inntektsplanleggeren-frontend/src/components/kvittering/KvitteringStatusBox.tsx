@@ -19,7 +19,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
 
     return (
         <VStack>
-            { !statusResponse || statusResponse.status === StatusCodes.TIL_BEHANDLING ?
+            { !statusResponse || statusResponse.status === StatusCodes.TIL_BEHANDLING &&
                 <VStack gap="5">
                     <Alert variant="info">
                         <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
@@ -31,11 +31,11 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                         <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring}/></BodyShort>  {/*    todo display date in nice format*/}
                         <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
                     </VStack>
-                </VStack>: null
+                </VStack>
             }
 
 
-            { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING ?
+            { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING &&
                 <VStack gap="5">
                     <Alert variant="success">
                         <VStack gap="3">
@@ -53,9 +53,9 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                     <BodyLong>
                         Vi har behandlet saken din og du vil snart motta et vedtaksbrev i <Link target="_blank" to="/">Din innboks (åpnes i ny fane)</Link>.  {/* TODO link?   */}
                     </BodyLong>
-                </VStack>: null }
+                </VStack> }
 
-            { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING ?
+            { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING &&
                 <VStack gap="5">
                     <Alert variant="success">
                         <VStack gap="3">
@@ -73,7 +73,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                     <BodyLong>
                         Inntekten du har sendt inn endrer ikke utbetalingen din. Du får derfor ikke et nytt vedtaksbrev fra oss.
                     </BodyLong>
-                </VStack>: null
+                </VStack>
             }
 
 
