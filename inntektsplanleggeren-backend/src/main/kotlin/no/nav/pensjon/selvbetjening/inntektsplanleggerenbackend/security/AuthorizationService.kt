@@ -117,7 +117,7 @@ class AuthorizationService(
                 throw NoFullmaktPresentException()
             }
 
-            if(personService.hasAdressebeskyttelse(fullmaktsgiverPid)) {
+            if(personService.hasAdressebeskyttelse(harGyldigFullmakt.fullmaktsgiverFnr)) {
                 log.info("Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang")
                 throw NoFullmaktPresentException()
             }
