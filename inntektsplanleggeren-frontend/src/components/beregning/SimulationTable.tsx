@@ -2,6 +2,7 @@ import { SimulationResult } from "@/api/model/ApiRequests";
 import {BodyShort, Table, VStack} from "@navikt/ds-react";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import React, {useEffect, useState} from "react";
+import {DESKTOP_WIDTH} from "@/FormContainer";
 
 export const SimulationTable = (props: { simulationResult: SimulationResult }) => {
     const { uforetrygd, forventetInntekt, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, gjenlevendetillegg, sum } = props.simulationResult;
@@ -14,7 +15,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
         return () => window.removeEventListener('resize', handleWindowSize);
     });
 
-    const isDesktop = width > 768;
+    const isDesktop = width > DESKTOP_WIDTH;
 
 
 

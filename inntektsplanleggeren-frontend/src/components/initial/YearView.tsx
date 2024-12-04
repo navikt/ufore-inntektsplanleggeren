@@ -4,7 +4,6 @@ import {FormStateContext} from "@/context/FormData";
 
 interface Props {
     availableYears: number[],
-    infoType: number //0 default, 1 for oct/nov, 2 for dec
     error: string | null;
 }
 

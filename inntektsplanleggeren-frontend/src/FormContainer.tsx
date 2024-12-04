@@ -5,6 +5,8 @@ import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
 import {BASE_PATH} from "@/routes";
 
+export const DESKTOP_WIDTH = 768
+
 export const FormContainer = () => {
     const { formStep } = useContext(FormStateContext);
 

@@ -152,5 +152,3 @@ export function InitialPage() {
         </VStack>
     )
 }
-
-// const delay = (ms: number) => new Promise(res => setTimeout(res, ms)); // TODO: remove after demo.
