@@ -73,9 +73,6 @@ export const BeregningPage = () => {
                     </ReadMore>
                 </VStack>
             </VStack>
-            {/*TODO what here?*/}
-
-
             
             <BodyLong><strong>Har du spørsmål? <Link href={PageLinks.KONTAKT} target="_blank">Kontakt oss (åpnes i ny fane)</Link></strong></BodyLong>
 

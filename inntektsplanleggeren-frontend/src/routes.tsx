@@ -17,17 +17,15 @@ export const AppRoutes = () => (
     <BrowserRouter basename={BASE_PATH}>
         <Routes>
             <Route element={<App />}>
-                {/*<Route element={<AccessControl />}>*/}
-                    <Route index element={<InitialPage />} />
-                    <Route element={<YearGuard />}>
-                        <Route element={<FormContainer />}>
-                            <Route index path={PageLinks.FORVENTEDE_INNTEKTER} element={<InnfyllingPage />} />
-                            <Route index path={PageLinks.BEREGNING} element={<BeregningPage />} />
-                            <Route index path={PageLinks.OPPSUMMERING} element={<OppsummeringPage />} />
-                            <Route index path={PageLinks.KVITTERING} element={<KvitteringPage />} />
-                        </Route>
+                <Route index element={<InitialPage />} />
+                <Route element={<YearGuard />}>
+                    <Route element={<FormContainer />}>
+                        <Route index path={PageLinks.FORVENTEDE_INNTEKTER} element={<InnfyllingPage />} />
+                        <Route index path={PageLinks.BEREGNING} element={<BeregningPage />} />
+                        <Route index path={PageLinks.OPPSUMMERING} element={<OppsummeringPage />} />
+                        <Route index path={PageLinks.KVITTERING} element={<KvitteringPage />} />
                     </Route>
-                {/*</Route>*/}
+                </Route>
             </Route>
         </Routes>
     </BrowserRouter>

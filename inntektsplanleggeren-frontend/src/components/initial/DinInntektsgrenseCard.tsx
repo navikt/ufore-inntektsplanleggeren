@@ -30,11 +30,11 @@ export function InntektsgrenseCard(props: {
                     <section>
                         <Label as="p">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Label>
                         { props.displayData.hasVarigTilrettelagtArbeid ?
-                            <BodyLong word-break: break-all>
+                            <BodyLong style={{ wordBreak:"normal"}}>
                                 Du har tiltaket <Link to={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil <FormatKroner value={props.displayData.inntektsgrense}></FormatKroner> (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
                                 din av beløpet du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du aldri trukket for. I de fleste tilfeller vil det lønne seg å jobbe, fordi uføretrygd og inntekt er høyere enn uføretrygd alene.
                             </BodyLong> :
-                            <BodyLong word-break: break-all>
+                            <BodyLong style={{ wordBreak:"normal"}}>
                                 Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden din av beløpet du tjener over inntektsgrensen.
                                 Beløpet opp til inntektsgrensen blir du aldri trukket for.
                             </BodyLong>
@@ -43,7 +43,7 @@ export function InntektsgrenseCard(props: {
 
                     <section>
                         <Label as="p">Din trekkprosent (kompensasjonsgrad): {props.displayData.kompensasjonsgrad} prosent</Label>
-                        <BodyLong word-break: break-all>
+                        <BodyLong style={{ wordBreak:"normal"}}>
                             Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
                             Vi trekker {props.displayData.kompensasjonsgrad} prosent kun av det du har tjent over inntektsgrensen.
                             Du vil fortsatt få utbetalt redusert uføretrygd i tillegg til lønnen din.
@@ -62,7 +62,7 @@ export function InntektsgrenseCard(props: {
                     { props.displayData.hasGjenlevendeTillegg ?
                         <section>
                             <Label as="p"> Gjenlevendetillegg </Label>
-                            <BodyLong word-break: break-all>
+                            <BodyLong style={{ wordBreak:"normal"}}>
                                 Tjener du mer enn inntektsgrensen din, reduseres også utbetalingen av gjenlevendetillegget ditt.
                             </BodyLong>
                         </section> : null
@@ -71,7 +71,7 @@ export function InntektsgrenseCard(props: {
                     { props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? //todo check if this condition is right!
                         <section>
                             <Label as="p">Barnetillegg har egne inntektsgrenser (fribeløp)</Label>
-                            <BodyLong word-break: break-all>
+                            <BodyLong style={{ wordBreak:"normal"}}>
                                 Fribeløpet er grensen for hva foreldre kan tjene før for barnetillegget blir mindre.
                             </BodyLong>
                         </section> : null
@@ -80,7 +80,7 @@ export function InntektsgrenseCard(props: {
                     { props.displayData.hasBarneTilleggFellesbarn ?
                         <section>
                             <Label as="p">Fribeløp for felles barn</Label>
-                            <BodyLong word-break: break-all>
+                            <BodyLong style={{ wordBreak:"normal"}}>
                                 Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes inntekt. Derfor skal du bare
                                 fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere bor sammen.
                                 <List>
@@ -98,7 +98,7 @@ export function InntektsgrenseCard(props: {
                     { props.displayData.hasBarnetilleggSaerkullsbarn ?
                         <section>
                             <Label as="p">Fribeløp for særkullsbarn</Label>
-                            <BodyLong word-break: break-all>
+                            <BodyLong style={{ wordBreak:"normal"}}>
                                 Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du skal kun oppgi din inntekt i inntektsplanleggeren.
                                 <List>
                                     <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggSaerkullsbarn}/>,</b> blir barnetillegget for særkullsbarn mindre.</List.Item>
