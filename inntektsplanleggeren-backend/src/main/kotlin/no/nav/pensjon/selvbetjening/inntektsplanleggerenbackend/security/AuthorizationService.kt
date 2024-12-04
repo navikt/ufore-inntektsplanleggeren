@@ -43,15 +43,12 @@ class AuthorizationService(
             val fullmaktsgiverPidKryptert = navOnBehalfOfCookie.value
             val fullmaktsforhold = haandterFullmakt(httpMethod, fullmaktsgiverPidKryptert, requestingPid)
             if (fullmaktsforhold.fullmaktsgiverFnr != requestingPid) {
-                AuthenticatedUserDetails(fullmaktsforhold.fullmaktsgiverFnr, true)
-            } else {
-                checkAdressebeskyttelseAndLoginLevel(requestingPid)
-                AuthenticatedUserDetails(requestingPid, false)
+                return AuthenticatedUserDetails(fullmaktsforhold.fullmaktsgiverFnr, true)
             }
-        }else {
-            checkAdressebeskyttelseAndLoginLevel(requestingPid)
-            return AuthenticatedUserDetails(requestingPid, false)
         }
+
+        checkAdressebeskyttelseAndLoginLevel(requestingPid)
+        return AuthenticatedUserDetails(requestingPid, false)
     }
 
     private fun checkBasisTilgang() {
@@ -110,18 +107,6 @@ class AuthorizationService(
             log.info("Bruker adressebeskyttet, innloggingsnivå for lavt. Nekter adgang")
             throw LoginLevelTooLowException()
         }
-    }
-
-    private fun isFullmaktsCase(navOnBehalfOfCookie: Cookie?, requestingPid: String): Boolean {
-        if (navOnBehalfOfCookie != null) {
-            log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
-            val fullmaktsgiverPid = navOnBehalfOfCookie.value
-            val fullmaktsforhold = haandterFullmakt(request.method, fullmaktsgiverPidKryptert, requestingPid)
-            if (requestingPid != "" && requestingPid != fullmaktsgiverPid) {
-                return true
-            }
-        }
-        return false
     }
 
     private fun haandterFullmakt(httpMethod: String, fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
