@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {Routes, Route, BrowserRouter, Outlet, Navigate } from "react-router-dom";
 import {InitialPage} from "@/components/initial/InitialPage";
 import App from "@/App";
-import {FormContainer, PageLinks} from "@/formContainer";
+import {FormContainer, PageLinks} from "@/FormContainer";
 import {InnfyllingPage} from "@/components/innfylling/InnfyllingPage";
 import {BeregningPage} from "@/components/beregning/BeregningPage";
 import {KvitteringPage} from "@/components/kvittering/KvitteringPage";

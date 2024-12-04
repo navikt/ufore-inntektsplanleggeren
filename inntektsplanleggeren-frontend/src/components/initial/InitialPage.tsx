@@ -20,7 +20,7 @@ import {FormStateContext} from "@/context/FormData";
 import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
-import {PageLinks} from "@/formContainer";
+import {PageLinks} from "@/FormContainer";
 import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
 

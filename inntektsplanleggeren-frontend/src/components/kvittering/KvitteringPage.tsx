@@ -5,7 +5,7 @@ import { DataContext } from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
-import {PageLinks} from "@/formContainer";
+import {PageLinks} from "@/FormContainer";
 
 export const KvitteringPage = () => {
     // const { id } = useParams();
@@ -25,7 +25,7 @@ export const KvitteringPage = () => {
         let attempts = 0;
         setIsWaiting(true);
         const intervalId = setInterval(() => {
-            if (attempts >= 5) {
+            if (attempts >= 10) {
                 console.log("attempts exceeded", attempts);
                 setIsWaiting(false);
                 clearInterval(intervalId);

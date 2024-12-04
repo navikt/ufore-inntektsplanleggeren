@@ -5,7 +5,7 @@ import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/beregning/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
 import {SelectedYearContext} from "@/context/SelectedYear";
-import {PageLinks} from "@/formContainer";
+import {PageLinks} from "@/FormContainer";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/beregning/Graph";
 import {InputSummary} from "@/components/beregning/InputSummary";
@@ -29,7 +29,7 @@ export const BeregningPage = () => {
     }
 
     if (simulationResponse?.result) return (
-        <VStack gap="5">
+        <VStack gap="8">
             { simulationResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ?
                 <Alert variant="warning">
                     Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
@@ -58,22 +58,24 @@ export const BeregningPage = () => {
                 <Graph simulationResult={simulationResponse?.result}/>
             </VStack>
 
-            <VStack>
-                <Heading size={"medium"}>Oversikt i tabell</Heading>
+            <Heading size={"medium"}>Oversikt i tabell</Heading>
+            <VStack gap="12">
                 {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
+                <VStack>
+                    <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt: <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
+                    <ReadMore header="Månedsbeløp spesifisert">
+                        <VStack>
+                            <BodyLong>{ simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
+                                <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
+                            { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                            { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                        </VStack>
+                    </ReadMore>
+                </VStack>
             </VStack>
-
-            <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt: <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
             {/*TODO what here?*/}
 
-            <ReadMore header="Månedsbeløp spesifisert">
-                <VStack>
-                    <BodyLong>{ simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
-                        <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
-                    { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                    { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                </VStack>
-            </ReadMore>
+
             
             <BodyLong><strong>Har du spørsmål? <Link href={PageLinks.KONTAKT} target="_blank">Kontakt oss (åpnes i ny fane)</Link></strong></BodyLong>
 
