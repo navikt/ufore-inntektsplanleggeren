@@ -19,8 +19,6 @@ class AuthorizationServiceTest {
     private val pensjonSaksbehandlerGroupId = "saksbehandler"
     private val pensjonVeilederGroupId = "veileder"
     private val pensjonBrukerHjelpa = "brukerhjelpa"
-    private val pensjonKlageBehandlerGroupId = "klagebehandler"
-    private val pensjonUfoereGroupId = "ufore"
     private val pensjonOkonomiGroupId = "okonomi"
 
     private val VeilederUnauthorizedExceptionName = "no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.VeilederUnauthorizedException"
@@ -37,8 +35,7 @@ class AuthorizationServiceTest {
         pensjonSaksbehandlerGroupId,
         pensjonVeilederGroupId,
         pensjonBrukerHjelpa,
-        pensjonKlageBehandlerGroupId,
-        pensjonUfoereGroupId,
+        pensjonOkonomiGroupId,
         tokenService,
         skjermingClient,
         personService,
@@ -52,7 +49,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder access to innbygger without addressebeskyttelse or skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(null)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -61,7 +58,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.UGRADERT)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -70,7 +67,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when saksbehandler access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonSaksbehandlerGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonSaksbehandlerGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.UGRADERT)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -79,33 +76,25 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when brukerhjelpa access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonBrukerHjelpa,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonBrukerHjelpa))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.UGRADERT)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
     }
 
     @Test
-    fun `should return nothing when klagebehandler access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
+    fun `should return nothing when okonomi access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonKlageBehandlerGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonOkonomiGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.UGRADERT)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
     }
 
     @Test
-    fun `should return Exception when okonomi access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
+    fun `should return Exception when nav ansatt med skjermet and no pensjon rolle access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonOkonomiGroupId,pensjonUfoereGroupId))
-        val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
-        assertEquals(VeilederUnauthorizedExceptionName,exception.toString())
-    }
-
-    @Test
-    fun `should return Exception when saksbehandler without ufore rolle access to innbygger with addressebeskyttelse ugradert and no skjerming`() {
-        val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonSaksbehandlerGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(skjermetGroupId))
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
         assertEquals(VeilederUnauthorizedExceptionName,exception.toString())
     }
@@ -117,7 +106,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder with access to skjermede access innbygger with skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,skjermetGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,skjermetGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(true)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(null)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -126,7 +115,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return Exception when veileder without access to skjermede access innbygger with skjerming`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(true)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(null)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
@@ -140,7 +129,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder with access to strengt fortrolig adresse access innbygger with strengt fortrolig adresse`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,strengtFortroligAdresseGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,strengtFortroligAdresseGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -149,7 +138,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder with access to strengt fortrolig adresse access innbygger with strengt fortrolig adresse utland`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,strengtFortroligAdresseGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,strengtFortroligAdresseGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -158,7 +147,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder with access to fortrolig adresse access innbygger with fortrolig adresse`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,fortroligAdresseGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,fortroligAdresseGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -167,7 +156,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return nothing when veileder with access to strengt fortrolig adresse access innbygger without adressebeskyttelse - ugradert`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,strengtFortroligAdresseGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,strengtFortroligAdresseGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.UGRADERT)
         authorizationService.checkVeilederTilgangTilInnbygger(pid)
@@ -176,7 +165,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return Exception when veileder with access to strengt fortrolig adresse access innbygger with fortrolig adresse`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,strengtFortroligAdresseGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,strengtFortroligAdresseGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
@@ -186,7 +175,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return Exception when veileder with access to fortrolig adresse access innbygger with strengt fortrolig adresse`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId,fortroligAdresseGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,fortroligAdresseGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
@@ -196,7 +185,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return Exception when veileder with no access to addressebekyttede access innbygger with strengt fortrolig adresse`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
@@ -206,7 +195,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return Exception when veileder with no access to addressebekyttede access innbygger with strengt fortrolig adresse utland`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }
@@ -216,7 +205,7 @@ class AuthorizationServiceTest {
     @Test
     fun `should return Exception when veileder with no access to addressebekyttede access innbygger with fortrolig adresse`() {
         val pid = "12345678901"
-        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId,pensjonUfoereGroupId))
+        `when` (tokenService.getGroups()).thenReturn(listOf(pensjonVeilederGroupId))
         `when` (skjermingClient.isSkjermet(pid)).thenReturn(false)
         `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
         val exception = assertThrows<VeilederUnauthorizedException> { authorizationService.checkVeilederTilgangTilInnbygger(pid) }

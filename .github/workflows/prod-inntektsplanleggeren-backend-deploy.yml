@@ -1,0 +1,48 @@
+name: "Prod: Inntektsplanleggeren backend deploy"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - inntektsplanleggeren-backend/**
+
+jobs:
+  build-backend-and-publish-docker:
+    name: Build backend application
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-backend-and-publish-docker.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      path: /inntektsplanleggeren-backend
+      team: pensjonselvbetjening
+      app: inntektsplanleggeren-backend
+      java-version: 21
+    secrets: inherit
+
+  trivy-docker:
+    needs: build-backend-and-publish-docker
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      security-events: write
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/trivy-docker.yml@main
+    with:
+      image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
+      team: pensjonselvbetjening
+    secrets: inherit
+
+  deploy-to-prod:
+    if: github.ref == 'refs/heads/main'
+    needs: build-backend-and-publish-docker
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      cluster: prod-gcp
+      image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
+      team: pensjonselvbetjening
+      nais-template: inntektsplanleggeren-backend/.nais/prod.yml
