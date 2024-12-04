@@ -1,4 +1,4 @@
-import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading, BodyShort, BodyLong, List} from "@navikt/ds-react";
+import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading, BodyShort, BodyLong} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
 import { PersonInntekter } from "@/api/model/ApiRequests";
@@ -14,7 +14,7 @@ export interface FormFieldsProps {
     forventedeInntekter: PersonInntekter;
 }
 
-export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
+export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
 
@@ -64,9 +64,9 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
                     />
                     <div className="description-card">
                         <ReadMore header="Innteker du skal legge inn">
-                            Legg inn annen forelders lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året.
-                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger,  overgangsstønad, omsorgs-, pleie-
-                            eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
+                            Legg inn lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året.
+                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, omsorgs-,
+                            pleie- eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetatennad, overgangsstønad, omsorgs-,
                         </ReadMore>
                     </div>
                 </VStack>
@@ -84,8 +84,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
                         htmlSize={30}
                     />
                     <ReadMore header="Næringsinntekt du skal legge inn">
-                        Legg inn det den andre forelderen forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt. Er du usikker på hva som regnes som pensjonsgivende næringsinntekt
-                        kan du kontakte Skatteetaten.
+                        Legg inn det du forventer å tjene fra næringsvirksomhet i Norge som et årsbeløp før skatt. Er du usikker på hva som regnes som pensjonsgivende næringsinntekt kan du kontakte Skatteetaten.
                     </ReadMore>
                 </VStack>
             )}
@@ -102,8 +101,8 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
                         onBlur={handleInputChange("inntektUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekter du skal melde inn">
-                        Legg inn det den andre forelderen forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
+                    <ReadMore header="Inntekter du skal legge inn">
+                        Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                     </ReadMore>
                 </VStack>
             )}
@@ -121,23 +120,21 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
                         htmlSize={30}
                     />
                     <ReadMore header="Pensjoner du skal legge inn">
-                        <section>
-                            <BodyLong> Legg inn annen forelders pensjoner som et årsbeløp før skatt. Oppgi pensjoner fra både private og offentlige ordninger.</BodyLong>
-                            <List title="Du skal ikke melde inn">
-                                <List.Item>alderspensjon fra oss</List.Item>
-                                <List.Item>uføretrygd fra oss</List.Item>
-                                <List.Item>AFP i privat sektor</List.Item>
-                                <List.Item>AFP fra Statens pensjonskasse hvis du er under 65 år</List.Item>
-                            </List>
+                        <VStack>
+                            <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt.</BodyLong>
+                                <BodyLong>Du skal ikke legge inn</BodyLong>
+                                <ul>
+                                    <li>alderspensjon fra oss</li>
+                                    <li>uføretrygd fra oss </li>
+                                </ul>
+                                <BodyLong>Du skal for eksempel legge inn</BodyLong>
+                                <ul>
+                                    <li>uførepensjon</li>
+                                    <li>tjenestepensjon</li>
+                                </ul>
+                            <BodyLong>Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.</BodyLong>
+                        </VStack>
 
-                            <List title="Du skal for eksempel melde inn">
-                                <List.Item>AFP offentlig</List.Item>
-                                <List.Item>uførepensjon</List.Item>
-                                <List.Item>introduksjonsstønad</List.Item>
-                                <List.Item>barnepensjon</List.Item>
-                                <List.Item>supplerende stønad</List.Item>
-                            </List>
-                        </section>
                     </ReadMore>
                 </VStack>
             )}
@@ -154,18 +151,19 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
                         onBlur={handleInputChange("pensjonUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal melde inn">
-                        Legg inn den andre forelderens pensjoner fra utlandet som et årsbeløp.
+                    <ReadMore header="Pensjoner du skal legge inn">
+                        Legg inn pensjoner fra utlandet som et årsbeløp før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
                     </ReadMore>
                 </VStack>
             )}
 
             <Box padding="4" background="surface-info-subtle">
                 <VStack>
-                    <Heading size="small"> Annen forelder sin samlede inntekt i {year}: </Heading>
+                    <Heading size="small"> Din samlede forventede inntekt i {year}: </Heading>
                     <BodyShort className="sum"><FormatKroner value={inntektSum}/> før skatt</BodyShort>
                 </VStack>
             </Box>
         </div>
     );
 };
+

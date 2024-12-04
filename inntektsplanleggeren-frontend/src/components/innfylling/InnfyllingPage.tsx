@@ -3,7 +3,7 @@ import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "rea
 import "./innfylling.css"
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import { FormFieldsUser } from "./FormFieldsEps";
+import { FormFieldsUser } from "./FormFieldsUser";
 import {simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";

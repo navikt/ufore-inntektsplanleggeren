@@ -11,7 +11,7 @@ import {
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = true && import.meta.env.DEV;
+const MOCKS_ENABLED = false && import.meta.env.DEV;
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -193,7 +193,7 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         credentials: "include",
         headers: headers,
     });
-    
+
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
     }
