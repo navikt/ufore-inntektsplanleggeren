@@ -49,18 +49,18 @@ export const OppsummeringPage = () => {
                         <FormSummary.Label>Din forventede inntekt i {selectedYear}</FormSummary.Label>
                         <FormSummary.Value><FormatKroner value={getBrukerinntektSum()}/></FormSummary.Value>
                     </FormSummary.Answer>
-                    {annenForelderInntekt ?
+                    {annenForelderInntekt &&
                         <FormSummary.Answer>
                             <FormSummary.Label>Annen forelders forventede inntekt i {selectedYear}</FormSummary.Label>
                             <FormSummary.Value><FormatKroner value={getAnnenForelderInntektSum() ?? 0}/></FormSummary.Value>
-                        </FormSummary.Answer> : null }
+                        </FormSummary.Answer> }
                 </FormSummary.Answers>
             </FormSummary>
 
-            { simulationResponse?.messages.some(message => message.messageCode === "EPS_INNTEKT_CHANGED") ?
+            { simulationResponse?.messages.some(message => message.messageCode === "EPS_INNTEKT_CHANGED") &&
                 <Alert variant="info">
                     Husk at inntektene du melder inn for annen forelder bare brukes for å beregne barnetillegget til uføretrygden din. Hvis den andre forelderen har utbetalinger fra oss, må hen selv også melde fra om ny inntekt til oss.
-                </Alert> : null
+                </Alert>
             }
 
             <HStack gap="4">

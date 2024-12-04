@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 
-export const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
 const app = express();
 app.use(express.json())
@@ -52,8 +52,6 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-
-        console.log(req.query.simuleringsaar)
         const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/inntekter?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders
@@ -76,7 +74,6 @@ app.post(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        console.log(req.query.simuleringsaar)
         const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/simuler?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders,

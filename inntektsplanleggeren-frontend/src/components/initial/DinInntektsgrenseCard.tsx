@@ -110,15 +110,12 @@ export function InntektsgrenseCard(props: {
                         </section> : null
                     }
 
-
-
-
                 </VStack> : null }
 
-                {/*    }*/}
             <HStack justify="center">
                 <Button onClick={handleButton} variant="secondary-neutral" iconPosition="right" icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>{buttonText}</Button>
             </HStack>
+
             </VStack>
         </Box>
     )

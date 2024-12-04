@@ -132,7 +132,6 @@ function DataContextProvider(props: DataContextProviderProps) {
                         setLoading(true)
 
                         const inntektsPlanleggerenResponse = await getInitiate()
-                        console.log(initiateResponse)
                         setInitiateResponse(inntektsPlanleggerenResponse)
 
                         setLoading(false)

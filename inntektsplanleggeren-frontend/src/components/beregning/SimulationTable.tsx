@@ -34,12 +34,12 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                             <Table.DataCell align="right"><FormatKroner value={uforetrygd.yearly.before + (gjenlevendetillegg?.yearly.before ?? 0)}/></Table.DataCell>
                             <Table.DataCell align="right"><FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)}/></Table.DataCell>
                         </Table.Row>
-                        {barnetilleggSaerkullsbarn || barnetilleggFellesbarn ?
+                        { (barnetilleggSaerkullsbarn || barnetilleggFellesbarn) &&
                             <Table.Row>
                                 <Table.DataCell scope="row">Barnetillegg</Table.DataCell>
                                 <Table.DataCell align="right"><FormatKroner value={(barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)}/></Table.DataCell>
                                 <Table.DataCell align="right"><FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}/></Table.DataCell>
-                            </Table.Row>: null }
+                            </Table.Row> }
                         <Table.Row>
                             <Table.DataCell scope="row">Forventet inntekt</Table.DataCell>
                             <Table.DataCell align="right"><FormatKroner value={forventetInntekt.yearly.before}/></Table.DataCell>
@@ -95,7 +95,5 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                         </Table.Row>
                 </Table.Body>
             </Table>
-
-        // : null }
     );
 };
