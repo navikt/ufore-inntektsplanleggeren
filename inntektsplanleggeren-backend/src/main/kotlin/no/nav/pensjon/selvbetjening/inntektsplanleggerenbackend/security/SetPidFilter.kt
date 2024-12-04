@@ -53,7 +53,8 @@ class SetPidFilter(
             if (tokenService.determineTokenType() == TokenService.TokenType.TOKEN_X) {
                 log.info("Borger context")
                 val navOnBehalfOfCookie = request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }
-                authenticatedUserDetails = authorizationService.checkBorgerTilgang(navOnBehalfOfCookie)
+
+                authenticatedUserDetails = authorizationService.checkBorgerTilgang(request.method, navOnBehalfOfCookie)
             } else {
                 val pid = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")

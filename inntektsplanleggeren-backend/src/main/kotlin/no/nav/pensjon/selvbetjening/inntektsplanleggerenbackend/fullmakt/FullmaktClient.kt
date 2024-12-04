@@ -24,12 +24,12 @@ class FullmaktClient(
     private val tokenService: TokenService
 ) {
 
-    fun hasValidRepresentasjonsforhold(fullmaktsgiverPid: String, fullmektigPid: String): RepresentasjonsforholdValidity? {
+    fun hasValidRepresentasjonsforhold(httpMethod: String, fullmaktsgiverPid: String, fullmektigPid: String): RepresentasjonsforholdValidity? {
         return try {
             tokenService.getEgressToken(scope, audience, fullmektigPid, AppId.PENSJON_FULLMAKT).let {
                 webClient
                     .get()
-                    .uri(urlValidRepresentasjonsforhold())
+                    .uri(urlValidRepresentasjonsforhold(httpMethod))
                     .headers { headers: HttpHeaders ->
                         headers.setBearerAuth(it!!)
                         headers[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_JSON_VALUE
@@ -59,10 +59,15 @@ class FullmaktClient(
         }
     }
 
-    private fun urlValidRepresentasjonsforhold(): String {
+    private fun urlValidRepresentasjonsforhold(httpMethod: String): String {
+        val representasjonstyperBasertPaaHttpMethode = if (listOf("POST", "PUT", "DELETE").contains(httpMethod))
+            VALID_SKRIV_REPRESENTASJONSTYPER
+        else
+            VALID_LES_REPRESENTASJONSTYPER
+
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
             .path(PATH_HASREPRESENTASJONSFORHOLD)
-            .queryParam(VALID_REPRESENTASJONSTYPER_KEY, VALID_REPRESENTASJONSTYPER)
+            .queryParam(VALID_REPRESENTASJONSTYPER_KEY, representasjonstyperBasertPaaHttpMethode)
             .queryParam(INCLUDE_NAVN_KEY, false)
             .build()
             .toUriString()
@@ -76,8 +81,11 @@ class FullmaktClient(
         const val FULLMAKTSGIVER_PID = "fullmaktsgiverPid"
         const val INCLUDE_NAVN_KEY = "includeFullmaktsgiverNavn"
         const val VALID_REPRESENTASJONSTYPER_KEY = "validRepresentasjonstyper"
-        private val VALID_REPRESENTASJONSTYPER = setOf(
-            "UFORETRYGD_SKRIV")
+        private val VALID_LES_REPRESENTASJONSTYPER = setOf(
+            "UFORETRYGD_LES", "PENSJON_BEGRENSET")
+
+        private val VALID_SKRIV_REPRESENTASJONSTYPER = setOf(
+            "UFORETRYGD_SKRIV", "PENSJON_FULLSTENDIG")
 
         private val logger: Logger = LoggerFactory.getLogger(FullmaktClient::class.java)
 

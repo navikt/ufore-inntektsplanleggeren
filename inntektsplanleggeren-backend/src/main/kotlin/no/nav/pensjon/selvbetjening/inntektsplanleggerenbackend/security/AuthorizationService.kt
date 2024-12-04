@@ -36,12 +36,18 @@ class AuthorizationService(
         checkAdressebeskyttetInnbygger(pid)
     }
 
-    fun checkBorgerTilgang(navOnBehalfOfCookie: Cookie?) : AuthenticatedUserDetails {
+    fun checkBorgerTilgang(httpMethod: String, navOnBehalfOfCookie: Cookie?) : AuthenticatedUserDetails {
         val requestingPid = tokenService.determineRequestingPid()
-        if (isFullmaktsCase(navOnBehalfOfCookie, requestingPid)) {
-            val fullmaktsgiverPid = navOnBehalfOfCookie!!.value
-            haandterFullmakt(fullmaktsgiverPid, requestingPid)
-            return AuthenticatedUserDetails(fullmaktsgiverPid, true)
+        if (navOnBehalfOfCookie != null) {
+            log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
+            val fullmaktsgiverPidKryptert = navOnBehalfOfCookie.value
+            val fullmaktsforhold = haandterFullmakt(httpMethod, fullmaktsgiverPidKryptert, requestingPid)
+            if (fullmaktsforhold.fullmaktsgiverFnr != requestingPid) {
+                AuthenticatedUserDetails(fullmaktsforhold.fullmaktsgiverFnr, true)
+            } else {
+                checkAdressebeskyttelseAndLoginLevel(requestingPid)
+                AuthenticatedUserDetails(requestingPid, false)
+            }
         }else {
             checkAdressebeskyttelseAndLoginLevel(requestingPid)
             return AuthenticatedUserDetails(requestingPid, false)
@@ -110,6 +116,7 @@ class AuthorizationService(
         if (navOnBehalfOfCookie != null) {
             log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
             val fullmaktsgiverPid = navOnBehalfOfCookie.value
+            val fullmaktsforhold = haandterFullmakt(request.method, fullmaktsgiverPidKryptert, requestingPid)
             if (requestingPid != "" && requestingPid != fullmaktsgiverPid) {
                 return true
             }
@@ -117,9 +124,9 @@ class AuthorizationService(
         return false
     }
 
-    private fun haandterFullmakt(fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
+    private fun haandterFullmakt(httpMethod: String, fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
         try {
-            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(fullmaktsgiverPid, requestingPid)
+            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, fullmaktsgiverPid, requestingPid)
             if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
                 log.info("Fullmaktsforhold er ikke funnet. Nekter adgang")
                 throw NoFullmaktPresentException()
