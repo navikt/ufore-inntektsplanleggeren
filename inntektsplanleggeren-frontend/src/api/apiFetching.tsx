@@ -11,7 +11,7 @@ import {
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = false && import.meta.env.DEV;
+const MOCKS_ENABLED = true && import.meta.env.DEV;
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -67,15 +67,15 @@ export async function getInntekter(year: number): Promise<InntekterResponse> {
         }
     }
 
+    if (MOCKS_ENABLED) {
+        return mockInntekterResponse
+    }
+
     const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
         headers: headers
     });
-
-    if (MOCKS_ENABLED) {
-        return mockInntekterResponse
-    }
 
     if (!res.ok) {
         console.log("error")
@@ -107,16 +107,16 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
         eps: epsInntekter
     }
 
+    if (MOCKS_ENABLED) {
+        return mockSimulationResponse;
+    }
+
     const res = await fetch(basePath + `/api/simuler?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
         body: JSON.stringify(request)
     });
-
-    if (MOCKS_ENABLED) {
-        return mockSimulationResponse;
-    }
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
@@ -147,16 +147,16 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
         eps: epsInntekter
     }
 
+    if (MOCKS_ENABLED) {
+        return mockSendApplicationResponse;
+    }
+
     const res = await fetch(basePath + `/api/send?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
         body: JSON.stringify(request)
     });
-
-    if (MOCKS_ENABLED) {
-        return mockSendApplicationResponse;
-    }
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
@@ -182,17 +182,18 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         }
     }
 
+    if (MOCKS_ENABLED) {
+        return mockStatusResponse;
+    }
+
+
     const url = encodeURI(basePath + `/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
     const res = await fetch(url, {
         method: "GET",
         credentials: "include",
         headers: headers,
     });
-
-    if (MOCKS_ENABLED) {
-        return mockStatusResponse;
-    }
-
+    
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
     }

@@ -142,9 +142,22 @@ export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forvented
                         onBlur={handleInputChange("andrePensjonsgivendeYtelser")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner skal meldes inn">
-                        Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt. Oppgi pensjoner fra både offentlige og private ordninger. Dette inkluderer også uførepensjon fra andre enn oss.
-                        Ikke oppgi alderspensjon du får fra oss. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
+                    <ReadMore header="Pensjoner du skal legge inn">
+                        <VStack>
+                            <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt.</BodyLong>
+                                <BodyLong>Du skal ikke legge inn</BodyLong>
+                                <ul>
+                                    <li>alderspensjon fra oss</li>
+                                    <li>uføretrygd fra oss </li>
+                                </ul>
+                                <BodyLong>Du skal for eksempel legge inn</BodyLong>
+                                <ul>
+                                    <li>uførepensjon</li>
+                                    <li>tjenestepensjon</li>
+                                </ul>
+                            <BodyLong>Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.</BodyLong>
+                        </VStack>
+
                     </ReadMore>
                 </VStack>
             )}

@@ -11,7 +11,7 @@ import {
 } from "@navikt/ds-react";
 import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
 import {YearView} from "@/components/initial/YearView";
 import "./InitialView.css"
@@ -125,7 +125,8 @@ export function InitialPage() {
                         <List>
                             <List.Item>Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss så godt du kan.</List.Item>
                             <List.Item>Ser du at inntekten din blir annerledes enn det du tidligere har meldt inn, bør du melde fra til oss så fort som mulig.</List.Item>
-                            <List.Item>Får du endring i inntekt, skal du ikke legge inn den nye årslønnen din, men regne ut antall måneder med gammel årslønn og legge sammen med antall måneder med ny årslønn dette året. </List.Item>
+                            <List.Item><Link target="_blank" to="/">På nav.no finner du mer informasjon om hvordan du legger inn riktig inntekt, og eksempler på beregning når inntekten din endrer seg.</Link></List.Item>
+                        {/*    TODO link missing*/}
                         </List>
                     </Accordion.Content>
                 </Accordion.Item>
@@ -140,7 +141,7 @@ export function InitialPage() {
 
             {(initiateResponse.data?.aktuelleAar && initiateResponse.data.aktuelleAar.length > 0) &&
                 <VStack gap="10">
-                    <YearView error={errorMessage} availableYears={initiateResponse.data.aktuelleAar} infoType={1}></YearView>
+                    <YearView error={errorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
 
                     <HStack>
                         <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
