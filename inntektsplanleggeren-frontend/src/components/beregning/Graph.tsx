@@ -24,6 +24,8 @@ const getXAxisCategories = (isBeforeValuesAvailable: boolean) => {
 }
 
 const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
+    // @ts-ignore
+    // @ts-ignore
     return {
         chart: {
             type: 'column',
@@ -58,6 +60,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -2
             },
             labels: {
+                // @ts-ignore
                 formatter: ({value}) => formatYAxisNumber(isDesktop, value),
             }
         },
@@ -82,11 +85,12 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
     }
 };
 
-const COULMN_STYLE = (isBeforeValuesAvailable: boolean) => {
+const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
     return {
         point: {
             events: {
                 click: function () {
+                    // @ts-ignore
                     this.series.chart.update({
                         tooltip: {
                             enabled: true
@@ -94,6 +98,7 @@ const COULMN_STYLE = (isBeforeValuesAvailable: boolean) => {
                     });
                 },
                 mouseOut: function () {
+                    // @ts-ignore
                     this.series.chart.update({
                         tooltip: {
                             enabled: false
@@ -131,7 +136,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
     return (
         <VStack>
             <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA(isBeforeValuesAvailable, isDesktop), tooltip, series: [{
-                ...COULMN_STYLE(isBeforeValuesAvailable),
+                ...COLUMN_STYLE(isBeforeValuesAvailable),
                 name: props.simulationResult.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd',
                 data: [
                     isBeforeValuesAvailable ? ((props.simulationResult.uforetrygd.yearly.before ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0)) : undefined,
@@ -139,7 +144,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                 color: "var(--a-deepblue-500)"
                 },
                 props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn ? {
-                    ...COULMN_STYLE(isBeforeValuesAvailable),
+                    ...COLUMN_STYLE(isBeforeValuesAvailable),
                     name: 'Barnetillegg uføretrygd',
                     data: [
                         isBeforeValuesAvailable ? ((props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0)): undefined,
@@ -147,7 +152,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                     color: "var(--a-purple-400)"
                     } : undefined,
             {
-                ...COULMN_STYLE(isBeforeValuesAvailable),
+                ...COLUMN_STYLE(isBeforeValuesAvailable),
                 name: 'Din forventede inntekt',
                 data: [
                     isBeforeValuesAvailable ? (props.simulationResult.forventetInntekt.yearly.before ?? 0) : undefined,
