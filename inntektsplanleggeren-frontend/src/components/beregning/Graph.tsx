@@ -73,6 +73,25 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean) => {
 
 const COULMN_STYLE = (isBeforeValuesAvailable: boolean) => {
     return {
+        point: {
+            events: {
+                click: function () {
+                    this.series.chart.update({
+                        tooltip: {
+                            enabled: true
+                        }
+                    });
+                },
+                mouseOut: function () {
+                    this.series.chart.update({
+                        tooltip: {
+                            enabled: false
+                        }
+
+                    })
+                }
+            }
+        },
         maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
         borderWidth: 1,
         borderColor: "#303030",
@@ -85,6 +104,7 @@ const COULMN_STYLE = (isBeforeValuesAvailable: boolean) => {
 export const Graph = (props : { simulationResult : SimulationResult}) => {
     const isBeforeValuesAvailable = props.simulationResult.sum.yearly.before !== null
     const tooltip: Options['tooltip'] = {
+        enabled: false,
         headerFormat: '<b>{point.x}</b><br/>',
             pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
     };
