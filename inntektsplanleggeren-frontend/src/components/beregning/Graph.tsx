@@ -60,7 +60,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -2
             },
             labels: {
-                // @ts-ignore
+                // @ts-expect-error
                 formatter: ({value}) => formatYAxisNumber(isDesktop, value),
             }
         },
@@ -90,7 +90,7 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
         point: {
             events: {
                 click: function () {
-                    // @ts-ignore
+                    // @ts-expect-error
                     this.series.chart.update({
                         tooltip: {
                             enabled: true
@@ -98,7 +98,7 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
                     });
                 },
                 mouseOut: function () {
-                    // @ts-ignore
+                    // @ts-expect-error
                     this.series.chart.update({
                         tooltip: {
                             enabled: false
