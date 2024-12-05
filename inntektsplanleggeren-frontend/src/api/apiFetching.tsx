@@ -6,7 +6,8 @@ import {
     mockInntekterResponse,
     mockInitiateResponse,
     mockSimulationResponse,
-    mockSendApplicationResponse, mockStatusResponse
+    mockSendApplicationResponse,
+    mockStatusResponse
 } from "@/api/model/Mocks";
 
 const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
@@ -76,6 +77,10 @@ export async function getInntekter(year: number): Promise<InntekterResponse> {
         credentials: "include",
         headers: headers
     });
+
+    if (MOCKS_ENABLED) {
+        return mockInntekterResponse
+    }
 
     if (!res.ok) {
         console.log("error")
@@ -182,17 +187,16 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         }
     }
 
-    if (MOCKS_ENABLED) {
-        return mockStatusResponse;
-    }
-
-
     const url = encodeURI(basePath + `/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
     const res = await fetch(url, {
         method: "GET",
         credentials: "include",
         headers: headers,
     });
+
+    if (MOCKS_ENABLED) {
+        return mockStatusResponse;
+    }
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");
