@@ -42,7 +42,9 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean) => {
                 }
             },
             stackLabels: {
-                enabled: true
+                enabled: true,
+                backgroundColor: '#FFFFFFFF',
+                y: -2
             },
             labels: {
                 formatter: ({value}) => NUMBER_FORMATTER.format(typeof value === "string" ? Number.parseInt(value, 10) : value),
