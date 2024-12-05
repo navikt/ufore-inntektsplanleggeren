@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering
 
 
+import junit.framework.TestCase.assertNull
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.PersonInntekter
@@ -10,6 +11,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
@@ -26,8 +28,9 @@ class SimuleringServiceTest {
     private val penClient = mock(PenClient::class.java)
     private val validator = mock(SimuleringValidator::class.java)
     private val tokenService = mock(TokenService::class.java)
+    private val nowProvider = mock(NowProvider::class.java)
 
-    private val simuleringService = SimuleringService(penClient, validator, tokenService)
+    private val simuleringService = SimuleringService(penClient, validator, tokenService, nowProvider)
 
     @Captor
     private lateinit var captor: ArgumentCaptor<List<Inntektsgrunnlag>>
@@ -35,6 +38,7 @@ class SimuleringServiceTest {
     @BeforeEach
     fun init() {
         MockitoAnnotations.openMocks(this)
+        `when`(nowProvider.now()).thenReturn(LocalDate.now())
     }
 
     @Test
@@ -417,7 +421,7 @@ class SimuleringServiceTest {
     }
 
     @Test
-    fun `should set sum yearly uforetrygd before to totalbelopNettoAr when simuleringsaar not same year as gjeldendeBeregningFom`() {
+    fun `should set sum yearly uforetrygd before to null when simuleringsaar not same year as gjeldendeBeregningFom`() {
         val simuleringsaar = LocalDate.now().year + 1
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
         val forventedeInntekterOppgitt = ForventedeInntekter(
@@ -479,7 +483,7 @@ class SimuleringServiceTest {
         val result = simuleringService.simulerInntektsendring(
             PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
         )
-        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.totalbelopNettoAr?.toInt(), result.simuleringsresultat.sum.yearly.before)
+        assertNull(result.simuleringsresultat.sum.yearly.before)
     }
 
     @Test
