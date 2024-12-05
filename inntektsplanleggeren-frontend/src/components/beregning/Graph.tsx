@@ -106,8 +106,9 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
             }
         },
         maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
-        borderWidth: 1,
-        borderColor: "#303030",
+        borderWidth: 0.9,
+        borderColor: "#ffffff",
+        marginTop: 10,
         dataLabels: {
             enabled: false
         }
@@ -138,7 +139,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                 data: [
                     isBeforeValuesAvailable ? ((props.simulationResult.uforetrygd.yearly.before ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0)) : undefined,
                     (props.simulationResult.uforetrygd.yearly.after ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0)].filter(isNotUndefined),
-                color: "var(--a-deepblue-500)"
+                color: "var(--a-deepblue-500)",
                 },
                 props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn ? {
                     ...COLUMN_STYLE(isBeforeValuesAvailable),
