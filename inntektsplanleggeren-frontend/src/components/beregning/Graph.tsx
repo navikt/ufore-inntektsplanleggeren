@@ -2,8 +2,19 @@ import { VStack } from "@navikt/ds-react";
 import Highcharts, {Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {SimulationResult} from "@/api/model/ApiRequests";
+import {DESKTOP_WIDTH} from "@/FormContainer";
+import {useEffect, useState} from "react";
 
 const NUMBER_FORMATTER = new Intl.NumberFormat('nb-NO', { style: 'decimal', useGrouping: true });
+
+const formatYAxisNumber = (isDesktop: boolean, value: string | number) => {
+    const valueAsString = value + ""
+    if(!isDesktop && valueAsString.length > 3) {
+        return NUMBER_FORMATTER.format(Number.parseInt(valueAsString.substring(0, valueAsString.length - 3), 10))
+    }
+    return NUMBER_FORMATTER.format(Number.parseInt(valueAsString))
+}
+
 const getXAxisCategories = (isBeforeValuesAvailable: boolean) => {
     if (isBeforeValuesAvailable) {
         return ['I dag', 'Med dine endringer']
@@ -12,11 +23,11 @@ const getXAxisCategories = (isBeforeValuesAvailable: boolean) => {
     }
 }
 
-const GRAPH_DATA = (isBeforeValuesAvailable: boolean) => {
+const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
     return {
         chart: {
             type: 'column',
-            marginTop: 40
+            marginTop: 50
         },
         title: undefined,
         credits: undefined,
@@ -34,7 +45,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean) => {
             title: {
                 align: 'high',
                 offset: 15,
-                text: 'Kroner',
+                text: isDesktop ? 'Kroner' : 'Tusen kroner',
                 rotation: 0,
                 y: -30,
                 style: {
@@ -47,7 +58,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean) => {
                 y: -2
             },
             labels: {
-                formatter: ({value}) => NUMBER_FORMATTER.format(typeof value === "string" ? Number.parseInt(value, 10) : value),
+                formatter: ({value}) => formatYAxisNumber(isDesktop, value),
             }
         },
         plotOptions: {
@@ -102,6 +113,14 @@ const COULMN_STYLE = (isBeforeValuesAvailable: boolean) => {
 }
 
 export const Graph = (props : { simulationResult : SimulationResult}) => {
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    const handleWindowSize = () => setWidth(window.innerWidth);
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSize);
+        return () => window.removeEventListener('resize', handleWindowSize);
+    });
+    const isDesktop = width > DESKTOP_WIDTH;
+
     const isBeforeValuesAvailable = props.simulationResult.sum.yearly.before !== null
     const tooltip: Options['tooltip'] = {
         enabled: false,
@@ -111,7 +130,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
 
     return (
         <VStack>
-            <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA(isBeforeValuesAvailable), tooltip, series: [{
+            <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA(isBeforeValuesAvailable, isDesktop), tooltip, series: [{
                 ...COULMN_STYLE(isBeforeValuesAvailable),
                 name: props.simulationResult.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd',
                 data: [
