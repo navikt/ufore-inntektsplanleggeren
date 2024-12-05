@@ -4,18 +4,15 @@ Tar utgangspunkt i:
 
 https://navno.sharepoint.com/sites/fag-og-ytelser-pesys/SitePages/Tilgangsstyring-i-Pesys.aspx
 https://confluence.adeo.no/display/SIK/Forretningspolicyer
+https://confluence.adeo.no/display/PEN/PSELV+Tilgangskontroll
 
 ==== Basis tilgang:
 Veileder/saksbehandler må være i en av følgende AD-grupper:
 
 * 0000-GA-Pensjon_VEILEDER
 * 0000-GA-PENSJON_SAKSBEHANDLER
-* 0000-GA-PENSJON_KLAGEBEH
 * 0000-GA-PENSJON_BRUKERHJELPA
-
-I tillegg må man være med i:
-
-* 0000-ga-pensjon_ufore
+* 0000-GA-PENSJON_OKONOMI
 
 Det skilles ikke mellom lese og skrive tilgang.
 
