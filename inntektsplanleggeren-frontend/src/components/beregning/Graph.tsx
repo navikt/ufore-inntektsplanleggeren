@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 
 const NUMBER_FORMATTER = new Intl.NumberFormat('nb-NO', { style: 'decimal', useGrouping: true });
 
-const formatYAxisNumber = (isDesktop: boolean, value: string | number) => {
+const formatYAxisNumber = (isDesktop: boolean, value: any) => {
     const valueAsString = value + ""
     if(!isDesktop && valueAsString.length > 3) {
         return NUMBER_FORMATTER.format(Number.parseInt(valueAsString.substring(0, valueAsString.length - 3), 10))
@@ -58,8 +58,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -2
             },
             labels: {
-                //@ts-expect-error
-                formatter: ({value}) => formatYAxisNumber(isDesktop, value),
+                formatter: ({value} : {value:any}) => formatYAxisNumber(isDesktop, value),
             }
         },
         plotOptions: {
@@ -88,7 +87,7 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
         point: {
             events: {
                 click: function () {
-                    // @ts-expect-error
+                    // @ts-expect-error This object is inserted into a context where this.series.chart has meaning for Highcharts
                     this.series.chart.update({
                         tooltip: {
                             enabled: true
@@ -96,7 +95,7 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
                     });
                 },
                 mouseOut: function () {
-                    // @ts-expect-error
+                    // @ts-expect-error This object is inserted into a context where this.series.chart has meaning for Highcharts
                     this.series.chart.update({
                         tooltip: {
                             enabled: false
