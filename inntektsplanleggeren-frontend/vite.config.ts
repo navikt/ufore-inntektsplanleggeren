@@ -6,7 +6,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 const buildConfig = {
-  base: '/api',
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
   build: {
     outDir: './dist'
   },
@@ -23,6 +23,7 @@ const buildConfig = {
 }
 
 const devConfig = {
+  base: '/pensjon/selvbetjening/inntektsplanleggeren',
   build: {
     manifest: true,
     rollupOptions: {
@@ -42,6 +43,15 @@ const devConfig = {
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url))
+    }
+  },
+  server: {
+    port: 3000,
+    proxy: {
+      '/pensjon/selvbetjening/inntektsplanleggeren/api': {
+        target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no',
+        changeOrigin: true,
+      },
     }
   }
 }

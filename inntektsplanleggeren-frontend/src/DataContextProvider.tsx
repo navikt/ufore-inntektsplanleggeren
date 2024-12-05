@@ -1,79 +1,96 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {
-    DisplayData,
-    getInntektsgrense,
-    Message,
+    getInitiate,
 } from "@/api/apiFetching";
+import {
+    InitiateData, InitiateResponse,
+    InntekterResponse,
+    Message,
+    SendApplicationResponse,
+    SimulationResponse, StatusResponse
+} from "@/api/model/ApiRequests";
 
-
-export const InitialViewDefaultData: DisplayData | null = {
-    forventetInntekt: 100000,
-    forventetInntektAnnenForelder: null,
-    inntektsgrense: 50000,
-    kompensasjonsgrad: 60.14,
-    grenseStoppAvUfoeretrygd: 600000,
-    aktuelleAar: [
-        2024,
-        2023
-    ],
-    hasVarigTilrettelagtArbeid: true,
-    hasBarneTillegg: true,
-    hasGjenlevendeTillegg: true
+export const InitialViewDefaultData: InitiateData | null = {
+    forventetInntekt: 0,
+    forventetInntektAnnenForelder: 0,
+    inntektsgrense: 0,
+    kompensasjonsgrad: 0,
+    grenseStoppAvUfoeretrygd: 0,
+    aktuelleAar: [],
+    hasVarigTilrettelagtArbeid: false,
+    hasBarneTilleggFellesbarn: false,
+    grenseStoppAvBarnetilleggFellesbarn: null,
+    fribelopBarnetilleggFellesbarn: null,
+    hasBarnetilleggSaerkullsbarn: false,
+    grenseStoppAvBarnetilleggSaerkullsbarn: null,
+    fribelopBarnetilleggSaerkullsbarn: null,
+    hasGjenlevendeTillegg: false
 }
 
-export const WarningMessageDefaultValue: Message[] | null = [{
-    messageCode: "USER_HAS_NO_LOPENDE_VEDTAK_YET",
-    details: "Bruker kan ikke registrere inntektsendring før vedkommendes vedtak har blitt løpende",
-    type: "ERROR"
-}]
+export const messagesDefaultValue: Message[]  = []
 
-export const InntektSimulationDefaultValue = {
-    "messages":[
-        {
-            "messageCode": "EPS_INNTEKT_CHANGED",
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": "WARNING",
-            "metadata": {}
-        }
-    ],
-    "result": {
-        "uforetrygd": {"before": 200000, "after": 300000},
-        "forventetInntekt": {"before": 430982, "after": 150000},
-        "barnetilleggFellesbarn": {"before": 0, "after": 4342},
-        "barnetilleggSaerkullsbarn": {"before": 0, "after": 0},
-        "gjenlevendetillegg": {"before": 0, "after": 0},
-        "sum": {"before": 630982, "after": 454342},
-    }
-}
 
 // export const WarningMessageDefaultValue: Message[] | null = []
 
+interface DataContextValue {
+    initiateResponse: InitiateResponse | null;
+    setInitiateResponse: (value: InitiateResponse) => void;
 
-const DataContextDefaultValue = {
-    initialViewData: InitialViewDefaultData,
-    warningMessage: WarningMessageDefaultValue,
+    inntekterResponse: InntekterResponse | null;
+    setInntekterResponse: (value: InntekterResponse) => void;
+
+    simulationResponse: SimulationResponse | null;
+    setSimulationResponse: (value: SimulationResponse) => void;
+
+    sendResponse: SendApplicationResponse | null,
+    setSendResponse: (value: SendApplicationResponse) => void,
+
+    statusResponse: StatusResponse | null,
+    setStatusResponse: (value: StatusResponse) => void,
+
+    refetch: boolean;
+    setRefetch: (value: boolean) => void;
+    loading: boolean;
+    setLoading: (loading: boolean) => void;
+    error: boolean;
+    setError: (value: boolean) => void;
+    loadingError: boolean;
+    setLoadingError: (value: boolean) => void;
+    feilmeldingkode: string;
+    setFeilmeldingkode: (value: string) => void;
+    success: boolean;
+    setSuccess: (value: boolean) => void;
+}
+
+const DataContextDefaultValue: DataContextValue = {
+    initiateResponse: null,
+    setInitiateResponse: () => undefined,
+
+    inntekterResponse: null,
+    setInntekterResponse: () => undefined,
+
+    simulationResponse: null,
+    setSimulationResponse: () => undefined,
+
+    sendResponse: null,
+    setSendResponse: () => undefined,
+
+    statusResponse: null,
+    setStatusResponse: () => undefined,
+
     refetch: true,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setRefetch: (value: boolean) => {
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setRefetch: () => undefined,
+     
     loading: true,
-    setLoading: {},
+    setLoading: () => undefined,
     error: false,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setError: (value: boolean) => {
-    },
+    setError: () => undefined,
     loadingError: false,
-    setLoadingError: {},
+    setLoadingError: () => undefined,
     feilmeldingkode: "",
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setFeilmeldingkode: (value: string) => {
-    },
-    inntektSimulation: InntektSimulationDefaultValue,
+    setFeilmeldingkode: () => undefined,
     success: false,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setSuccess: (value: boolean) => {
-    }
+    setSuccess: () => undefined
 };
 
 
@@ -85,9 +102,11 @@ interface DataContextProviderProps {
 
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
-    const [initialViewData, setInitialViewData] = useState(DataContextDefaultValue.initialViewData)
-    const [inntektSimulation, setInntektSimulation] = useState(DataContextDefaultValue.inntektSimulation)
-    const [warningMessage, setWarningMessage] = useState(DataContextDefaultValue.warningMessage)
+    const [initiateResponse, setInitiateResponse] = useState(DataContextDefaultValue.initiateResponse)
+    const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
+    const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
+    const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
+    const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -111,9 +130,9 @@ function DataContextProvider(props: DataContextProviderProps) {
                 if (refetch) {
                     try {
                         setLoading(true)
-                        const inntektsPlannleggerResponse = await getInntektsgrense()
-                        setInitialViewData(inntektsPlannleggerResponse.data)
-                        // setInitialWarningBox(inntektsPlannleggerResponse.messages)
+
+                        const inntektsPlanleggerenResponse = await getInitiate()
+                        setInitiateResponse(inntektsPlanleggerenResponse)
 
                         setLoading(false)
                     } catch (e) {
@@ -129,11 +148,24 @@ function DataContextProvider(props: DataContextProviderProps) {
 
     return (
         <DataContext.Provider value={{
-            inntektSimulation,
+            initiateResponse,
+            setInitiateResponse,
+
+            inntekterResponse,
+            setInntekterResponse,
+
+            simulationResponse,
+            setSimulationResponse,
+
+            sendResponse,
+            setSendResponse,
+
+            statusResponse,
+            setStatusResponse,
+
             refetch,
             setRefetch,
-            initialViewData,
-            warningMessage,
+
             loading,
             setLoading,
             error,
