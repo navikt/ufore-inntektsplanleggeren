@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: inntektsplanleggeren-frontend-borger
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+spec:
+  groups:
+    - name: inntektsplanleggeren-frontend-borger-alerts
+      rules:
+        - alert: Application is unavailable
+          expr: kube_deployment_status_replicas_available{deployment="inntektsplanleggeren-frontend-borger"} == 0
+          for: 1m
+          annotations:
+            consequence: Pensjon Inntektsplanleggeren borger application is unavailable
+            action: "https://logs.adeo.no/app/r/s/IUFfT"
+          labels:
+            namespace: pensjonselvbetjening # required
+            severity: danger
+        - alert: Failing deployment
+          expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-frontend-borger"} > 0
+          for: 2m
+          annotations:
+            consequence: Pensjon Inntektsplanleggeren borger failing deployment
+            action: "https://logs.adeo.no/app/r/s/IUFfT"
+          labels:
+            namespace: pensjonselvbetjening # required
+            severity: warning
