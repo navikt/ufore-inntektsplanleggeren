@@ -24,8 +24,6 @@ const getXAxisCategories = (isBeforeValuesAvailable: boolean) => {
 }
 
 const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
-    // @ts-ignore
-    // @ts-ignore
     return {
         chart: {
             type: 'column',
@@ -60,7 +58,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -2
             },
             labels: {
-                // @ts-expect-error
+                //@ts-expect-error
                 formatter: ({value}) => formatYAxisNumber(isDesktop, value),
             }
         },
