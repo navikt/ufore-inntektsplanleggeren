@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 
 const NUMBER_FORMATTER = new Intl.NumberFormat('nb-NO', { style: 'decimal', useGrouping: true });
 
-const formatYAxisNumber = (isDesktop: boolean, value: any) => {
+const formatYAxisNumber = (isDesktop: boolean, value: string | number) => {
     const valueAsString = value + ""
     if(!isDesktop && valueAsString.length > 3) {
         return NUMBER_FORMATTER.format(Number.parseInt(valueAsString.substring(0, valueAsString.length - 3), 10))
@@ -58,7 +58,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -2
             },
             labels: {
-                formatter: ({value} : {value:any}) => formatYAxisNumber(isDesktop, value),
+                formatter: ({value} : {value:string | number}) => formatYAxisNumber(isDesktop, value),
             }
         },
         plotOptions: {
