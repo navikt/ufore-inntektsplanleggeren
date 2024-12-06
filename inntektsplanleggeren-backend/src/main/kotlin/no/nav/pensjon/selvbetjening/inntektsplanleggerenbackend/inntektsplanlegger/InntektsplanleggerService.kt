@@ -206,12 +206,16 @@ class InntektsplanleggerService(
     ): List<Int> {
         val today = nowProvider.now()
         val isMonthBeforeOctober = today.month.value < Month.OCTOBER.value
+        val isMonthDecember = today.month.value == Month.DECEMBER.value
 
         if (hasLopendeUforeVedtakThisYear == null || hasLopendeUforeVedtakNextYear == null) {
             return emptyList()
         }
         if (isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
             return listOf(today.year)
+        }
+        if (isMonthDecember && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)){
+            return listOf(today.year + 1)
         }
         if (!isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
             return listOf(today.year, today.year + 1)
