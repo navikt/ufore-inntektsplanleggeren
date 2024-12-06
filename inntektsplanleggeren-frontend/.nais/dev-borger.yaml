@@ -11,8 +11,8 @@ metadata:
 spec:
   image: "{{ image }}"
   ingresses:
-    - https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no
-    - https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.ansatt.dev.nav.no
+    - https://uforetrygd-inntektsplanleggeren-frontend-borger.intern.dev.nav.no
+    - https://uforetrygd-inntektsplanleggeren-frontend-borger.ansatt.dev.nav.no
   port: 8080
   replicas:
     min: 2

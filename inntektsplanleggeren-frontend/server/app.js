@@ -165,7 +165,11 @@ app.get('/internal/health/readiness', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    if (process.env.MODE === "veileder") {
+        res.sendFile(path.resolve(__dirname, '../dist', 'index-veileder.html'));
+    } else {
+        res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    }
 });
 
 app.listen(PORT, () => {
