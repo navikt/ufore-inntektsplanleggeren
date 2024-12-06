@@ -35,7 +35,8 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             categories: getXAxisCategories(isBeforeValuesAvailable),
             labels: {
                 style: {
-                    fontWeight: 'bold'
+                    fontSize: 18,
+                    fontWeight: 'normal'
                 }
             },
 
@@ -55,7 +56,14 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             stackLabels: {
                 enabled: true,
                 backgroundColor: '#FFFFFFFF',
-                y: -2
+                y: -2,
+                style: {
+                    fontSize: 18,
+                    fontWeight: 'normal'
+                },
+                formatter(this:Highcharts.StackItemObject){
+                    return "Sum " + NUMBER_FORMATTER.format(this.total) +" kr"
+                }
             },
             labels: {
                 formatter: ({value} : {value:string | number}) => formatYAxisNumber(isDesktop, value),
@@ -87,6 +95,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 cursor: 'auto'
             },
             itemDistance: 40,
+            itemMarginBottom: 15
             // itemWidth: 250,
         }
     }
@@ -103,7 +112,7 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
             }
         },
         maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
-        borderWidth: 0.9,
+        borderWidth: 1,
         borderColor: "#ffffff",
         marginTop: 10,
         dataLabels: {
