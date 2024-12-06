@@ -3,7 +3,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.SimuleringValidator
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Ytelseskomponent
@@ -74,11 +73,11 @@ class SimuleringService(
                 ),
                 sum = SimuleringAmounts(
                     yearly = BeforeAndAfterValues(
-                        before = getSumArligUforetrygd(simuleringsresultat, simuleringsaar),
-                        after = getSumArligUforetrygdSimulert(simuleringsresultat)
+                        before = getSumArligUforetrygdAndInntekt(simuleringsresultat, forventedeInntekter, simuleringsaar),
+                        after = getSumArligUforetrygdSimulertAndInntekt(simuleringsresultat, forventedeInntekterOppgitt)
                     ), monthly = BeforeAndAfterValues(
-                        before = getSumMaanedligUforetrygd(simuleringsresultat, simuleringsaar),
-                        after = simuleringsresultat.simulertUforetrygdSummary.totalbelopNetto ?: 0
+                        before = getSumMaanedligUforetrygdAndInntekt(simuleringsresultat, forventedeInntekter, simuleringsaar),
+                        after = getSumMaanedligUforetrygdSimulertAndInntekt(simuleringsresultat, forventedeInntekterOppgitt)
                     )
                 )
             )
@@ -108,25 +107,30 @@ class SimuleringService(
         )
     }
 
-    private fun getSumMaanedligUforetrygd(simuleringsresultat: SimulerEndringUforetrygdResponse, simuleringsaar: Int) =
+    private fun getSumMaanedligUforetrygdAndInntekt(simuleringsresultat: SimulerEndringUforetrygdResponse, forventedeInntekter: ForventedeInntekterSummary, simuleringsaar: Int) =
         if (isSimuleringsaarThisYear(simuleringsaar))
-            simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0
+            (simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0) + (forventedeInntekter.sumBenyttedeInntekterBruker / 12)
         else
             null
 
-    private fun getSumArligUforetrygd(
+    private fun getSumMaanedligUforetrygdSimulertAndInntekt(simuleringsresultat: SimulerEndringUforetrygdResponse, forventedeInntekterOppgitt: ForventedeInntekter) =
+        (simuleringsresultat.simulertUforetrygdSummary.totalbelopNetto ?: 0) + forventedeInntekterOppgitt.bruker.sum() / 12
+
+    private fun getSumArligUforetrygdAndInntekt(
         simuleringsresultat: SimulerEndringUforetrygdResponse,
+        forventedeInntekter: ForventedeInntekterSummary,
         simuleringsaar: Int
     ): Int? {
         return if (isSimuleringsaarThisYear(simuleringsaar)) {
-            simuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter ?: 0
+            (simuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter ?: 0) + forventedeInntekter.sumBenyttedeInntekterBruker
         } else {
             null
         }
     }
 
-    private fun getSumArligUforetrygdSimulert(simuleringsresultat: SimulerEndringUforetrygdResponse): Int {
-        return simuleringsresultat.simulertUforetrygdSummary.sumYtelseskomponenter ?: 0
+    private fun getSumArligUforetrygdSimulertAndInntekt(simuleringsresultat: SimulerEndringUforetrygdResponse,
+                                                        forventedeInntekterOppgitt: ForventedeInntekter): Int {
+        return (simuleringsresultat.simulertUforetrygdSummary.sumYtelseskomponenter ?: 0) + forventedeInntekterOppgitt.bruker.sum()
     }
 
     private fun isSimuleringsaarThisYear(simuleringsaar: Int) =
