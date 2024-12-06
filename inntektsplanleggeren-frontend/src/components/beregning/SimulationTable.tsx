@@ -59,7 +59,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                         <Table.Row>
                             <Table.DataCell>
                             <VStack gap="1">
-                                <BodyShort><strong>Uføretrygd inkludert gjenlevendetillegg</strong></BodyShort>
+                                <BodyShort><strong>{gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg" : "Uføretrygd"}</strong></BodyShort>
                                 {isBeforeValuesAvailable && <BodyShort>I dag: <FormatKroner value={(uforetrygd.yearly.before ?? 0) + (gjenlevendetillegg?.yearly.before ?? 0)}/></BodyShort>}
                                 <BodyShort>Med dine endringer: <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)}/></BodyShort>
                             </VStack>
