@@ -166,12 +166,15 @@ app.get('/internal/health/readiness', (req, res) => {
 
 app.get('*', (req, res) => {
     if (process.env.MODE === "veileder") {
+        console.log('Serving veileder')
         res.sendFile(path.resolve(__dirname, '../dist', 'index-veileder.html'));
     } else {
+        console.log('Serving borger')
         res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
     }
 });
 
 app.listen(PORT, () => {
+    console.log(`process.env.MODE=${process.env.MODE}`)
     console.log("Server started");
 });
