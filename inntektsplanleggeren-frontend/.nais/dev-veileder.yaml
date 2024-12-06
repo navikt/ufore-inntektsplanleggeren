@@ -54,14 +54,14 @@ spec:
           cluster: dev-gcp
     outbound:
       rules:
-        - application: nav-dekoratoren
+        - application: nav-dekoratoren  # TODO: trenger vi denne
           namespace: personbruker
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: MODE
-      value: veileder
+    - name: "MODE"
+      value: "veileder"
     - name: "VITE_DECORATOR_URL"
       value: "https://dekoratoren.ekstern.dev.nav.no"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
