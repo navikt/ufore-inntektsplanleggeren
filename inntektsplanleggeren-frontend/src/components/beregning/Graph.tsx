@@ -70,11 +70,21 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             }
         },
         legend: {
+            events: {
+                itemClick: function () {
+                    return false;
+                }
+            },
+            enableMouseTracking: false,
             symbolHeight: 15, //size of legend circle
+            itemHoverStyle: {
+                color: '#010B18AD'
+            },
             itemStyle: {
                 color: '#010B18AD',
                 fontSize: '17px', // TODO: how to use stantdard nav font?
-                newLine: true
+                newLine: true,
+                cursor: 'auto'
             },
             itemDistance: 40,
             // itemWidth: 250,
@@ -84,25 +94,12 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
 
 const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
     return {
-        point: {
-            events: {
-                click: function () {
-                    // @ts-expect-error This object is inserted into a context where this.series.chart has meaning for Highcharts
-                    this.series.chart.update({
-                        tooltip: {
-                            enabled: true
-                        }
-                    });
-                },
-                mouseOut: function () {
-                    // @ts-expect-error This object is inserted into a context where this.series.chart has meaning for Highcharts
-                    this.series.chart.update({
-                        tooltip: {
-                            enabled: false
-                        }
-
-                    })
-                }
+        states: {
+            hover: {
+                enabled: false
+            },
+            inactive: {
+                opacity: 1,
             }
         },
         maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
