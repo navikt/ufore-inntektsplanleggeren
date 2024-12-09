@@ -7,7 +7,7 @@ import { resolve } from "path";
 
 // https://vitejs.dev/config/
 const buildConfig = {
-  base: '/pensjon/selvbetjening/inntektsplanleggeren',
+  base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
   build: {
     outDir: './dist',
     rollupOptions: {
@@ -30,7 +30,7 @@ const buildConfig = {
 }
 
 const devConfig = {
-  base: '/pensjon/selvbetjening/inntektsplanleggeren',
+  base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
   build: {
     manifest: true,
     rollupOptions: {
@@ -56,7 +56,7 @@ const devConfig = {
   server: {
     port: 3000,
     proxy: {
-      '/pensjon/selvbetjening/inntektsplanleggeren/api': {
+      '/uforetrygd/selvbetjening/inntektsplanleggeren/api': {
         target: 'https://pensjon-selvbetjening-inntektsplanleggeren-frontend-borger-q2.intern.dev.nav.no',
         changeOrigin: true,
       },
