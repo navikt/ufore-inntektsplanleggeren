@@ -11,7 +11,7 @@ import { SelectedYearProvider } from "@/context/SelectedYear";
 import {OppsummeringPage} from "@/components/oppsummering/OppsummeringPage";
 
 
-export const BASE_PATH = "/pensjon/selvbetjening/inntektsplanleggeren";
+export const BASE_PATH = "/uforetrygd/selvbetjening/inntektsplanleggeren";
 
 export const AppRoutes = () => (
     <BrowserRouter basename={BASE_PATH}>

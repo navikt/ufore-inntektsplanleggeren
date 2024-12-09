@@ -9,7 +9,7 @@ import {
     mockSendApplicationResponse, mockStatusResponse
 } from "@/api/model/Mocks";
 
-const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+const basePath = "/uforetrygd/selvbetjening/inntektsplanleggeren";
 
 const MOCKS_ENABLED = true && import.meta.env.DEV;
 

@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering
 
 
+import junit.framework.TestCase.assertNull
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.PersonInntekter
@@ -10,6 +11,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
@@ -26,8 +28,9 @@ class SimuleringServiceTest {
     private val penClient = mock(PenClient::class.java)
     private val validator = mock(SimuleringValidator::class.java)
     private val tokenService = mock(TokenService::class.java)
+    private val nowProvider = mock(NowProvider::class.java)
 
-    private val simuleringService = SimuleringService(penClient, validator, tokenService)
+    private val simuleringService = SimuleringService(penClient, validator, tokenService, nowProvider)
 
     @Captor
     private lateinit var captor: ArgumentCaptor<List<Inntektsgrunnlag>>
@@ -35,6 +38,7 @@ class SimuleringServiceTest {
     @BeforeEach
     fun init() {
         MockitoAnnotations.openMocks(this)
+        `when`(nowProvider.now()).thenReturn(LocalDate.now())
     }
 
     @Test
@@ -351,7 +355,7 @@ class SimuleringServiceTest {
     }
 
     @Test
-    fun `should set sum yearly uforetrygd before to sumYtelseskomponenter when simuleringsaar same year as gjeldendeBeregningFom`() {
+    fun `should set sum yearly uforetrygd before to sum of Ytelseskomponenter and sumBenyttedeInntekterBruker when simuleringsaar same year as gjeldendeBeregningFom`() {
         val simuleringsaar = LocalDate.now().year
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
         val forventedeInntekterOppgitt = ForventedeInntekter(
@@ -413,11 +417,12 @@ class SimuleringServiceTest {
         val result = simuleringService.simulerInntektsendring(
             PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
         )
-        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter, result.simuleringsresultat.sum.yearly.before)
+        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter!! + forventedeInntekterRegistrert.sumBenyttedeInntekterBruker,
+            result.simuleringsresultat.sum.yearly.before)
     }
 
     @Test
-    fun `should set sum yearly uforetrygd before to totalbelopNettoAr when simuleringsaar not same year as gjeldendeBeregningFom`() {
+    fun `should set sum yearly uforetrygd before to null when simuleringsaar not same year as gjeldendeBeregningFom`() {
         val simuleringsaar = LocalDate.now().year + 1
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
         val forventedeInntekterOppgitt = ForventedeInntekter(
@@ -479,11 +484,11 @@ class SimuleringServiceTest {
         val result = simuleringService.simulerInntektsendring(
             PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
         )
-        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.totalbelopNettoAr?.toInt(), result.simuleringsresultat.sum.yearly.before)
+        assertNull(result.simuleringsresultat.sum.yearly.before)
     }
 
     @Test
-    fun `should set sum yearly uforetrygd after to sumYtelseskomponenter`() {
+    fun `should set sum yearly uforetrygd after to sum of ytelseskomponenter and forventet inntekt`() {
         val simuleringsaar = LocalDate.now().year + 1
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
         val forventedeInntekterOppgitt = ForventedeInntekter(
@@ -545,11 +550,12 @@ class SimuleringServiceTest {
         val result = simuleringService.simulerInntektsendring(
             PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
         )
-        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.sumYtelseskomponenter, result.simuleringsresultat.sum.yearly.after)
+        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.sumYtelseskomponenter!! + forventedeInntekterOppgitt.bruker.sum(),
+            result.simuleringsresultat.sum.yearly.after)
     }
 
     @Test
-    fun `should set monthly sums to totalbelopNetto for currentUforetrygd and simulert uforetrygd`(){
+    fun `should set monthly sums to sum of totalbelopNetto and forventet inntekt for currentUforetrygd and simulert uforetrygd`(){
         val simuleringsaar = LocalDate.now().year
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
         val forventedeInntekterOppgitt = ForventedeInntekter(
@@ -611,8 +617,10 @@ class SimuleringServiceTest {
         val result = simuleringService.simulerInntektsendring(
             PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
         )
-        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.totalbelopNetto, result.simuleringsresultat.sum.monthly.before)
-        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.totalbelopNetto, result.simuleringsresultat.sum.monthly.after)
+        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.totalbelopNetto!! + forventedeInntekterRegistrert.sumBenyttedeInntekterBruker / 12,
+            result.simuleringsresultat.sum.monthly.before)
+        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.totalbelopNetto!! + forventedeInntekterOppgitt.bruker.sum() / 12,
+            result.simuleringsresultat.sum.monthly.after)
     }
 
     private fun assertInntektsgrunnlagEqual(expected: Inntektsgrunnlag, actual: Inntektsgrunnlag) {
