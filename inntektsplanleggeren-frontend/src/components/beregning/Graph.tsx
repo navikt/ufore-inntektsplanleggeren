@@ -37,7 +37,8 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 style: {
                     fontSize: isDesktop ? 18 : 12,
                     fontWeight: 600,
-                    color: 'var(--a-grayalpha-700)'
+                    fontFamily: 'var(--a-font-family)',
+                    color: 'var(--a-grayalpha-700)',
                 }
             },
 
@@ -52,6 +53,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -30,
                 style: {
                     fontSize: '16px',
+                    fontFamily: 'var(--a-font-family)',
                     color: 'var(--a-grayalpha-700)'
                 }
             },
@@ -65,13 +67,16 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                     fontSize: isDesktop ? 18 : 12,
                     color: 'var(--a-grayalpha-700)',
                     textOutline: false,
-                    fontWeight: 600
+                    fontWeight: 600,
+                    fontFamily: 'var(--a-font-family)',
+                    align: 'center'
                 }
             },
             labels: {
                 formatter: ({value} : {value:string | number}) => formatYAxisNumber(isDesktop, value),
                 style:{
                     fontSize: 16,
+                    fontFamily: 'var(--a-font-family)',
                     color: 'var(--a-grayalpha-700)'
                 }
             }
@@ -81,7 +86,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 stacking: 'normal',
                 dataLabels: {
                     enabled: true
-                },
+                }
             }
         },
         legend: {
@@ -119,9 +124,6 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
             }
         },
         maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
-        borderWidth: 1,
-        borderColor: "#ffffff",
-        marginTop: 10,
         dataLabels: {
             enabled: false
         }
@@ -152,7 +154,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                 data: [
                     isBeforeValuesAvailable ? ((props.simulationResult.uforetrygd.yearly.before ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0)) : undefined,
                     (props.simulationResult.uforetrygd.yearly.after ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0)].filter(isNotUndefined),
-                color: "var(--a-deepblue-500)",
+                color: 'var(--a-deepblue-500)',
                 },
                 props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn ? {
                     ...COLUMN_STYLE(isBeforeValuesAvailable),
@@ -160,7 +162,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                     data: [
                         isBeforeValuesAvailable ? ((props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0)): undefined,
                         (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.after ?? 0) + (props.simulationResult.barnetilleggFellesbarn?.yearly.after ?? 0)].filter(isNotUndefined),
-                    color: "var(--a-purple-400)"
+                    color: 'var(--a-purple-400)'
                     } : undefined,
             {
                 ...COLUMN_STYLE(isBeforeValuesAvailable),
