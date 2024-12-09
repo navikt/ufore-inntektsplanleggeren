@@ -42,7 +42,8 @@ Det kreves tilgang for å hente ut inntektsdata (dette sjekkes ikke inntektsplan
 Det kreves innloggingsnivå ‘substantial’ og ‘high’ for å kunne bruke tjenesten.
 
 ==== Adressebeskyttelse
-Dersom innbygger har adressebeskyttelse (Strengt Fortrolig, Strengt Fortrolig Utland, Fortrolig) kreves innloggingsnivå ‘high’.
+Dersom innbygger har adressebeskyttelse på nivå: Strengt Fortrolig, Strengt Fortrolig Utland kreves innloggingsnivå ‘high’.
+Dersom innbygger har adressebeskyttelse på nivå: Fortrolig kreves innloggingsnivå ‘substantial’.
 
 ==== Fullmakt
 Dersom det foreligger et gyldig fullmaktsforhold, kan en fullmaktsmottaker få tilgang.
