@@ -51,7 +51,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 rotation: 0,
                 y: -30,
                 style: {
-                    fontSize: '15px',
+                    fontSize: '16px',
                     color: 'var(--a-grayalpha-700)'
                 }
             },
@@ -71,6 +71,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             labels: {
                 formatter: ({value} : {value:string | number}) => formatYAxisNumber(isDesktop, value),
                 style:{
+                    fontSize: 16,
                     color: 'var(--a-grayalpha-700)'
                 }
             }
