@@ -157,7 +157,7 @@ export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forvented
                 </VStack>
             )}
 
-            <Box padding="4" background="surface-info-subtle">
+            <Box padding="4" background="surface-info-subtle" borderRadius="large">
                 <VStack>
                     <Heading size="small"> Din samlede forventede inntekt i {year}: </Heading>
                     <BodyShort className="sum"><FormatKroner value={inntektSum}/> før skatt</BodyShort>
