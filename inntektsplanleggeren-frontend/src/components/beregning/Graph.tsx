@@ -46,7 +46,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             min: 0,
             title: {
                 align: 'high',
-                offset: isDesktop ? 15 : -50,
+                offset: isDesktop ? 24 : -50,
                 text: isDesktop ? 'Kroner' : 'Tusen kroner',
                 rotation: 0,
                 y: -30,
