@@ -19,8 +19,8 @@ let client = process.env.MODE === "borger" ? await tokenx.client() : await azure
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const buildPath = path.resolve(__dirname, "../dist")
-app.use(basePath, express.static(buildPath));
+const assetPath = path.resolve(__dirname, "../dist/assets")
+app.use(`${basePath}/assets`, express.static(assetPath));
 
 app.get(
     basePath + '/api/initiate',
