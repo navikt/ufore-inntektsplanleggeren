@@ -1,0 +1,65 @@
+name: "Prod: Inntektsplanleggeren frontend deploy"
+
+on:
+  workflow_dispatch:
+#  push:            //TODO: activate when ready
+#    branches:
+#      - main
+#    paths:
+#      - inntektsplanleggeren-frontend/**
+
+jobs:
+
+  build-frontend-and-publish-docker:
+    name: Build frontend application
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      path: inntektsplanleggeren-frontend
+      team: pensjonselvbetjening
+      app: inntektsplanleggeren-frontend
+      prune_dev_dependencies: true
+      build_script_command: build
+      node_version: 20
+    secrets: inherit
+
+  trivy-docker:
+    needs: build-frontend-and-publish-docker
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      security-events: write
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/trivy-docker.yml@main
+    with:
+      image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
+      team: pensjonselvbetjening
+    secrets: inherit
+
+  deploy-frontend-borger-to-prod:
+    if: github.ref == 'refs/heads/main'
+    needs: [build-frontend-and-publish-docker]
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      cluster: prod-gcp
+      image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
+      team: pensjonselvbetjening
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yml
+
+  deploy-frontend-veileder-to-prod:
+    if: github.ref == 'refs/heads/main'
+    needs: [build-frontend-and-publish-docker]
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      cluster: prod-gcp
+      image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
+      team: pensjonselvbetjening
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yml

@@ -1,0 +1,47 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: inntektsplanleggeren-backend
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+spec:
+  groups:
+    - name: inntektsplanleggeren-backend-alerts
+      rules:
+        - alert: Application is unavailable
+          expr: kube_deployment_status_replicas_available{deployment="inntektsplanleggeren-backend"} == 0
+          for: 1m
+          annotations:
+            consequence: inntektsplanleggeren backend application is unavailable
+            action: https://logs.adeo.no/app/r/s/FEsy4
+          labels:
+            namespace: pensjonselvbetjening # required
+            severity: danger
+        - alert: Failing deployment
+          expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-backend"} > 0
+          for: 2m
+          annotations:
+            consequence: inntektsplanleggeren backend failing deployment
+            action: https://logs.adeo.no/app/r/s/FEsy4
+          labels:
+            namespace: pensjonselvbetjening # required
+            severity: warning
+        - alert: 401 Unauthorized
+          expr: (increase(http_server_requests_seconds_count{app="inntektsplanleggeren-backend", status="401"}[2m])) != 0
+          for: 1m
+          annotations:
+            consequence: inntektsplanleggeren backend 401 Unauthorized
+            action: https://logs.adeo.no/app/r/s/FEsy4
+          labels:
+            namespace: pensjonselvbetjening # required
+            severity: danger
+        - alert: 500 Internal Server Error
+          expr: (increase(http_server_requests_seconds_count{app="inntektsplanleggeren-backend", status="500"}[2m])) != 0
+          for: 1m
+          annotations:
+            consequence: inntektsplanleggeren backend 500 Internal Server Error
+            action: https://logs.adeo.no/app/r/s/FEsy4
+          labels:
+            namespace: pensjonselvbetjening # required
+            severity: danger
