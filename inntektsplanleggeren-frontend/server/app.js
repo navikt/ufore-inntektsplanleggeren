@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 
-const basePath = "/pensjon/selvbetjening/inntektsplanleggeren";
+const basePath = "/uforetrygd/selvbetjening/inntektsplanleggeren";
 
 const app = express();
 app.use(express.json())
@@ -19,8 +19,8 @@ let client = process.env.MODE === "borger" ? await tokenx.client() : await azure
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const buildPath = path.resolve(__dirname, "../dist")
-app.use(basePath, express.static(buildPath));
+const assetPath = path.resolve(__dirname, "../dist/assets")
+app.use(`${basePath}/assets`, express.static(assetPath));
 
 app.get(
     basePath + '/api/initiate',
@@ -165,9 +165,16 @@ app.get('/internal/health/readiness', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    if (process.env.MODE === "veileder") {
+        console.log('Serving veileder')
+        res.sendFile(path.resolve(__dirname, '../dist', 'index-veileder.html'));
+    } else {
+        console.log('Serving borger')
+        res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    }
 });
 
 app.listen(PORT, () => {
+    console.log(`process.env.MODE=${process.env.MODE}`)
     console.log("Server started");
 });
