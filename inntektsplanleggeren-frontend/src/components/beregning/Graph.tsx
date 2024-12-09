@@ -35,8 +35,9 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             categories: getXAxisCategories(isBeforeValuesAvailable),
             labels: {
                 style: {
-                    fontSize: 18,
-                    fontWeight: 'normal'
+                    fontSize: isDesktop ? 18 : 12,
+                    fontWeight: 600,
+                    color: 'var(--a-grayalpha-700)'
                 }
             },
 
@@ -51,22 +52,27 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 y: -30,
                 style: {
                     fontSize: '15px',
+                    color: 'var(--a-grayalpha-700)'
                 }
             },
             stackLabels: {
                 enabled: true,
-                backgroundColor: '#FFFFFFFF',
-                y: -2,
-                style: {
-                    fontSize: 18,
-                    fontWeight: 'normal'
-                },
                 formatter(this:Highcharts.StackItemObject){
                     return "Sum " + NUMBER_FORMATTER.format(this.total) +" kr"
+                },
+                backgroundColor: '#FFFFFFFF',
+                style: {
+                    fontSize: isDesktop ? 18 : 12,
+                    color: 'var(--a-grayalpha-700)',
+                    textOutline: false,
+                    fontWeight: 600
                 }
             },
             labels: {
                 formatter: ({value} : {value:string | number}) => formatYAxisNumber(isDesktop, value),
+                style:{
+                    color: 'var(--a-grayalpha-700)'
+                }
             }
         },
         plotOptions: {
@@ -161,7 +167,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                 data: [
                     isBeforeValuesAvailable ? (props.simulationResult.forventetInntekt.yearly.before ?? 0) : undefined,
                     props.simulationResult.forventetInntekt.yearly.after ?? 0].filter(isNotUndefined),
-                color: "var(--a-green-200)"
+                color: 'var(--a-green-200)'
             }
             ].filter(isNotUndefined)}} />
         </VStack>
