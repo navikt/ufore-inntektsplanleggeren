@@ -93,8 +93,9 @@ class AuthorizationService(
     }
 
     private fun checkAdressebeskyttelseAndLoginLevel(requestingPid: String) {
-        if (!tokenService.isLoginLevelHigh() && personService.hasAdressebeskyttelse(requestingPid)) {
-            log.info("Bruker adressebeskyttet, innloggingsnivå for lavt. Nekter adgang")
+        val adressebeskyttelse = personService.getAdressebeskyttelsesgrad(requestingPid)
+        if (!tokenService.isLoginLevelHigh() && (adressebeskyttelse == PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG || adressebeskyttelse == PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)) {
+            log.info("Bruker adressebeskyttet - Strengt Fortrolig, innloggingsnivå for lavt. Nekter adgang")
             throw LoginLevelTooLowException()
         }
     }
