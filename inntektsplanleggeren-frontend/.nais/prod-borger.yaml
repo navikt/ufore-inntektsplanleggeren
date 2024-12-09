@@ -11,7 +11,7 @@ metadata:
 spec:
   image: "{{ image }}"
   ingresses:
-    - https://uforetrygd-inntektsplanleggeren-frontend-borger.intern.nav.no
+    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 2

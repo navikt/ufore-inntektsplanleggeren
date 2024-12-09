@@ -11,8 +11,8 @@ metadata:
 spec:
   image: "{{ image }}"
   ingresses:
-    - https://uforetrygd-inntektsplanleggeren-frontend-veileder.intern.dev.nav.no
-    - https://uforetrygd-inntektsplanleggeren-frontend-veileder.ansatt.dev.nav.no
+    - https://veileder.intern.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+    - https://veileder.ansatt.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 1
@@ -62,8 +62,6 @@ spec:
   env:
     - name: "MODE"
       value: "veileder"
-    - name: "VITE_DECORATOR_URL"
-      value: "https://dekoratoren.ekstern.dev.nav.no"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend-q2"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
