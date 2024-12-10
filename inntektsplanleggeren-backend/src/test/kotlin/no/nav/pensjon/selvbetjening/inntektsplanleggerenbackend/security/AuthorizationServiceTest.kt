@@ -251,12 +251,43 @@ class AuthorizationServiceTest {
     }
 
     @Test
-    fun `should return Exception when borger withaddressebekyttelse access himself login level substantial`() {
+    fun `should return Exception when borger with addressebekyttelse Strengt fortrolig access himself login level substantial`() {
         val pid = "12345678901"
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
-        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(true)
+        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG)
         assertThrows<LoginLevelTooLowException> { authorizationService.checkBorgerTilgang(null) }
+    }
+
+    @Test
+    fun `should return Exception when borger with addressebekyttelse Strengt fortrolig utland access himself login level substantial`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
+        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)
+        assertThrows<LoginLevelTooLowException> { authorizationService.checkBorgerTilgang(null) }
+    }
+
+    @Test
+    fun `should return pid and isFullmakt=false when borger with addressebekyttelse Strengt fortrolig access himself login level high`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
+        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        assertEquals(pid,authenticatedUserDetails.pid)
+        assertEquals(false,authenticatedUserDetails.isFullmakt)
+    }
+
+    @Test
+    fun `should return pid and isFullmakt=false when borger with addressebekyttelse Fortrolig access himself login level substantial`() {
+        val pid = "12345678901"
+        `when` (tokenService.determineRequestingPid()).thenReturn(pid)
+        `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
+        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
+        val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
+        assertEquals(pid,authenticatedUserDetails.pid)
+        assertEquals(false,authenticatedUserDetails.isFullmakt)
     }
 
     //----------------------------
