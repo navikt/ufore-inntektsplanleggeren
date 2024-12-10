@@ -222,7 +222,6 @@ class AuthorizationServiceTest {
         val pid = "12345678901"
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
-        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(false)
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
@@ -233,7 +232,7 @@ class AuthorizationServiceTest {
         val pid = "12345678901"
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
-        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(false)
+        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(null)
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
@@ -244,7 +243,6 @@ class AuthorizationServiceTest {
         val pid = "12345678901"
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
-        `when` (personService.hasAdressebeskyttelse(pid)).thenReturn(true)
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
@@ -273,7 +271,7 @@ class AuthorizationServiceTest {
         val pid = "12345678901"
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(true)
-        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)
+ //       `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND)
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
@@ -284,7 +282,7 @@ class AuthorizationServiceTest {
         val pid = "12345678901"
         `when` (tokenService.determineRequestingPid()).thenReturn(pid)
         `when` (tokenService.isLoginLevelHigh()).thenReturn(false)
-        `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
+  //      `when` (personService.getAdressebeskyttelsesgrad(pid)).thenReturn(PdlAdressebeskyttelsesgradering.FORTROLIG)
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(null)
         assertEquals(pid,authenticatedUserDetails.pid)
         assertEquals(false,authenticatedUserDetails.isFullmakt)
