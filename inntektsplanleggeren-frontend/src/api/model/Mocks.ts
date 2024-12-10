@@ -1,4 +1,4 @@
-import {InitiateData, InntekterResponse, SendApplicationResponse, StatusResponse} from "@/api/model/ApiRequests";
+import {InitiateData, InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse} from "@/api/model/ApiRequests";
 import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {StatusCodes} from "@/api/model/StatusCodes";
 
@@ -129,14 +129,51 @@ export const mockInntekterResponse : InntekterResponse = {
     "epsPid": "1234"
 };
 
-export const mockSimulationResponse = {
+export const mockSimulationResponse: SimulationResponse = {
     "messages":  [
         {
-        "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
-        "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-        "type": MessageTypes.WARNING,
-        "metadata": {}
-    }],
+            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": MessageTypes.WARNING,
+            metadata: {}
+        },
+        {
+            "messageCode": MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": MessageTypes.WARNING,
+            "metadata": {
+                "SUM_HITTIL_I_AAR": 10000,
+                "AFFECTED_FIELD": "ARBEIDSINNTEKT_BRUKER"
+            }
+        },
+        {
+            "messageCode": MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": MessageTypes.WARNING,
+            "metadata": {
+                "SUM_HITTIL_I_AAR": 20000,
+                "AFFECTED_FIELD": "ARBEIDSINNTEKT_EPS"
+            }
+        },
+        {
+            "messageCode": MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": MessageTypes.WARNING,
+            "metadata": {
+                "SUM_HITTIL_I_AAR": 30000,
+                "AFFECTED_FIELD": "ANDRE_YTELSER_BRUKER"
+            }
+        },
+        {
+            "messageCode": MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
+            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+            "type": MessageTypes.WARNING,
+            "metadata": {
+                "SUM_HITTIL_I_AAR": 40000,
+                "AFFECTED_FIELD": "ANDRE_YTELSER_EPS"
+            }
+        },
+    ],
     "result": {
         "uforetrygd": {
             "monthly": {
@@ -211,7 +248,7 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
 
 export const mockStatusResponse : StatusResponse = {
     "registeringsTidspunktEndring": new Date("2024-06-02T09:06:38.971Z"),
-    "status": StatusCodes.TIL_BEHANDLING,
+    "status": StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING,
     "sakId": 2112,
     "maandedligeUtbetalinger": {
         "fom": new Date("2024-06-01"),
