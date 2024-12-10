@@ -38,18 +38,24 @@ export const InnfyllingPage = () => {
     const { selectedYear } = useContext(SelectedYearContext);
     const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
-    const [sendingErrors, setSendingErrors] = useState<string[]>([]);
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setFormStep(1);
     }, [setFormStep]);
 
+    const checkForFieldErrors = () : boolean => {
+        const errorMessages = Object.values(brukerErrors).concat(Object.values(epsErrors)).filter((message) => message !== undefined)
+        setErrorMessages(errorMessages)
+        return errorMessages.length > 0
+    }
+
     const checkForSendingErrors = (response: SimulationResponse) : boolean => {
         const errors: string[] = [];
         const bErrors: Partial<Record<keyof PersonInntekter, string>> = {};
         const eErrors: Partial<Record<keyof PersonInntekter, string>> = {};
-        
+
         //todo review texts below
         for (const message of response.messages) {
             if (message.messageCode === MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR) {
@@ -72,7 +78,7 @@ export const InnfyllingPage = () => {
             }
         }
 
-        setSendingErrors(errors);
+        setErrorMessages(errors);
         setBrukerErrors(bErrors);
         setEpsErrors(eErrors);
         return errors.length > 0;
@@ -84,6 +90,11 @@ export const InnfyllingPage = () => {
 
         try {
             setIsLoading(true);
+            if(checkForFieldErrors()){
+                console.log("FIELD")
+                setIsLoading(false);
+                return
+            }
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             if(checkForSendingErrors(result)) {
                 setIsLoading(false);
@@ -164,7 +175,7 @@ export const InnfyllingPage = () => {
                                 <FormFieldsEps
                                     year={selectedYear}
                                     errors={epsErrors}
-                                    setErrors={setBrukerErrors}
+                                    setErrors={setEpsErrors}
                                     setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
                                     forventedeInntekter={annenForelderInntekt || {} as PersonInntekter}
                                     inntektSum={getAnnenForelderInntektSum() || 0}
@@ -174,9 +185,9 @@ export const InnfyllingPage = () => {
                     }
 
 
-                    {sendingErrors.length > 0 ?
+                    {errorMessages.length > 0 ?
                         (<ErrorSummary heading="Du må rette disse feilene før du kan fortsette:">
-                        {sendingErrors.map((error) => (<ErrorSummary.Item key={error} href={`#${error}`}>
+                        {errorMessages.map((error) => (<ErrorSummary.Item key={error} href={`#${error}`}>
                             {error}
                         </ErrorSummary.Item>))}
                     </ErrorSummary>) : null}

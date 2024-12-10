@@ -14,14 +14,14 @@ export interface FormFieldsProps {
     forventedeInntekter: PersonInntekter;
 }
 
-export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
+export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>(errors);
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
 
     const handleInputChange = (field: keyof PersonInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         if (target.value === '') {
             setInputData((prev) => ({ ...prev, [field]: target.value }));
-            setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+            setErrorOnState(field, undefined)
             setInntekt(field, 0);
             return;
         }
@@ -29,12 +29,17 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
 
         if (isNaN(numericValue) || numericValue < 0) {
             setInputData((prev) => ({ ...prev, [field]: target.value }));
-            setFieldErrors((prev) => ({ ...prev, [field]: 'Du kan ikke skrive mellomrom, bokstaver eller tegn' }));
+            setErrorOnState(field, 'Du kan ikke skrive mellomrom, bokstaver eller tegn')
         } else {
             setInputData((prev) => ({ ...prev, [field]: undefined }));
-            setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+            setErrorOnState(field, undefined)
             setInntekt(field, numericValue);
         }
+    };
+
+    const setErrorOnState = (field: keyof PersonInntekter, message: string | undefined) => {
+        setFieldErrors((prev) => ({ ...prev, [field]: message }));
+        setErrors((prev) => ({ ...prev, [field]: message }));
     };
 
     return (
