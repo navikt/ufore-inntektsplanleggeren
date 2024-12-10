@@ -62,8 +62,6 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                 formatter(this:Highcharts.StackItemObject){
                     return "Sum " + NUMBER_FORMATTER.format(this.total) +" kr"
                 },
-                backgroundColor: '#FFFFFFFF',
-                y: -3,
                 style: {
                     fontSize: isDesktop ? 18 : 12,
                     color: 'var(--a-grayalpha-700)',
@@ -126,6 +124,7 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
             }
         },
         maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
+        minPointLength: undefined,
         dataLabels: {
             enabled: false
         }
