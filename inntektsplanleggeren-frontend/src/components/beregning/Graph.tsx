@@ -63,6 +63,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                     return "Sum " + NUMBER_FORMATTER.format(this.total) +" kr"
                 },
                 backgroundColor: '#FFFFFFFF',
+                y: -3,
                 style: {
                     fontSize: isDesktop ? 18 : 12,
                     color: 'var(--a-grayalpha-700)',
@@ -85,7 +86,8 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             column: {
                 stacking: 'normal',
                 dataLabels: {
-                    enabled: true
+                    enabled: true,
+                    padding: 10
                 }
             }
         },
