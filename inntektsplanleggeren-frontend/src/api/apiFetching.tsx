@@ -6,12 +6,13 @@ import {
     mockInntekterResponse,
     mockInitiateResponse,
     mockSimulationResponse,
-    mockSendApplicationResponse, mockStatusResponse
+    mockSendApplicationResponse,
+    mockStatusResponse
 } from "@/api/model/Mocks";
 
 const basePath = "/uforetrygd/selvbetjening/inntektsplanleggeren";
 
-const MOCKS_ENABLED = true && import.meta.env.DEV;
+const MOCKS_ENABLED = false && import.meta.env.DEV;
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -76,6 +77,10 @@ export async function getInntekter(year: number): Promise<InntekterResponse> {
         credentials: "include",
         headers: headers
     });
+
+    if (MOCKS_ENABLED) {
+        return mockInntekterResponse
+    }
 
     if (!res.ok) {
         console.log("error")
@@ -182,17 +187,16 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         }
     }
 
-    if (MOCKS_ENABLED) {
-        return mockStatusResponse;
-    }
-
-
     const url = encodeURI(basePath + `/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
     const res = await fetch(url, {
         method: "GET",
         credentials: "include",
         headers: headers,
     });
+
+    if (MOCKS_ENABLED) {
+        return mockStatusResponse;
+    }
 
     if (!res.ok) {
         throw new Error("Fikk ikke 2xx respons fra server");

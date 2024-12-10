@@ -1,4 +1,4 @@
-import {VStack, TextField, ReadMore, Box, ErrorSummary, Heading, BodyShort, BodyLong} from "@navikt/ds-react";
+import {VStack, TextField, ReadMore, Box, Heading, BodyShort, BodyLong} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
 import { PersonInntekter } from "@/api/model/ApiRequests";
@@ -14,8 +14,8 @@ export interface FormFieldsProps {
     forventedeInntekter: PersonInntekter;
 }
 
-export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
-    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forventedeInntekter}: FormFieldsProps) => {
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>(errors);
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
 
     const handleInputChange = (field: keyof PersonInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,23 +39,13 @@ export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forvented
 
     return (
         <div>
-            {Object.keys(errors).length > 0 && (
-                <ErrorSummary heading="Du må rette disse feilene før du kan sende inn søknaden:">
-                    {Object.entries(errors).map(([key, value]) => (
-                        <ErrorSummary.Item href={`#${key}`} key={key}>
-                            {value}
-                        </ErrorSummary.Item>
-                    ))}
-                </ErrorSummary>
-            )}
-
             {forventedeInntekter.arbeidsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
                         label="Lønn og pensjonsgivende ytelser"
                         description="Du skal ikke ta med uføretrygden."
                         inputMode="numeric"
-                        error={fieldErrors.arbeidsinntekt}
+                        error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
                         value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}
                         onBlur={handleInputChange("arbeidsinntekt")}
                         onChange={handleInputChange("arbeidsinntekt")}
@@ -113,7 +103,7 @@ export const FormFieldsUser = ({ year, errors, setInntekt, inntektSum, forvented
                         label="Pensjoner og uførepensjon fra andre enn Nav"
                         description="For eksempel fra KLP, OPF, SPK, Gjensidige, Storebrand"
                         inputMode="numeric"
-                        error={fieldErrors.andrePensjonsgivendeYtelser}
+                        error={fieldErrors.andrePensjonsgivendeYtelser ?? errors.andrePensjonsgivendeYtelser}
                         value={inputData.andrePensjonsgivendeYtelser ?? formatInntekt(forventedeInntekter.andrePensjonsgivendeYtelser)}
                         onChange={handleInputChange("andrePensjonsgivendeYtelser")}
                         onBlur={handleInputChange("andrePensjonsgivendeYtelser")}
