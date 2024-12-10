@@ -1,4 +1,16 @@
-import {BodyLong, Box, Button, Heading, HStack, List, Loader, VStack, Alert, Link} from "@navikt/ds-react";
+import {
+    BodyLong,
+    Box,
+    Button,
+    Heading,
+    HStack,
+    List,
+    Loader,
+    VStack,
+    Alert,
+    Link,
+    ErrorSummary
+} from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import "./innfylling.css"
 import {Link as RouterLink, useNavigate} from "react-router-dom";
@@ -9,12 +21,14 @@ import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {belopSum} from "@/common/Utils";
 import {DataContext} from "@/DataContextProvider";
-import {PersonInntekter} from "@/api/model/ApiRequests";
+import {PersonInntekter, SimulationResponse} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {PageLinks} from "@/FormContainer";
 import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
+import {MessageCodes} from "@/api/model/MessageCodes";
+
 
 
 export const InnfyllingPage = () => {
@@ -22,12 +36,47 @@ export const InnfyllingPage = () => {
     const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
     const { inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
-    const [errors, setErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+    const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+    const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+    const [sendingErrors, setSendingErrors] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setFormStep(1);
     }, [setFormStep]);
+
+    const checkForSendingErrors = (response: SimulationResponse) : boolean => {
+        const errors: string[] = [];
+        const bErrors: Partial<Record<keyof PersonInntekter, string>> = {};
+        const eErrors: Partial<Record<keyof PersonInntekter, string>> = {};
+        
+        //todo review texts below
+        for (const message of response.messages) {
+            if (message.messageCode === MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR) {
+                if(message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_BRUKER") {
+                    errors.push(`Beløpet for inntekt og pengestøtter kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}`);
+                    bErrors["arbeidsinntekt"] = `Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}, fordi du allerede har fått dette i lønn og pengestøtte`
+                } else if(message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS") {
+                    errors.push(`Inntekt til annen forelder må være høyere enn det hen har tjent hittil i år.`);
+                    eErrors["arbeidsinntekt"] = `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte hittil i år. Den andre forelderen kan se inntekter som er registrert hittil i år hos Skatteetaten.`;
+                }
+            }
+            else if (message.messageCode === MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR) {
+                if(message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_BRUKER") {
+                    errors.push(`Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}`)
+                    bErrors["andrePensjonsgivendeYtelser"] = `Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}, fordi du allerede har fått dette i pensjoner fra andre enn folketrygden hittil i år.`;
+                } else if(message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS") {
+                    errors.push(`Pensjoner til annen forelder må være høyere enn det hen har fått hittil i år.`);
+                    eErrors["andrePensjonsgivendeYtelser"] = `Beløpet må være høyere enn det den andre forelderen har fått i pensjoner hittil i år. Den andre forelderen kan se inntekter som er registrert hittil i år hos Skatteetaten.`;
+                }
+            }
+        }
+
+        setSendingErrors(errors);
+        setBrukerErrors(bErrors);
+        setEpsErrors(eErrors);
+        return errors.length > 0;
+    }
 
 
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
@@ -36,13 +85,18 @@ export const InnfyllingPage = () => {
         try {
             setIsLoading(true);
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
-            setSimulationResponse(result);
-            navigate(PageLinks.BEREGNING);
+            if(checkForSendingErrors(result)) {
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
+                setSimulationResponse(result);
+                navigate(PageLinks.BEREGNING);
+            }
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
 
-        navigate(PageLinks.BEREGNING);
+        // navigate(PageLinks.BEREGNING);
     };
 
     if(inntekterResponse === null) {
@@ -86,8 +140,8 @@ export const InnfyllingPage = () => {
                             {/*todo link? open in new tab?*/}
                             <FormFieldsUser
                                 year={selectedYear}
-                                errors={errors}
-                                setErrors={setErrors}
+                                errors={brukerErrors}
+                                setErrors={setBrukerErrors}
                                 setInntekt={(field, belop) => setBrukerinntekt(b => ({...b, [field]:  belop }))}
                                 forventedeInntekter={brukerinntekt}
                                 inntektSum={getBrukerinntektSum()}
@@ -109,8 +163,8 @@ export const InnfyllingPage = () => {
                                 todo link? open in new tab?
                                 <FormFieldsEps
                                     year={selectedYear}
-                                    errors={errors}
-                                    setErrors={setErrors}
+                                    errors={epsErrors}
+                                    setErrors={setBrukerErrors}
                                     setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
                                     forventedeInntekter={annenForelderInntekt || {} as PersonInntekter}
                                     inntektSum={getAnnenForelderInntektSum() || 0}
@@ -119,11 +173,19 @@ export const InnfyllingPage = () => {
                         </Box> : null
                     }
 
+
+                    {sendingErrors.length > 0 ?
+                        (<ErrorSummary heading="Du må rette disse feilene før du kan fortsette:">
+                        {sendingErrors.map((error) => (<ErrorSummary.Item key={error} href={`#${error}`}>
+                            {error}
+                        </ErrorSummary.Item>))}
+                    </ErrorSummary>) : null}
+
                     <HStack gap="4">
                         <Button as={RouterLink} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                             Tilbake
                         </Button>
-                        <Button type="submit" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>
+                        <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>
                             Gå videre og se resultat
                         </Button>
                     </HStack>
