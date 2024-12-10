@@ -6,23 +6,28 @@
   "main": "src/server/app.js",
   "scripts": {
     "dev": "vite --port 3000",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode development",
     "build:production": "tsc && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
+    "@navikt/oasis": "^3.4.0",
+    "date-fns": "^3.6.0",
     "dotenv": "16.3.1",
-    "express": "4.19.2",
+    "express": "^4.21.1",
+    "highcharts": "^11.4.8",
+    "highcharts-react-official": "^3.2.1",
     "jsonwebtoken": "^9.0.0",
     "node-jose": "^2.2.0",
     "openid-client": "5.6.5",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@navikt/aksel-icons": "6.16.2",
-    "@navikt/ds-css": "6.16.2",
-    "@navikt/ds-react": "6.16.2",
+    "@navikt/aksel-icons": "^7.4.0",
+    "@navikt/ds-css": "^7.4.0",
+    "@navikt/ds-react": "^7.4.0",
     "@types/express": "^4.17.17",
     "@types/node": "^20.14.2",
     "@types/react": "^18.2.15",
@@ -33,17 +38,18 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
-    "stylelint-config-standard": "^34.0.0",
-    "stylelint-config-standard-scss": "^11.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "openapi-typescript": "^7.4.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-router": "^6.26.1",
     "react-router-dom": "^6.26.1",
-    "typescript": "^5.4.5",
+    "stylelint-config-standard": "^34.0.0",
+    "stylelint-config-standard-scss": "^11.0.0",
+    "typescript": "^5.6.3",
     "vite": "^4.5.3",
-    "vite-plugin-mock": "^3.0.2",
-    "vitest": "^1.6.0",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-stylelint": "^5.2.0"
+    "vite-plugin-mock": "^3.0.2",
+    "vite-plugin-stylelint": "^5.2.0",
+    "vitest": "^1.6.0"
   }
 }

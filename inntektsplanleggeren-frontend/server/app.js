@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import path from "path";
 import {fileURLToPath} from "url";
 
-const basePath = "/pensjon/selvbetjening/familieforhold";
+const basePath = "/uforetrygd/selvbetjening/inntektsplanleggeren";
 
 const app = express();
 app.use(express.json())
@@ -19,11 +19,11 @@ let client = process.env.MODE === "borger" ? await tokenx.client() : await azure
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const buildPath = path.resolve(__dirname, "../dist")
-app.use(basePath, express.static(buildPath));
+const assetPath = path.resolve(__dirname, "../dist/assets")
+app.use(`${basePath}/assets`, express.static(assetPath));
 
 app.get(
-    basePath + '/api/familieforhold',
+    basePath + '/api/initiate',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
@@ -31,7 +31,7 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/familieforhold", {
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + "/api/initiate", {
             method: req.method,
             headers: newHeaders
         });
@@ -44,7 +44,7 @@ app.get(
 );
 
 app.get(
-    basePath + '/api/samboer',
+    basePath + '/api/inntekter',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
@@ -52,7 +52,7 @@ app.get(
         let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer", {
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/inntekter?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders
         });
@@ -64,104 +64,69 @@ app.get(
     }
 );
 
-app.post(basePath + '/api/samboer', async (req, res) => {
 
-        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
-        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
-
-        const params = {
-            method: req.method,
-            headers: newHeaders,
-            body: JSON.stringify(req.body)
-        }
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer", params)
-        if (response.status === 400) {
-            const body = await response.json();
-            res.status(response.status).send(body)
-        }
-
-        res.status(response.status).send()
-    }
-);
-
-app.put(basePath + '/api/samboer/:periodeId', async (req, res) => {
-
-        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
-        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
-
-        const periodeId = parseInt(req.params.periodeId)
-
-
-        const params = {
-            method: req.method,
-            headers: newHeaders,
-            body: JSON.stringify(req.body)
-        }
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer/" + periodeId, params)
-        if (response.status === 400) {
-            const body = await response.json();
-            res.status(response.status).send(body)
-        }
-
-        res.status(response.status).send()
-    }
-);
-
-app.delete(basePath + '/api/samboer/:periodeId', async (req, res) => {
-
-        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
-        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
-
-        const periodeId = parseInt(req.params.periodeId)
-
-        const params = {
-            method: req.method,
-            headers: newHeaders,
-        }
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + "/api/samboer/" + periodeId, params)
-        if (response.status === 400) {
-            const body = await response.json();
-            res.status(response.status).send(body)
-        }
-
-        res.status(response.status).send()
-    }
-);
-
-app.all(
-    basePath + '/api/samboer/**',
+app.post(
+    basePath + '/api/simuler',
     async (req, res) => {
 
         const idToken = req.headers['authorization'].replace('Bearer', '').trim();
-        let accessToken = await getTokenValue(idToken)
-        let newHeaders = req.headers
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
         newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
 
-        const params = {
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/simuler?simuleringsaar=${req.query.simuleringsaar}`, {
             method: req.method,
             headers: newHeaders,
-        }
+            body: JSON.stringify(req.body)
+        });
 
-        if (req.body) {
-            params["body"] = JSON.stringify(req.body)
-        }
+        const body = await response.json();
 
-        console.log(req.params)
-        console.log(req.body)
-        console.log(JSON.stringify(req.body))
-
-        const response = await fetch(process.env.FAMILIEFORHOLD_BACKEND_URL + req.path, params)
         const statuskode = response.status
-        const body = await response.text()
+        res.status(statuskode).send(body)
+    }
+);
+
+app.post(
+    basePath + '/api/send',
+    async (req, res) => {
+
+        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
+        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
+
+        const response = await fetch(process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/send?simuleringsaar=${req.query.simuleringsaar}`, {
+            method: req.method,
+            headers: newHeaders,
+            body: JSON.stringify(req.body)
+        });
+
+        const body = await response.json();
+
+        const statuskode = response.status
+        res.status(statuskode).send(body)
+    }
+);
+
+app.get(
+    basePath + '/api/status',
+    async (req, res) => {
+
+        const idToken = req.headers['authorization'].replace('Bearer', '').trim();
+        let accessToken = await getTokenValue(idToken);
+        let newHeaders = req.headers;
+        newHeaders['authorization'] = 'Bearer ' + accessToken; // Override authorization header with new token
+
+        const url = process.env.INNTEKTSPLANLEGGEREN_BACKEND_URL + `/api/status?valgtaar=${req.query.valgtaar}&innsendingstidspunkt=${req.query.innsendingstidspunkt}`
+        const response = await fetch(encodeURI(url), {
+            method: req.method,
+            headers: newHeaders,
+        });
+
+        const body = await response.json();
+
+        const statuskode = response.status
         res.status(statuskode).send(body)
     }
 );
@@ -174,7 +139,7 @@ async function getTokenValue(idToken) {
         return await azure.getOnBehalfOfAccessToken(
             client,
             idToken,
-            process.env.FAMILIEFORHOLD_BACKEND_SCOPE,
+            process.env.INNTEKTSPLANLEGGEREN_BACKEND_SCOPE,
             tokenEndpoint
         );
 
@@ -182,7 +147,7 @@ async function getTokenValue(idToken) {
         return await tokenx.getTokenExchangeAccessToken(
             client,
             idToken,
-            process.env.FAMILIEFORHOLD_BACKEND_AUDIENCE
+            process.env.INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE
         );
     }
 }
@@ -200,7 +165,16 @@ app.get('/internal/health/readiness', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    if (process.env.MODE === "veileder") {
+        console.log('Serving veileder')
+        res.sendFile(path.resolve(__dirname, '../dist', 'index-veileder.html'));
+    } else {
+        console.log('Serving borger')
+        res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    }
 });
 
-app.listen(PORT, () => console.log("Server started"));
+app.listen(PORT, () => {
+    console.log(`process.env.MODE=${process.env.MODE}`)
+    console.log("Server started");
+});

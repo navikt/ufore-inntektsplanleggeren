@@ -1,64 +1,81 @@
-import { ExternalLinkIcon } from "@navikt/aksel-icons";
-import { BodyLong, ExpansionCard, Label, Link, Table } from "@navikt/ds-react";
+import {Box, Button, HStack, Table, VStack} from "@navikt/ds-react";
 import "./DinInntektTable.css";
 import {InntektDetaljer} from "@/api/model/ApiRequests";
 import {Month} from "@/common/MonthEnum";
 import {belopSum, numberFormatWithKr} from "@/common/Utils";
-import {useEffect, useState} from "react"; // Import the CSS file
+import React, {useEffect, useState} from "react";
+import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
+import {FormatKroner} from "@/components/utils/FormatKroner";
+import {DESKTOP_WIDTH} from "@/FormContainer"; // Import the CSS file
+
 
 interface DinInntektTableProps {
+    type?: "arbeidsgiver" | "pensjonsordning";
     data: InntektDetaljer[];
     children: React.ReactNode;
 }
 
-export const DinInntektTable = ({ data, children }: DinInntektTableProps) => { //todo button to open/close?
+export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) => {
     const [width, setWidth] = useState<number>(window.innerWidth);
+    const [isOpen, setIsOpen] = React.useState(false)
+    const [buttonText, setButtonText] = React.useState("")
+    const closedText = "Vis månedsoversikt"
+    const openText = "Skjul månedsoversikt"
 
     const handleWindowSize = () => setWidth(window.innerWidth);
 
     useEffect(() => {
+        setButtonText(isOpen ? openText : closedText)
         window.addEventListener('resize', handleWindowSize);
         return () => window.removeEventListener('resize', handleWindowSize);
     });
 
-    const isDesktop = width > 768;
+    const handleButton = () => {
+        setIsOpen(!isOpen)
+        setButtonText(isOpen ? openText : closedText)
+    }
 
-    return    <div className="grid gap-6">
-            {/*todo style/colors when open or selected?*/}
-            <ExpansionCard size="small" aria-label="Small-variant med description" className="expansion-card-gray">
-                <ExpansionCard.Header>
-                    <ExpansionCard.Description>
-                        {children}
-                    </ExpansionCard.Description>
-                </ExpansionCard.Header>
-                <ExpansionCard.Content>
-                    { isDesktop ? <Innhold data={data}   /> : <InnholdMobile data={data}/> }
-                </ExpansionCard.Content>
-            </ExpansionCard>
-        </div>
+    const isDesktop = width > DESKTOP_WIDTH;
+
+    return (
+        <Box borderRadius="xlarge" padding="4" className="top-box">
+            <VStack gap="6">
+                {children}
+
+                {isOpen ?
+                    isDesktop ? <Innhold data={data} type={type}/> : <InnholdMobile data={data} type={type}/>
+                    : null
+                }
+
+                <HStack justify="center">
+                    <Button onClick={handleButton} variant="secondary-neutral" iconPosition="right" icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>{buttonText}</Button>
+                </HStack>
+            </VStack>
+        </Box>
+    )
 }
 
-const Innhold = (props: { data: InntektDetaljer[] }) => {
+const Innhold = (props: { data: InntektDetaljer[], type?: string }) => {
     return (
         <Table>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell scope="col">Måned</Table.HeaderCell>
                     <Table.HeaderCell scope="col">Beløp per måned</Table.HeaderCell>
-                    <Table.HeaderCell scope="col">Arbeidsgiver</Table.HeaderCell>
+                    <Table.HeaderCell scope="col">{props.type === "pensjonsordning" ? "Pensjonsordning" : "Arbeidsgiver" } </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
                 {props.data.map(({ maned, belop, inntektsgivere }, i) => (
             <Table.Row key={i} className="table-row">
                 <Table.DataCell scope="row">{Month[maned]}</Table.DataCell>
-                <Table.DataCell>{ belop > 0 ? numberFormatWithKr(belop) : "Ikke mottatt"} </Table.DataCell>
+                <Table.DataCell><FormatKroner value={belop}/></Table.DataCell>
                 <Table.DataCell>{inntektsgivere.join(", ")}</Table.DataCell>
             </Table.Row>
             ))}
             <Table.Row>
                     <Table.HeaderCell scope="row">Sum hittil i år</Table.HeaderCell>
-                    <Table.DataCell><b>{numberFormatWithKr(belopSum(props.data))}</b></Table.DataCell>
+                    <Table.DataCell><b><FormatKroner value={belopSum(props.data)}/></b></Table.DataCell>
                     <Table.DataCell></Table.DataCell>
             </Table.Row>
             </Table.Body>
@@ -66,7 +83,7 @@ const Innhold = (props: { data: InntektDetaljer[] }) => {
     );
 };
 
-const InnholdMobile = (props: { data: InntektDetaljer[] }) => {
+const InnholdMobile = (props: { data: InntektDetaljer[], type?: string }) => {
     return (
         <Table>
             <Table.Body>
@@ -75,8 +92,8 @@ const InnholdMobile = (props: { data: InntektDetaljer[] }) => {
                         <Table.DataCell>
                             <div>
                                 <b>{Month[maned]}</b>
-                                <div>Beløp per måned: {belop > 0 ? numberFormatWithKr(belop) : "Ikke mottatt"}</div>
-                                {inntektsgivere.length > 0 ? <div>Arbeidsgiver: {inntektsgivere.join(", ")}</div> : null}
+                                <div><FormatKroner value={belop}/></div>
+                                {inntektsgivere.length > 0 ? <div>{props.type === "pensjonsordning" ? "Pensjonsordning" : "Arbeidsgiver"}: {inntektsgivere.join(", ")}</div> : null}
                             </div>
                         </Table.DataCell>
                     </Table.Row>

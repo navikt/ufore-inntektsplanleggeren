@@ -1,44 +1,40 @@
-import React, {useContext, useState} from "react";
-import {Routes, Route, BrowserRouter, Outlet, Navigate} from "react-router-dom";
-import {InitialView} from "@/components/initialView/InitialView";
+import React, {useContext} from "react";
+import {Routes, Route, BrowserRouter, Outlet, Navigate } from "react-router-dom";
+import {InitialPage} from "@/components/initial/InitialPage";
 import App from "@/App";
-import {FormContainer} from "@/form-container";
-import {Innfylling} from "@/components/innfylling/Innfylling";
-import {Beregning} from "@/components/beregning/Beregning";
-import {Oppsummering} from "@/components/oppsummering/Oppsummering";
-import {Kvittering} from "@/components/kvittering/Kvittering";
+import {FormContainer, PageLinks} from "@/FormContainer";
+import {InnfyllingPage} from "@/components/innfylling/InnfyllingPage";
+import {BeregningPage} from "@/components/beregning/BeregningPage";
+import {KvitteringPage} from "@/components/kvittering/KvitteringPage";
 import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
+import {OppsummeringPage} from "@/components/oppsummering/OppsummeringPage";
 
-export const AppRoutes = (
-) => {
-  //  const [displayData, setDisplayData] = useState<DisplayData>(DataContextProvider.)
 
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route element={<App />}>
-                    {/*<Route element={<AccessControl />}>*/}
-                        <Route index element={<InitialView />} />
-                        <Route element={<YearGuard />}>
-                            <Route element={<FormContainer />}>
-                                <Route path="/forventede-inntekter" element={<Innfylling />} />
-                                <Route path="/beregning" element={<Beregning />} />
-                                <Route path="/oppsummering" element={<Oppsummering />} />
-                                <Route path="/kvittering" element={<Kvittering />} />
-                            </Route>
-                        </Route>
-                    {/*</Route>*/}
+export const BASE_PATH = "/uforetrygd/selvbetjening/inntektsplanleggeren";
+
+export const AppRoutes = () => (
+    <BrowserRouter basename={BASE_PATH}>
+        <Routes>
+            <Route element={<App />}>
+                <Route index element={<InitialPage />} />
+                <Route element={<YearGuard />}>
+                    <Route element={<FormContainer />}>
+                        <Route index path={PageLinks.FORVENTEDE_INNTEKTER} element={<InnfyllingPage />} />
+                        <Route index path={PageLinks.BEREGNING} element={<BeregningPage />} />
+                        <Route index path={PageLinks.OPPSUMMERING} element={<OppsummeringPage />} />
+                        <Route index path={PageLinks.KVITTERING} element={<KvitteringPage />} />
+                    </Route>
                 </Route>
-            </Routes>
-        </BrowserRouter>
-    );
-};
+            </Route>
+        </Routes>
+    </BrowserRouter>
+);
 
 const YearGuard = () => {
     const { selectedYear } = useContext(FormStateContext);
 
-    if (selectedYear === undefined) {
+    if (selectedYear === null) {
         return <Navigate to="/" replace />;
     }
 

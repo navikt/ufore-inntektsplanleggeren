@@ -4,18 +4,15 @@ Tar utgangspunkt i:
 
 https://navno.sharepoint.com/sites/fag-og-ytelser-pesys/SitePages/Tilgangsstyring-i-Pesys.aspx
 https://confluence.adeo.no/display/SIK/Forretningspolicyer
+https://confluence.adeo.no/display/PEN/PSELV+Tilgangskontroll
 
 ==== Basis tilgang:
 Veileder/saksbehandler må være i en av følgende AD-grupper:
 
 * 0000-GA-Pensjon_VEILEDER
 * 0000-GA-PENSJON_SAKSBEHANDLER
-* 0000-GA-PENSJON_KLAGEBEH
 * 0000-GA-PENSJON_BRUKERHJELPA
-
-I tillegg må man være med i:
-
-* 0000-ga-pensjon_ufore
+* 0000-GA-PENSJON_OKONOMI
 
 Det skilles ikke mellom lese og skrive tilgang.
 
@@ -45,7 +42,9 @@ Det kreves tilgang for å hente ut inntektsdata (dette sjekkes ikke inntektsplan
 Det kreves innloggingsnivå ‘substantial’ og ‘high’ for å kunne bruke tjenesten.
 
 ==== Adressebeskyttelse
-Dersom innbygger har adressebeskyttelse (Strengt Fortrolig, Strengt Fortrolig Utland, Fortrolig) kreves innloggingsnivå ‘high’.
+Dersom innbygger har adressebeskyttelse på nivå: _Strengt Fortrolig_ eller _Strengt Fortrolig Utland_ kreves innloggingsnivå ‘high’.
+
+Dersom innbygger har adressebeskyttelse på nivå: _Fortrolig_ kreves innloggingsnivå ‘substantial’.
 
 ==== Fullmakt
 Dersom det foreligger et gyldig fullmaktsforhold, kan en fullmaktsmottaker få tilgang.

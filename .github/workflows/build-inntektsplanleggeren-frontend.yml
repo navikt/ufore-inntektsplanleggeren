@@ -1,0 +1,20 @@
+name: Build inntektsplanleggeren frontend
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - inntektsplanleggeren-frontend/**
+    branches-ignore:
+      - main  # Bygges allerede av deploy-workflow
+
+jobs:
+  build-frontend:
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend.yml@main
+    name: Build inntektsplanleggeren frontend
+    permissions:
+      actions: read
+      contents: read
+    secrets: inherit
+    with:
+      path: inntektsplanleggeren-frontend
+      node_version: 20

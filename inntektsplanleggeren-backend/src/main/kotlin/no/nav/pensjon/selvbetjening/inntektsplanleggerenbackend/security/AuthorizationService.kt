@@ -20,8 +20,7 @@ class AuthorizationService(
     @Value("\${pensjon-saksbehandler-tilgang.group.id}") private val pensjonSaksbehandlerGroupId: String,
     @Value("\${pensjon-veileder-tilgang.group.id}") private val pensjonVeilederGroupId: String,
     @Value("\${pensjon-brukerhjelpa-tilgang.group.id}") private val pensjonBrukerhjelpaGroupId: String,
-    @Value("\${pensjon-klagebeh-tilgang.group.id}") private val pensjonKlagebehandlerGroupId: String,
-    @Value("\${pensjon-ufoere-tilgang.group.id}") private val pensjonUfoereGroupId: String,
+    @Value("\${pensjon-okonomi-tilgang.group.id}") private val pensjonOkonmiGroupId: String,
     private val tokenService: TokenService,
     private val skjermingClient: SkjermingClient,
     private val personService: PersonService,
@@ -54,16 +53,10 @@ class AuthorizationService(
     private fun checkBasisTilgang() {
         val adGroups = tokenService.getGroups()
 
-        if (!adGroups.contains(pensjonUfoereGroupId)) {
-            log.info("Veileder/saksbehandler mangler basis rolle for ufore. Nekter tilgang.")
-            throw VeilederUnauthorizedException()
-        }
-        if (adGroups.contains(pensjonSaksbehandlerGroupId) ||
+        if (!(adGroups.contains(pensjonSaksbehandlerGroupId) ||
             adGroups.contains(pensjonVeilederGroupId) ||
             adGroups.contains(pensjonBrukerhjelpaGroupId) ||
-            adGroups.contains(pensjonKlagebehandlerGroupId)) {
-            return
-        } else {
+            adGroups.contains(pensjonOkonmiGroupId))) {
             log.info("Veileder/saksbehandler mangler basis rolle for pensjon. Nekter tilgang.")
             throw VeilederUnauthorizedException()
         }
@@ -103,9 +96,12 @@ class AuthorizationService(
     }
 
     private fun checkAdressebeskyttelseAndLoginLevel(requestingPid: String) {
-        if (!tokenService.isLoginLevelHigh() && personService.hasAdressebeskyttelse(requestingPid)) {
-            log.info("Bruker adressebeskyttet, innloggingsnivå for lavt. Nekter adgang")
-            throw LoginLevelTooLowException()
+        if (!tokenService.isLoginLevelHigh()) {
+            val adressebeskyttelse = personService.getAdressebeskyttelsesgrad(requestingPid)
+            if (adressebeskyttelse == PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG || adressebeskyttelse == PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND) {
+                log.info("Bruker adressebeskyttet - Strengt Fortrolig, innloggingsnivå for lavt. Nekter adgang")
+                throw LoginLevelTooLowException()
+            }
         }
     }
 

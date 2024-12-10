@@ -1,0 +1,59 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: inntektsplanleggeren-frontend-borger
+  namespace: pensjonselvbetjening
+  labels:
+    team: pensjonselvbetjening
+  annotations:
+    nais.io/run-as-user: "101" # nginx
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+spec:
+  image: "{{ image }}"
+  ingresses:
+    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+  port: 8080
+  replicas:
+    min: 2
+    max: 2
+  liveness:
+    path: /internal/health/liveness
+    initialDelay: 20
+    periodSeconds: 20
+    failureThreshold: 5
+    timeout: 1
+  readiness:
+    path: /internal/health/health
+    initialDelay: 20
+    periodSeconds: 20
+    failureThreshold: 5
+    timeout: 1
+  idporten:
+    enabled: true
+    sidecar:
+      level: idporten-loa-substantial
+      enabled: true
+      autoLogin: true
+      autoLoginIgnorePaths:
+        - /internal/ping
+  tokenx:
+    enabled: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: nav-dekoratoren
+          namespace: personbruker
+        - application: inntektsplanleggeren-backend
+          cluster: prod-gcp
+          namespace: pensjonselvbetjening
+  env:
+    - name: MODE
+      value: borger
+    - name: "VITE_DECORATOR_URL"
+      value: "https://www.nav.no/dekoratoren"
+    - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
+      value: "http://inntektsplanleggeren-backend"
+    - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
+      value: "api://prod-gcp.pensjonselvbetjening.inntektsplanleggeren-backend/.default"
+    - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
+      value: "prod-gcp:pensjonselvbetjening:inntektsplanleggeren-backend"

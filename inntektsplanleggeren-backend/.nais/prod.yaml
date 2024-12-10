@@ -6,7 +6,7 @@ metadata:
   labels:
     team: pensjonselvbetjening
 spec:
-  image: "{{{ image_backend }}}"
+  image: "{{ image }}"
   port: 8080
   ingresses:
     - https://inntektsplanleggeren-backend.intern.nav.no
@@ -29,16 +29,13 @@ spec:
           - "NAVident"
           - "azp_name"
         groups:
-          - id: "0af3955f-df85-4eb0-b5b2-45bf2c8aeb9e" #SAKSBEHANDLER
-          - id: "8d5e0211-6c41-4ed3-be74-dd19a210ebab" #KLAGEBEH
-          - id: "7845a796-1516-4d14-b500-fd65c001f35c" #BRUKERHJELPA
-          - id: "959ead5b-99b5-466b-a0ff-5fdbc687517b" #VEILEDER
-          - id: "4b3ee3f4-2d6c-4418-8b1e-4d229bb2001c" #BEGRENSET_VEILEDER
-          - id: "70ef8e7f-7456-4298-95e0-b13c0ef2422b" #OKONOMI
-          - id: "f9aea83c-f483-448d-927c-b86063505ee2" #UFORE
-          - id: "7c2f2439-b67a-41c0-b50b-0abb02e3b479" #UTLAND
-          - id: "d05cd957-b330-4a68-b4d8-40fe603b5efc" #KODE6
-          - id: "6f54457a-ef15-41ab-acf6-725a978df464" #KODE7
+          - id: "0af3955f-df85-4eb0-b5b2-45bf2c8aeb9e" # SAKSBEHANDLER
+          - id: "959ead5b-99b5-466b-a0ff-5fdbc687517b" # VEILEDER
+          - id: "7845a796-1516-4d14-b500-fd65c001f35c" # BRUKERHJELPA
+          - id: "70ef8e7f-7456-4298-95e0-b13c0ef2422b" # OKONOMI
+          - id: "e750ceb5-b70b-4d94-b4fa-9d22467b786b" # Egne ansatte
+          - id: "ad7b87a6-9180-467c-affc-20a566b0fec0" # Strengt Fortrolig Adresse
+          - id: "9ec6487d-f37a-4aad-a027-cd221c1ac32b" # Fortrolig Adresse
   tokenx:
     enabled: true
   replicas:
@@ -67,9 +64,11 @@ spec:
           cluster: prod-gcp
     outbound:
       external:
+        - host: pdl-api.prod-fss-pub.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
         - host: pensjon-representasjon.prod-fss-pub.nais.io
-        - host: pdl-api.prod-fss-pub.nais.io
+        - host: team-inntekt-proxy.prod-fss-pub.nais.io
+        - host: ereg-services.prod-fss-pub.nais.io
   env:
     - name: LOGGING_CONFIG
       value: classpath:logback-json.xml
@@ -97,9 +96,30 @@ spec:
       value: https://skjermede-personer-pip.intern.nav.no
     - name: SKJERMING_SCOPE
       value: api://prod-gcp.nom.skjermede-personer-pip/.default
+    - name: INNTEKTSKOMPONENTEN_URL
+      value: https://team-inntekt-proxy.prod-fss-pub.nais.io/proxy/inntektskomponenten/rs
+    - name: INNTEKTSKOMPONENTEN_SCOPE
+      value: api://prod-fss.team-inntekt.inntektskomponenten/.default
+    - name: INNTEKTSKOMPONENTEN_AUD
+      value: prod-fss.team-inntekt.inntektskomponenten
+    - name: EREG_SERVICES_URL
+      value: https://ereg-services.prod-fss-pub.nais.io
     - name: SKJERMET_TILGANG_GROUP_ID
-      value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
+      value: e750ceb5-b70b-4d94-b4fa-9d22467b786b
     - name: FORTROLIG_TILGANG_GROUP_ID
-      value: ea930b6b-9397-44d9-b9e6-f4cf527a632a
+      value: 9ec6487d-f37a-4aad-a027-cd221c1ac32b
     - name: STRENGT_FORTROLIG_TILGANG_GROUP_ID
-      value: 5ef775f2-61f8-4283-bf3d-8d03f428aa14
+      value: ad7b87a6-9180-467c-affc-20a566b0fec0
+    - name: PENSJON_UFOERE_SAKSBEHANDLER_GROUP_ID
+      value: 0af3955f-df85-4eb0-b5b2-45bf2c8aeb9e
+    - name: PENSJON_UFOERE_VEILEDER_GROUP_ID
+      value: 959ead5b-99b5-466b-a0ff-5fdbc687517b
+    - name: PENSJON_UFOERE_BRUKERHJELPA_GROUP_ID
+      value: 7845a796-1516-4d14-b500-fd65c001f35c
+    - name: PENSJON_UFOERE_OKONOMI_GROUP_ID
+      value: 70ef8e7f-7456-4298-95e0-b13c0ef2422b
+
+
+
+
+

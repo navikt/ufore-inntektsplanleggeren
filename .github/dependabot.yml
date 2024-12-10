@@ -26,6 +26,11 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+  - package-ecosystem: maven
+    directory: "/inntektsplanleggeren-backend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
 #### NPM ####
   - package-ecosystem: npm
     directory: "/familieforhold-frontend/"
@@ -87,7 +92,11 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
-
+  - package-ecosystem: npm
+    directory: "/inntektsplanleggeren-frontend/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
 #### GITHUB ACTIONS ####
   - package-ecosystem: github-actions
     directory: "/"
