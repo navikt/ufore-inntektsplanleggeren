@@ -36,7 +36,6 @@ export const InnfyllingPage = () => {
     const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
     const { inntekterResponse, setSimulationResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
-    const [anyError, setAnyError] = useState<boolean>(false)
     const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
