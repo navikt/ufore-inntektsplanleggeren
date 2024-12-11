@@ -91,7 +91,6 @@ export const InnfyllingPage = () => {
         try {
             setIsLoading(true);
             if(checkForFieldErrors()){
-                console.log("FIELD")
                 setIsLoading(false);
                 return
             }
