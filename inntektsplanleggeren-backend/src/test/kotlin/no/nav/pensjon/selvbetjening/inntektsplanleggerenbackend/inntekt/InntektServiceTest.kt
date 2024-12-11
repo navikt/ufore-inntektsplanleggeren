@@ -472,7 +472,7 @@ class InntektServiceTest {
     }
 
     @Test
-    fun `should set forventede inntekter to status registrert and belop 0 when open krav exists but inntektsgrunnlag not on krav`() {
+    fun `should set forventede inntekter to status IKKE_REGISTRERT and belop 0 when open krav exists but inntektsgrunnlag not on krav`() {
         val year = LocalDate.now().year
 
         `when`(inntektskomponentClient.hentForventetInntekt(PID, listOf(year))).thenReturn(
