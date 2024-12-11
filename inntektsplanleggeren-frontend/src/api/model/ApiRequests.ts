@@ -118,7 +118,7 @@ export type SimulationDetail = {
 };
 
 export type PayDetail = {
-    before: number;
+    before: number | null;
     after: number;
 };
 

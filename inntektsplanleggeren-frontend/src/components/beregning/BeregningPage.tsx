@@ -58,19 +58,21 @@ export const BeregningPage = () => {
                 <Graph simulationResult={simulationResponse?.result}/>
             </VStack>
 
-            <Heading size={"medium"}>Oversikt i tabell</Heading>
-            <VStack gap="12">
-                {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
-                <VStack>
-                    <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt: <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
-                    <ReadMore header="Månedsbeløp spesifisert">
-                        <VStack>
-                            <BodyLong>{ simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
-                                <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
-                            { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                            { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                        </VStack>
-                    </ReadMore>
+            <VStack>
+                <Heading size={"medium"}>Oversikt i tabell</Heading>
+                <VStack gap="12">
+                    {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
+                    <VStack>
+                        <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt: <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
+                        <ReadMore header="Månedsbeløp spesifisert">
+                            <VStack>
+                                <BodyLong>{ simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
+                                    <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
+                                { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                                { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                            </VStack>
+                        </ReadMore>
+                    </VStack>
                 </VStack>
             </VStack>
             
