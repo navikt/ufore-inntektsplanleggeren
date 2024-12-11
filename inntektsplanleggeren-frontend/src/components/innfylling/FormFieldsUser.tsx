@@ -52,6 +52,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
             {forventedeInntekter.arbeidsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="arbeidsinntekt_bruker"
                         label="Lønn og pensjonsgivende ytelser"
                         description="Du skal ikke ta med uføretrygden."
                         inputMode="numeric"
@@ -75,6 +76,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
             {forventedeInntekter.naeringsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="naeringsinntekt_bruker"
                         label="Næringsinntekt"
                         inputMode="numeric"
                         error={fieldErrors.naeringsinntekt}
@@ -92,6 +94,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
             {forventedeInntekter.inntektUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="inntektUtland_bruker"
                         label="Inntekt fra utlandet"
                         description="I norske kroner"
                         inputMode="numeric"
@@ -110,6 +113,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
             {forventedeInntekter.andrePensjonsgivendeYtelser !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="andrePensjonsgivendeYtelser_bruker"
                         label="Pensjoner og uførepensjon fra andre enn Nav"
                         description="For eksempel fra KLP, OPF, SPK, Gjensidige, Storebrand"
                         inputMode="numeric"
@@ -142,6 +146,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
             {forventedeInntekter.pensjonUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="pensjonUtland_bruker"
                         label="Pensjoner fra utlandet"
                         description="I norske kroner"
                         inputMode="numeric"
