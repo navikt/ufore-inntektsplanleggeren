@@ -17,6 +17,7 @@ export interface FormFieldsProps {
 export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum, forventedeInntekter}: FormFieldsProps) => {
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>(errors);
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+    const MAX_VALUE = 2147483647
 
     const handleInputChange = (field: keyof PersonInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         if (target.value === '') {
@@ -30,6 +31,9 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
         if (isNaN(numericValue) || numericValue < 0) {
             setInputData((prev) => ({ ...prev, [field]: target.value }));
             setErrorOnState(field, 'Du kan ikke skrive mellomrom, bokstaver eller tegn')
+        } else if (numericValue > MAX_VALUE){
+            setInputData((prev) => ({ ...prev, [field]: target.value }));
+            setErrorOnState(field, 'Tallet du har skrevet inn er for stort')
         } else {
             setInputData((prev) => ({ ...prev, [field]: undefined }));
             setErrorOnState(field, undefined)
