@@ -133,8 +133,12 @@ class InntektService(
         type: InntektsgrunnlagType
     ): Personinntekt {
         val belop = inntektsgrunnlagListe.sortedByDescending { it.endringstidspunkt }
-            .firstOrNull { it.bruk && type.code == it.inntektType }?.belop ?: 0
-        return Personinntekt(belop, Inntektshendelse.REGISTRERT)
+            .firstOrNull { it.bruk && type.code == it.inntektType }?.belop
+        return if (belop != null) {
+            Personinntekt(belop, Inntektshendelse.REGISTRERT)
+        } else {
+            Personinntekt(0, Inntektshendelse.IKKE_REGISTRERT)
+        }
     }
 
     private fun getForventedeInntekterFromInntektskomponent(
@@ -265,7 +269,7 @@ class InntektService(
                 Inntektshendelse.getHendelseForCode(mostRecentInntektOfType.hendelse)
             )
         }
-        return null
+        return Personinntekt(0, Inntektshendelse.IKKE_REGISTRERT)
     }
 
     private fun fetchArbeidsinntektOgPensjonsgivendeYtelser(

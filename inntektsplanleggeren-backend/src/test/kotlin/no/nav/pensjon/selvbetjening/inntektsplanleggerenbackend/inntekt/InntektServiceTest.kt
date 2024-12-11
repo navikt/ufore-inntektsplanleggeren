@@ -472,6 +472,48 @@ class InntektServiceTest {
     }
 
     @Test
+    fun `should set forventede inntekter to status registrert and belop 0 when open krav exists but inntektsgrunnlag not on krav`() {
+        val year = LocalDate.now().year
+
+        `when`(inntektskomponentClient.hentForventetInntekt(PID, listOf(year))).thenReturn(
+            HentForventetInntektResponse(
+                null
+            )
+        )
+
+        val pensjonsdata = pensjonsdata(
+            barnetilleggFellesbarn = true,
+            inntekterFromOpenKravBruker = emptyList())
+
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata, year)
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.belop)
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.belop)
+
+    }
+
+    @Test
     fun `should not include eps inntekter from krav when no barnetillegg fellesbarn`() {
         val year = LocalDate.now().year
 
@@ -958,6 +1000,47 @@ class InntektServiceTest {
         assertNull(forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland)
         assertNull(forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser)
         assertNull(forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps)
+    }
+
+    @Test
+    fun `should return inntekter with hendelse IKKE_REGISTRERT and belop 0 when null from inntektskomponenten`() {
+        val year = LocalDate.now().year
+
+        `when`(inntektskomponentClient.hentForventetInntekt(PID, listOf(year))).thenReturn(
+            HentForventetInntektResponse(
+                "",
+                listOf()
+            )
+        )
+        val forventedeInntekter = inntektService.getForventedeInntekter(
+            PID,
+            pensjonsdata(barnetilleggFellesbarn = true, barnetilleggSaerkullsbarn = false),
+            year
+        )
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.belop)
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.belop)
     }
 
     @Test
