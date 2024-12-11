@@ -38,44 +38,45 @@ export const InnfyllingPage = () => {
     const { selectedYear } = useContext(SelectedYearContext);
     const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
-    const [sendingErrors, setSendingErrors] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setFormStep(1);
     }, [setFormStep]);
 
+    const checkForFieldErrors = () : boolean => {
+        const errorMessages = Object.values(brukerErrors).concat(Object.values(epsErrors)).filter((message) => message !== undefined)
+        return errorMessages.length > 0
+    }
+
     const checkForSendingErrors = (response: SimulationResponse) : boolean => {
-        const errors: string[] = [];
         const bErrors: Partial<Record<keyof PersonInntekter, string>> = {};
         const eErrors: Partial<Record<keyof PersonInntekter, string>> = {};
-        
+        let isError = false
+
         //todo review texts below
         for (const message of response.messages) {
             if (message.messageCode === MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR) {
+                isError = true
                 if(message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_BRUKER") {
-                    errors.push(`Beløpet for inntekt og pengestøtter kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}`);
                     bErrors["arbeidsinntekt"] = `Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}, fordi du allerede har fått dette i lønn og pengestøtte`
                 } else if(message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS") {
-                    errors.push(`Inntekt til annen forelder må være høyere enn det hen har tjent hittil i år.`);
                     eErrors["arbeidsinntekt"] = `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte hittil i år. Den andre forelderen kan se inntekter som er registrert hittil i år hos Skatteetaten.`;
                 }
             }
             else if (message.messageCode === MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR) {
+                isError = true
                 if(message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_BRUKER") {
-                    errors.push(`Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}`)
                     bErrors["andrePensjonsgivendeYtelser"] = `Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]}, fordi du allerede har fått dette i pensjoner fra andre enn folketrygden hittil i år.`;
                 } else if(message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS") {
-                    errors.push(`Pensjoner til annen forelder må være høyere enn det hen har fått hittil i år.`);
                     eErrors["andrePensjonsgivendeYtelser"] = `Beløpet må være høyere enn det den andre forelderen har fått i pensjoner hittil i år. Den andre forelderen kan se inntekter som er registrert hittil i år hos Skatteetaten.`;
                 }
             }
         }
 
-        setSendingErrors(errors);
         setBrukerErrors(bErrors);
         setEpsErrors(eErrors);
-        return errors.length > 0;
+        return isError
     }
 
 
@@ -84,6 +85,10 @@ export const InnfyllingPage = () => {
 
         try {
             setIsLoading(true);
+            if(checkForFieldErrors()){
+                setIsLoading(false);
+                return
+            }
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             if(checkForSendingErrors(result)) {
                 setIsLoading(false);
@@ -101,6 +106,28 @@ export const InnfyllingPage = () => {
 
     if(inntekterResponse === null) {
         return <Loader />;
+    }
+
+    const errorSummary = (errors: Partial<Record<keyof PersonInntekter, string>>, suffix: string) => {
+        return (
+            <>
+            {errors.arbeidsinntekt && <ErrorSummary.Item key={'arbeidsinntekt_'+suffix} href={'#arbeidsinntekt_'+suffix}>
+                {errors.arbeidsinntekt}
+            </ErrorSummary.Item>}
+            {errors.naeringsinntekt && <ErrorSummary.Item key={'naeringsinntekt_'+suffix} href={'#naeringsinntekt_'+suffix}>
+                {errors.naeringsinntekt}
+            </ErrorSummary.Item>}
+            {errors.inntektUtland && <ErrorSummary.Item key={'inntektUtland_'+suffix} href={'#inntektUtland_'+suffix}>
+                {errors.inntektUtland}
+            </ErrorSummary.Item>}
+            {errors.pensjonUtland && <ErrorSummary.Item key={'pensjonUtland_'+suffix} href={'#pensjonUtland_'+suffix}>
+                {errors.pensjonUtland}
+            </ErrorSummary.Item>}
+            {errors.andrePensjonsgivendeYtelser && <ErrorSummary.Item key={'andrePensjonsgivendeYtelser_'+suffix} href={'#andrePensjonsgivendeYtelser_'+suffix}>
+                {errors.andrePensjonsgivendeYtelser}
+            </ErrorSummary.Item>}
+            </>
+        )
     }
 
 
@@ -164,7 +191,7 @@ export const InnfyllingPage = () => {
                                 <FormFieldsEps
                                     year={selectedYear}
                                     errors={epsErrors}
-                                    setErrors={setBrukerErrors}
+                                    setErrors={setEpsErrors}
                                     setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
                                     forventedeInntekter={annenForelderInntekt || {} as PersonInntekter}
                                     inntektSum={getAnnenForelderInntektSum() || 0}
@@ -174,11 +201,10 @@ export const InnfyllingPage = () => {
                     }
 
 
-                    {sendingErrors.length > 0 ?
+                    {checkForFieldErrors() ?
                         (<ErrorSummary heading="Du må rette disse feilene før du kan fortsette:">
-                        {sendingErrors.map((error) => (<ErrorSummary.Item key={error} href={`#${error}`}>
-                            {error}
-                        </ErrorSummary.Item>))}
+                            {errorSummary(brukerErrors, "bruker")}
+                            {errorSummary(epsErrors, "eps")}
                     </ErrorSummary>) : null}
 
                     <HStack gap="4">
