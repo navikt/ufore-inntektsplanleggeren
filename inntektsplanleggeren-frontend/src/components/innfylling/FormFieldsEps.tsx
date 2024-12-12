@@ -1,4 +1,4 @@
-import {VStack, TextField, ReadMore, Box, Heading, BodyShort, BodyLong} from "@navikt/ds-react";
+import {VStack, TextField, ReadMore, Box, Heading, BodyShort, BodyLong, List} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
 import { PersonInntekter } from "@/api/model/ApiRequests";
@@ -126,22 +126,19 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <ReadMore header="Pensjoner du skal legge inn">
                         <VStack gap="4">
                             <BodyLong> Legg inn annen forelders pensjoner som et årsbeløp før skatt. Oppgi pensjoner fra både private og offentlige ordninger.</BodyLong>
-                            <BodyLong>Du skal ikke melde inn</BodyLong>
-                            <ul>
-                                <li>alderspensjon fra oss</li>
-                                <li>uføretrygd fra oss</li>
-                                <li>AFP i privat sektor</li>
-                                <li>AFP fra Statens pensjonskasse hvis du er under 65 år</li>
-                            </ul>
-
-                            <BodyLong>Du skal for eksempel melde inn</BodyLong>
-                            <ul>
-                                <li>AFP offentlig</li>
-                                <li>uførepensjon</li>
-                                <li>introduksjonsstønad</li>
-                                <li>barnepensjon</li>
-                                <li>supplerende stønad</li>
-                            </ul>
+                            <List as="ul" description="Du skal ikke melde inn">
+                                <List.Item>alderspensjon fra oss</List.Item>
+                                <List.Item>uføretrygd fra oss</List.Item>
+                                <List.Item>AFP i privat sektor</List.Item>
+                                <List.Item>AFP fra Statens pensjonskasse hvis du er under 65 år</List.Item>
+                            </List>
+                            <List as="ul" description="Du skal for eksempel melde inn">
+                                <List.Item>AFP offentlig</List.Item>
+                                <List.Item>uførepensjon</List.Item>
+                                <List.Item>introduksjonsstønad</List.Item>
+                                <List.Item>barnepensjon</List.Item>
+                                <List.Item>supplerende stønad</List.Item>
+                            </List>
                         </VStack>
                     </ReadMore>
                 </VStack>

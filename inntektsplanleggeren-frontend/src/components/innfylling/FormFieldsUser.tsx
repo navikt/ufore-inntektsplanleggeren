@@ -1,4 +1,4 @@
-import {VStack, TextField, ReadMore, Box, Heading, BodyShort, BodyLong} from "@navikt/ds-react";
+import {VStack, TextField, ReadMore, Box, Heading, BodyShort, BodyLong, List} from "@navikt/ds-react";
 import React, { useState } from "react";
 import "./FormFields.css";
 import { PersonInntekter } from "@/api/model/ApiRequests";
@@ -124,18 +124,16 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         htmlSize={30}
                     />
                     <ReadMore header="Pensjoner du skal legge inn">
-                        <VStack>
+                        <VStack gap="4">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt.</BodyLong>
-                                <BodyLong>Du skal ikke legge inn</BodyLong>
-                                <ul>
-                                    <li>alderspensjon fra oss</li>
-                                    <li>uføretrygd fra oss </li>
-                                </ul>
-                                <BodyLong>Du skal for eksempel legge inn</BodyLong>
-                                <ul>
-                                    <li>uførepensjon</li>
-                                    <li>tjenestepensjon</li>
-                                </ul>
+                            <List as="ul" description="Du skal ikke legge inn">
+                                <List.Item>alderspensjon fra oss</List.Item>
+                                <List.Item>uføretrygd fra oss</List.Item>
+                            </List>
+                            <List description="Du skal for eksempel legge inn">
+                                <List.Item>uførepensjon</List.Item>
+                                <List.Item>tjenestepensjon</List.Item>
+                            </List>
                             <BodyLong>Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.</BodyLong>
                         </VStack>
 
