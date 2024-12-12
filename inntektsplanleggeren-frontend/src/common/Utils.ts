@@ -10,7 +10,7 @@ export function belopSum(data: InntektDetaljer[]): number {
 }
 
 export function formatDateTime(value: Date): string {
-    return value.toLocaleDateString('no-NO', {day: 'numeric', month: 'long'}) + ' kl. ' + value.toLocaleTimeString('no-NO', {hour: '2-digit', minute:'2-digit'})
+    return value.toLocaleDateString('no-NO', {day: 'numeric', month: 'long', year: 'numeric'}) + ' kl. ' + value.toLocaleTimeString('no-NO', {hour: '2-digit', minute:'2-digit'})
 }
 
 export function formatDate(value: Date): string {
