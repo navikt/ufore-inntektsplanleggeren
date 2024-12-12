@@ -19,99 +19,99 @@ export function InntektsgrenseCard(props: {
 
     return (
         <Box borderRadius="xlarge" padding="4" className="top-box">
-            <VStack gap="5">
+            <VStack gap="2">
                 <Heading size="small">Inntektsgrenser og trekkprosent</Heading>
+                <VStack gap="5">
+                    <BodyLong style={{ whiteSpace: "pre-wrap" }}>
+                        Dine inntektsgrensener sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
+                    </BodyLong>
 
-                <BodyLong style={{ whiteSpace: "pre-wrap" }}>
-                    Dine inntektsgrensener sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
-                </BodyLong>
+                    {isOpen ? <VStack gap="5">
+                        <section>
+                            <Label as="p">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Label>
+                            { props.displayData.hasVarigTilrettelagtArbeid ?
+                                <BodyLong style={{ wordBreak:"normal"}}>
+                                    Du har tiltaket <Link to={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil <FormatKroner value={props.displayData.inntektsgrense}></FormatKroner> (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
+                                    din av beløpet du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du aldri trukket for. I de fleste tilfeller vil det lønne seg å jobbe, fordi uføretrygd og inntekt er høyere enn uføretrygd alene.
+                                </BodyLong> :
+                                <BodyLong style={{ wordBreak:"normal"}}>
+                                    Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden din av beløpet du tjener over inntektsgrensen.
+                                    Beløpet opp til inntektsgrensen blir du aldri trukket for.
+                                </BodyLong>
+                            }
+                        </section>
 
-                {isOpen ? <VStack gap="5">
-                    <section>
-                        <Label as="p">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Label>
-                        { props.displayData.hasVarigTilrettelagtArbeid ?
+                        <section>
+                            <Label as="p">Din trekkprosent (kompensasjonsgrad): {props.displayData.kompensasjonsgrad} prosent</Label>
                             <BodyLong style={{ wordBreak:"normal"}}>
-                                Du har tiltaket <Link to={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil <FormatKroner value={props.displayData.inntektsgrense}></FormatKroner> (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
-                                din av beløpet du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du aldri trukket for. I de fleste tilfeller vil det lønne seg å jobbe, fordi uføretrygd og inntekt er høyere enn uføretrygd alene.
-                            </BodyLong> :
-                            <BodyLong style={{ wordBreak:"normal"}}>
-                                Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden din av beløpet du tjener over inntektsgrensen.
-                                Beløpet opp til inntektsgrensen blir du aldri trukket for.
+                                Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
+                                Vi trekker {props.displayData.kompensasjonsgrad} prosent kun av det du har tjent over inntektsgrensen.
+                                Du vil fortsatt få utbetalt redusert uføretrygd i tillegg til lønnen din.
                             </BodyLong>
+                        </section>
+
+                        <section>
+                            <Label as="p">Årlig inntekt som gir deg rett til 0 kr i utbetaling av uføretrygd: <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/></Label>
+                            <List>
+                                <List.Item>Tjener du over <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> har du ikke rett til utbetaling av uføretrygd det aktuelle året. </List.Item>
+                                <List.Item>Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> et kalenderår,  må du betale tilbake det du har fått i uføretrygd det året.</List.Item>
+                                <List.Item>Du beholder likevel retten til uføretrygd. Tjener du mindre neste år, kan du igjen få utbetalt uføretrygd. </List.Item>
+                            </List>
+                        </section>
+
+                        { props.displayData.hasGjenlevendeTillegg ?
+                            <section>
+                                <Label as="p"> Gjenlevendetillegg </Label>
+                                <BodyLong style={{ wordBreak:"normal"}}>
+                                    Tjener du mer enn inntektsgrensen din, reduseres også utbetalingen av gjenlevendetillegget ditt.
+                                </BodyLong>
+                            </section> : null
                         }
-                    </section>
 
-                    <section>
-                        <Label as="p">Din trekkprosent (kompensasjonsgrad): {props.displayData.kompensasjonsgrad} prosent</Label>
-                        <BodyLong style={{ wordBreak:"normal"}}>
-                            Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
-                            Vi trekker {props.displayData.kompensasjonsgrad} prosent kun av det du har tjent over inntektsgrensen.
-                            Du vil fortsatt få utbetalt redusert uføretrygd i tillegg til lønnen din.
-                        </BodyLong>
-                    </section>
+                        { props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? //todo check if this condition is right!
+                            <section>
+                                <Label as="p">Barnetillegg har egne inntektsgrenser (fribeløp)</Label>
+                                <BodyLong style={{ wordBreak:"normal"}}>
+                                    Fribeløpet er grensen for hva foreldre kan tjene før for barnetillegget blir mindre.
+                                </BodyLong>
+                            </section> : null
+                        }
 
-                    <section>
-                        <Label as="p">Årlig inntekt som gir deg rett til 0 kr i utbetaling av uføretrygd: <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/></Label>
-                        <List>
-                            <List.Item>Tjener du over <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> har du ikke rett til utbetaling av uføretrygd det aktuelle året. </List.Item>
-                            <List.Item>Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> et kalenderår,  må du betale tilbake det du har fått i uføretrygd det året.</List.Item>
-                            <List.Item>Du beholder likevel retten til uføretrygd. Tjener du mindre neste år, kan du igjen få utbetalt uføretrygd. </List.Item>
-                        </List>
-                    </section>
+                        { props.displayData.hasBarneTilleggFellesbarn ?
+                            <section>
+                                <Label as="p">Fribeløp for felles barn</Label>
+                                <BodyLong style={{ wordBreak:"normal"}}>
+                                    Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes inntekt. Derfor skal du bare
+                                    fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere bor sammen.
+                                    <List>
+                                        <List.Item>Tjener dere tilsammen mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggFellesbarn}/></b>,
+                                            blir barnetillegget for barn dere har sammen mindre.</List.Item>
+                                        <List.Item>Tjener dere tilsammen mer enn <b><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggFellesbarn}/></b>,
+                                            får du ikke utbetalt barnetillegget for barn dere har sammen.
+                                            Får dere lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
+                                        </List.Item>
+                                    </List>
+                                </BodyLong>
+                            </section> : null
+                        }
 
-                    { props.displayData.hasGjenlevendeTillegg ?
-                        <section>
-                            <Label as="p"> Gjenlevendetillegg </Label>
-                            <BodyLong style={{ wordBreak:"normal"}}>
-                                Tjener du mer enn inntektsgrensen din, reduseres også utbetalingen av gjenlevendetillegget ditt.
-                            </BodyLong>
-                        </section> : null
-                    }
+                        { props.displayData.hasBarnetilleggSaerkullsbarn ?
+                            <section>
+                                <Label as="p">Fribeløp for særkullsbarn</Label>
+                                <BodyLong style={{ wordBreak:"normal"}}>
+                                    Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du skal kun oppgi din inntekt i inntektsplanleggeren.
+                                    <List>
+                                        <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggSaerkullsbarn}/>,</b> blir barnetillegget for særkullsbarn mindre.</List.Item>
+                                        <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggSaerkullsbarn}/></b>,
+                                                får du ikke utbetalt barnetillegget for særkullsbarn. Får du lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
+                                        </List.Item>
+                                    </List>
+                                </BodyLong>
+                            </section> : null
+                        }
 
-                    { props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? //todo check if this condition is right!
-                        <section>
-                            <Label as="p">Barnetillegg har egne inntektsgrenser (fribeløp)</Label>
-                            <BodyLong style={{ wordBreak:"normal"}}>
-                                Fribeløpet er grensen for hva foreldre kan tjene før for barnetillegget blir mindre.
-                            </BodyLong>
-                        </section> : null
-                    }
-
-                    { props.displayData.hasBarneTilleggFellesbarn ?
-                        <section>
-                            <Label as="p">Fribeløp for felles barn</Label>
-                            <BodyLong style={{ wordBreak:"normal"}}>
-                                Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes inntekt. Derfor skal du bare
-                                fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere bor sammen.
-                                <List>
-                                    <List.Item>Tjener dere tilsammen mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggFellesbarn}/></b>,
-                                        blir barnetillegget for barn dere har sammen mindre.</List.Item>
-                                    <List.Item>Tjener dere tilsammen mer enn <b><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggFellesbarn}/></b>,
-                                        får du ikke utbetalt barnetillegget for barn dere har sammen.
-                                        Får dere lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
-                                    </List.Item>
-                                </List>
-                            </BodyLong>
-                        </section> : null
-                    }
-
-                    { props.displayData.hasBarnetilleggSaerkullsbarn ?
-                        <section>
-                            <Label as="p">Fribeløp for særkullsbarn</Label>
-                            <BodyLong style={{ wordBreak:"normal"}}>
-                                Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du skal kun oppgi din inntekt i inntektsplanleggeren.
-                                <List>
-                                    <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggSaerkullsbarn}/>,</b> blir barnetillegget for særkullsbarn mindre.</List.Item>
-                                    <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggSaerkullsbarn}/></b>,
-                                            får du ikke utbetalt barnetillegget for særkullsbarn. Får du lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
-                                    </List.Item>
-                                </List>
-                            </BodyLong>
-                        </section> : null
-                    }
-
-                </VStack> : null }
-
+                    </VStack> : null }
+            </VStack>
             <HStack justify="center">
                 <Button onClick={handleButton} variant="secondary-neutral" iconPosition="right" icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>{buttonText}</Button>
             </HStack>

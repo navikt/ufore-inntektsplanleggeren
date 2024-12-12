@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, VStack, BodyLong, Button, HStack} from "@navikt/ds-react";
+import {Box, VStack, BodyLong, Button, HStack, Heading} from "@navikt/ds-react";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 
@@ -19,7 +19,9 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
 
     return(
         <Box borderRadius="xlarge" padding="4" className="top-box">
-                <VStack gap="6">
+
+                <VStack gap="2">
+                    <Heading size="small">Registrert inntekt</Heading>
                     <section>
                         <BodyLong> Din registrerte inntekt: <b><FormatKroner value={forventetInntekt} /></b></BodyLong>
                         {forventetInntektAnnenForelder !== null && forventetInntektAnnenForelder !== undefined ?
