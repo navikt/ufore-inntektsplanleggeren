@@ -14,6 +14,7 @@ body {
   justify-content: space-evenly;
   margin: 4rem 1rem 12rem;
   z-index: 1;
+  hyphens: none;
 }
 
 .main-header {
