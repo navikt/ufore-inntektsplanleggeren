@@ -14,14 +14,15 @@ export interface FormFieldsProps {
     forventedeInntekter: PersonInntekter;
 }
 
-export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
+export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum, forventedeInntekter }: FormFieldsProps) => {
     const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>(errors);
     const [inputData, setInputData] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+    const MAX_VALUE = 2147483647
 
     const handleInputChange = (field: keyof PersonInntekter) => ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         if (target.value === '') {
             setInputData((prev) => ({ ...prev, [field]: target.value }));
-            setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+            setErrorOnState(field, undefined)
             setInntekt(field, 0);
             return;
         }
@@ -29,12 +30,20 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
 
         if (isNaN(numericValue) || numericValue < 0) {
             setInputData((prev) => ({ ...prev, [field]: target.value }));
-            setFieldErrors((prev) => ({ ...prev, [field]: 'Du kan ikke skrive mellomrom, bokstaver eller tegn' }));
+            setErrorOnState(field, 'Du kan ikke skrive mellomrom, bokstaver eller tegn')
+        } else if (numericValue > MAX_VALUE){
+            setInputData((prev) => ({ ...prev, [field]: target.value }));
+            setErrorOnState(field, 'Tallet du har skrevet inn er for stort')
         } else {
             setInputData((prev) => ({ ...prev, [field]: undefined }));
-            setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+            setErrorOnState(field, undefined)
             setInntekt(field, numericValue);
         }
+    };
+
+    const setErrorOnState = (field: keyof PersonInntekter, message: string | undefined) => {
+        setFieldErrors((prev) => ({ ...prev, [field]: message }));
+        setErrors((prev) => ({ ...prev, [field]: message }));
     };
 
     return (
@@ -42,6 +51,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
             {forventedeInntekter.arbeidsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="arbeidsinntekt_eps"
                         label="Lønn og pensjonsgivende ytelser"
                         description="Du skal ikke ta med uføretrygden."
                         inputMode="numeric"
@@ -65,6 +75,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
             {forventedeInntekter.naeringsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="naeringsinntekt_eps"
                         label="Næringsinntekt"
                         inputMode="numeric"
                         error={fieldErrors.naeringsinntekt}
@@ -83,6 +94,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
             {forventedeInntekter.inntektUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="inntektUtland_eps"
                         label="Inntekt fra utlandet"
                         description="I norske kroner"
                         inputMode="numeric"
@@ -101,6 +113,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
             {forventedeInntekter.andrePensjonsgivendeYtelser !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="andrePensjonsgivendeYtelser_eps"
                         label="Pensjoner og uførepensjon fra andre enn Nav"
                         description="For eksempel fra KLP, OPF, SPK, Gjensidige, Storebrand"
                         inputMode="numeric"
@@ -137,6 +150,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
             {forventedeInntekter.pensjonUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
+                        id="pensjonUtland_eps"
                         label="Pensjoner fra utlandet"
                         description="I norske kroner"
                         inputMode="numeric"
@@ -152,7 +166,7 @@ export const FormFieldsEps = ({ year, errors, setInntekt, inntektSum, forventede
                 </VStack>
             )}
 
-            <Box padding="4" background="surface-info-subtle">
+            <Box padding="4" background="surface-info-subtle" borderRadius="large">
                 <VStack>
                     <Heading size="small"> Annen forelder sin samlede inntekt i {year}: </Heading>
                     <BodyShort className="sum"><FormatKroner value={inntektSum}/> før skatt</BodyShort>
