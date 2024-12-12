@@ -75,9 +75,9 @@ class SimuleringService(
                     yearly = BeforeAndAfterValues(
                         before = getSumArligUforetrygdAndInntekt(simuleringsresultat, forventedeInntekter, simuleringsaar),
                         after = getSumArligUforetrygdSimulertAndInntekt(simuleringsresultat, forventedeInntekterOppgitt)
-                    ), monthly = BeforeAndAfterValues(
-                        before = getSumMaanedligUforetrygdAndInntekt(simuleringsresultat, forventedeInntekter, simuleringsaar),
-                        after = getSumMaanedligUforetrygdSimulertAndInntekt(simuleringsresultat, forventedeInntekterOppgitt)
+                    ), monthly = BeforeAndAfterValues( //Note: Monthly sums do not include forventet inntekt, this is intentional.
+                        before = getSumMaanedligUforetrygd(simuleringsresultat, simuleringsaar),
+                        after = getSumMaanedligUforetrygdSimulert(simuleringsresultat)
                     )
                 )
             )
@@ -107,14 +107,14 @@ class SimuleringService(
         )
     }
 
-    private fun getSumMaanedligUforetrygdAndInntekt(simuleringsresultat: SimulerEndringUforetrygdResponse, forventedeInntekter: ForventedeInntekterSummary, simuleringsaar: Int) =
+    private fun getSumMaanedligUforetrygd(simuleringsresultat: SimulerEndringUforetrygdResponse, simuleringsaar: Int) =
         if (isSimuleringsaarThisYear(simuleringsaar))
-            (simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0) + (forventedeInntekter.sumBenyttedeInntekterBruker / 12)
+            (simuleringsresultat.currentUforetrygdSummary.totalbelopNetto ?: 0)
         else
             null
 
-    private fun getSumMaanedligUforetrygdSimulertAndInntekt(simuleringsresultat: SimulerEndringUforetrygdResponse, forventedeInntekterOppgitt: ForventedeInntekter) =
-        (simuleringsresultat.simulertUforetrygdSummary.totalbelopNetto ?: 0) + forventedeInntekterOppgitt.bruker.sum() / 12
+    private fun getSumMaanedligUforetrygdSimulert(simuleringsresultat: SimulerEndringUforetrygdResponse) =
+        (simuleringsresultat.simulertUforetrygdSummary.totalbelopNetto ?: 0)
 
     private fun getSumArligUforetrygdAndInntekt(
         simuleringsresultat: SimulerEndringUforetrygdResponse,
