@@ -98,7 +98,9 @@ export function InitialPage() {
                 </BodyLong>
             </section>
 
+            { initiateResponse.data !== null &&
             <InntektsgrenseCard displayData={initiateResponse.data}/>
+            }
 
 
             <Accordion>
