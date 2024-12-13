@@ -58,8 +58,7 @@ export enum PageLinks {
     OPPSUMMERING = "/oppsummering",
     KVITTERING = "/kvittering",
 
-    KONTAKT = "https://www.nav.no/kontaktoss",
-    DIN_UFORE = "#" //TODO actual link?
+    KONTAKT = "https://www.nav.no/kontaktoss"
 }
 
 export const PAGE_LINKS = {

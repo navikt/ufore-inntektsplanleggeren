@@ -5,7 +5,6 @@ import { DataContext } from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
-import {PageLinks} from "@/FormContainer";
 
 export const KvitteringPage = () => {
     // const { id } = useParams();
@@ -95,7 +94,7 @@ export const KvitteringPage = () => {
             </BodyLong>
 
             <HStack gap="4">
-            <Button as={Link} to={PageLinks.DIN_UFORE} variant="primary">Din uføretrygd</Button>
+            <Button as={Link} to={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="primary">Din uføretrygd</Button>
             </HStack>
         </VStack>
     );
