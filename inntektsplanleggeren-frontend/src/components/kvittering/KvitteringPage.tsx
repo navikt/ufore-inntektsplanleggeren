@@ -5,7 +5,6 @@ import { DataContext } from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
-import {PageLinks} from "@/FormContainer";
 
 export const KvitteringPage = () => {
     // const { id } = useParams();
