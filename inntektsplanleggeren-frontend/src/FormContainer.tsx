@@ -58,8 +58,7 @@ export enum PageLinks {
     OPPSUMMERING = "/oppsummering",
     KVITTERING = "/kvittering",
 
-    KONTAKT = "https://www.nav.no/kontaktoss",
-    DIN_UFORE = import.meta.env.VITE_DIN_UFORETRYGD_URL
+    KONTAKT = "https://www.nav.no/kontaktoss"
 }
 
 export const PAGE_LINKS = {
