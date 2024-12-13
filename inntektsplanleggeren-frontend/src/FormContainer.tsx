@@ -59,7 +59,7 @@ export enum PageLinks {
     KVITTERING = "/kvittering",
 
     KONTAKT = "https://www.nav.no/kontaktoss",
-    DIN_UFORE = "#" //TODO actual link?
+    DIN_UFORE = import.meta.env.VITE_DIN_UFORETRYGD_URL
 }
 
 export const PAGE_LINKS = {
