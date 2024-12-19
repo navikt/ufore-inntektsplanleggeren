@@ -15,7 +15,7 @@
   "dependencies": {
     "@navikt/oasis": "^3.4.0",
     "date-fns": "^3.6.0",
-    "dotenv": "16.3.1",
+    "dotenv": "16.4.7",
     "express": "^4.21.1",
     "highcharts": "^11.4.8",
     "highcharts-react-official": "^3.2.1",
