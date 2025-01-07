@@ -5,7 +5,7 @@ import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/beregning/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
 import {SelectedYearContext} from "@/context/SelectedYear";
-import {PageLinks} from "@/FormContainer";
+import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/beregning/Graph";
 import {InputSummary} from "@/components/beregning/InputSummary";
@@ -25,7 +25,7 @@ export const BeregningPage = () => {
 
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault();
-        navigate(PageLinks.OPPSUMMERING);
+        navigate(getFullPathForPage(PageLinks.OPPSUMMERING));
     }
 
     if (simulationResponse?.result) return (
@@ -79,7 +79,7 @@ export const BeregningPage = () => {
             <BodyLong><strong>Har du spørsmål? <Link href={PageLinks.KONTAKT} target="_blank">Kontakt oss (åpnes i ny fane)</Link></strong></BodyLong>
 
             <HStack gap="4">
-                <Button as={RouterLink} to={PageLinks.FORVENTEDE_INNTEKTER} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                <Button as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Endre beløp i beregning
                 </Button>
                 <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}onClick={handleSubmit}>

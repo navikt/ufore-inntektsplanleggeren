@@ -20,7 +20,7 @@ import {FormStateContext} from "@/context/FormData";
 import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes} from "@/api/model/MessageCodes";
-import {PageLinks} from "@/FormContainer";
+import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
 
@@ -47,7 +47,7 @@ export function InitialPage() {
             setInntekterResponse(data);
             setBrukerinntekt(data.forventedeInntekter.bruker);
             setAnnenForelderInntekt(data.forventedeInntekter.eps);
-            navigate(PageLinks.FORVENTEDE_INNTEKTER);
+            navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
         }
     }
 

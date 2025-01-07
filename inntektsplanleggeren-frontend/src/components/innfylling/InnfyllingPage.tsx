@@ -24,7 +24,7 @@ import {DataContext} from "@/DataContextProvider";
 import {PersonInntekter, SimulationResponse} from "@/api/model/ApiRequests";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
-import {PageLinks} from "@/FormContainer";
+import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 import {MessageCodes} from "@/api/model/MessageCodes";
@@ -95,7 +95,7 @@ export const InnfyllingPage = () => {
             } else {
                 setIsLoading(false);
                 setSimulationResponse(result);
-                navigate(PageLinks.BEREGNING);
+                navigate(getFullPathForPage(PageLinks.BEREGNING));
             }
         } catch (error) {
             console.error("Error submitting income simulation:", error);
