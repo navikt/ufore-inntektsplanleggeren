@@ -1,6 +1,6 @@
 import {Alert, Button, FormSummary, HStack, VStack} from "@navikt/ds-react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import {PageLinks} from "@/FormContainer";
+import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
@@ -29,12 +29,12 @@ export const OppsummeringPage = () => {
             setIsLoading(true);
             const result = await send(brukerinntekt, annenForelderInntekt, selectedYear);
             setSendResponse(result);
-            navigate(PageLinks.KVITTERING);
+            navigate(getFullPathForPage(PageLinks.KVITTERING));
         } catch (error) {
             console.error("Error submitting income simulation:", error);
         }
 
-        navigate(PageLinks.KVITTERING);
+        navigate(getFullPathForPage(PageLinks.KVITTERING));
     }
 
     return (
@@ -42,7 +42,7 @@ export const OppsummeringPage = () => {
             <FormSummary>
                 <FormSummary.Header>
                     <FormSummary.Heading level="2">Opplysningene du sender inn</FormSummary.Heading>
-                    <FormSummary.EditLink href={BASE_PATH + PageLinks.FORVENTEDE_INNTEKTER} />
+                    <FormSummary.EditLink href={BASE_PATH + getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} />
                 </FormSummary.Header>
                 <FormSummary.Answers>
                     <FormSummary.Answer>
@@ -64,7 +64,7 @@ export const OppsummeringPage = () => {
             }
 
             <HStack gap="4">
-                <Button as={RouterLink} to={PageLinks.BEREGNING} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                <Button as={RouterLink} to={getFullPathForPage(PageLinks.BEREGNING)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Tilbake
                 </Button>
                 <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}onClick={handleSubmit} loading={isLoading}>

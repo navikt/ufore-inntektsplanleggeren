@@ -20,9 +20,9 @@ export const FormContainer = () => {
                     <Heading level="1" size="large">{getPageName(formStep)}</Heading>
                 </VStack> : null }
             { formStep ? <FormProgress totalSteps={3} activeStep={formStep} interactiveSteps={false}>
-                <FormProgress.Step href={BASE_PATH + PageLinks.FORVENTEDE_INNTEKTER} completed>{getPageName(1)}</FormProgress.Step>
-                <FormProgress.Step href={BASE_PATH + PageLinks.BEREGNING}>{getPageName(2)}</FormProgress.Step>
-                <FormProgress.Step href={BASE_PATH + PageLinks.OPPSUMMERING}>{getPageName(3)}</FormProgress.Step>
+                <FormProgress.Step href={BASE_PATH + getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} completed>{getPageName(1)}</FormProgress.Step>
+                <FormProgress.Step href={BASE_PATH + getFullPathForPage(PageLinks.BEREGNING)}>{getPageName(2)}</FormProgress.Step>
+                <FormProgress.Step href={BASE_PATH + getFullPathForPage(PageLinks.OPPSUMMERING)}>{getPageName(3)}</FormProgress.Step>
             </FormProgress> : null }
             <Outlet/>
         </VStack>
@@ -69,6 +69,10 @@ export const PAGE_LINKS = {
     4: "/kvittering"
 };
 
+export const getFullPathForPage = (pageLink: PageLinks) => {
+    return pageLink + getPidQueryParamString()
+}
+
 const getPage = (index: number): string => {
     switch (index) {
         case 1:
@@ -84,4 +88,13 @@ const getPage = (index: number): string => {
     }
 }
 
-const getPreviousPage = (index: number): string => getPage(index - 1);
+const getPidQueryParamString = () => {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid = searchParams.get('pid')
+    if (pid === null) {
+        return ''
+    }
+    return '?pid=' + pid
+}
+
+const getPreviousPage = (index: number): string => getPage(index - 1) + getPidQueryParamString();
