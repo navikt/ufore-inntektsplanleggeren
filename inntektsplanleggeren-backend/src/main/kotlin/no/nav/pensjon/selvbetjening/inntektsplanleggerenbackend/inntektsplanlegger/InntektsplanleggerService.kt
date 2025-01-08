@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
@@ -139,7 +140,7 @@ class InntektsplanleggerService(
         val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
         return InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, aktuelleAar, messages)
+            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages)
         )
     }
 
@@ -174,15 +175,15 @@ class InntektsplanleggerService(
     private fun mapInntektsplanleggerenInitialData(
         pid: String,
         pensjonsdata: Pensjonsdata?,
-        simuleringsaar: Int,
         aktuelleAar: List<Int>,
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
         if (pensjonsdata != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
-            val forventedeInntekter = inntektService.getForventedeInntekter(pid, pensjonsdata, simuleringsaar)
+            val forventedeInntekter = aktuelleAar.associateWith { inntektService.getForventedeInntekter(pid, pensjonsdata, it) }
+
             return InntektsplanleggerenInitialData(
-                forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
-                forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps,
+                forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
+                forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
                 inntektsgrense = pensjonsdata.inntektsgrense,
                 kompensasjonsgrad = pensjonsdata.kompensasjonsgrad,
                 grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,

@@ -63,8 +63,8 @@ class InntektsplanleggerServiceTest {
     fun `should return InntektsplanleggerInitialData from pensjonsdata, validation result and forventede inntekter when constructInitialInntektsplanleggerResponse`() {
         val year = LocalDate.now().year
 
-        val expectedForventetInntektBruker = 5000
-        val expectedForventetInntektEps = 6000
+        val expectedForventetInntektBruker = mapOf(year to 5000)
+        val expectedForventetInntektEps = mapOf(year to 6000)
         val expectedInntektsgrense = 232
         val expectedKompensasjonsgrad = 23.2
         val expectedGrenseStoppAvUfoeretrygd = 564654
@@ -85,6 +85,7 @@ class InntektsplanleggerServiceTest {
             fribelopBarnetilleggFellesbarn = expectedFribelopFellesbarn,
             fribelopBarnetilleggSaerkullsbarn = expectedFribelopSaerkullsbarn,
             hasVarigTilrettelagtArbeid = true,
+            hasLopendeUforeVedtakThisYear = true
         )
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
@@ -95,8 +96,8 @@ class InntektsplanleggerServiceTest {
                     PersonInntekter(null, null, null, null, null),
                     null
                 ),
-                expectedForventetInntektBruker,
-                expectedForventetInntektEps
+                expectedForventetInntektBruker[year]!!,
+                expectedForventetInntektEps[year]!!
             )
         )
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
@@ -142,6 +143,7 @@ class InntektsplanleggerServiceTest {
     @Test
     fun `should set aktuelleAar to current year only when before october and hasLopendeUforeVedtakThisYear`() {
         val year = LocalDate.now().year
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -150,18 +152,23 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.SEPTEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
         assertEquals(year, initialData.data.aktuelleAar[0])
+        assertEquals(setOf(year), initialData.data.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year])
+        assertEquals(setOf(year), initialData.data.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year])
     }
 
     @Test
     fun `should set aktuelleAar to current year and next year when after october and hasLopendeUforeVedtakThisYear`() {
         val year = LocalDate.now().year
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -170,7 +177,8 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(expectedInntekter)
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
@@ -178,11 +186,21 @@ class InntektsplanleggerServiceTest {
         assertEquals(2, initialData.data!!.aktuelleAar.size)
         assertEquals(year, initialData.data.aktuelleAar[0])
         assertEquals(year + 1, initialData.data.aktuelleAar[1])
+
+        assertEquals(setOf(year, year + 1), initialData.data.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year])
+        assertEquals(setOf(year, year + 1), initialData.data.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year])
+
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year + 1])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year + 1])
     }
 
     @Test
     fun `should set aktuelleAar to next year when after october and hasLopendeUforeVedtakNextYear`() {
         val year = LocalDate.now().year
+        val expectedAktueltAar = year + 1
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = false,
@@ -191,18 +209,23 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, expectedAktueltAar)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year + 1, initialData.data.aktuelleAar[0])
+        assertEquals(expectedAktueltAar, initialData.data.aktuelleAar[0])
+        assertEquals(setOf(expectedAktueltAar), initialData.data.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[expectedAktueltAar])
+        assertEquals(setOf(expectedAktueltAar), initialData.data.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[expectedAktueltAar])
     }
 
     @Test
     fun `should always set aktuelleAar to next year when december`() {
         val year = LocalDate.now().year
+        val expectedAktueltAar = year + 1
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -211,13 +234,13 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, expectedAktueltAar)).thenReturn(forventedeInntekterRegistrert())
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year + 1, initialData.data.aktuelleAar[0])
+        assertEquals(expectedAktueltAar, initialData.data.aktuelleAar[0])
     }
 
     @Test
