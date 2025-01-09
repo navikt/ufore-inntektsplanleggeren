@@ -247,7 +247,7 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
 }
 
 export const mockStatusResponse : StatusResponse = {
-    "registeringsTidspunktEndring": "2024-12-13 13:25:08",
+    "registeringsTidspunktEndring": new Date("2024-06-02T09:06:38.971Z"),
     "status": StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING,
     "sakId": 2112,
     "maandedligeUtbetalinger": {
