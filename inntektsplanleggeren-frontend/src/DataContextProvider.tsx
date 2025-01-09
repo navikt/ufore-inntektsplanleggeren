@@ -11,8 +11,8 @@ import {
 } from "@/api/model/ApiRequests";
 
 export const InitialViewDefaultData: InitiateData | null = {
-    forventetInntekt: 0,
-    forventetInntektAnnenForelder: 0,
+    forventetInntekt: {},
+    forventetInntektAnnenForelder: {},
     inntektsgrense: 0,
     kompensasjonsgrad: 0,
     grenseStoppAvUfoeretrygd: 0,

@@ -25,8 +25,8 @@ export const mockInitiateResponse = {
         ],
 
     "data": {
-        "forventetInntekt": 120000,
-        "forventetInntektAnnenForelder": 800000,
+        "forventetInntekt": {2024: 120000, 2025: 89343},
+        "forventetInntektAnnenForelder": {2024: 3424, 2025: null},
         "inntektsgrense": 49611,
         "kompensasjonsgrad": 49.7,
         "grenseStoppAvUfoeretrygd": 460060,
@@ -38,7 +38,7 @@ export const mockInitiateResponse = {
         "hasBarneTilleggFellesbarn": true,
         "grenseStoppAvBarnetilleggFellesbarn": 669751,
         "fribelopBarnetilleggFellesbarn": 570529,
-        "hasBarnetilleggSaerkullsbarn": true,
+        "hasBarnetilleggSaerkullsbarn": false,
         "grenseStoppAvBarnetilleggSaerkullsbarn": 827,
         "fribelopBarnetilleggSaerkullsbarn": 242,
         "hasGjenlevendeTillegg": true
@@ -131,48 +131,48 @@ export const mockInntekterResponse : InntekterResponse = {
 
 export const mockSimulationResponse: SimulationResponse = {
     "messages":  [
-        {
-            "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            metadata: {}
-        },
-        {
-            "messageCode": MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            "metadata": {
-                "SUM_HITTIL_I_AAR": 10000,
-                "AFFECTED_FIELD": "ARBEIDSINNTEKT_BRUKER"
-            }
-        },
-        {
-            "messageCode": MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            "metadata": {
-                "SUM_HITTIL_I_AAR": 20000,
-                "AFFECTED_FIELD": "ARBEIDSINNTEKT_EPS"
-            }
-        },
-        {
-            "messageCode": MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            "metadata": {
-                "SUM_HITTIL_I_AAR": 30000,
-                "AFFECTED_FIELD": "ANDRE_YTELSER_BRUKER"
-            }
-        },
-        {
-            "messageCode": MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
-            "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
-            "type": MessageTypes.WARNING,
-            "metadata": {
-                "SUM_HITTIL_I_AAR": 40000,
-                "AFFECTED_FIELD": "ANDRE_YTELSER_EPS"
-            }
-        },
+        // {
+        //     "messageCode": MessageCodes.EPS_INNTEKT_CHANGED,
+        //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": MessageTypes.WARNING,
+        //     metadata: {}
+        // },
+        // {
+        //     "messageCode": MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
+        //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": MessageTypes.WARNING,
+        //     "metadata": {
+        //         "SUM_HITTIL_I_AAR": 10000,
+        //         "AFFECTED_FIELD": "ARBEIDSINNTEKT_BRUKER"
+        //     }
+        // },
+        // {
+        //     "messageCode": MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
+        //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": MessageTypes.WARNING,
+        //     "metadata": {
+        //         "SUM_HITTIL_I_AAR": 20000,
+        //         "AFFECTED_FIELD": "ARBEIDSINNTEKT_EPS"
+        //     }
+        // },
+        // {
+        //     "messageCode": MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
+        //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": MessageTypes.WARNING,
+        //     "metadata": {
+        //         "SUM_HITTIL_I_AAR": 30000,
+        //         "AFFECTED_FIELD": "ANDRE_YTELSER_BRUKER"
+        //     }
+        // },
+        // {
+        //     "messageCode": MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
+        //     "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+        //     "type": MessageTypes.WARNING,
+        //     "metadata": {
+        //         "SUM_HITTIL_I_AAR": 40000,
+        //         "AFFECTED_FIELD": "ANDRE_YTELSER_EPS"
+        //     }
+        // },
     ],
     "result": {
         "uforetrygd": {
@@ -247,7 +247,7 @@ export const mockSendApplicationResponse: SendApplicationResponse = {
 }
 
 export const mockStatusResponse : StatusResponse = {
-    "registeringsTidspunktEndring": new Date("2024-06-02T09:06:38.971Z"),
+    "registeringsTidspunktEndring": "2024-12-13 13:25:08",
     "status": StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING,
     "sakId": 2112,
     "maandedligeUtbetalinger": {

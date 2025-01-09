@@ -24,8 +24,8 @@ export interface StringDictionary {
 }
 
 export interface BaseInitiateData {
-    forventetInntekt: number;
-    forventetInntektAnnenForelder: number | null;
+    forventetInntekt: Record<number, number | null>;
+    forventetInntektAnnenForelder: Record<number, number | null>;
     inntektsgrense: number;
     kompensasjonsgrad: number;
     grenseStoppAvUfoeretrygd: number;
