@@ -179,7 +179,7 @@ class InntektsplanleggerService(
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
         if (pensjonsdata != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
-            val forventedeInntekter = aktuelleAar.associateWith { inntektService.getForventedeInntekter(pid, pensjonsdata, it) }
+            val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, pensjonsdata, it) }
 
             return InntektsplanleggerenInitialData(
                 forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
@@ -199,6 +199,15 @@ class InntektsplanleggerService(
             )
         }
         return null
+    }
+
+    private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> {
+        val today = nowProvider.now()
+        val isMonthDecember = today.month.value == Month.DECEMBER.value
+        if (isMonthDecember) {
+            return (listOf(today.year) + aktuelleAar).distinct()
+        }
+        return aktuelleAar
     }
 
     private fun getAktuelleAar(

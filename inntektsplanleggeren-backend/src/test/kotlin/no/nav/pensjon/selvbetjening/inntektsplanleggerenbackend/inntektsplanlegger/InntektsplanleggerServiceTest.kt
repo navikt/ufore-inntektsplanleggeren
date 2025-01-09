@@ -223,9 +223,9 @@ class InntektsplanleggerServiceTest {
     }
 
     @Test
-    fun `should always set aktuelleAar to next year when december`() {
+    fun `should always set aktuelleAar to next year when december but include inntekter for this year and next year`() {
         val year = LocalDate.now().year
-        val expectedAktueltAar = year + 1
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -234,13 +234,22 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, expectedAktueltAar)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(expectedInntekter)
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(expectedAktueltAar, initialData.data.aktuelleAar[0])
+        assertEquals(year + 1, initialData.data.aktuelleAar[0])
+
+        assertEquals(setOf(year, year + 1), initialData.data.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year + 1])
+
+        assertEquals(setOf(year, year + 1), initialData.data.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year + 1])
     }
 
     @Test
