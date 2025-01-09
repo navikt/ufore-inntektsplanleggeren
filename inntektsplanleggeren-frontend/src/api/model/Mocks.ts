@@ -38,7 +38,7 @@ export const mockInitiateResponse = {
         "hasBarneTilleggFellesbarn": true,
         "grenseStoppAvBarnetilleggFellesbarn": 669751,
         "fribelopBarnetilleggFellesbarn": 570529,
-        "hasBarnetilleggSaerkullsbarn": false,
+        "hasBarnetilleggSaerkullsbarn": true,
         "grenseStoppAvBarnetilleggSaerkullsbarn": 827,
         "fribelopBarnetilleggSaerkullsbarn": 242,
         "hasGjenlevendeTillegg": true
