@@ -31,13 +31,13 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                 <BodyLong> {"Din forventede inntekt: "}
                     {expectedIncome !== null && expectedIncome !== undefined ?
                         <b><FormatKroner value={expectedIncome}/></b>
-                        : <b>Ingen registrert inntekt funnet</b>}
+                        : <b>Ingen registrert forventet inntekt funnet</b>}
                 </BodyLong>
                 {hasBarnetilleggFellesbarn || hasBarnetilleggSaerkullsbarn ?
                         <BodyLong> {"Annen forelder du bor med sin forventede inntekt: "}
                             {expectedIncomeAnnenForelder !== null && expectedIncomeAnnenForelder !== undefined ?
                                 <b><FormatKroner value={expectedIncomeAnnenForelder}/></b>
-                                : <b>Ingen registrert inntekt funnet</b>}
+                                : <b>Ingen registrert forventet inntekt funnet</b>}
                         </BodyLong>
                     : <></>
                 }
@@ -53,7 +53,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                 {isOpen &&
                     <BodyLong>
                         Forventet inntekt kan komme fra dine tidligere registreringer, eller i noen tilfeller fra
-                        opplysninger vi har hentet. Har du nylig meldt inn ny inntekt, vil den ikke vises her før den
+                        opplysninger vi har hentet. Har du nylig meldt inn inntekt, vil den ikke vises her før den
                         har blitt behandlet hos oss.
                     </BodyLong>
                 }
