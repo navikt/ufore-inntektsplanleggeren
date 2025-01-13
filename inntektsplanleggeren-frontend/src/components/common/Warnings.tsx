@@ -13,12 +13,6 @@ export function Warnings(props: {
                 <Alert variant="warning">
                     Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
                 </Alert> : null }
-
-            { props.messages.some(message => message.messageCode === MessageCodes.ONE_OR_MORE_INNTEKT_HAS_STATUS_REGISTRERT ||
-                message.messageCode === MessageCodes.OPEN_INNTEKTSENDRING_KRAV ) ?
-                    <Alert variant="warning">
-                        Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
-                    </Alert> : null }
         </VStack>
     )
 }
