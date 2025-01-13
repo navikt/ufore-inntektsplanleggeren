@@ -4,7 +4,7 @@ import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 
 interface ExpectedIncomeBoxProps {
-    forventetInntekt: Record<number, number | null>
+    forventetInntekt: Record<number, number>
     forventetInntektAnnenForelder: Record<number, number | null>
     hasBarnetilleggFellesbarn: boolean
     hasBarnetilleggSaerkullsbarn: boolean
