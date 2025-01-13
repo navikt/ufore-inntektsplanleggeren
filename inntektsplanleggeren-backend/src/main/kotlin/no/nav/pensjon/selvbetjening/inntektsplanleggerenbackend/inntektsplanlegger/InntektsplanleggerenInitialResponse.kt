@@ -9,8 +9,8 @@ data class InntektsplanleggerenInitialResponse(
 
 
 data class InntektsplanleggerenInitialData(
-    val forventetInntekt: Int,
-    val forventetInntektAnnenForelder: Int? = null,
+    val forventetInntekt: Map<Int, Int>,
+    val forventetInntektAnnenForelder: Map<Int, Int?>,
     val inntektsgrense: Int,
     val kompensasjonsgrad: Double,
     val grenseStoppAvUfoeretrygd: Int,
