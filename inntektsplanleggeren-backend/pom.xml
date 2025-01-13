@@ -23,6 +23,8 @@
 		<spring-boot-starter-security.version>3.4.1</spring-boot-starter-security.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
 		<micrometer.version>1.14.2</micrometer.version>
+		<logback.version>1.5.16</logback.version>
+		<logback-access.version>2.0.6</logback-access.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -33,13 +35,48 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.6.0</version>
+			<version>2.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.papertrailapp</groupId>
 			<artifactId>logback-syslog4j</artifactId>
 			<version>1.0.0</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.access</groupId>
+			<artifactId>logback-access-common</artifactId>
+			<version>${logback-access.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.access</groupId>
+			<artifactId>logback-access-tomcat</artifactId>
+			<version>${logback-access.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-catalina</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-coyote</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -88,21 +125,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback.access</groupId>
-			<artifactId>tomcat</artifactId>
-			<version>2.0.3</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-catalina</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-coyote</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
