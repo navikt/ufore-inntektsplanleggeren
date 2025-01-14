@@ -102,6 +102,14 @@ const getOboToken = async (req: Request) => {
 };
 
 app.use(
+  `${BASE_PATH}/assets`,
+  (req: Request, res: Response, next: NextFunction) => {
+    const assetFolder = path.join(__dirname, "./dist", "assets");
+    return express.static(assetFolder)(req, res, next);
+  },
+);
+
+app.use(
   `${BASE_PATH}/api`,
   async (req: Request, res: Response, next: NextFunction) => {
     let oboToken;
