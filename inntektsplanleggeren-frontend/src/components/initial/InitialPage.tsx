@@ -126,12 +126,12 @@ export function InitialPage() {
                 <Accordion.Item>
                     <Accordion.Header>Usikker på hva du kommer til å tjene?</Accordion.Header>
                     <Accordion.Content>
-                        <List>
-                            <List.Item>Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss så godt du kan.</List.Item>
-                            <List.Item>Ser du at inntekten din blir annerledes enn det du tidligere har meldt inn, bør du melde fra til oss så fort som mulig.</List.Item>
-                            <List.Item><Link target="_blank" to="/">På nav.no finner du mer informasjon om hvordan du legger inn riktig inntekt, og eksempler på beregning når inntekten din endrer seg.</Link></List.Item>
-                        {/*    TODO link missing*/}
-                        </List>
+                        <VStack gap="8">
+                            <BodyShort>Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss så godt du kan.</BodyShort>
+                            <BodyShort>Ser du at inntekten din blir annerledes enn det du tidligere har meldt inn, bør du melde fra til oss så fort som mulig.</BodyShort>
+                            <BodyShort><Link target="_blank" to="/">På nav.no finner du mer informasjon om hvordan du legger inn riktig inntekt, og eksempler på beregning når inntekten din endrer seg.</Link>
+                                {/*    TODO link missing*/}</BodyShort>
+                        </VStack>
                     </Accordion.Content>
                 </Accordion.Item>
                 <Accordion.Item>
