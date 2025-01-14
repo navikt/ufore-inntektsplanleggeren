@@ -120,8 +120,6 @@ app.use(
       return res.sendStatus(401);
     }
 
-    logger.info("OBO Token test", oboToken);
-
     return createProxyMiddleware({
       target: `${env.inntektsplanleggerenBackendUrl}/api`,
       headers: {
