@@ -53,7 +53,5 @@ spec:
       value: "https://www.nav.no/dekoratoren"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
-      value: "api://prod-gcp.pensjonselvbetjening.inntektsplanleggeren-backend/.default"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
       value: "prod-gcp:pensjonselvbetjening:inntektsplanleggeren-backend"
