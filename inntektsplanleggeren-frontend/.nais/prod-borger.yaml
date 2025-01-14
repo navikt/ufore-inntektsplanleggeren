@@ -47,8 +47,6 @@ spec:
           cluster: prod-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: MODE
-      value: borger
     - name: "VITE_DECORATOR_URL"
       value: "https://www.nav.no/dekoratoren"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
