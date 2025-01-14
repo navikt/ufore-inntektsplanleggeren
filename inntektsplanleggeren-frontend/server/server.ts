@@ -90,6 +90,7 @@ const getOboToken = async (req: Request) => {
     throw new Error("401");
   }
 
+  logger.info(`Trying to fetch data with ${env.oboAudience}`);
   const obo = await requestOboToken(token, env.oboAudience);
   if (!obo.ok) {
     logger.error("Failed to get OBO token", {
