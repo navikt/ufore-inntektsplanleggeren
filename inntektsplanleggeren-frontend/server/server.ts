@@ -115,7 +115,7 @@ app.use(
   async (req: Request, res: Response, next: NextFunction) => {
     let oboToken;
     try {
-      oboToken = getOboToken(req);
+      oboToken = await getOboToken(req);
     } catch {
       return res.sendStatus(401);
     }
