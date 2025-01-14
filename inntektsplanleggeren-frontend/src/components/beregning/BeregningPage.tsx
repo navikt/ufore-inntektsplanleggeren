@@ -12,6 +12,7 @@ import {InputSummary} from "@/components/beregning/InputSummary";
 import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
+import {BeregningWarnings} from "@/components/beregning/BeregningWarnings";
 
 export const BeregningPage = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
@@ -27,6 +28,9 @@ export const BeregningPage = () => {
         e.preventDefault();
         navigate(getFullPathForPage(PageLinks.OPPSUMMERING));
     }
+
+    const showSimulering = !(simulationResponse?.messages.some(message => message.messageCode === MessageCodes.FAKTOROMREGNET_ELLER_MANUELT_OVERSTYRT
+        || message.messageCode === MessageCodes.SIMULERING_CONTAINS_MOTREGNING))
 
     if (simulationResponse?.result) return (
         <VStack gap="8">
@@ -53,28 +57,47 @@ export const BeregningPage = () => {
                     </VStack>
             </ReadMore>
 
-            <VStack gap="3">
-                <Heading size={"medium"}>Oversikt i graf</Heading>
-                <Graph simulationResult={simulationResponse?.result}/>
-            </VStack>
+            <BeregningWarnings messages={simulationResponse.messages}/>
 
-            <VStack>
-                <Heading size={"medium"}>Oversikt i tabell</Heading>
-                <VStack gap="12">
-                    {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
-                    <VStack>
-                        <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før skatt: <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
-                        <ReadMore header="Månedsbeløp spesifisert">
-                            <VStack>
-                                <BodyLong>{ simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
-                                    <FormatKroner value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
-                                { simulationResponse?.result.barnetilleggFellesbarn !== null ? <BodyLong>Barnetillegg for fellesbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                                { simulationResponse?.result.barnetilleggSaerkullsbarn !== null ? <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                            </VStack>
-                        </ReadMore>
+            {showSimulering ?
+                <>
+                    <VStack gap="3">
+                        <Heading size={"medium"}>Oversikt i graf</Heading>
+                        <Graph simulationResult={simulationResponse?.result}/>
                     </VStack>
-                </VStack>
-            </VStack>
+
+                    <VStack>
+                        <Heading size={"medium"}>Oversikt i tabell</Heading>
+                        <VStack gap="12">
+                            {simulationResponse?.result &&
+                                <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
+                            <VStack>
+                                <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før
+                                    skatt: <FormatKroner
+                                        value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
+                                <ReadMore header="Månedsbeløp spesifisert">
+                                    <VStack>
+                                        <BodyLong>{simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
+                                            <FormatKroner
+                                                value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
+                                        {simulationResponse?.result.barnetilleggFellesbarn !== null ?
+                                            <BodyLong>Barnetillegg for fellesbarn: <FormatKroner
+                                                value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                                        {simulationResponse?.result.barnetilleggSaerkullsbarn !== null ?
+                                            <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner
+                                                value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                                    </VStack>
+                                </ReadMore>
+                            </VStack>
+                        </VStack>
+                    </VStack>
+                </>
+                :
+                <Alert variant="warning">
+                    Vi kan dessverre ikke vise hvordan den nye inntekten din vil påvirke utbetalingen din av uføretrygd.
+                    Du kan likevel sende inn din inntektsendring.
+                </Alert>
+            }
             
             <BodyLong><strong>Har du spørsmål? <Link href={PageLinks.KONTAKT} target="_blank">Kontakt oss (åpnes i ny fane)</Link></strong></BodyLong>
 
