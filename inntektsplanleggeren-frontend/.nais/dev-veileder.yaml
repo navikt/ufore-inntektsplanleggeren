@@ -64,5 +64,5 @@ spec:
       value: "veileder"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend-q2"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
-      value: "dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2"
+    - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
+      value: "api://dev-gcp.pensjonselvbetjening.inntektsplanleggeren-backend-q2/.default"
