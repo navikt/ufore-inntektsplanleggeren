@@ -5,6 +5,7 @@ import { DataContext } from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
+import {StatusCodes} from "@/api/model/StatusCodes";
 
 export const KvitteringPage = () => {
     // const { id } = useParams();
@@ -66,10 +67,26 @@ export const KvitteringPage = () => {
 
             { statusResponse ? <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={getBrukerinntektSum()} epsRegisteredInntekt={getAnnenForelderInntektSum()} /> : null }
 
+            {statusResponse?.status === StatusCodes.TIL_BEHANDLING &&
+                <section>
+                    <Heading size={"large"}>Hva skjer videre?</Heading>
+                    <List as="ul">
+                        <List.Item>Endringen er sendt til behandling. I de fleste tilfeller vil saken være ferdig
+                            behandlet i løpet av 14 dager. </List.Item>
+                        <List.Item>Din nye inntekt vil ikke vises i inntektsplanleggeren før vi har behandlet
+                            saken.</List.Item>
+                        <List.Item>Når saken er ferdig behandlet vil du finne vedtaksbrevet i <Link
+                            to={import.meta.env.VITE_NAV_INNBOKS_URL} target="_blank">Din innboks (åpnes i ny
+                            fane).</Link></List.Item>
+                    </List>
+                </section>
+            }
+
             <Heading size={"large"}>Etteroppgjør</Heading>
             <BodyLong>
                 Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant annet Skatteetaten.
-                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles etteroppgjør. <Link to={"/"} target="_blank">Les mer om etteroppgjøret (åpnes i ny fane).</Link> {/* TODO link? */}
+                Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake.
+                Dette kalles etteroppgjør. <Link to={import.meta.env.VITE_NAV_UFORETRYGD_INFO_URL+"#etteroppgjor"} target="_blank">Les mer om etteroppgjøret (åpnes i ny fane).</Link>
             </BodyLong>
 
             <Heading size={"large"}>Hvis inntekten din endrer seg</Heading>
@@ -80,7 +97,7 @@ export const KvitteringPage = () => {
 
             <Heading size={"large"}>Husk å oppdatere skattekortet</Heading>
             <BodyLong>
-                Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres. <Link to={"/"}>Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane)</Link>
+                Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres. <Link to={import.meta.env.VITE_SKATTEETATEN_SKATTEKORT_URL} target="_blank">Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane)</Link>
             </BodyLong>
 
             <Heading size={"large"}>Må du melde fra til flere?</Heading>
