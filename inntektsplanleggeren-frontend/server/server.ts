@@ -123,9 +123,9 @@ app.use(
 
 app.get("*", (req, res) => {
   if (AUTH_PROVIDER === "azure") {
-    res.sendFile(path.resolve(__dirname, "../dist", "index-veileder.html"));
+    res.sendFile(path.resolve(__dirname, "./dist", "index-veileder.html"));
   } else {
-    res.sendFile(path.resolve(__dirname, "../dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "./dist", "index.html"));
   }
 });
 

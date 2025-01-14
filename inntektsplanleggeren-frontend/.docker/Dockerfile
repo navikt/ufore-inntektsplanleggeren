@@ -8,7 +8,6 @@ USER nonroot
 COPY ./inntektsplanleggeren-frontend/package.json .
 COPY ./inntektsplanleggeren-frontend/package-lock.json .
 COPY ./inntektsplanleggeren-frontend/node_modules/ node_modules/
-COPY ./inntektsplanleggeren-frontend/server server/
 COPY ./inntektsplanleggeren-frontend/dist/ dist/
 
-ENTRYPOINT ["/nodejs/bin/node", "./server/server.js"]
+ENTRYPOINT ["/nodejs/bin/node", "./dist/server/server.js"]
