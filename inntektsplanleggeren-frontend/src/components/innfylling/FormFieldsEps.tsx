@@ -104,7 +104,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange("inntektUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekter du skal melde inn">
+                    <ReadMore header="Inntekter du skal legge inn">
                         Legg inn det den andre forelderen forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                     </ReadMore>
                 </VStack>
