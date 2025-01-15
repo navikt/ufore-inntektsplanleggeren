@@ -33,7 +33,7 @@ export function BeregningWarnings(props: {
             { props.messages.some(message => message.messageCode === MessageCodes.ONE_OR_MORE_INNTEKT_HAS_STATUS_REGISTRERT ||
                     message.messageCode === MessageCodes.OPEN_INNTEKTSENDRING_KRAV ) &&
                 <Alert variant="warning">
-                    Du har meldt inn en inntektsendring som ikke er behandet enda. Derfor ser du ikke oppdatert inntekt og uføretrygd for i dag.
+                    Du har tidligere meldt inn en inntektsendring som ikke er behandet enda. Derfor ser du ikke oppdatert inntekt og uføretrygd for i dag.
                 </Alert> }
         </VStack>
     )
