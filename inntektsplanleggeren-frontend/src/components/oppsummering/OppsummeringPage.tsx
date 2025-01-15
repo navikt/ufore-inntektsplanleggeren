@@ -42,7 +42,7 @@ export const OppsummeringPage = () => {
             <FormSummary>
                 <FormSummary.Header>
                     <FormSummary.Heading level="2">Opplysningene du sender inn</FormSummary.Heading>
-                    <FormSummary.EditLink href={BASE_PATH + getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} />
+                    <FormSummary.EditLink as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} />
                 </FormSummary.Header>
                 <FormSummary.Answers>
                     <FormSummary.Answer>
