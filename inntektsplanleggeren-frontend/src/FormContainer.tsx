@@ -3,7 +3,6 @@ import {Link as RouterLink, Link, Outlet} from "react-router-dom";
 import {Heading, FormProgress, VStack, Button, HStack} from "@navikt/ds-react";
 import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
-import {BASE_PATH} from "@/routes";
 
 export const DESKTOP_WIDTH = 768
 
