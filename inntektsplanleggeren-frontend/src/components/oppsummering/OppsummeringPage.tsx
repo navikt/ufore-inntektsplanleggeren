@@ -9,7 +9,6 @@ import {FormStateContext} from "@/context/FormData";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {DataContext} from "@/DataContextProvider";
 import {FormatKroner} from "@/components/utils/FormatKroner";
-import {BASE_PATH} from "@/routes";
 
 export const OppsummeringPage = () => {
     const navigate = useNavigate();
