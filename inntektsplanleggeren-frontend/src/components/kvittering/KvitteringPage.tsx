@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
 import {StatusCodes} from "@/api/model/StatusCodes";
+import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export const KvitteringPage = () => {
     // const { id } = useParams();
@@ -15,6 +16,7 @@ export const KvitteringPage = () => {
     const [isWaiting, setIsWaiting] = useState(true);
     const { setFormStep, getBrukerinntektSum, getAnnenForelderInntektSum, selectedYear } = useContext(FormStateContext);
     const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext);
+    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
 
     useEffect(() => {
         setFormStep(null);
@@ -32,13 +34,22 @@ export const KvitteringPage = () => {
                 return;
             }
             if (selectedYear && sendResponse?.innsendingsTidspunkt) {
-                getStatus(selectedYear, sendResponse.innsendingsTidspunkt).then(result => {
-                    setStatusResponse(result);
-                    if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
-                        setIsWaiting(false);
-                        clearInterval(intervalId);
-                    }
-                });
+                try {
+                    getStatus(selectedYear, sendResponse.innsendingsTidspunkt).then(result => {
+                        if(result instanceof ErrorResponse){
+                            setSystemErrorMessage(result.message)
+                        } else {
+                            setStatusResponse(result);
+                            if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
+                                setIsWaiting(false);
+                                clearInterval(intervalId);
+                            }
+                        }
+                    });
+                } catch (error) { //TODO: Fiks denne, når ikke denne catchen!
+                    setSystemErrorMessage(ErrorCode.STATUS_ERROR)
+                    setIsWaiting(false);
+                }
             }
             attempts++;
         }, 1_000);
@@ -63,8 +74,7 @@ export const KvitteringPage = () => {
     return (
         <VStack className="form-container">
             <Heading level="2" size="large">Kvittering</Heading>
-
-
+            <ErrorView message={systemErrorMessage}/>
             { statusResponse ? <KvitteringStatusBox statusResponse={statusResponse} registeredInntekt={getBrukerinntektSum()} epsRegisteredInntekt={getAnnenForelderInntektSum()} /> : null }
 
             {statusResponse?.status === StatusCodes.TIL_BEHANDLING &&

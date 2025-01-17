@@ -1,14 +1,15 @@
 import {createContext, useCallback, useEffect, useState} from "react";
+import {getInitiate,} from "@/api/apiFetching";
 import {
-    getInitiate,
-} from "@/api/apiFetching";
-import {
-    InitiateData, InitiateResponse,
+    InitiateData,
+    InitiateResponse,
     InntekterResponse,
     Message,
     SendApplicationResponse,
-    SimulationResponse, StatusResponse
+    SimulationResponse,
+    StatusResponse
 } from "@/api/model/ApiRequests";
+import {ErrorCode, ErrorResponse} from "@/components/common/Error";
 
 export const InitialViewDefaultData: InitiateData | null = {
     forventetInntekt: {},
@@ -54,6 +55,8 @@ interface DataContextValue {
     setLoading: (loading: boolean) => void;
     error: boolean;
     setError: (value: boolean) => void;
+    errorMessage: ErrorCode | null;
+    setErrorMessage: (value: ErrorCode) => void;
     loadingError: boolean;
     setLoadingError: (value: boolean) => void;
     feilmeldingkode: string;
@@ -85,6 +88,8 @@ const DataContextDefaultValue: DataContextValue = {
     setLoading: () => undefined,
     error: false,
     setError: () => undefined,
+    errorMessage: null,
+    setErrorMessage: () => undefined,
     loadingError: false,
     setLoadingError: () => undefined,
     feilmeldingkode: "",
@@ -108,6 +113,7 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
     const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
     const [loading, setLoading] = useState(DataContextDefaultValue.loading)
+    const [errorMessage, setErrorMessage] = useState(DataContextDefaultValue.errorMessage)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
     const [feilmeldingkode, setFeilmeldingkode] = useState(DataContextDefaultValue.feilmeldingkode)
@@ -132,12 +138,18 @@ function DataContextProvider(props: DataContextProviderProps) {
                         setLoading(true)
 
                         const inntektsPlanleggerenResponse = await getInitiate()
-                        setInitiateResponse(inntektsPlanleggerenResponse)
-
-                        setLoading(false)
+                        if(inntektsPlanleggerenResponse instanceof ErrorResponse){
+                            setErrorMessage(inntektsPlanleggerenResponse.message)
+                            setLoadingError(true)
+                            setLoading(false)
+                        } else {
+                            setInitiateResponse(inntektsPlanleggerenResponse)
+                            setLoading(false)
+                        }
                     } catch (e) {
                         setLoadingError(true)
                         setLoading(false)
+                        setErrorMessage(ErrorCode.GENERIC_ERROR)
                     }
                     setRefetch(false)
                 }
@@ -170,6 +182,8 @@ function DataContextProvider(props: DataContextProviderProps) {
             setLoading,
             error,
             setError,
+            errorMessage,
+            setErrorMessage,
             loadingError,
             setLoadingError,
             feilmeldingkode,
