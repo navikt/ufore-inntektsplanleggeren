@@ -61,7 +61,7 @@ app.post('/uforetrygd/selvbetjening/inntektsplanleggeren/api/send', (req, res) =
 })
 
 app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/status', (req, res) => {
-    console.log("GET - /api/send")
+    console.log("GET - /api/status")
     //403 response
     //res.status(403).send(mockForbiddenResponse)
 

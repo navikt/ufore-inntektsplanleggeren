@@ -1,7 +1,7 @@
-import {Heading, VStack, BodyLong, BodyShort, HStack, Loader, List, Button} from "@navikt/ds-react";
+import {BodyLong, BodyShort, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
-import { DataContext } from "@/DataContextProvider";
+import {DataContext} from "@/DataContextProvider";
 import {Link} from "react-router-dom";
 import {KvitteringStatusBox} from "@/components/kvittering/KvitteringStatusBox";
 import {getStatus} from "@/api/apiFetching";
@@ -34,22 +34,20 @@ export const KvitteringPage = () => {
                 return;
             }
             if (selectedYear && sendResponse?.innsendingsTidspunkt) {
-                try {
-                    getStatus(selectedYear, sendResponse.innsendingsTidspunkt).then(result => {
-                        if(result instanceof ErrorResponse){
-                            setSystemErrorMessage(result.message)
-                        } else {
-                            setStatusResponse(result);
-                            if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
-                                setIsWaiting(false);
-                                clearInterval(intervalId);
-                            }
+                getStatus(selectedYear, sendResponse.innsendingsTidspunkt).then(result => {
+                    if(result instanceof ErrorResponse){
+                        setSystemErrorMessage(result.message)
+                    } else {
+                        setSystemErrorMessage(null)
+                        setStatusResponse(result);
+                        if (result.status === "BEHANDLET_MEDFOERER_ENDRING" || result.status === "BEHANDLET_MEDFOERER_INGEN_ENDRING") {
+                            setIsWaiting(false);
+                            clearInterval(intervalId);
                         }
-                    });
-                } catch (error) { //TODO: Fiks denne, når ikke denne catchen!
+                    }
+                }).catch(() => {
                     setSystemErrorMessage(ErrorCode.STATUS_ERROR)
-                    setIsWaiting(false);
-                }
+                });
             }
             attempts++;
         }, 1_000);
@@ -119,7 +117,6 @@ export const KvitteringPage = () => {
                     <List.Item>bostøtte fra Husbanken</List.Item>
                 </List>
             </BodyLong>
-
             <HStack gap="4">
             <Button as={Link} to={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="primary">Din uføretrygd</Button>
             </HStack>
