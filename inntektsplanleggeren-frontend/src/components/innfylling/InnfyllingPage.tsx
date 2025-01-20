@@ -133,9 +133,12 @@ export const InnfyllingPage = () => {
 
     return (
         <VStack className="form-container">
-            <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
-            <BodyLong> Under kan du se hvilke inntekter som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for hele året til oss.
-                Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.</BodyLong>
+            {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
+                <VStack>
+                    <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
+                    <BodyLong> Under kan du se hvilke inntekter som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for hele året til oss.
+                        Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.</BodyLong>
+                </VStack>}
 
             {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar} type="arbeidsgiver">
