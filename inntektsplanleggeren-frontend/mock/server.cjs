@@ -66,7 +66,7 @@ app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/status', (req, res) 
     //res.status(403).send(mockForbiddenResponse)
 
     //200 response
-    res.status(500).send(mockStatusResponse)
+    res.status(200).send(mockStatusResponse)
 })
 
 app.listen(port, () => {
