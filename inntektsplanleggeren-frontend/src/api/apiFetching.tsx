@@ -2,14 +2,8 @@ import {
     PersonInntekter, GetInntektsgrenseResponse,
     InntekterResponse, SubmitInntekterRequest, SimulationResponse, SendApplicationResponse, StatusResponse
 } from "@/api/model/ApiRequests";
-import {mockSendApplicationResponse,
-    mockStatusResponse
-} from "@/api/model/Mocks";
 import {ErrorResponse} from "@/components/common/Error";
 
-const basePath = "/uforetrygd/selvbetjening/inntektsplanleggeren";
-
-const MOCKS_ENABLED = true;
  const isMock = process.env.isMock || false
  const PORT = process.env.MOCK_PORT || "8080"
  const BASE_URL = isMock ? "http://" + window.location.hostname + ":" + PORT + import.meta.env.BASE_URL + "/"
