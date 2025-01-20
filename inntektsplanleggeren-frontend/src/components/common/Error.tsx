@@ -1,4 +1,4 @@
-import {Alert, BodyShort, VStack} from "@navikt/ds-react";
+import {Alert, BodyShort} from "@navikt/ds-react";
 import React from "react";
 
 
