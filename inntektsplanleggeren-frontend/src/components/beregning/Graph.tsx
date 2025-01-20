@@ -171,7 +171,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
                 data: [
                     isBeforeValuesAvailable ? (props.simulationResult.forventetInntekt.yearly.before ?? 0) : undefined,
                     props.simulationResult.forventetInntekt.yearly.after ?? 0].filter(isNotUndefined),
-                color: 'var(--a-green-200)'
+                color: 'var(--a-green-400)'
             }
             ].filter(isNotUndefined)}} />
         </VStack>
