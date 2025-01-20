@@ -2,6 +2,8 @@ name: "Dev: inntektsplanleggeren Backend (q2) deploy"
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * SUN'
 
 jobs:
   build-backend-and-publish-docker:
