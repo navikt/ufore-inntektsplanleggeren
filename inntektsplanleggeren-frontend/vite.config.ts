@@ -53,6 +53,10 @@ const devConfig = {
       "@": fileURLToPath(new URL("./src", import.meta.url))
     }
   },
+  define: {
+    "process.env.isMock": true,
+    "process.env.MOCK_PORT": 3000,
+  },
   server: {
     port: 3000,
     proxy: {

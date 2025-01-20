@@ -1,21 +1,21 @@
 import {
+    Alert,
     BodyLong,
     Box,
     Button,
+    ErrorSummary,
     Heading,
     HStack,
+    Link,
     List,
     Loader,
-    VStack,
-    Alert,
-    Link,
-    ErrorSummary
+    VStack
 } from "@navikt/ds-react";
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import "./innfylling.css"
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
-import { FormFieldsUser } from "./FormFieldsUser";
+import {FormFieldsUser} from "./FormFieldsUser";
 import {simulate} from "@/api/apiFetching";
 import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
 import {SelectedYearContext} from "@/context/SelectedYear";
@@ -28,7 +28,7 @@ import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 import {MessageCodes} from "@/api/model/MessageCodes";
-
+import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 
 export const InnfyllingPage = () => {
@@ -38,6 +38,7 @@ export const InnfyllingPage = () => {
     const { selectedYear } = useContext(SelectedYearContext);
     const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
+    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -90,15 +91,21 @@ export const InnfyllingPage = () => {
                 return
             }
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
-            if(checkForSendingErrors(result)) {
-                setIsLoading(false);
+            if (result instanceof ErrorResponse){
+                setSystemErrorMessage(result.message)
+                setIsLoading(false)
             } else {
-                setIsLoading(false);
-                setSimulationResponse(result);
-                navigate(getFullPathForPage(PageLinks.BEREGNING));
+                if (checkForSendingErrors(result)) {
+                    setIsLoading(false);
+                } else {
+                    setIsLoading(false);
+                    setSimulationResponse(result);
+                    navigate(getFullPathForPage(PageLinks.BEREGNING));
+                }
             }
         } catch (error) {
-            console.error("Error submitting income simulation:", error);
+            setIsLoading(false);
+            setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
         }
 
         // navigate(PageLinks.BEREGNING);
@@ -210,6 +217,7 @@ export const InnfyllingPage = () => {
                             {errorSummary(epsErrors, "eps")}
                     </ErrorSummary>) : null}
 
+                    <ErrorView message={systemErrorMessage}/>
                     <HStack gap="4">
                         <Button as={RouterLink} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                             Tilbake

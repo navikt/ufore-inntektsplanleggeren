@@ -19,48 +19,70 @@ import {DataContext} from "@/DataContextProvider";
 import {FormStateContext} from "@/context/FormData";
 import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
-import {MessageCodes} from "@/api/model/MessageCodes";
+import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
+import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export function InitialPage() {
     const {initiateResponse, setInntekterResponse} = useContext(DataContext)
     const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const {errorMessage} = useContext(DataContext)
+    const [userErrorMessage, setUserErrorMessage] = useState<string | null>(null)
+    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     
     useEffect(() => {
         if (selectedYear !== null) {
-            setErrorMessage(null);
+            setUserErrorMessage(null);
         }
     }, [selectedYear]);
 
+    const canStartInntektsplanleggeren =
+        initiateResponse != null
+        && !initiateResponse.messages.some(message => message.type == MessageTypes.ERROR)
+        && initiateResponse.data?.aktuelleAar
+        && initiateResponse.data.aktuelleAar.length > 0
+
+
     const handleButtonClick = async () => {
         if (!selectedYear) {
-            setErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.");
+            setUserErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.");
         } else {
             setIsLoading(true);
-            const data = await getInntekter(selectedYear);
-            setInntekterResponse(data);
-            setBrukerinntekt(data.forventedeInntekter.bruker);
-            setAnnenForelderInntekt(data.forventedeInntekter.eps);
-            navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
+            try {
+                const data = await getInntekter(selectedYear);
+                if (data instanceof ErrorResponse) {
+                    setSystemErrorMessage(data.message)
+                } else {
+                    setInntekterResponse(data);
+                    setBrukerinntekt(data.forventedeInntekter.bruker);
+                    setAnnenForelderInntekt(data.forventedeInntekter.eps);
+                    navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
+                }
+                setIsLoading(false)
+            } catch {
+                setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
+                setIsLoading(false)
+            }
         }
     }
 
-    if(!initiateResponse) {
+    if (isLoading) {
         return <LoadingBox/>
     }
 
-    if (initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
-        return (
-            <Alert variant="warning">
-                Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
-            </Alert>
-        );
+    if (initiateResponse === null){
+       return  <ErrorView message={errorMessage}/>
+    }
+
+    if(initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)){
+    return (<Alert variant="warning">
+        Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
+    </Alert>)
     }
 
     return (
@@ -143,10 +165,10 @@ export function InitialPage() {
                 </Accordion.Item>
             </Accordion>
 
-            {(initiateResponse.data?.aktuelleAar && initiateResponse.data.aktuelleAar.length > 0) &&
+            {canStartInntektsplanleggeren &&
                 <VStack gap="10">
-                    <YearView error={errorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
-
+                    <YearView error={userErrorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
+                    <ErrorView message={systemErrorMessage}/>
                     <HStack>
                         <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
                             Start inntektsplanlegger
