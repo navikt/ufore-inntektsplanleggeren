@@ -17,16 +17,16 @@ spec:
             action: https://logs.adeo.no/app/r/s/FEsy4
           labels:
             namespace: pensjonselvbetjening # required
-            severity: danger
+            severity: critical
         - alert: Failing deployment
-          expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-backend"} > 0
-          for: 2m
+          expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-backend"} > 1
+          for: 5m
           annotations:
             consequence: inntektsplanleggeren backend failing deployment
             action: https://logs.adeo.no/app/r/s/FEsy4
           labels:
             namespace: pensjonselvbetjening # required
-            severity: warning
+            severity: critical
         - alert: 401 Unauthorized
           expr: (increase(http_server_requests_seconds_count{app="inntektsplanleggeren-backend", status="401"}[2m])) != 0
           for: 1m
@@ -35,7 +35,7 @@ spec:
             action: https://logs.adeo.no/app/r/s/FEsy4
           labels:
             namespace: pensjonselvbetjening # required
-            severity: danger
+            severity: warning
         - alert: 500 Internal Server Error
           expr: (increase(http_server_requests_seconds_count{app="inntektsplanleggeren-backend", status="500"}[2m])) != 0
           for: 1m
@@ -44,4 +44,4 @@ spec:
             action: https://logs.adeo.no/app/r/s/FEsy4
           labels:
             namespace: pensjonselvbetjening # required
-            severity: danger
+            severity: warning
