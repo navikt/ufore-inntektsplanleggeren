@@ -53,7 +53,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <TextField
                         id="arbeidsinntekt_eps"
                         label="Lønn og pensjonsgivende ytelser"
-                        description="Du skal ikke ta med uføretrygden."
+                        description="Uføretrygd skal ikke tas med."
                         inputMode="numeric"
                         error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
                         value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}
