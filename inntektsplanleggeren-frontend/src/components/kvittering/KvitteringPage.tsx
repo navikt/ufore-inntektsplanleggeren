@@ -1,4 +1,4 @@
-import {BodyLong, BodyShort, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
+import {BodyLong, BodyShort, Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
 import {DataContext} from "@/DataContextProvider";
@@ -59,13 +59,15 @@ export const KvitteringPage = () => {
 
     if (isWaiting) {
         return (
-            <VStack className="form-container" align="center" gap="20">
-                    <Heading level="2" size="large">Vent mens vi sender inn</Heading>
-                        <Loader size="3xlarge"/>
-                        <VStack>
-                            <BodyShort>Dette kan ta opptil ett minutt.</BodyShort>
-                        </VStack>
-            </VStack>
+            <Box background="bg-subtle" padding="16" borderRadius="large">
+                <VStack className="form-container" align="center" gap="20">
+                        <Heading level="2" size="large">Vent mens vi sender inn</Heading>
+                            <Loader size="3xlarge"/>
+                            <VStack>
+                                <BodyShort>Dette kan ta opptil ett minutt.</BodyShort>
+                            </VStack>
+                </VStack>
+            </Box>
         );
     }
 
