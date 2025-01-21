@@ -6,13 +6,21 @@ import {FormStateComponent} from "@/context/FormData";
 import React, {useEffect} from "react";
 
 
-
 export function App() {
     const location = useLocation();
-
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
+
+    const confirmationMessage = 'You have unsaved changes. Continue?';
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        event. = confirmationMessage;
+        return confirmationMessage;
+    };
+
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return (
         <FormStateComponent>
