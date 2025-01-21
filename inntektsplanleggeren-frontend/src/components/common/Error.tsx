@@ -20,6 +20,9 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
                     "Vi beklager for dette. Du kan prøve igjen senere. Ta gjerne kontakt med oss hvis problemet fortsetter."
             case ErrorCode.STATUS_ERROR:
                 return "Det har skjedd en teknisk feil. Vi klarte ikke å sjekke status på behandlingen av inntektsendringen din. Ta gjerne kontakt med oss hvis problemet fortsetter."
+            default:
+                return "Det har skjedd en teknisk feil. Hvis du har registrert informasjon, har den dessverre ikke blitt lagret. " +
+                    "Vi beklager for dette. Du kan prøve igjen senere. Ta gjerne kontakt med oss hvis problemet fortsetter."
         }
     }
 
