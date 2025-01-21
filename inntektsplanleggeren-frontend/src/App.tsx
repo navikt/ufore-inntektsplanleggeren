@@ -18,8 +18,8 @@ export function App() {
         <FormStateComponent>
             <main className="mainBody">
                 <representasjon-banner
-                    representasjonstyper="PENSJON_FULLSTENDIG,PENSJON_BEGRENSET,UFORETRYGD_SKRIV,UFORETRYGD_KOMMUNISER,UFORETRYGD_LES,PENSJON_SUPERADMIN">
-                    redirectTo={`${window.location.origin}/uforetrygd/selvbetjening/inntektsplanleggeren`}
+                    representasjonstyper="PENSJON_FULLSTENDIG,PENSJON_BEGRENSET,UFORETRYGD_SKRIV,UFORETRYGD_KOMMUNISER,UFORETRYGD_LES,PENSJON_SUPERADMIN"
+                    redirectTo={`${window.location.origin}/uforetrygd/selvbetjening/inntektsplanleggeren`}>
                 </representasjon-banner>
 
                 <article className="contentWrapper">
