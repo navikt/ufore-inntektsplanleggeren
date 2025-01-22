@@ -34,22 +34,13 @@ export function InitialPage() {
     const [userErrorMessage, setUserErrorMessage] = useState<string | null>(null)
     const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
     const navigate = useNavigate()
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-    const [canStartInntektsplanleggeren, setCanStartInntektsplanleggeren] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
         if (selectedYear !== null) {
             setUserErrorMessage(null);
         }
     }, [selectedYear]);
-
-    useEffect(() => {
-        setCanStartInntektsplanleggeren(
-            initiateResponse != null
-            && !initiateResponse.messages.some(message => message.type == MessageTypes.ERROR)
-            && initiateResponse.data?.aktuelleAar
-            && initiateResponse.data.aktuelleAar.length > 0)
-    }, [initiateResponse])
 
     const handleButtonClick = async () => {
         if (!selectedYear) {
@@ -170,7 +161,7 @@ export function InitialPage() {
                 </Accordion.Item>
             </Accordion>
 
-            {canStartInntektsplanleggeren &&
+            {initiateResponse?.data?.aktuelleAar?.length > 0 &&
                 <VStack gap="10">
                     <YearView error={userErrorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
                     <ErrorView message={systemErrorMessage}/>
