@@ -22,15 +22,15 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             { !statusResponse || statusResponse.status === StatusCodes.TIL_BEHANDLING &&
                 <VStack gap="5">
                     <Alert variant="info">
-                        <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
-                        <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
-                        { epsRegisteredInntekt != null && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
-                            value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
+                        <VStack gap="3">
+                            <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
+                            <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
+                            { epsRegisteredInntekt != null && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
+                        </VStack>
                     </Alert>
-                    <VStack>
                         <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring}/></BodyShort>  {/*    todo display date in nice format*/}
                         <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
-                    </VStack>
+
                 </VStack>
             }
 
