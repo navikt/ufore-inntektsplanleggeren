@@ -1,15 +1,17 @@
 import {
     Accordion,
-    BodyLong,
-    Button,
-    Heading,
-    VStack,
-    Link as NavLink,
     Alert,
+    BodyLong,
+    BodyShort,
+    Button,
+    GuidePanel,
+    Heading,
+    HStack,
+    Link as NavLink,
     List,
-    BodyShort, GuidePanel, HStack
+    VStack
 } from "@navikt/ds-react";
-import { ArrowRightIcon } from '@navikt/aksel-icons';
+import {ArrowRightIcon} from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
@@ -34,19 +36,11 @@ export function InitialPage() {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    
     useEffect(() => {
         if (selectedYear !== null) {
             setUserErrorMessage(null);
         }
     }, [selectedYear]);
-
-    const canStartInntektsplanleggeren =
-        initiateResponse != null
-        && !initiateResponse.messages.some(message => message.type == MessageTypes.ERROR)
-        && initiateResponse.data?.aktuelleAar
-        && initiateResponse.data.aktuelleAar.length > 0
-
 
     const handleButtonClick = async () => {
         if (!selectedYear) {
@@ -71,18 +65,20 @@ export function InitialPage() {
         }
     }
 
-    if (isLoading) {
+    if(errorMessage){
+        return <ErrorView message={errorMessage}/>
+    }
+
+    if (!initiateResponse) {
         return <LoadingBox/>
     }
 
-    if (initiateResponse === null){
-       return  <ErrorView message={errorMessage}/>
-    }
-
     if(initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)){
-    return (<Alert variant="warning">
-        Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
-    </Alert>)
+        return (<Alert variant="warning">
+            Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
+        </Alert>)
+    } else if (initiateResponse.messages.some(message => message.type === MessageTypes.ERROR)){
+        return <ErrorView message={errorMessage}/>
     }
 
     return (
@@ -165,7 +161,7 @@ export function InitialPage() {
                 </Accordion.Item>
             </Accordion>
 
-            {canStartInntektsplanleggeren &&
+            {initiateResponse?.data?.aktuelleAar?.length > 0 &&
                 <VStack gap="10">
                     <YearView error={userErrorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
                     <ErrorView message={systemErrorMessage}/>
