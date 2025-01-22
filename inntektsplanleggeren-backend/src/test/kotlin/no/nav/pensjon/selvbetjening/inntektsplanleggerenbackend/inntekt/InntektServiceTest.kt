@@ -730,7 +730,7 @@ class InntektServiceTest {
                     ForventetInntekt(
                         year.toString(),
                         expectedNaeringsinntektEps,
-                        "UFR_forv_naeringsinntekt_EPS",
+                        "UFR_forv_naeringsinnt_EPS",
                         "Benyttet"
                     ),
                     ForventetInntekt(
@@ -875,7 +875,7 @@ class InntektServiceTest {
                         "Benyttet"
                     ),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -960,7 +960,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 8723, "UFR_forv_andre_ytelser", "Benyttet"),
                     ForventetInntekt(year.toString(), 5544, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1133,7 +1133,7 @@ class InntektServiceTest {
                         "Benyttet"
                     ),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1182,7 +1182,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 3454, "UFR_forv_andre_ytelser", "Benyttet"),
                     ForventetInntekt(year.toString(), 4355, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1231,7 +1231,7 @@ class InntektServiceTest {
                     ForventetInntekt(
                         year.toString(),
                         expectedNaeringsinntektEps,
-                        "UFR_forv_naeringsinntekt_EPS",
+                        "UFR_forv_naeringsinnt_EPS",
                         "Benyttet"
                     ),
                     ForventetInntekt(
@@ -1283,7 +1283,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 5544, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 234234, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Registrert"),
-                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345345, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 657756, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1311,7 +1311,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 5544, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 234234, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Registrert"),
-                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345345, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 657756, "UFR_forv_pensjon_utland_EPS", "Benyttet")
