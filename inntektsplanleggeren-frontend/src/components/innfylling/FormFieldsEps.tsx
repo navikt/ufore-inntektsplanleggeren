@@ -53,7 +53,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <TextField
                         id="arbeidsinntekt_eps"
                         label="Lønn og pensjonsgivende ytelser"
-                        description="Du skal ikke ta med uføretrygden."
+                        description="Uføretrygd skal ikke tas med."
                         inputMode="numeric"
                         error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
                         value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}
@@ -104,7 +104,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange("inntektUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekter du skal melde inn">
+                    <ReadMore header="Inntekter du skal legge inn">
                         Legg inn det den andre forelderen forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                     </ReadMore>
                 </VStack>
@@ -123,16 +123,16 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange("andrePensjonsgivendeYtelser")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn">
+                    <ReadMore header="Pensjoner du skal legge inn" className="readmorePensjonFraAndre">
                         <VStack gap="4">
-                            <BodyLong> Legg inn annen forelders pensjoner som et årsbeløp før skatt. Oppgi pensjoner fra både private og offentlige ordninger.</BodyLong>
-                            <List as="ul" description="Du skal ikke melde inn">
+                            <BodyLong>Legg inn annen forelders pensjoner som et årsbeløp før skatt. Legg inn pensjoner fra både private og offentlige ordninger.</BodyLong>
+                            <List as="ul" description="Du skal ikke legge inn">
                                 <List.Item>alderspensjon fra oss</List.Item>
                                 <List.Item>uføretrygd fra oss</List.Item>
                                 <List.Item>AFP i privat sektor</List.Item>
                                 <List.Item>AFP fra Statens pensjonskasse hvis du er under 65 år</List.Item>
                             </List>
-                            <List as="ul" description="Du skal for eksempel melde inn">
+                            <List as="ul" description="Du skal for eksempel legge inn">
                                 <List.Item>AFP offentlig</List.Item>
                                 <List.Item>uførepensjon</List.Item>
                                 <List.Item>introduksjonsstønad</List.Item>
@@ -157,7 +157,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange("pensjonUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal melde inn">
+                    <ReadMore header="Pensjoner du skal legge inn">
                         Legg inn den andre forelderens pensjoner fra utlandet som et årsbeløp.
                     </ReadMore>
                 </VStack>

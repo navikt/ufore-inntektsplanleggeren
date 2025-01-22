@@ -1,9 +1,8 @@
 import React, {useContext} from "react";
-import {Link, Outlet} from "react-router-dom";
+import {Link as RouterLink, Link, Outlet} from "react-router-dom";
 import {Heading, FormProgress, VStack, Button, HStack} from "@navikt/ds-react";
 import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
-import {BASE_PATH} from "@/routes";
 
 export const DESKTOP_WIDTH = 768
 
@@ -19,11 +18,29 @@ export const FormContainer = () => {
                     </HStack>
                     <Heading level="1" size="large">{getPageName(formStep)}</Heading>
                 </VStack> : null }
-            { formStep ? <FormProgress totalSteps={3} activeStep={formStep} interactiveSteps={false}>
-                <FormProgress.Step href={BASE_PATH + getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} completed>{getPageName(1)}</FormProgress.Step>
-                <FormProgress.Step href={BASE_PATH + getFullPathForPage(PageLinks.BEREGNING)}>{getPageName(2)}</FormProgress.Step>
-                <FormProgress.Step href={BASE_PATH + getFullPathForPage(PageLinks.OPPSUMMERING)}>{getPageName(3)}</FormProgress.Step>
-            </FormProgress> : null }
+            { formStep && <FormProgress totalSteps={3} activeStep={formStep}>
+                <FormProgress.Step
+                    as={RouterLink}
+                    to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)}
+                    completed={isStepCompleted(formStep, 1)}
+                    interactive={isStepEnabled(formStep, 1)}>
+                    {getPageName(1)}
+                </FormProgress.Step>
+                <FormProgress.Step
+                    as={RouterLink}
+                    to={getFullPathForPage(PageLinks.BEREGNING)}
+                    completed={isStepCompleted(formStep, 2)}
+                    interactive={isStepEnabled(formStep, 2)}>
+                    {getPageName(2)}
+                </FormProgress.Step>
+                <FormProgress.Step
+                    as={RouterLink}
+                    to={getFullPathForPage(PageLinks.OPPSUMMERING)}
+                    completed={isStepCompleted(formStep, 3)}
+                    interactive={isStepEnabled(formStep, 3)}>
+                    {getPageName(3)}
+                </FormProgress.Step>
+            </FormProgress> }
             <Outlet/>
         </VStack>
     );
@@ -34,6 +51,14 @@ export enum PageNames {
     BEREGNING = "Beregning",
     OPPSUMMERING = "Oppsummering - se over før du sender inn",
     KVIITTERING = "Kvittering"
+}
+
+const isStepEnabled = (currentStepIndex: number, stepToCheckIndex: number) => {
+    return currentStepIndex >= stepToCheckIndex
+}
+
+const isStepCompleted = (currentStepIndex: number, stepToCheckIndex: number) => {
+    return currentStepIndex > stepToCheckIndex
 }
 
 const getPageName = (index: number): string => {

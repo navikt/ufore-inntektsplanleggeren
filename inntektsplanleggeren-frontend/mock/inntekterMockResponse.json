@@ -1,0 +1,82 @@
+{
+  "arbeidsinntektOgYtelserHittilIAar": [
+    {
+      "maned": 5,
+      "belop": 53426.0,
+      "inntektsgivere": [
+        "Veterinær AS",
+        "Grønnsakssuppekjøkkenet AS"
+      ]
+    },
+    {
+      "maned": 6,
+      "belop": 0.0,
+      "inntektsgivere": [
+        "Isbilen AS"
+      ]
+    },
+    {
+      "maned": 7,
+      "belop": 54001.0,
+      "inntektsgivere": [
+        "Veterinær AS"
+      ]
+    },
+    {
+      "maned": 8,
+      "belop": 7641.0,
+      "inntektsgivere": [
+        "Veterinær AS"
+      ]
+    }
+  ],
+  "pensjonFraAndreHittilIAar": [
+    {
+      "maned": 5,
+      "belop": 10,
+      "inntektsgivere": [
+        "Isbilen AS",
+        "Veterinær AS"
+      ]
+    },
+    {
+      "maned": 6,
+      "belop": 34543.0,
+      "inntektsgivere": [
+        "Grønnsakssuppekjøkkenet AS"
+      ]
+    },
+    {
+      "maned": 7,
+      "belop": 54001.0,
+      "inntektsgivere": [
+        "Isbilen AS"
+      ]
+    },
+    {
+      "maned": 8,
+      "belop": 7641.0,
+      "inntektsgivere": [
+        "Isbilen AS"
+      ]
+    }
+  ],
+  "forventedeInntekter": {
+    "bruker": {
+      "arbeidsinntekt": 1,
+      "andrePensjonsgivendeYtelser": 2,
+      "naeringsinntekt": 3,
+      "inntektUtland": 4,
+      "pensjonUtland": 5
+    },
+    "eps": {
+      "arbeidsinntekt": 6,
+      "andrePensjonsgivendeYtelser": 7,
+      "naeringsinntekt": 8,
+      "inntektUtland": 9,
+      "pensjonUtland": 10
+    }
+  },
+  "uforeHeleAaret": false,
+  "epsPid": "1234"
+}

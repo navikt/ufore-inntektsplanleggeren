@@ -123,7 +123,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange("andrePensjonsgivendeYtelser")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn">
+                    <ReadMore header="Pensjoner du skal legge inn" className="readmorePensjonFraAndre">
                         <VStack gap="4">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss som et årsbeløp før skatt.</BodyLong>
                             <List as="ul" description="Du skal ikke legge inn">

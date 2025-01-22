@@ -15,3 +15,11 @@
 .form-container {
     gap: 20px; /* Adjust the value as needed */
 }
+
+.readmorePensjonFraAndre li {
+    margin-bottom:0;
+}
+
+.readmorePensjonFraAndre ul {
+    margin-top: 0;
+}

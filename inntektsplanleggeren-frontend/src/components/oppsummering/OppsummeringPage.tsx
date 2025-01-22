@@ -9,7 +9,7 @@ import {FormStateContext} from "@/context/FormData";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {DataContext} from "@/DataContextProvider";
 import {FormatKroner} from "@/components/utils/FormatKroner";
-import {BASE_PATH} from "@/routes";
+import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export const OppsummeringPage = () => {
     const navigate = useNavigate();
@@ -17,6 +17,7 @@ export const OppsummeringPage = () => {
     const { simulationResponse, setSendResponse } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
 
     useEffect(() => {
         setFormStep(3)
@@ -28,10 +29,16 @@ export const OppsummeringPage = () => {
         try {
             setIsLoading(true);
             const result = await send(brukerinntekt, annenForelderInntekt, selectedYear);
-            setSendResponse(result);
-            navigate(getFullPathForPage(PageLinks.KVITTERING));
+            if (result instanceof ErrorResponse){
+                setSystemErrorMessage(result.message)
+                setIsLoading(false);
+            } else {
+                setSendResponse(result);
+                navigate(getFullPathForPage(PageLinks.KVITTERING));
+            }
         } catch (error) {
-            console.error("Error submitting income simulation:", error);
+            setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
+            setIsLoading(false);
         }
 
         navigate(getFullPathForPage(PageLinks.KVITTERING));
@@ -42,7 +49,7 @@ export const OppsummeringPage = () => {
             <FormSummary>
                 <FormSummary.Header>
                     <FormSummary.Heading level="2">Opplysningene du sender inn</FormSummary.Heading>
-                    <FormSummary.EditLink href={BASE_PATH + getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} />
+                    <FormSummary.EditLink as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} />
                 </FormSummary.Header>
                 <FormSummary.Answers>
                     <FormSummary.Answer>
@@ -63,6 +70,7 @@ export const OppsummeringPage = () => {
                 </Alert>
             }
 
+            <ErrorView message={systemErrorMessage}/>
             <HStack gap="4">
                 <Button as={RouterLink} to={getFullPathForPage(PageLinks.BEREGNING)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Tilbake

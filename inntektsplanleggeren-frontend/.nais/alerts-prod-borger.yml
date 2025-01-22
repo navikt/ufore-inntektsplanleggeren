@@ -17,13 +17,13 @@ spec:
             action: "https://logs.adeo.no/app/r/s/IUFfT"
           labels:
             namespace: pensjonselvbetjening # required
-            severity: danger
+            severity: critical
         - alert: Failing deployment
-          expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-frontend-borger"} > 0
-          for: 2m
+          expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-frontend-borger"} > 1
+          for: 5m
           annotations:
             consequence: Inntektsplanleggeren borger failing deployment
             action: "https://logs.adeo.no/app/r/s/IUFfT"
           labels:
             namespace: pensjonselvbetjening # required
-            severity: warning
+            severity: critical

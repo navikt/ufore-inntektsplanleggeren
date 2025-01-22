@@ -6,7 +6,7 @@ import {AppRoutes} from "@/routes";
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
       <DataContextProvider>
-          <AppRoutes />
+          <AppRoutes/>
       </DataContextProvider>
   </React.StrictMode>
 )

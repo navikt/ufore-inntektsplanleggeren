@@ -2,19 +2,14 @@ import {
     PersonInntekter, GetInntektsgrenseResponse,
     InntekterResponse, SubmitInntekterRequest, SimulationResponse, SendApplicationResponse, StatusResponse
 } from "@/api/model/ApiRequests";
-import {
-    mockInntekterResponse,
-    mockInitiateResponse,
-    mockSimulationResponse,
-    mockSendApplicationResponse,
-    mockStatusResponse
-} from "@/api/model/Mocks";
+import {ErrorResponse} from "@/components/common/Error";
 
-const basePath = "/uforetrygd/selvbetjening/inntektsplanleggeren";
+ const isMock = process.env.isMock || false
+ const PORT = process.env.MOCK_PORT || "8080"
+ const BASE_URL = isMock ? "http://" + window.location.hostname + ":" + PORT + import.meta.env.BASE_URL + "/"
+     : import.meta.env.BASE_URL + "/"
 
-const MOCKS_ENABLED = false && import.meta.env.DEV;
-
-export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
+export async function getInitiate(): Promise<GetInntektsgrenseResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -31,27 +26,25 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse> {
         }
     }
 
-    if (MOCKS_ENABLED) {
-        return mockInitiateResponse
-    }
-
-    const res = await fetch(basePath + `/api/initiate`, {
+    return await fetch(BASE_URL + `api/initiate`, {
         method: "GET",
         credentials: "include",
         headers: headers
-    });
+    }).then(async response => {
+        if (response.status === 403) {
+            return await response.json().then(it => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
 
-
-    if (!res.ok) {
-        throw new Error("Fikk ikke 2xx respons fra server");
-    }
-
-    return res.json();
+        return response.json()
+    })
 }
 
 
 
-export async function getInntekter(year: number): Promise<InntekterResponse> {
+export async function getInntekter(year: number): Promise<InntekterResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -68,29 +61,23 @@ export async function getInntekter(year: number): Promise<InntekterResponse> {
         }
     }
 
-    if (MOCKS_ENABLED) {
-        return mockInntekterResponse
-    }
-
-    const res = await fetch(basePath + `/api/inntekter?simuleringsaar=${year}`, {
+    return await fetch(BASE_URL + `api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
         headers: headers
-    });
+    }).then(async response => {
+        if (response.status === 403) {
+            return await response.json().then(it => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
 
-    if (MOCKS_ENABLED) {
-        return mockInntekterResponse
-    }
-
-    if (!res.ok) {
-        console.log("error")
-        throw new Error("Fikk ikke 2xx respons fra server");
-    }
-
-    return res.json();
+        return response.json()
+    })
 }
 
-export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SimulationResponse> {
+export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SimulationResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -112,25 +99,24 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
         eps: epsInntekter
     }
 
-    if (MOCKS_ENABLED) {
-        return mockSimulationResponse;
-    }
-
-    const res = await fetch(basePath + `/api/simuler?simuleringsaar=${year}`, {
+    return await fetch(BASE_URL + `api/simuler?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
         body: JSON.stringify(request)
-    });
+    }).then(async response => {
+        if (response.status === 403) {
+            return await response.json().then(it => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
 
-    if (!res.ok) {
-        throw new Error("Fikk ikke 2xx respons fra server");
-    }
-
-    return res.json();
+        return response.json()
+    })
 }
 
-export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SendApplicationResponse> {
+export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<SendApplicationResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -152,25 +138,24 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
         eps: epsInntekter
     }
 
-    if (MOCKS_ENABLED) {
-        return mockSendApplicationResponse;
-    }
-
-    const res = await fetch(basePath + `/api/send?simuleringsaar=${year}`, {
+    return await fetch(BASE_URL + `api/send?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
         body: JSON.stringify(request)
-    });
+    }).then(async response => {
+        if (response.status === 403) {
+            return await response.json().then(it => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
 
-    if (!res.ok) {
-        throw new Error("Fikk ikke 2xx respons fra server");
-    }
-
-    return res.json();
+        return response.json()
+    })
 }
 
-export async function getStatus(valgtaar: number, innsendingstidspunkt: string): Promise<StatusResponse> {
+export async function getStatus(valgtaar: number, innsendingstidspunkt: string): Promise<StatusResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
@@ -187,20 +172,19 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         }
     }
 
-    const url = encodeURI(basePath + `/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
-    const res = await fetch(url, {
+    const url = encodeURI(BASE_URL + `api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
+    return await fetch(url, {
         method: "GET",
         credentials: "include",
         headers: headers,
-    });
+    }).then(async response => {
+        if (response.status === 403) {
+            return await response.json().then(it => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
 
-    if (MOCKS_ENABLED) {
-        return mockStatusResponse;
-    }
-
-    if (!res.ok) {
-        throw new Error("Fikk ikke 2xx respons fra server");
-    }
-
-    return res.json();
+        return response.json()
+    })
 }

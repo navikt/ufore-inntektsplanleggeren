@@ -1,4 +1,4 @@
-import { Heading, List, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
+import {Alert, Heading, List, Radio, RadioGroup, ReadMore, VStack} from "@navikt/ds-react";
 import React, {useContext, useEffect} from "react";
 import {FormStateContext} from "@/context/FormData";
 
@@ -37,6 +37,10 @@ export function YearView({ availableYears, error }: Props) {
                             <List.Item>Fra 1. til 31. desember kan du bare registrere inntekter for neste år, fordi endringen ikke vil påvirke utbetalingen din før til neste år.</List.Item>
                         </List>
                 </ReadMore>
+
+                { firstYear !== undefined && secondYear !== undefined ?
+                    <Alert variant="info">Hvis du ikke sender inn ny forventet inntekt for neste år, lager vi en forventet inntekt for deg. Den vil være litt høyere enn den forventede inntekten din for året vi er i nå. </Alert> : null
+                }
 
                 { firstYear !== undefined && secondYear !== undefined ?
                     <RadioGroup error={error} legend="Hvilket år ønsker du å registrere inntekter for?" value={selectedYear} onChange={setSelectedYear}>
