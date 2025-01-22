@@ -11,7 +11,6 @@ import {
     List,
     VStack
 } from "@navikt/ds-react";
-import {ArrowRightIcon} from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
@@ -29,7 +28,7 @@ import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export function InitialPage() {
     const {initiateResponse, setInntekterResponse} = useContext(DataContext)
-    const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
+    const {selectedYear, setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const {errorMessage} = useContext(DataContext)
     const [userErrorMessage, setUserErrorMessage] = useState<string | null>(null)
     const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
@@ -42,26 +41,23 @@ export function InitialPage() {
         }
     }, [selectedYear]);
 
-    const handleButtonClick = async () => {
-        if (!selectedYear) {
-            setUserErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.");
-        } else {
-            setIsLoading(true);
-            try {
-                const data = await getInntekter(selectedYear);
-                if (data instanceof ErrorResponse) {
-                    setSystemErrorMessage(data.message)
-                } else {
-                    setInntekterResponse(data);
-                    setBrukerinntekt(data.forventedeInntekter.bruker);
-                    setAnnenForelderInntekt(data.forventedeInntekter.eps);
-                    navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
-                }
-                setIsLoading(false)
-            } catch {
-                setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
-                setIsLoading(false)
+    const handleButtonClick = async (year: number) => {
+        setSelectedYear(year);
+
+        setIsLoading(true);
+        try {
+            const data = await getInntekter(year);
+            if (data instanceof ErrorResponse) {
+                setSystemErrorMessage(data.message)
+            } else {
+                setInntekterResponse(data);
+                setBrukerinntekt(data.forventedeInntekter.bruker);
+                setAnnenForelderInntekt(data.forventedeInntekter.eps);
+                navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
             }
+            setIsLoading(false)
+        } catch {
+            setIsLoading(false)
         }
     }
 
@@ -162,15 +158,7 @@ export function InitialPage() {
             </Accordion>
 
             {initiateResponse?.data?.aktuelleAar?.length > 0 &&
-                <VStack gap="10">
-                    <YearView error={userErrorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
-                    <ErrorView message={systemErrorMessage}/>
-                    <HStack>
-                        <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
-                            Start inntektsplanlegger
-                        </Button>
-                    </HStack>
-                </VStack>
+                <YearView availableYears={initiateResponse.data.aktuelleAar} handleSubmit={handleButtonClick} isLoading={isLoading}></YearView>
             }
         </VStack>
     )
