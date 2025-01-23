@@ -28,17 +28,16 @@ import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {FormFieldsEps} from "@/components/innfylling/FormFieldsEps";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 import {MessageCodes} from "@/api/model/MessageCodes";
-import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
+import {ErrorCode, ErrorResponse} from "@/components/common/Error";
 
 
 export const InnfyllingPage = () => {
     const navigate = useNavigate()
     const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
-    const { inntekterResponse, setSimulationResponse } = useContext(DataContext);
+    const { inntekterResponse, setSimulationResponse, setErrorMessage} = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
-    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -92,7 +91,7 @@ export const InnfyllingPage = () => {
             }
             const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear);
             if (result instanceof ErrorResponse){
-                setSystemErrorMessage(result.message)
+                setErrorMessage(result.message)
                 setIsLoading(false)
             } else {
                 if (checkForSendingErrors(result)) {
@@ -105,14 +104,14 @@ export const InnfyllingPage = () => {
             }
         } catch (error) {
             setIsLoading(false);
-            setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
+            setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
 
         // navigate(PageLinks.BEREGNING);
     };
 
     if(inntekterResponse === null) {
-        return <Loader />;
+        return <Loader/>;
     }
 
     const errorSummary = (errors: Partial<Record<keyof PersonInntekter, string>>, suffix: string) => {
@@ -217,7 +216,6 @@ export const InnfyllingPage = () => {
                             {errorSummary(epsErrors, "eps")}
                     </ErrorSummary>) : null}
 
-                    <ErrorView message={systemErrorMessage}/>
                     <HStack gap="4">
                         <Button as={RouterLink} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                             Tilbake

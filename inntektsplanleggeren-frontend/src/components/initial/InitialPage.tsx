@@ -1,18 +1,17 @@
 import {
     Accordion,
-    BodyLong,
-    Button,
-    Heading,
-    VStack,
-    Link as NavLink,
     Alert,
+    BodyLong,
+    BodyShort,
+    GuidePanel,
+    Heading,
+    Link as NavLink,
     List,
-    BodyShort, GuidePanel, HStack
+    VStack
 } from "@navikt/ds-react";
-import { ArrowRightIcon } from '@navikt/aksel-icons';
 import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
 import {Link, useNavigate} from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {YearView} from "@/components/initial/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
@@ -26,63 +25,44 @@ import {LoadingBox} from "@/components/initial/LoadingBox";
 import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export function InitialPage() {
-    const {initiateResponse, setInntekterResponse} = useContext(DataContext)
-    const {selectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
-    const {errorMessage} = useContext(DataContext)
-    const [userErrorMessage, setUserErrorMessage] = useState<string | null>(null)
-    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
+    const {initiateResponse, setInntekterResponse, errorMessage, setErrorMessage} = useContext(DataContext)
+    const {setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    
-    useEffect(() => {
-        if (selectedYear !== null) {
-            setUserErrorMessage(null);
-        }
-    }, [selectedYear]);
 
-    const canStartInntektsplanleggeren =
-        initiateResponse != null
-        && !initiateResponse.messages.some(message => message.type == MessageTypes.ERROR)
-        && initiateResponse.data?.aktuelleAar
-        && initiateResponse.data.aktuelleAar.length > 0
-
-
-    const handleButtonClick = async () => {
-        if (!selectedYear) {
-            setUserErrorMessage("Du må velge et år før du kan starte inntektsplanleggeren.");
-        } else {
-            setIsLoading(true);
-            try {
-                const data = await getInntekter(selectedYear);
-                if (data instanceof ErrorResponse) {
-                    setSystemErrorMessage(data.message)
-                } else {
-                    setInntekterResponse(data);
-                    setBrukerinntekt(data.forventedeInntekter.bruker);
-                    setAnnenForelderInntekt(data.forventedeInntekter.eps);
-                    navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
-                }
-                setIsLoading(false)
-            } catch {
-                setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
-                setIsLoading(false)
+    const handleButtonClick = async (year: number) => {
+        setSelectedYear(year);
+        try {
+            const data = await getInntekter(year);
+            if(data instanceof ErrorResponse){
+                setErrorMessage(data.message)
+            } else {
+                setInntekterResponse(data);
+                setBrukerinntekt(data.forventedeInntekter.bruker);
+                setAnnenForelderInntekt(data.forventedeInntekter.eps);
             }
+        } catch {
+            setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
+        setIsLoading(false)
+        navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
     }
 
-    if (isLoading) {
+    if(errorMessage){
+        return <ErrorView message={errorMessage}/>
+    }
+
+    if (!initiateResponse) {
         return <LoadingBox/>
     }
 
-    if (initiateResponse === null){
-       return  <ErrorView message={errorMessage}/>
-    }
-
     if(initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)){
-    return (<Alert variant="warning">
-        Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
-    </Alert>)
+        return (<Alert variant="warning">
+            Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
+        </Alert>)
+    } else if (initiateResponse.messages.some(message => message.type === MessageTypes.ERROR)){
+        return <ErrorView message={errorMessage}/>
     }
 
     return (
@@ -165,16 +145,8 @@ export function InitialPage() {
                 </Accordion.Item>
             </Accordion>
 
-            {canStartInntektsplanleggeren &&
-                <VStack gap="10">
-                    <YearView error={userErrorMessage} availableYears={initiateResponse.data.aktuelleAar}></YearView>
-                    <ErrorView message={systemErrorMessage}/>
-                    <HStack>
-                        <Button onClick={handleButtonClick} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
-                            Start inntektsplanlegger
-                        </Button>
-                    </HStack>
-                </VStack>
+            {initiateResponse?.data?.aktuelleAar?.length > 0 &&
+                <YearView availableYears={initiateResponse.data.aktuelleAar} handleSubmit={handleButtonClick} isLoading={isLoading}></YearView>
             }
         </VStack>
     )

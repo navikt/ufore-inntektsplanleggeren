@@ -13,10 +13,11 @@ import {ArrowLeftIcon, ArrowRightIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {CancelConfirmationModal} from "@/components/common/CancelConfirmationModal";
 import {BeregningWarnings} from "@/components/beregning/BeregningWarnings";
+import {ErrorView} from "@/components/common/Error";
 
 export const BeregningPage = () => {
     const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
-    const { simulationResponse } = useContext(DataContext);
+    const { simulationResponse, errorMessage } = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const navigate = useNavigate();
 
@@ -31,6 +32,10 @@ export const BeregningPage = () => {
 
     const showSimulering = !(simulationResponse?.messages.some(message => message.messageCode === MessageCodes.FAKTOROMREGNET_ELLER_MANUELT_OVERSTYRT
         || message.messageCode === MessageCodes.SIMULERING_CONTAINS_MOTREGNING))
+
+    if(errorMessage){
+        return <ErrorView message={errorMessage}/>
+    }
 
     if (simulationResponse?.result) return (
         <VStack gap="8">
