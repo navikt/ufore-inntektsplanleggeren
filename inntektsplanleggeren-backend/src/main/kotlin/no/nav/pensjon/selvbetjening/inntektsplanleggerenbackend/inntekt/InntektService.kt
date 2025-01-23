@@ -132,7 +132,9 @@ class InntektService(
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         type: InntektsgrunnlagType
     ): Personinntekt {
-        val belop = inntektsgrunnlagListe.sortedByDescending { it.endringstidspunkt }
+        val belop = inntektsgrunnlagListe
+            .sortedByDescending { it.fomDato }
+            .sortedByDescending { it.endringstidspunkt }
             .firstOrNull { it.bruk && type.code == it.inntektType }?.belop
         return if (belop != null) {
             Personinntekt(belop, Inntektshendelse.REGISTRERT)
