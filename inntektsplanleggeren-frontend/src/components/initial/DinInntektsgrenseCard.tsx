@@ -23,7 +23,7 @@ export function InntektsgrenseCard(props: {
                 <Heading size="small">Inntektsgrenser og trekkprosent</Heading>
                 <VStack gap="5">
                     <BodyLong style={{ whiteSpace: "pre-wrap" }}>
-                        Dine inntektsgrensener sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
+                        Dine inntektsgrenser sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
                     </BodyLong>
 
                     {isOpen ? <VStack gap="5">
