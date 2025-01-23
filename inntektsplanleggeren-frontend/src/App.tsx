@@ -12,15 +12,16 @@ export function App() {
         window.scrollTo(0, 0);
     }, [location]);
 
-    const confirmationMessage = 'You have unsaved changes. Continue?';
-
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-        event. = confirmationMessage;
-        return confirmationMessage;
-    };
-
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.returnValue = "confirm";
+            return;
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+    }, []);
 
     return (
         <FormStateComponent>
