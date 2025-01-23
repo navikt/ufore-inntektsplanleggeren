@@ -51,8 +51,7 @@ interface DataContextValue {
 
     refetch: boolean;
     setRefetch: (value: boolean) => void;
-    loading: boolean;
-    setLoading: (loading: boolean) => void;
+
     error: boolean;
     setError: (value: boolean) => void;
     errorMessage: ErrorCode | null;
@@ -83,9 +82,7 @@ const DataContextDefaultValue: DataContextValue = {
 
     refetch: true,
     setRefetch: () => undefined,
-     
-    loading: true,
-    setLoading: () => undefined,
+
     error: false,
     setError: () => undefined,
     errorMessage: null,
@@ -112,7 +109,6 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
     const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
     const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
-    const [loading, setLoading] = useState(DataContextDefaultValue.loading)
     const [errorMessage, setErrorMessage] = useState(DataContextDefaultValue.errorMessage)
     const [error, setError] = useState(DataContextDefaultValue.error)
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
@@ -135,20 +131,13 @@ function DataContextProvider(props: DataContextProviderProps) {
             (async () => {
                 if (refetch) {
                     try {
-                        setLoading(true)
-
                         const inntektsPlanleggerenResponse = await getInitiate()
                         if(inntektsPlanleggerenResponse instanceof ErrorResponse){
                             setErrorMessage(inntektsPlanleggerenResponse.message)
-                            setLoadingError(true)
-                            setLoading(false)
                         } else {
                             setInitiateResponse(inntektsPlanleggerenResponse)
-                            setLoading(false)
                         }
                     } catch (e) {
-                        setLoadingError(true)
-                        setLoading(false)
                         setErrorMessage(ErrorCode.GENERIC_ERROR)
                     }
                     setRefetch(false)
@@ -178,8 +167,6 @@ function DataContextProvider(props: DataContextProviderProps) {
             refetch,
             setRefetch,
 
-            loading,
-            setLoading,
             error,
             setError,
             errorMessage,

@@ -22,32 +22,31 @@ import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
-import {ErrorResponse, ErrorView} from "@/components/common/Error";
+import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export function InitialPage() {
-    const {initiateResponse, setInntekterResponse} = useContext(DataContext)
+    const {initiateResponse, setInntekterResponse, errorMessage, setErrorMessage} = useContext(DataContext)
     const {setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
-    const {errorMessage} = useContext(DataContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
     const handleButtonClick = async (year: number) => {
         setSelectedYear(year);
-
-        setIsLoading(true);
         try {
             const data = await getInntekter(year);
-            if (!(data instanceof ErrorResponse)) {
+            if(data instanceof ErrorResponse){
+                setErrorMessage(data.message)
+            } else {
                 setInntekterResponse(data);
                 setBrukerinntekt(data.forventedeInntekter.bruker);
                 setAnnenForelderInntekt(data.forventedeInntekter.eps);
-                navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
             }
-            setIsLoading(false)
         } catch {
-            setIsLoading(false)
+            setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
+        setIsLoading(false)
+        navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
     }
 
     if(errorMessage){
