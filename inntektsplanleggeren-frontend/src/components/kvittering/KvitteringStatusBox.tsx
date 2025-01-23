@@ -51,7 +51,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                         <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
                     </VStack>
                     <BodyLong>
-                        Vi har behandlet saken din og du vil snart motta et vedtaksbrev i <Link target="_blank" to="/">Din innboks (åpnes i ny fane)</Link>.  {/* TODO link?   */}
+                        Vi har behandlet saken din og du vil snart motta et vedtaksbrev i <Link target="_blank" to={import.meta.env.VITE_NAV_INNBOKS_URL}>Din innboks (åpnes i ny fane)</Link>.
                     </BodyLong>
                 </VStack> }
 
