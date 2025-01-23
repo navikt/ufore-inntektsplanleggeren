@@ -6,15 +6,24 @@ import {FormStateComponent} from "@/context/FormData";
 import React, {useEffect} from "react";
 
 
-
 export function App() {
     const location = useLocation();
-
     useEffect(() => {
         if(!location.hash) {
             window.scrollTo(0, 0);
         }
     }, [location]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.returnValue = "confirm";
+            return;
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+    }, []);
 
     return (
         <FormStateComponent>
