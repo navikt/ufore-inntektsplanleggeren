@@ -3,17 +3,15 @@ import {
     Alert,
     BodyLong,
     BodyShort,
-    Button,
     GuidePanel,
     Heading,
-    HStack,
     Link as NavLink,
     List,
     VStack
 } from "@navikt/ds-react";
 import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
 import {Link, useNavigate} from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {YearView} from "@/components/initial/YearView";
 import "./InitialView.css"
 import {DataContext} from "@/DataContextProvider";
@@ -24,22 +22,15 @@ import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
-import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
+import {ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export function InitialPage() {
     const {initiateResponse, setInntekterResponse} = useContext(DataContext)
-    const {selectedYear, setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
+    const {setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const {errorMessage} = useContext(DataContext)
-    const [userErrorMessage, setUserErrorMessage] = useState<string | null>(null)
-    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    useEffect(() => {
-        if (selectedYear !== null) {
-            setUserErrorMessage(null);
-        }
-    }, [selectedYear]);
 
     const handleButtonClick = async (year: number) => {
         setSelectedYear(year);
@@ -47,9 +38,7 @@ export function InitialPage() {
         setIsLoading(true);
         try {
             const data = await getInntekter(year);
-            if (data instanceof ErrorResponse) {
-                setSystemErrorMessage(data.message)
-            } else {
+            if (!(data instanceof ErrorResponse)) {
                 setInntekterResponse(data);
                 setBrukerinntekt(data.forventedeInntekter.bruker);
                 setAnnenForelderInntekt(data.forventedeInntekter.eps);

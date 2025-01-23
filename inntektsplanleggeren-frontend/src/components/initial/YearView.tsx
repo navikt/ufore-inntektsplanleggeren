@@ -10,9 +10,8 @@ import {
     ReadMore,
     VStack
 } from "@navikt/ds-react";
-import React, {useContext, useEffect, useState} from "react";
-import {FormStateContext} from "@/context/FormData";
 import {ArrowRightIcon} from "@navikt/aksel-icons";
+import {useRef, useState} from "react";
 
 interface Props {
     availableYears: number[],
@@ -22,11 +21,11 @@ interface Props {
 
 export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
     const [firstYear, secondYear] = availableYears;
-    const [year, setYear] = React.useState<number | undefined>(undefined);
-    const [errors, setErrors] = React.useState({
+    const [year, setYear] = useState<number | undefined>(undefined);
+    const [errors, setErrors] = useState({
         year: ""
     });
-    const errorSummaryRef = React.useRef<HTMLDivElement>(null);
+    const errorSummaryRef = useRef<HTMLDivElement>(null);
 
     if (availableYears.length === 0) {
         return null;
