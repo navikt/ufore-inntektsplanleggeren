@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
-import winston from "winston";
+import winston, { format } from "winston";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { getToken, requestOboToken, validateToken } from "@navikt/oasis";
 import promBundle from "express-prom-bundle";
@@ -16,9 +16,12 @@ const metricsMiddleware = promBundle({ includeMethod: true });
 const app = express();
 const __dirname = process.cwd();
 
+const isDevelopment = process.env.NODE_ENV === "development";
+
 dotenv.config();
 
 const logger = winston.createLogger({
+  format: isDevelopment ? format.simple() : undefined,
   transports: [new winston.transports.Console()],
 });
 
@@ -72,6 +75,10 @@ const env =
       });
 
 const getOboToken = async (req: Request) => {
+  if (isDevelopment && process.env.ACCESS_TOKEN) {
+    logger.error("Returning mock ACCESS_TOKEN from enviroment variable");
+    return process.env.ACCESS_TOKEN;
+  }
   const token = getToken(req);
   if (!token) {
     logger.info("No token found in request", {
@@ -113,7 +120,7 @@ app.use(
 app.use(
   `${BASE_PATH}/api`,
   async (req: Request, res: Response, next: NextFunction) => {
-    let oboToken;
+    let oboToken: string;
     try {
       oboToken = await getOboToken(req);
     } catch {
@@ -122,6 +129,7 @@ app.use(
 
     return createProxyMiddleware({
       target: `${env.inntektsplanleggerenBackendUrl}/api`,
+      changeOrigin: true,
       headers: {
         Authorization: `Bearer ${oboToken}`,
       },
@@ -130,7 +138,7 @@ app.use(
   },
 );
 
-app.get("*", (req, res) => {
+app.get("*", (_req, res) => {
   if (AUTH_PROVIDER === "azure") {
     res.sendFile(path.resolve(__dirname, "./dist", "index-veileder.html"));
   } else {

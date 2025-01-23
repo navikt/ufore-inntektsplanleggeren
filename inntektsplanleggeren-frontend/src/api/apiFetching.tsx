@@ -4,10 +4,7 @@ import {
 } from "@/api/model/ApiRequests";
 import {ErrorResponse} from "@/components/common/Error";
 
- const isMock = process.env.isMock || false
- const PORT = process.env.MOCK_PORT || "8080"
- const BASE_URL = isMock ? "http://" + window.location.hostname + ":" + PORT + import.meta.env.BASE_URL + "/"
-     : import.meta.env.BASE_URL + "/"
+const BASE_PATH = "/uforetrygd/selvbetjening/inntektsplanleggeren";
 
 export async function getInitiate(): Promise<GetInntektsgrenseResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -26,7 +23,7 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse | ErrorRe
         }
     }
 
-    return await fetch(BASE_URL + `api/initiate`, {
+    return await fetch(`${BASE_PATH}/api/initiate`, {
         method: "GET",
         credentials: "include",
         headers: headers
@@ -37,7 +34,6 @@ export async function getInitiate(): Promise<GetInntektsgrenseResponse | ErrorRe
         if (response.status >= 300) {
             throw Error()
         }
-
         return response.json()
     })
 }
@@ -61,7 +57,7 @@ export async function getInntekter(year: number): Promise<InntekterResponse | Er
         }
     }
 
-    return await fetch(BASE_URL + `api/inntekter?simuleringsaar=${year}`, {
+    return await fetch(`${BASE_PATH}/api/inntekter?simuleringsaar=${year}`, {
         method: "GET",
         credentials: "include",
         headers: headers
@@ -99,7 +95,7 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
         eps: epsInntekter
     }
 
-    return await fetch(BASE_URL + `api/simuler?simuleringsaar=${year}`, {
+    return await fetch(`${BASE_PATH}/api/simuler?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
@@ -138,7 +134,7 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
         eps: epsInntekter
     }
 
-    return await fetch(BASE_URL + `api/send?simuleringsaar=${year}`, {
+    return await fetch(`${BASE_PATH}/api/send?simuleringsaar=${year}`, {
         method: "POST",
         credentials: "include",
         headers: headers,
@@ -172,7 +168,7 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         }
     }
 
-    const url = encodeURI(BASE_URL + `api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
+    const url = encodeURI(`${BASE_PATH}/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
     return await fetch(url, {
         method: "GET",
         credentials: "include",
