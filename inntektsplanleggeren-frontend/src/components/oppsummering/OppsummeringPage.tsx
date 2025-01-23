@@ -9,15 +9,14 @@ import {FormStateContext} from "@/context/FormData";
 import {SelectedYearContext} from "@/context/SelectedYear";
 import {DataContext} from "@/DataContextProvider";
 import {FormatKroner} from "@/components/utils/FormatKroner";
-import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
+import {ErrorCode, ErrorResponse} from "@/components/common/Error";
 
 export const OppsummeringPage = () => {
     const navigate = useNavigate();
     const { setFormStep, brukerinntekt, annenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
-    const { simulationResponse, setSendResponse } = useContext(DataContext);
+    const { simulationResponse, setSendResponse , setErrorMessage} = useContext(DataContext);
     const { selectedYear } = useContext(SelectedYearContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
 
     useEffect(() => {
         setFormStep(3)
@@ -30,14 +29,14 @@ export const OppsummeringPage = () => {
             setIsLoading(true);
             const result = await send(brukerinntekt, annenForelderInntekt, selectedYear);
             if (result instanceof ErrorResponse){
-                setSystemErrorMessage(result.message)
+                setErrorMessage(result.message)
                 setIsLoading(false);
             } else {
                 setSendResponse(result);
                 navigate(getFullPathForPage(PageLinks.KVITTERING));
             }
         } catch (error) {
-            setSystemErrorMessage(ErrorCode.GENERIC_ERROR)
+            setErrorMessage(ErrorCode.GENERIC_ERROR)
             setIsLoading(false);
         }
 
@@ -70,7 +69,6 @@ export const OppsummeringPage = () => {
                 </Alert>
             }
 
-            <ErrorView message={systemErrorMessage}/>
             <HStack gap="4">
                 <Button as={RouterLink} to={getFullPathForPage(PageLinks.BEREGNING)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Tilbake

@@ -3,11 +3,18 @@ import {Link as RouterLink, Link, Outlet} from "react-router-dom";
 import {Heading, FormProgress, VStack, Button, HStack} from "@navikt/ds-react";
 import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
+import {DataContext} from "@/DataContextProvider";
+import {ErrorView} from "@/components/common/Error";
 
 export const DESKTOP_WIDTH = 768
 
 export const FormContainer = () => {
     const { formStep } = useContext(FormStateContext);
+    const {errorMessage} = useContext(DataContext)
+
+    if (errorMessage) {
+        return <ErrorView message={errorMessage}/>
+    }
 
     return (
         <VStack gap="5">
