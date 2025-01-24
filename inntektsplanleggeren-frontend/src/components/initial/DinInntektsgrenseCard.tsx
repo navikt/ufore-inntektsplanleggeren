@@ -1,6 +1,6 @@
 import {BodyLong, Box, Button, Heading, HStack, Label, List, VStack} from "@navikt/ds-react";
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useRef} from "react";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {InitiateData} from "@/api/model/ApiRequests";
@@ -11,14 +11,18 @@ export function InntektsgrenseCard(props: {
 }) {
     const [isOpen, setIsOpen] = React.useState(false)
     const [buttonText, setButtonText] = React.useState("Vis grenser og trekkprosent")
+    const inntektsgrenseCardRef = useRef<null | HTMLDivElement>(null)
 
     const handleButton = () => {
         setIsOpen(!isOpen)
+        if (isOpen){
+            inntektsgrenseCardRef!.current!.scrollIntoView()
+        }
         setButtonText(isOpen ? "Vis grenser og trekkprosent" : "Skjul grenser og trekkprosent" )
     }
 
     return (
-        <Box borderRadius="xlarge" padding="4" className="top-box">
+        <Box borderRadius="xlarge" padding="4" className="top-box" ref={inntektsgrenseCardRef}>
             <VStack gap="2">
                 <Heading size="small">Inntektsgrenser og trekkprosent</Heading>
                 <VStack gap="5">
