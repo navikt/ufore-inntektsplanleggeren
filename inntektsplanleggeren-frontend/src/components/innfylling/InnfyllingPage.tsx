@@ -172,8 +172,7 @@ export const InnfyllingPage = () => {
                             <Heading level="2" size="small" spacing>Din inntekt {selectedYear}</Heading>
                             <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
                             { !inntekterResponse.uforeHeleAaret ?
-                                <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd. <Link href="/" target="_blank">Se eksempel.</Link></Alert> : null }
-                            {/*todo link? open in new tab?*/}
+                                <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd.</Alert> : null }
                             <FormFieldsUser
                                 year={selectedYear}
                                 errors={brukerErrors}
