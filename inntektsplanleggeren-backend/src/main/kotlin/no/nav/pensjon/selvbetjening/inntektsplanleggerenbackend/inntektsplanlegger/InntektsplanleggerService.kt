@@ -2,7 +2,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
+import java.time.ZoneId
 
 @Service
 class InntektsplanleggerService(
@@ -37,7 +37,7 @@ class InntektsplanleggerService(
         simuleringsaar: Int,
         oppgitteInntekter: ForventedeInntekter
     ): InntektsplanleggerenSendResponse {
-        val innsendingsTidspunkt = LocalDateTime.now()
+        val innsendingsTidspunkt = LocalDateTime.now(ZoneId.of("Europe/Paris"))
         val simulering = simulerInntektsendring(pid, simuleringsaar, oppgitteInntekter)
         if (simulering.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val initiertAv = tokenService.determineLoggedInUser()
