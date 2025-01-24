@@ -48,7 +48,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
         <Box borderRadius="xlarge" padding="4" className="top-box">
             <VStack gap="7">
                 {Array.from(expectedIncomeMap.keys()).map((year) => (
-                    <ExpectedIncome year={year}/>
+                    <ExpectedIncome key={year} year={year}/>
                 ))}
                 {isOpen &&
                     <BodyLong>

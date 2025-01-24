@@ -54,7 +54,7 @@ spec:
           cluster: dev-gcp
     outbound:
       rules:
-        - application: nav-dekoratoren  # TODO: trenger vi denne
+        - application: nav-dekoratoren # TODO: trenger vi denne
           namespace: personbruker
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp
@@ -66,5 +66,3 @@ spec:
       value: "http://inntektsplanleggeren-backend-q2"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
       value: "api://dev-gcp.pensjonselvbetjening.inntektsplanleggeren-backend-q2/.default"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
-      value: "dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2"

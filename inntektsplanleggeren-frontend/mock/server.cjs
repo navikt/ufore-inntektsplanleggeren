@@ -4,8 +4,6 @@ const app = express()
 const port = 3000
 var cors = require('cors')
 
-const whitelist = "http://localhost:8080"
-
 const mockForbiddenResponse = JSON.parse(fs.readFileSync('mock/mockForbiddenResponse.json', 'utf8'));
 const mockInntekterResponse = JSON.parse(fs.readFileSync('mock/inntekterMockResponse.json', 'utf8'));
 const mockInitiateResponse = JSON.parse(fs.readFileSync('mock/initiateMockResponse.json', 'utf8'));
@@ -16,11 +14,7 @@ const mockStatusResponse = JSON.parse(fs.readFileSync('mock/statusMockResponse.j
 app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
+      return callback(null, true)
     }
 }));
 
@@ -70,5 +64,5 @@ app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/status', (req, res) 
 })
 
 app.listen(port, () => {
-    console.log(`dinpensjon-backend mock lytter på port ${port}`)
+    console.log(`inntektsplanleggeren-backend mock lytter på port ${port}`)
 })
