@@ -31,7 +31,7 @@ export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
         return null;
     }
 
-    if (firstYear !== undefined && secondYear === undefined) {
+    if (firstYear !== undefined && secondYear === undefined && !year) {
         setYear(firstYear);
     }
 
