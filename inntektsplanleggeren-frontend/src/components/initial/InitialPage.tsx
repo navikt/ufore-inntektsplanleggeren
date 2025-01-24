@@ -91,8 +91,7 @@ export function InitialPage() {
             { initiateResponse.data !== null &&
             <ExpectedIncomeBox forventetInntekt={initiateResponse.data.forventetInntekt}
                                forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}
-                               hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}
-                               hasBarnetilleggSaerkullsbarn={initiateResponse.data.hasBarnetilleggSaerkullsbarn}/>
+                               hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}/>
             }
 
             <section>

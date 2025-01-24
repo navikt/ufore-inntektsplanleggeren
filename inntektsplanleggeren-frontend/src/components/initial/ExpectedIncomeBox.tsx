@@ -7,11 +7,10 @@ interface ExpectedIncomeBoxProps {
     forventetInntekt: Record<number, number>
     forventetInntektAnnenForelder: Record<number, number | null>
     hasBarnetilleggFellesbarn: boolean
-    hasBarnetilleggSaerkullsbarn: boolean
 
 }
 
-export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetInntekt, forventetInntektAnnenForelder, hasBarnetilleggFellesbarn, hasBarnetilleggSaerkullsbarn }) => {
+export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetInntekt, forventetInntektAnnenForelder, hasBarnetilleggFellesbarn }) => {
     const [isOpen, setIsOpen] = React.useState(false)
     const [buttonText, setButtonText] = React.useState("Vis forklaring")
     const expectedIncomeMap = new Map(Object.entries(forventetInntekt))
@@ -33,7 +32,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                         <b><FormatKroner value={expectedIncome}/></b>
                         : <b>Ingen registrert forventet inntekt funnet</b>}
                 </BodyLong>
-                {hasBarnetilleggFellesbarn || hasBarnetilleggSaerkullsbarn ?
+                {hasBarnetilleggFellesbarn ?
                         <BodyLong> {"Annen forelder du bor med sin forventede inntekt: "}
                             {expectedIncomeAnnenForelder !== null && expectedIncomeAnnenForelder !== undefined ?
                                 <b><FormatKroner value={expectedIncomeAnnenForelder}/></b>
