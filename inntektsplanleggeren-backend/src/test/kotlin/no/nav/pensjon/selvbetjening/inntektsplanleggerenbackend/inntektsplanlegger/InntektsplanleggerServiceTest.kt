@@ -141,6 +141,62 @@ class InntektsplanleggerServiceTest {
     }
 
     @Test
+    fun `should set annetRelevantAar to previous year when december`() {
+        val year = LocalDate.now().year
+
+        val pensjonsdata = pensjonsdata(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(
+            inntektService.getForventedeInntekter(
+                PID,
+                pensjonsdata,
+                year
+            )
+        ).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(
+            forventedeInntekterRegistrert()
+        )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+        assertEquals(year - 1, initialData.data!!.annetRelevantAar)
+    }
+
+    @Test
+    fun `should set annetRelevantAar to null when not december`() {
+        val year = LocalDate.now().year
+
+        val pensjonsdata = pensjonsdata(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(
+            inntektService.getForventedeInntekter(
+                PID,
+                pensjonsdata,
+                year
+            )
+        ).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(
+            forventedeInntekterRegistrert()
+        )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.NOVEMBER.value))
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+        assertNull(initialData.data!!.annetRelevantAar)
+    }
+
+    @Test
     fun `should set aktuelleAar to current year only when before october and hasLopendeUforeVedtakThisYear`() {
         val year = LocalDate.now().year
         val expectedInntekter = forventedeInntekterRegistrert()
