@@ -410,17 +410,17 @@ class InntektsplanleggerServiceTest {
         assertEquals(5, inntektData.pensjonFraAndreHittilIAar[1].maned)
         assertEquals(listOf("Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar[1].inntektsgivere)
 
-        assertEquals(1, inntektData.forventedeInntekter.bruker.arbeidsinntekt)
-        assertEquals(2, inntektData.forventedeInntekter.bruker.naeringsinntekt)
-        assertEquals(3, inntektData.forventedeInntekter.bruker.inntektUtland)
-        assertEquals(4, inntektData.forventedeInntekter.bruker.andrePensjonsgivendeYtelser)
-        assertEquals(5, inntektData.forventedeInntekter.bruker.pensjonUtland)
+        assertEquals(1, inntektData.forventedeInntekter?.bruker?.arbeidsinntekt)
+        assertEquals(2, inntektData.forventedeInntekter?.bruker?.naeringsinntekt)
+        assertEquals(3, inntektData.forventedeInntekter?.bruker?.inntektUtland)
+        assertEquals(4, inntektData.forventedeInntekter?.bruker?.andrePensjonsgivendeYtelser)
+        assertEquals(5, inntektData.forventedeInntekter?.bruker?.pensjonUtland)
 
-        assertEquals(6, inntektData.forventedeInntekter.eps?.arbeidsinntekt)
-        assertEquals(7, inntektData.forventedeInntekter.eps?.naeringsinntekt)
-        assertEquals(8, inntektData.forventedeInntekter.eps?.inntektUtland)
-        assertEquals(9, inntektData.forventedeInntekter.eps?.andrePensjonsgivendeYtelser)
-        assertEquals(10, inntektData.forventedeInntekter.eps?.pensjonUtland)
+        assertEquals(6, inntektData.forventedeInntekter?.eps?.arbeidsinntekt)
+        assertEquals(7, inntektData.forventedeInntekter?.eps?.naeringsinntekt)
+        assertEquals(8, inntektData.forventedeInntekter?.eps?.inntektUtland)
+        assertEquals(9, inntektData.forventedeInntekter?.eps?.andrePensjonsgivendeYtelser)
+        assertEquals(10, inntektData.forventedeInntekter?.eps?.pensjonUtland)
 
         assertTrue(inntektData.uforeHeleAaret)
     }

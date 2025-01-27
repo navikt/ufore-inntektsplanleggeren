@@ -104,7 +104,7 @@ class InntektsplanleggerService(
         return SimuleringResponse(validationResult, null)
     }
 
-    fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
+    fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
         val pensjonsdata =
             penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
@@ -116,11 +116,13 @@ class InntektsplanleggerService(
         return InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
-            forventedeInntekter = inntektService.getForventedeInntekter(
-                pid,
-                pensjonsdata,
-                simuleringsaar
-            ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto(),
+            forventedeInntekter = if (fetchForventedeInntekter) {
+                inntektService.getForventedeInntekter(
+                    pid,
+                    pensjonsdata,
+                    simuleringsaar
+                ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto()
+            } else null,
             uforeHeleAaret = pensjonsdata.uforeHeleAaret,
             epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
         )
