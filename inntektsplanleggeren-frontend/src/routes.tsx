@@ -9,6 +9,7 @@ import {KvitteringPage} from "@/components/kvittering/KvitteringPage";
 import {FormStateContext} from "@/context/FormData";
 import { SelectedYearProvider } from "@/context/SelectedYear";
 import {OppsummeringPage} from "@/components/oppsummering/OppsummeringPage";
+import {PreviousYearPage} from "@/components/previousYear/PreviousYearPage";
 
 
 export const BASE_PATH = "/uforetrygd/selvbetjening/inntektsplanleggeren";
@@ -18,6 +19,7 @@ export const AppRoutes = () => (
         <Routes>
             <Route element={<App />}>
                 <Route index element={<InitialPage />} />
+                <Route index path={PageLinks.FORRIGE_INNTEKTER} element={<PreviousYearPage />} />
                 <Route element={<YearGuard />}>
                     <Route element={<FormContainer />}>
                         <Route index path={PageLinks.FORVENTEDE_INNTEKTER} element={<InnfyllingPage />} />

@@ -6,16 +6,14 @@ import {CancelConfirmationModal} from "@/components/common/CancelConfirmationMod
 import React, {FormEvent, MouseEvent, useContext, useEffect, useState} from "react";
 import {send} from "@/api/apiFetching";
 import {FormStateContext} from "@/context/FormData";
-import {SelectedYearContext} from "@/context/SelectedYear";
 import {DataContext} from "@/DataContextProvider";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {ErrorCode, ErrorResponse} from "@/components/common/Error";
 
 export const OppsummeringPage = () => {
     const navigate = useNavigate();
-    const { setFormStep, brukerinntekt, annenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
+    const {selectedYear, setFormStep, brukerinntekt, annenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum } = useContext(FormStateContext);
     const { simulationResponse, setSendResponse , setErrorMessage} = useContext(DataContext);
-    const { selectedYear } = useContext(SelectedYearContext);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {

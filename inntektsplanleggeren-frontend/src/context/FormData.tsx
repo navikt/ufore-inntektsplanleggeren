@@ -4,8 +4,12 @@ import { PersonInntekter } from "@/api/model/ApiRequests";
 interface FormState {
     formStep: number | null;
     setFormStep: (value: SetStateAction<number | null>) => void;
-    selectedYear: number | null;
-    setSelectedYear: (value: SetStateAction<number | null>) => void;
+
+    previousYear: null | number;
+    setPreviousYear: (value: SetStateAction<null | number>) => void;
+
+    selectedYear: number;
+    setSelectedYear: (value: SetStateAction<number>) => void;
 
     brukerinntekt: PersonInntekter;
     setBrukerinntekt: (value: SetStateAction<PersonInntekter>) => void;
@@ -26,7 +30,7 @@ const forventedeInntekterDefaultValue = {
 };
 
 export const FormStateContext = createContext<FormState>({
-    selectedYear: null,
+    selectedYear: 0,
     setSelectedYear: () => undefined,
     brukerinntekt: forventedeInntekterDefaultValue,
     setBrukerinntekt: () => undefined,
@@ -36,6 +40,8 @@ export const FormStateContext = createContext<FormState>({
     getAnnenForelderInntektSum: () => null,
     formStep: 1,
     setFormStep: () => undefined,
+    previousYear: null,
+    setPreviousYear: () => undefined,
 });
 
 interface Props {
@@ -44,10 +50,11 @@ interface Props {
 
 
 export const FormStateComponent = ({ children }: Props) => {
-    const [selectedYear, setSelectedYear] = useState<number | null>(null);
+    const [selectedYear, setSelectedYear] = useState<number>(0);
     const [brukerinntekt, setBrukerinntekt] = useState<PersonInntekter>(forventedeInntekterDefaultValue);
     const [annenForelderInntekt, setAnnenForelderInntekt] = useState<PersonInntekter | null>(forventedeInntekterDefaultValue);
     const [formStep, setFormStep] = useState<number | null>(null);
+    const [previousYear, setPreviousYear] = useState<number | null>(null);
 
     const getBrukerinntektSum = (): number => Object.values(brukerinntekt).reduce<number>((acc, val) => (acc ?? 0) + (val || 0), 0);
     const getAnnenForelderInntektSum = (): number | null => {
@@ -67,6 +74,8 @@ return (
             setFormStep,
             selectedYear,
             setSelectedYear,
+            previousYear,
+            setPreviousYear,
             brukerinntekt,
             annenForelderInntekt,
             setBrukerinntekt,

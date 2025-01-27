@@ -17,8 +17,7 @@ import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {FormFieldsUser} from "./FormFieldsUser";
 import {simulate} from "@/api/apiFetching";
-import {DinInntektTable} from "@/components/innfylling/DinInntektTable";
-import {SelectedYearContext} from "@/context/SelectedYear";
+import {DinInntektTable} from "@/components/common/DinInntektTable";
 import {belopSum} from "@/common/Utils";
 import {DataContext} from "@/DataContextProvider";
 import {PersonInntekter, SimulationResponse} from "@/api/model/ApiRequests";
@@ -33,9 +32,8 @@ import {ErrorCode, ErrorResponse} from "@/components/common/Error";
 
 export const InnfyllingPage = () => {
     const navigate = useNavigate()
-    const { brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
+    const { selectedYear, previousYear, brukerinntekt, setBrukerinntekt, annenForelderInntekt, setAnnenForelderInntekt, getBrukerinntektSum, getAnnenForelderInntektSum, setFormStep } = useContext(FormStateContext);
     const { inntekterResponse, setSimulationResponse, setErrorMessage} = useContext(DataContext);
-    const { selectedYear } = useContext(SelectedYearContext);
     const [brukerErrors, setBrukerErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -106,8 +104,6 @@ export const InnfyllingPage = () => {
             setIsLoading(false);
             setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
-
-        // navigate(PageLinks.BEREGNING);
     };
 
     if(inntekterResponse === null) {
@@ -148,11 +144,13 @@ export const InnfyllingPage = () => {
 
             {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar} type="arbeidsgiver">
+                    <Heading size={"xsmall"}>Arbeidsinntekt og pengestøtter</Heading>
                     <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar)}/></strong> i arbeidsinntekt og pengestøtter hittil i år.</BodyLong>
                 </DinInntektTable>
             }
             {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar} type="pensjonsordning">
+                    <Heading size={"xsmall"}>Pensjoner fra andre enn folketrygden</Heading>
                     <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.pensjonFraAndreHittilIAar)}/></strong> i pensjoner fra andre enn folketrygden hittil i år.</BodyLong>
                 </DinInntektTable>
             }
@@ -216,7 +214,7 @@ export const InnfyllingPage = () => {
                     </ErrorSummary>) : null}
 
                     <HStack gap="4">
-                        <Button as={RouterLink} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                        <Button as={RouterLink} to={previousYear != null ? PageLinks.FORRIGE_INNTEKTER : PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                             Tilbake
                         </Button>
                         <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>

@@ -29,22 +29,22 @@ export const FormContainer = () => {
                 <FormProgress.Step
                     as={RouterLink}
                     to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)}
-                    completed={isStepCompleted(formStep, 1)}
-                    interactive={isStepEnabled(formStep, 1)}>
+                    completed={isStepCompleted(formStep, 2)}
+                    interactive={isStepEnabled(formStep, 2)}>
                     {getPageName(1)}
                 </FormProgress.Step>
                 <FormProgress.Step
                     as={RouterLink}
                     to={getFullPathForPage(PageLinks.BEREGNING)}
-                    completed={isStepCompleted(formStep, 2)}
-                    interactive={isStepEnabled(formStep, 2)}>
+                    completed={isStepCompleted(formStep, 3)}
+                    interactive={isStepEnabled(formStep, 3)}>
                     {getPageName(2)}
                 </FormProgress.Step>
                 <FormProgress.Step
                     as={RouterLink}
                     to={getFullPathForPage(PageLinks.OPPSUMMERING)}
-                    completed={isStepCompleted(formStep, 3)}
-                    interactive={isStepEnabled(formStep, 3)}>
+                    completed={isStepCompleted(formStep, 4)}
+                    interactive={isStepEnabled(formStep, 4)}>
                     {getPageName(3)}
                 </FormProgress.Step>
             </FormProgress> }
@@ -54,6 +54,7 @@ export const FormContainer = () => {
 };
 
 export enum PageNames {
+    FORRIGE_INNTEKTER = "Forrige inntekter",
     FORVENTEDE_INNTEKTER = "Forventede inntekter",
     BEREGNING = "Beregning",
     OPPSUMMERING = "Oppsummering - se over før du sender inn",
@@ -71,12 +72,14 @@ const isStepCompleted = (currentStepIndex: number, stepToCheckIndex: number) => 
 const getPageName = (index: number): string => {
     switch (index) {
         case 1:
-            return PageNames.FORVENTEDE_INNTEKTER;
+            return PageNames.FORRIGE_INNTEKTER;
         case 2:
-            return PageNames.BEREGNING;
+            return PageNames.FORVENTEDE_INNTEKTER;
         case 3:
-            return PageNames.OPPSUMMERING;
+            return PageNames.BEREGNING;
         case 4:
+            return PageNames.OPPSUMMERING;
+        case 5:
             return PageNames.KVIITTERING;
         default:
             return PageNames.FORVENTEDE_INNTEKTER;
@@ -85,6 +88,7 @@ const getPageName = (index: number): string => {
 
 export enum PageLinks {
     INDEX = "/",
+    FORRIGE_INNTEKTER = "/forrige-inntekter",
     FORVENTEDE_INNTEKTER = "/forventede-inntekter",
     BEREGNING = "/beregning",
     OPPSUMMERING = "/oppsummering",
@@ -95,10 +99,11 @@ export enum PageLinks {
 
 export const PAGE_LINKS = {
     0: "/",
-    1: "/forventede-inntekter",
-    2: "/beregning",
-    3: "/oppsummering",
-    4: "/kvittering"
+    1: "/forrige-inntekter",
+    2: "/forventede-inntekter",
+    3: "/beregning",
+    4: "/oppsummering",
+    5: "/kvittering"
 };
 
 export const getFullPathForPage = (pageLink: PageLinks) => {
@@ -115,6 +120,8 @@ const getPage = (index: number): string => {
             return PAGE_LINKS[3];
         case 4:
             return PAGE_LINKS[4];
+        case 5:
+            return PAGE_LINKS[5];
         default:
             return PAGE_LINKS[0];
     }

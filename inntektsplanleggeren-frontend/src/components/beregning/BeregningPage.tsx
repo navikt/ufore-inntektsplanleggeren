@@ -4,7 +4,6 @@ import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/beregning/SimulationTable";
 import {DataContext} from "@/DataContextProvider";
-import {SelectedYearContext} from "@/context/SelectedYear";
 import {getFullPathForPage, PageLinks} from "@/FormContainer";
 import {MessageCodes} from "@/api/model/MessageCodes";
 import {Graph} from "@/components/beregning/Graph";
@@ -16,9 +15,8 @@ import {BeregningWarnings} from "@/components/beregning/BeregningWarnings";
 import {ErrorView} from "@/components/common/Error";
 
 export const BeregningPage = () => {
-    const { setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
+    const { selectedYear, setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext);
     const { simulationResponse, errorMessage } = useContext(DataContext);
-    const { selectedYear } = useContext(SelectedYearContext);
     const navigate = useNavigate();
 
     useEffect(() => {
