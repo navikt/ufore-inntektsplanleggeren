@@ -91,6 +91,9 @@ export const BeregningPage = () => {
                                         {simulationResponse?.result.barnetilleggSaerkullsbarn !== null ?
                                             <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner
                                                 value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                                        {simulationResponse?.result.sum.monthly.after !== null ?
+                                            <BodyLong><strong>Uføretrygd per måned totalt: <FormatKroner
+                                                value={simulationResponse?.result.sum.monthly.after}/></strong></BodyLong> : null}
                                     </VStack>
                                 </ReadMore>
                             </VStack>
