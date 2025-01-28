@@ -104,7 +104,7 @@ class InntektsplanleggerService(
         return SimuleringResponse(validationResult, null)
     }
 
-    fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
+    fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
         val pensjonsdata =
             penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
@@ -116,11 +116,13 @@ class InntektsplanleggerService(
         return InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
-            forventedeInntekter = inntektService.getForventedeInntekter(
-                pid,
-                pensjonsdata,
-                simuleringsaar
-            ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto(),
+            forventedeInntekter = if (fetchForventedeInntekter) {
+                inntektService.getForventedeInntekter(
+                    pid,
+                    pensjonsdata,
+                    simuleringsaar
+                ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto()
+            } else null,
             uforeHeleAaret = pensjonsdata.uforeHeleAaret,
             epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
         )
@@ -195,20 +197,24 @@ class InntektsplanleggerService(
                 grenseStoppAvBarnetilleggSaerkullsbarn = pensjonsdata.grenseStoppAvBarnetilleggSaerkullsbarn,
                 fribelopBarnetilleggSaerkullsbarn = pensjonsdata.fribelopBarnetilleggSaerkullsbarn,
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
-                aktuelleAar = aktuelleAar
+                aktuelleAar = aktuelleAar,
+                annetRelevantAar = getAnnetRelevantAar()
             )
         }
         return null
     }
 
-    private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> {
-        val today = nowProvider.now()
-        val isMonthDecember = today.month.value == Month.DECEMBER.value
-        if (isMonthDecember) {
-            return (listOf(today.year) + aktuelleAar).distinct()
+    private fun getAnnetRelevantAar(): Int? =
+        if (isMonthDecember()) {
+            nowProvider.now().year - 1
+        } else null
+
+    private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> =
+        if (isMonthDecember()) {
+            (listOf(nowProvider.now().year) + aktuelleAar).distinct()
+        } else {
+            aktuelleAar
         }
-        return aktuelleAar
-    }
 
     private fun getAktuelleAar(
         hasLopendeUforeVedtakThisYear: Boolean?,
@@ -216,7 +222,6 @@ class InntektsplanleggerService(
     ): List<Int> {
         val today = nowProvider.now()
         val isMonthBeforeOctober = today.month.value < Month.OCTOBER.value
-        val isMonthDecember = today.month.value == Month.DECEMBER.value
 
         if (hasLopendeUforeVedtakThisYear == null || hasLopendeUforeVedtakNextYear == null) {
             return emptyList()
@@ -224,7 +229,7 @@ class InntektsplanleggerService(
         if (isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
             return listOf(today.year)
         }
-        if (isMonthDecember && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)){
+        if (isMonthDecember() && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)){
             return listOf(today.year + 1)
         }
         if (!isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
@@ -235,6 +240,8 @@ class InntektsplanleggerService(
         }
         return emptyList()
     }
+
+    private fun isMonthDecember() = nowProvider.now().month.value == Month.DECEMBER.value
 
     private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>?): List<AccumulatedMaanedsinntekt> {
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()

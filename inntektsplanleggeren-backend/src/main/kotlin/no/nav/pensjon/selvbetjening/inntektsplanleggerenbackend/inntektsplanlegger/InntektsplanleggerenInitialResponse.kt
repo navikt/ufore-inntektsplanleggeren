@@ -15,6 +15,7 @@ data class InntektsplanleggerenInitialData(
     val kompensasjonsgrad: Double,
     val grenseStoppAvUfoeretrygd: Int,
     val aktuelleAar: List<Int>,
+    val annetRelevantAar: Int?,
     val hasVarigTilrettelagtArbeid: Boolean,
     val hasBarneTilleggFellesbarn: Boolean,
     val grenseStoppAvBarnetilleggFellesbarn: Int?,
