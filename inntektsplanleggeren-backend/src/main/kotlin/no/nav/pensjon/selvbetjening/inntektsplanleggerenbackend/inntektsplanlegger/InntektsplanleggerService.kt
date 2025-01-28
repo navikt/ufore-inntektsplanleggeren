@@ -198,13 +198,13 @@ class InntektsplanleggerService(
                 fribelopBarnetilleggSaerkullsbarn = pensjonsdata.fribelopBarnetilleggSaerkullsbarn,
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
                 aktuelleAar = aktuelleAar,
-                annetRelevantAar = getAnnetAktueltAar()
+                annetRelevantAar = getAnnetRelevantAar()
             )
         }
         return null
     }
 
-    private fun getAnnetAktueltAar(): Int? =
+    private fun getAnnetRelevantAar(): Int? =
         if (isMonthDecember()) {
             nowProvider.now().year - 1
         } else null
