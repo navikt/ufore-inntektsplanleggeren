@@ -72,14 +72,12 @@ const isStepCompleted = (currentStepIndex: number, stepToCheckIndex: number) => 
 const getPageName = (index: number): string => {
     switch (index) {
         case 1:
-            return PageNames.FORRIGE_INNTEKTER;
-        case 2:
             return PageNames.FORVENTEDE_INNTEKTER;
-        case 3:
+        case 2:
             return PageNames.BEREGNING;
-        case 4:
+        case 3:
             return PageNames.OPPSUMMERING;
-        case 5:
+        case 4:
             return PageNames.KVIITTERING;
         default:
             return PageNames.FORVENTEDE_INNTEKTER;

@@ -26,7 +26,7 @@ export interface BaseInitiateData {
     kompensasjonsgrad: number;
     grenseStoppAvUfoeretrygd: number;
     aktuelleAar: number[];
-    annetRelevanteAar: number | null;
+    annetRelevantAar: number | null;
     hasVarigTilrettelagtArbeid: boolean;
     hasGjenlevendeTillegg: boolean;
 }

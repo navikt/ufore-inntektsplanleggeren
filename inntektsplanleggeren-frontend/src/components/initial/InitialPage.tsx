@@ -162,7 +162,7 @@ export function InitialPage() {
             </Accordion>
 
             {initiateResponse?.data?.aktuelleAar?.length > 0 &&
-                <YearView availableYears={initiateResponse.data.aktuelleAar} anotherAvalableYear={initiateResponse.data.annetRelevanteAar} handleSubmit={handleButtonClick} isLoading={isLoading}></YearView>
+                <YearView availableYears={initiateResponse.data.aktuelleAar} anotherAvalableYear={initiateResponse.data.annetRelevantAar} handleSubmit={handleButtonClick} isLoading={isLoading}></YearView>
             }
         </VStack>
     )
