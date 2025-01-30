@@ -1,5 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto
 
+import java.time.LocalDate
+
 data class Pensjonsdata(
     val inntektsgrense: Int,
     val kompensasjonsgrad: Double,
@@ -17,7 +19,8 @@ data class Pensjonsdata(
     val fribelopBarnetilleggFellesbarn: Int?,
     val epsPid: String?,
     val inntekterFromOpenKravBruker: List<Inntektsgrunnlag>?,
-    val inntekterFromOpenKravEps: List<Inntektsgrunnlag>?
+    val inntekterFromOpenKravEps: List<Inntektsgrunnlag>?,
+    val uforeFomDato: LocalDate?
 ) {
 
     fun hasBarnetillegg() = barnetilleggFellesbarn || barnetilleggSaerkullsbarn
