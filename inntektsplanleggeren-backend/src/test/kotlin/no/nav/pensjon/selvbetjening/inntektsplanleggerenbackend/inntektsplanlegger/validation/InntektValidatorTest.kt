@@ -942,15 +942,16 @@ class InntektValidatorTest {
             hasVarigTilrettelagtArbeid = false,
             hasGjenlevendeTillegg = false,
             uforeHeleAaret = false,
-            barnetilleggFellesbarn = false,
             barnetilleggSaerkullsbarn = false,
-            grenseStoppAvBarnetilleggFellesbarn = null,
             grenseStoppAvBarnetilleggSaerkullsbarn = null,
             fribelopBarnetilleggSaerkullsbarn = null,
+            barnetilleggFellesbarn = false,
+            grenseStoppAvBarnetilleggFellesbarn = null,
             fribelopBarnetilleggFellesbarn = null,
             epsPid = null,
             inntekterFromOpenKravBruker = null,
-            inntekterFromOpenKravEps = null
+            inntekterFromOpenKravEps = null,
+            uforeFomDato = null
         )
     private fun pensjonsdata(
         hasBarnetilleggFellesbarn: Boolean,
@@ -965,15 +966,16 @@ class InntektValidatorTest {
             hasVarigTilrettelagtArbeid = false,
             hasGjenlevendeTillegg = false,
             uforeHeleAaret = false,
-            barnetilleggFellesbarn = hasBarnetilleggFellesbarn,
             barnetilleggSaerkullsbarn = hasBarnetilleggSaerkullsbarn,
-            grenseStoppAvBarnetilleggFellesbarn = 100000,
             grenseStoppAvBarnetilleggSaerkullsbarn = 200000,
             fribelopBarnetilleggSaerkullsbarn = 150000,
+            barnetilleggFellesbarn = hasBarnetilleggFellesbarn,
+            grenseStoppAvBarnetilleggFellesbarn = 100000,
             fribelopBarnetilleggFellesbarn = 150000,
             epsPid = PID_EPS,
             inntekterFromOpenKravBruker = null,
-            inntekterFromOpenKravEps = null
+            inntekterFromOpenKravEps = null,
+            uforeFomDato = null
         )
 
     private fun <T> any(): T = Mockito.any()

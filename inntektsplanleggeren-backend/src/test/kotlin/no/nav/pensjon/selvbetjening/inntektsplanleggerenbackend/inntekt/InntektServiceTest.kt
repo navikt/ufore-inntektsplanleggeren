@@ -1352,15 +1352,16 @@ class InntektServiceTest {
             hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
-            barnetilleggFellesbarn = barnetilleggFellesbarn,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
-            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
             grenseStoppAvBarnetilleggSaerkullsbarn = grenseStoppAvBarnetilleggSaerkullsbarn,
             fribelopBarnetilleggSaerkullsbarn = fribelopBarnetilleggSaerkullsbarn,
+            barnetilleggFellesbarn = barnetilleggFellesbarn,
+            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
             fribelopBarnetilleggFellesbarn = fribelopBarnetilleggFellesbarn,
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
-            inntekterFromOpenKravEps = inntekterFromOpenKravEps
+            inntekterFromOpenKravEps = inntekterFromOpenKravEps,
+            uforeFomDato = null
         )
 
     private fun inntektsgrunnlag(

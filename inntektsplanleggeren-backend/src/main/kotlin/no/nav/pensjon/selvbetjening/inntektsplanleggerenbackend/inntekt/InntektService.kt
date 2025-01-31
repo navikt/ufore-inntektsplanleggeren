@@ -9,6 +9,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pens
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.TemporalAdjusters.firstDayOfMonth
 import java.time.temporal.TemporalAdjusters.lastDayOfMonth
 
 @Service
@@ -362,20 +364,28 @@ class InntektService(
     ): List<AbonnerteInntekterIdentOgPeriode> =
         if (pensjonsdata.hasEpsWithFellesbarn()) {
             listOf(
-                createAbonnerteInntekterIdentOgPeriode(pid),
-                createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!)
+                createAbonnerteInntekterIdentOgPeriode(pid, pensjonsdata.uforeFomDato),
+                createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!, pensjonsdata.uforeFomDato)
             )
         } else {
-            listOf(createAbonnerteInntekterIdentOgPeriode(pid))
+            listOf(createAbonnerteInntekterIdentOgPeriode(pid, pensjonsdata.uforeFomDato))
         }
 
-    private fun createAbonnerteInntekterIdentOgPeriode(pid: String): AbonnerteInntekterIdentOgPeriode {
+    private fun createAbonnerteInntekterIdentOgPeriode(pid: String, uforeFom: LocalDate?): AbonnerteInntekterIdentOgPeriode {
         val year = LocalDate.now().year
         return AbonnerteInntekterIdentOgPeriode(
             ident = Aktoer(pid, "NATURLIG_IDENT"),
-            spoerringPeriodeFom = LocalDate.of(year, Month.JANUARY.value, 1).toString(),
+            spoerringPeriodeFom = decideSpoerringFom(uforeFom).toString(),
             spoerringPeriodeTom = LocalDate.of(year, Month.DECEMBER.value, 1).with(lastDayOfMonth()).toString()
         )
+    }
+
+    private fun decideSpoerringFom(uforeFom: LocalDate?): LocalDate {
+        val firstDayThisYear = LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
+        if (uforeFom == null || uforeFom.isBefore(firstDayThisYear)) {
+            return firstDayThisYear
+        }
+        return uforeFom
     }
 
     private fun decideFormal(isBarnetillegg: Boolean) =
