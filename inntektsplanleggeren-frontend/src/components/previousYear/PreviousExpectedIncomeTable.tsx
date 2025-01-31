@@ -49,7 +49,7 @@ export const PreviousExpectedIncomeTable = (props: {personInntekter: PersonInnte
                             <Table.DataCell scope="row">Pensjoner fra utlandet</Table.DataCell>
                             <Table.DataCell align="right"><FormatKroner value={pensjonUtland || 0}/></Table.DataCell>
                         </Table.Row>
-                        <Table.Row  style={{ backgroundColor: "var(--a-bg-subtle)" }}>
+                        <Table.Row  style={{ backgroundColor: "var(--a-surface-subtle)" }}>
                             <Table.DataCell scope="row"><strong>Sum {props.eps ? "annen forelders" : "din"} forventede inntekt</strong></Table.DataCell>
                             <Table.DataCell align="right"><FormatKroner value={(arbeidsinntekt || 0) + (naeringsinntekt || 0) + (inntektUtland || 0) + (andrePensjonsgivendeYtelser || 0) + (pensjonUtland || 0)}/></Table.DataCell>
                         </Table.Row>
@@ -103,7 +103,7 @@ export const PreviousExpectedIncomeTable = (props: {personInntekter: PersonInnte
                         </Table.DataCell>
                     </Table.Row>
                     <Table.Row>
-                        <Table.DataCell style={{ backgroundColor: "var(--a-bg-subtle)" }}>
+                        <Table.DataCell style={{ backgroundColor: "var(--a-surface-subtle)" }}>
                             <VStack gap="1">
                                 <BodyShort><strong>Sum {props.eps ? "annen forelders" : "din"} forventede inntekt</strong></BodyShort>
                                 <BodyShort>Beløp før skatt: <FormatKroner value={(arbeidsinntekt || 0) + (naeringsinntekt || 0) + (inntektUtland || 0) + (andrePensjonsgivendeYtelser || 0) + (pensjonUtland || 0)}/></BodyShort>
