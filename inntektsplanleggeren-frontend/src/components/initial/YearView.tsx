@@ -11,15 +11,18 @@ import {
     VStack
 } from "@navikt/ds-react";
 import {ArrowRightIcon} from "@navikt/aksel-icons";
-import {useRef, useState} from "react";
+import {useContext, useRef, useState} from "react";
+import {FormStateContext} from "@/context/FormData";
 
 interface Props {
     availableYears: number[],
-    handleSubmit: (year: number) => void;
+    anotherAvalableYear: number | null;
+    handleSubmit: (year: number, previousYear: number | null) => void;
     isLoading: boolean;
 }
 
-export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
+export function YearView({ availableYears, anotherAvalableYear, handleSubmit, isLoading }: Props) {
+    const {setPreviousYear} = useContext(FormStateContext)
     const [firstYear, secondYear] = availableYears;
     const [year, setYear] = useState<number | undefined>(undefined);
     const [errors, setErrors] = useState({
@@ -35,7 +38,7 @@ export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
         setYear(firstYear);
     }
 
-    function onSubmit(event: React.FormEvent) {
+    function onSubmitStart(event: React.FormEvent) {
         event.preventDefault();
         const newErrors = {
             year: year ? "" : "Du må velge et år før du kan starte inntektsplanleggeren.",
@@ -43,13 +46,23 @@ export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
         setErrors(newErrors);
 
         if (year && !Object.values(newErrors).some(Boolean)) {
-            handleSubmit(year);
+            setPreviousYear(null);
+            handleSubmit(year, null);
+        }
+    }
+
+    function onSubmitSeePreviousYear(event: React.FormEvent) {
+        event.preventDefault();
+
+        if (year) {
+            setPreviousYear(anotherAvalableYear);
+            handleSubmit(year, anotherAvalableYear);
         }
     }
 
 
     return (
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmitStart}>
                 <VStack>
                     {availableYears.length === 1 ?
                         <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekter for {firstYear}</Heading> :
@@ -69,13 +82,13 @@ export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
                             </List>
                         </ReadMore>
 
-                        {firstYear !== undefined && secondYear !== undefined ?
+                        {anotherAvalableYear !== null || (firstYear !== undefined && secondYear !== undefined) ?
                             <Alert variant="info">Hvis du ikke sender inn ny forventet inntekt for neste år, lager vi en
                                 forventet inntekt for deg. Den vil være litt høyere enn den forventede inntekten din for
                                 året vi er i nå. </Alert> : null
                         }
 
-                        {firstYear !== undefined && secondYear !== undefined ?
+                        {(anotherAvalableYear == null && firstYear !== undefined && secondYear !== undefined) ?
                             <RadioGroup id="year"
                                     error={errors.year}
                                     legend="Hvilket år ønsker du å registrere inntekter for?"
@@ -87,6 +100,8 @@ export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
                                 {availableYears.map(year => <Radio key={year} value={year}>{year.toString(10)}</Radio>)}
                             </RadioGroup> : null
                         }
+
+
 
                         {Object.values(errors).some(Boolean) && (
                             <ErrorSummary ref={errorSummaryRef} heading="Du må rette disse feilene før du kan fortsette:">
@@ -100,12 +115,24 @@ export function YearView({ availableYears, handleSubmit, isLoading }: Props) {
                             </ErrorSummary>
                         )}
 
-                        <HStack>
-                            <Button type="submit" onClick={onSubmit} variant="primary" loading={isLoading}
-                                    iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}>
-                                Start inntektsplanlegger
-                            </Button>
-                        </HStack>
+                        {anotherAvalableYear == null ?
+                            <HStack>
+                                <Button type="submit" onClick={onSubmitStart} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}>
+                                    Start inntektsplanlegger
+                                </Button>
+                            </HStack> :
+                            <VStack gap="3">
+                                <HStack>
+                                    <Button variant="secondary" onClick={onSubmitSeePreviousYear} loading={isLoading}>
+                                        Se tall for {anotherAvalableYear}
+                                    </Button>
+                                </HStack>
+                                <HStack>
+                                    <Button type="submit" onClick={onSubmitStart} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden/>}>
+                                        Registrer inntekter for {year}
+                                    </Button>
+                                </HStack>
+                            </VStack> }
                     </VStack>
                 </VStack>
             </form>

@@ -19,10 +19,6 @@ export interface GetInntektsgrenseResponse {
     data: InitiateData
 }
 
-export interface StringDictionary {
-    [key: string]: never;
-}
-
 export interface BaseInitiateData {
     forventetInntekt: Record<number, number>;
     forventetInntektAnnenForelder: Record<number, number | null>;
@@ -30,6 +26,7 @@ export interface BaseInitiateData {
     kompensasjonsgrad: number;
     grenseStoppAvUfoeretrygd: number;
     aktuelleAar: number[];
+    annetRelevantAar: number | null;
     hasVarigTilrettelagtArbeid: boolean;
     hasGjenlevendeTillegg: boolean;
 }

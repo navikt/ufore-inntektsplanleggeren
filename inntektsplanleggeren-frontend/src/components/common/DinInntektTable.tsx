@@ -28,7 +28,7 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
         setButtonText(isOpen ? openText : closedText)
         window.addEventListener('resize', handleWindowSize);
         return () => window.removeEventListener('resize', handleWindowSize);
-    });
+    },[isOpen]);
 
     const handleButton = () => {
         setIsOpen(!isOpen)

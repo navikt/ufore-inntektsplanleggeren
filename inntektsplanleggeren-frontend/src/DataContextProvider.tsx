@@ -1,41 +1,21 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {getInitiate,} from "@/api/apiFetching";
 import {
-    InitiateData,
     InitiateResponse,
     InntekterResponse,
-    Message,
     SendApplicationResponse,
     SimulationResponse,
     StatusResponse
 } from "@/api/model/ApiRequests";
 import {ErrorCode, ErrorResponse} from "@/components/common/Error";
 
-export const InitialViewDefaultData: InitiateData | null = {
-    forventetInntekt: {},
-    forventetInntektAnnenForelder: {},
-    inntektsgrense: 0,
-    kompensasjonsgrad: 0,
-    grenseStoppAvUfoeretrygd: 0,
-    aktuelleAar: [],
-    hasVarigTilrettelagtArbeid: false,
-    hasBarneTilleggFellesbarn: false,
-    grenseStoppAvBarnetilleggFellesbarn: null,
-    fribelopBarnetilleggFellesbarn: null,
-    hasBarnetilleggSaerkullsbarn: false,
-    grenseStoppAvBarnetilleggSaerkullsbarn: null,
-    fribelopBarnetilleggSaerkullsbarn: null,
-    hasGjenlevendeTillegg: false
-}
-
-export const messagesDefaultValue: Message[]  = []
-
-
-// export const WarningMessageDefaultValue: Message[] | null = []
 
 interface DataContextValue {
     initiateResponse: InitiateResponse | null;
     setInitiateResponse: (value: InitiateResponse) => void;
+
+    previousYearInntekterResponse: InntekterResponse | null;
+    setPreviousYearInntekterResponse: (value: InntekterResponse) => void;
 
     inntekterResponse: InntekterResponse | null;
     setInntekterResponse: (value: InntekterResponse) => void;
@@ -67,6 +47,10 @@ interface DataContextValue {
 const DataContextDefaultValue: DataContextValue = {
     initiateResponse: null,
     setInitiateResponse: () => undefined,
+
+    previousYearInntekterResponse: null,
+    setPreviousYearInntekterResponse: () => undefined,
+
 
     inntekterResponse: null,
     setInntekterResponse: () => undefined,
@@ -105,6 +89,7 @@ interface DataContextProviderProps {
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
     const [initiateResponse, setInitiateResponse] = useState(DataContextDefaultValue.initiateResponse)
+    const [previousYearInntekterResponse, setPreviousYearInntekterResponse] = useState(DataContextDefaultValue.previousYearInntekterResponse)
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
     const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
@@ -151,6 +136,9 @@ function DataContextProvider(props: DataContextProviderProps) {
         <DataContext.Provider value={{
             initiateResponse,
             setInitiateResponse,
+
+            previousYearInntekterResponse,
+            setPreviousYearInntekterResponse,
 
             inntekterResponse,
             setInntekterResponse,

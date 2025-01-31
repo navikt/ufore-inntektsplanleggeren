@@ -13,9 +13,9 @@
     "kompensasjonsgrad": 49.7,
     "grenseStoppAvUfoeretrygd": 460060,
     "aktuelleAar": [
-      2024,
       2025
     ],
+    "annetRelevantAar": 2014,
     "hasVarigTilrettelagtArbeid": true,
     "hasBarneTilleggFellesbarn": true,
     "grenseStoppAvBarnetilleggFellesbarn": 669751,

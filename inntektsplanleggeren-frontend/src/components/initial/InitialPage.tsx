@@ -25,28 +25,45 @@ import {LoadingBox} from "@/components/initial/LoadingBox";
 import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export function InitialPage() {
-    const {initiateResponse, setInntekterResponse, errorMessage, setErrorMessage} = useContext(DataContext)
+    const {initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage} = useContext(DataContext)
     const {setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
-    const handleButtonClick = async (year: number) => {
+    const handleButtonClick = async (year: number, previousYear: number | null) => {
+        console.log(previousYear)
         setSelectedYear(year);
-        try {
-            const data = await getInntekter(year);
-            if(data instanceof ErrorResponse){
-                setErrorMessage(data.message)
-            } else {
-                setInntekterResponse(data);
-                setBrukerinntekt(data.forventedeInntekter.bruker);
-                setAnnenForelderInntekt(data.forventedeInntekter.eps);
+        console.log(year)
+        if(previousYear !== null) {
+            try {
+                const data = await getInntekter(previousYear);
+                if(data instanceof ErrorResponse){
+                    setErrorMessage(data.message)
+                } else {
+                    setPreviousYearInntekterResponse(data);
+                }
+            } catch {
+                setErrorMessage(ErrorCode.GENERIC_ERROR)
             }
-        } catch {
-            setErrorMessage(ErrorCode.GENERIC_ERROR)
+            navigate(getFullPathForPage(PageLinks.FORRIGE_INNTEKTER));
+        } else  {
+             try {
+                const data = await getInntekter(year);
+                if(data instanceof ErrorResponse){
+                    setErrorMessage(data.message)
+                } else {
+                    setInntekterResponse(data);
+                    setBrukerinntekt(data.forventedeInntekter.bruker);
+                    setAnnenForelderInntekt(data.forventedeInntekter.eps);
+                    setIsLoading(false)
+                }
+            } catch {
+                setErrorMessage(ErrorCode.GENERIC_ERROR)
+            }
+            navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
         }
         setIsLoading(false)
-        navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
     }
 
     if(errorMessage){
@@ -145,7 +162,7 @@ export function InitialPage() {
             </Accordion>
 
             {initiateResponse?.data?.aktuelleAar?.length > 0 &&
-                <YearView availableYears={initiateResponse.data.aktuelleAar} handleSubmit={handleButtonClick} isLoading={isLoading}></YearView>
+                <YearView availableYears={initiateResponse.data.aktuelleAar} anotherAvalableYear={initiateResponse.data.annetRelevantAar} handleSubmit={handleButtonClick} isLoading={isLoading}></YearView>
             }
         </VStack>
     )
