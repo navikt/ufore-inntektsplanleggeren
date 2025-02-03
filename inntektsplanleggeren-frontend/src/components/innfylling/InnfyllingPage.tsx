@@ -138,20 +138,23 @@ export const InnfyllingPage = () => {
             {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
                 <VStack>
                     <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
-                    <BodyLong> Under kan du se hvilke inntekter som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for hele året til oss.
+                    <BodyLong> Under kan du se hvilken inntekt som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for
+                        {inntekterResponse.uforeHeleAaret ? " hele året til oss. " : " den delen av året du får uføretrygd. "}
                         Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.</BodyLong>
                 </VStack>}
 
             {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar} type="arbeidsgiver">
                     <Heading size={"xsmall"}>Arbeidsinntekt og pengestøtter</Heading>
-                    <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar)}/></strong> i arbeidsinntekt og pengestøtter hittil i år.</BodyLong>
+                    <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar)}/></strong> i arbeidsinntekt og pengestøtter
+                        {inntekterResponse.uforeHeleAaret ? " hittil i år." : " i perioden du har hatt uføretrygd."} </BodyLong>
                 </DinInntektTable>
             }
             {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar} type="pensjonsordning">
                     <Heading size={"xsmall"}>Pensjoner fra andre enn folketrygden</Heading>
-                    <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.pensjonFraAndreHittilIAar)}/></strong> i pensjoner fra andre enn folketrygden hittil i år.</BodyLong>
+                    <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.pensjonFraAndreHittilIAar)}/></strong> i pensjoner fra andre enn folketrygden
+                        {inntekterResponse.uforeHeleAaret ? " hittil i år." : " i perioden du har hatt uføretrygd."} </BodyLong>
                 </DinInntektTable>
             }
 
