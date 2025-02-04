@@ -32,6 +32,7 @@ export function InitialPage() {
 
 
     const handleButtonClick = async (year: number, previousYear: number | null) => {
+        setIsLoading(true)
         console.log(previousYear)
         setSelectedYear(year);
         console.log(year)
