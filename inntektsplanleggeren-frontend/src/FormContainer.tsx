@@ -9,7 +9,7 @@ import {ErrorView} from "@/components/common/Error";
 export const DESKTOP_WIDTH = 768
 
 export const FormContainer = () => {
-    const { formStep } = useContext(FormStateContext);
+    const { formStep, previousYear } = useContext(FormStateContext);
     const {errorMessage} = useContext(DataContext)
 
     if (errorMessage) {
@@ -21,7 +21,7 @@ export const FormContainer = () => {
             { (formStep !== null) ?
                 <VStack>
                     <HStack>
-                        <Button as={Link} to={getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
+                        <Button as={Link} to={(previousYear === null && formStep === 1) ? getPreviousPage(0) : getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
                     </HStack>
                     <Heading level="1" size="large">{getPageName(formStep)}</Heading>
                 </VStack> : null }
@@ -134,4 +134,4 @@ const getPidQueryParamString = () => {
     return '?pid=' + pid
 }
 
-const getPreviousPage = (index: number): string => getPage(index - 1) + getPidQueryParamString();
+const getPreviousPage = (index: number): string => getPage(index) + getPidQueryParamString();
