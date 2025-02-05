@@ -14,17 +14,6 @@ export function App() {
         }
     }, [location]);
 
-    useEffect(() => {
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            event.returnValue = "confirm";
-            return;
-        }
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        }
-    }, []);
-
     return (
         <FormStateComponent>
             <main className="mainBody">
