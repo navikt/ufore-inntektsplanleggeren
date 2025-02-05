@@ -77,6 +77,6 @@
       "pensjonUtland": 10
     }
   },
-  "uforeHeleAaret": true,
+  "uforeHeleAaret": false,
   "epsPid": "1234"
 }
