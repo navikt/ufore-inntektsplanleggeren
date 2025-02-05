@@ -64,10 +64,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         htmlSize={30}
                     />
                     <div className="description-card">
-                        <ReadMore header="Innteker du skal legge inn">
-                            Legg inn lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året.
-                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, omsorgs-,
-                            pleie- eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetatennad, overgangsstønad, omsorgs-,
+                        <ReadMore header="Inntekt du skal legge inn">
+                            Legg inn lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året. Inntekter som er pensjonsgivende skal meldes inn.
+                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, omsorgs-, pleie- eller opplæringspenger fra oss.
+                            Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
                         </ReadMore>
                     </div>
                 </VStack>
@@ -104,7 +104,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange("inntektUtland")}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekter du skal legge inn">
+                    <ReadMore header="Inntekt du skal legge inn">
                         Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet som et årsbeløp før skatt.
                     </ReadMore>
                 </VStack>
@@ -114,7 +114,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                 <VStack className="vstack-gap">
                     <TextField
                         id="andrePensjonsgivendeYtelser_bruker"
-                        label="Pensjoner og uførepensjon fra andre enn Nav"
+                        label="Uførepensjon og pensjoner fra andre enn Nav"
                         description="For eksempel fra KLP, OPF, SPK, Gjensidige, Storebrand"
                         inputMode="numeric"
                         error={fieldErrors.andrePensjonsgivendeYtelser ?? errors.andrePensjonsgivendeYtelser}
