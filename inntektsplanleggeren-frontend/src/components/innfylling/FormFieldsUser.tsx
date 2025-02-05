@@ -64,10 +64,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         htmlSize={30}
                     />
                     <div className="description-card">
-                        <ReadMore header="Innteker du skal legge inn">
-                            Legg inn lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året.
-                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, omsorgs-,
-                            pleie- eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetatennad, overgangsstønad, omsorgs-,
+                        <ReadMore header="Inntekter du skal legge inn">
+                            Legg inn lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året. Inntekter som er pensjonsgivende skal meldes inn.
+                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, omstillingsstønad, overgangsstønad, omsorgs-, pleie- eller opplæringspenger fra oss.
+                            Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
                         </ReadMore>
                     </div>
                 </VStack>

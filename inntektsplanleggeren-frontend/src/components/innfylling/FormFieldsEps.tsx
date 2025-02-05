@@ -65,7 +65,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <div className="description-card">
                         <ReadMore header="Innteker du skal legge inn">
                             Legg inn annen forelders lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger for det gjeldende året.
-                            Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger,  overgangsstønad, omsorgs-, pleie-
+                            Inntekter som er pensjonsgivende skal meldes inn. Vanlige pensjonsgivende ytelser er sykepenger, arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger,  overgangsstønad, omsorgs-, pleie-
                             eller opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
                         </ReadMore>
                     </div>
