@@ -214,7 +214,7 @@ export const InnfyllingPage = () => {
                     </ErrorSummary>) : null}
 
                     <HStack gap="4">
-                        <Button as={RouterLink} to={previousYear != null ? PageLinks.FORRIGE_INNTEKTER : PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                        <Button as={RouterLink} to={previousYear != null ? getFullPathForPage(PageLinks.FORRIGE_INNTEKTER) : getFullPathForPage(PageLinks.INDEX)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                             Tilbake
                         </Button>
                         <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>

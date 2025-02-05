@@ -71,7 +71,7 @@ export const PreviousYearPage = () => {
             </VStack>
 
             <HStack gap="4">
-                <Button as={RouterLink} to={PageLinks.INDEX} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                <Button as={RouterLink} to={getFullPathForPage(PageLinks.INDEX)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Tilbake
                 </Button>
                 <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={onClickButton} loading={isLoading}>
