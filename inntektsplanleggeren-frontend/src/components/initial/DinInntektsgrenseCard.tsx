@@ -55,7 +55,7 @@ export function InntektsgrenseCard(props: {
                         </section>
 
                         <section>
-                            <Label as="p">Årlig inntekt som gir deg rett til 0 kr i utbetaling av uføretrygd: <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/></Label>
+                            <Label as="p">Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> får du ikke utbetalt uføretrygd</Label>
                             <List>
                                 <List.Item>Tjener du over <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> har du ikke rett til utbetaling av uføretrygd det aktuelle året. </List.Item>
                                 <List.Item>Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> et kalenderår,  må du betale tilbake det du har fått i uføretrygd det året.</List.Item>
