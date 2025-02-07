@@ -206,7 +206,7 @@ class InntektsplanleggerService(
 
     private fun getAnnetRelevantAar(): Int? =
         if (isMonthDecember()) {
-            nowProvider.now().year - 1
+            nowProvider.now().year
         } else null
 
     private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> =

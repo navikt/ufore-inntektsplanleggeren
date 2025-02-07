@@ -105,21 +105,21 @@ class InntektsplanleggerServiceTest {
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
 
         assertEquals(expectedForventetInntektBruker, initialData.data!!.forventetInntekt)
-        assertEquals(expectedForventetInntektEps, initialData.data.forventetInntektAnnenForelder)
-        assertEquals(expectedInntektsgrense, initialData.data.inntektsgrense)
-        assertEquals(expectedKompensasjonsgrad, initialData.data.kompensasjonsgrad)
-        assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.data.grenseStoppAvUfoeretrygd)
-        assertEquals(expectedGrenseStoppAvBarnetilleggFellesbarn, initialData.data.grenseStoppAvBarnetilleggFellesbarn)
+        assertEquals(expectedForventetInntektEps, initialData.data!!.forventetInntektAnnenForelder)
+        assertEquals(expectedInntektsgrense, initialData.data!!.inntektsgrense)
+        assertEquals(expectedKompensasjonsgrad, initialData.data!!.kompensasjonsgrad)
+        assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.data!!.grenseStoppAvUfoeretrygd)
+        assertEquals(expectedGrenseStoppAvBarnetilleggFellesbarn, initialData.data!!.grenseStoppAvBarnetilleggFellesbarn)
         assertEquals(
             expectedGrenseStoppAvBarnetilleggSaerkullsbarn,
-            initialData.data.grenseStoppAvBarnetilleggSaerkullsbarn
+            initialData.data!!.grenseStoppAvBarnetilleggSaerkullsbarn
         )
-        assertEquals(expectedFribelopFellesbarn, initialData.data.fribelopBarnetilleggFellesbarn)
-        assertEquals(expectedFribelopSaerkullsbarn, initialData.data.fribelopBarnetilleggSaerkullsbarn)
-        assertTrue(initialData.data.hasGjenlevendeTillegg)
-        assertTrue(initialData.data.hasVarigTilrettelagtArbeid)
-        assertFalse(initialData.data.hasBarnetilleggSaerkullsbarn)
-        assertTrue(initialData.data.hasBarneTilleggFellesbarn)
+        assertEquals(expectedFribelopFellesbarn, initialData.data!!.fribelopBarnetilleggFellesbarn)
+        assertEquals(expectedFribelopSaerkullsbarn, initialData.data!!.fribelopBarnetilleggSaerkullsbarn)
+        assertTrue(initialData.data!!.hasGjenlevendeTillegg)
+        assertTrue(initialData.data!!.hasVarigTilrettelagtArbeid)
+        assertFalse(initialData.data!!.hasBarnetilleggSaerkullsbarn)
+        assertTrue(initialData.data!!.hasBarneTilleggFellesbarn)
     }
 
     @Test
@@ -165,7 +165,7 @@ class InntektsplanleggerServiceTest {
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
-        assertEquals(year - 1, initialData.data!!.annetRelevantAar)
+        assertEquals(year, initialData.data!!.annetRelevantAar)
     }
 
     @Test
@@ -214,11 +214,11 @@ class InntektsplanleggerServiceTest {
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year, initialData.data.aktuelleAar[0])
-        assertEquals(setOf(year), initialData.data.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year])
-        assertEquals(setOf(year), initialData.data.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year])
+        assertEquals(year, initialData.data!!.aktuelleAar[0])
+        assertEquals(setOf(year), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year])
+        assertEquals(setOf(year), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year])
     }
 
     @Test
@@ -240,16 +240,16 @@ class InntektsplanleggerServiceTest {
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(2, initialData.data!!.aktuelleAar.size)
-        assertEquals(year, initialData.data.aktuelleAar[0])
-        assertEquals(year + 1, initialData.data.aktuelleAar[1])
+        assertEquals(year, initialData.data!!.aktuelleAar[0])
+        assertEquals(year + 1, initialData.data!!.aktuelleAar[1])
 
-        assertEquals(setOf(year, year + 1), initialData.data.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year])
-        assertEquals(setOf(year, year + 1), initialData.data.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year])
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year])
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year])
 
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year + 1])
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year + 1])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year + 1])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year + 1])
     }
 
     @Test
@@ -271,11 +271,11 @@ class InntektsplanleggerServiceTest {
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(expectedAktueltAar, initialData.data.aktuelleAar[0])
-        assertEquals(setOf(expectedAktueltAar), initialData.data.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[expectedAktueltAar])
-        assertEquals(setOf(expectedAktueltAar), initialData.data.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[expectedAktueltAar])
+        assertEquals(expectedAktueltAar, initialData.data!!.aktuelleAar[0])
+        assertEquals(setOf(expectedAktueltAar), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[expectedAktueltAar])
+        assertEquals(setOf(expectedAktueltAar), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[expectedAktueltAar])
     }
 
     @Test
@@ -297,15 +297,15 @@ class InntektsplanleggerServiceTest {
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year + 1, initialData.data.aktuelleAar[0])
+        assertEquals(year + 1, initialData.data!!.aktuelleAar[0])
 
-        assertEquals(setOf(year, year + 1), initialData.data.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year])
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data.forventetInntekt[year + 1])
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year + 1])
 
-        assertEquals(setOf(year, year + 1), initialData.data.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year])
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data.forventetInntektAnnenForelder[year + 1])
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year + 1])
     }
 
     @Test
@@ -403,12 +403,12 @@ class InntektsplanleggerServiceTest {
         )
 
         assertEquals(2, inntektData.pensjonFraAndreHittilIAar!!.size)
-        assertEquals(106.0, inntektData.pensjonFraAndreHittilIAar[0].belop)
-        assertEquals(4, inntektData.pensjonFraAndreHittilIAar[0].maned)
-        assertEquals(listOf("Nav", "Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar[0].inntektsgivere)
-        assertEquals(5436.0, inntektData.pensjonFraAndreHittilIAar[1].belop)
-        assertEquals(5, inntektData.pensjonFraAndreHittilIAar[1].maned)
-        assertEquals(listOf("Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar[1].inntektsgivere)
+        assertEquals(106.0, inntektData.pensjonFraAndreHittilIAar!![0].belop)
+        assertEquals(4, inntektData.pensjonFraAndreHittilIAar!![0].maned)
+        assertEquals(listOf("Nav", "Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar!![0].inntektsgivere)
+        assertEquals(5436.0, inntektData.pensjonFraAndreHittilIAar!![1].belop)
+        assertEquals(5, inntektData.pensjonFraAndreHittilIAar!![1].maned)
+        assertEquals(listOf("Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar!![1].inntektsgivere)
 
         assertEquals(1, inntektData.forventedeInntekter?.bruker?.arbeidsinntekt)
         assertEquals(2, inntektData.forventedeInntekter?.bruker?.naeringsinntekt)
