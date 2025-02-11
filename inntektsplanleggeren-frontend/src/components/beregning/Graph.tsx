@@ -1,4 +1,4 @@
-import {Bleed, VStack} from "@navikt/ds-react";
+import {VStack} from "@navikt/ds-react";
 import Highcharts, {Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {SimulationResult} from "@/api/model/ApiRequests";
