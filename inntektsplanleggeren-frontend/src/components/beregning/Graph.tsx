@@ -1,4 +1,4 @@
-import { VStack } from "@navikt/ds-react";
+import {VStack} from "@navikt/ds-react";
 import Highcharts, {Options} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {SimulationResult} from "@/api/model/ApiRequests";
@@ -23,11 +23,16 @@ const getXAxisCategories = (isBeforeValuesAvailable: boolean) => {
     }
 }
 
-const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
+const numberOfItems = (simulationResult : SimulationResult) => {
+    return (simulationResult.barnetilleggFellesbarn || simulationResult.barnetilleggSaerkullsbarn) ? 3 : 2;
+}
+
+const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, numberOfItems: number) => {
     return {
         chart: {
             type: 'column',
-            marginTop: 50
+            marginTop: 50,
+            height: 400 + (numberOfItems * 37),
         },
         title: undefined,
         credits: undefined,
@@ -45,9 +50,10 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
         },
         yAxis: {
             min: 0,
+            maxPadding: 0.1,
             title: {
                 align: 'high',
-                offset: isDesktop ? 24 : -50,
+                offset: isDesktop ? 13 : -50,
                 text: isDesktop ? 'Kroner' : 'Tusen kroner',
                 rotation: 0,
                 y: -30,
@@ -95,6 +101,8 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
                     return false;
                 }
             },
+            align: 'left',
+            x: 37,
             enableMouseTracking: false,
             symbolHeight: 15, //size of legend circle
             itemHoverStyle: {
@@ -102,11 +110,11 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean) => {
             },
             itemStyle: {
                 color: '#010B18AD',
-                fontSize: '17px', // TODO: how to use stantdard nav font?
+                fontSize: '17px',
                 newLine: true,
                 cursor: 'auto'
             },
-            itemDistance: 40,
+            itemDistance: 80,
             itemMarginBottom: 15
             // itemWidth: 250,
         }
@@ -149,7 +157,7 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
 
     return (
         <VStack>
-            <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA(isBeforeValuesAvailable, isDesktop), tooltip, series: [{
+            <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA(isBeforeValuesAvailable, isDesktop, numberOfItems(props.simulationResult)), tooltip, series: [{
                 ...COLUMN_STYLE(isBeforeValuesAvailable),
                 name: props.simulationResult.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd',
                 data: [
