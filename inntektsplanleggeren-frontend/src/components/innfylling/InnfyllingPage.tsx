@@ -6,7 +6,6 @@ import {
     ErrorSummary,
     Heading,
     HStack,
-    Link,
     List,
     Loader,
     VStack
@@ -164,8 +163,6 @@ export const InnfyllingPage = () => {
                 <List.Item>alltid i norske kroner</List.Item>
             </List>
 
-            <Link href="/" target="_blank">Slik regner du ut riktig inntekt. (åpnes i ny fane)</Link>{/*todo what is the link?*/}
-
             <form onSubmit={handleSubmit}>
                 <VStack gap="4">
                     <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
@@ -196,7 +193,6 @@ export const InnfyllingPage = () => {
 
                                 { !inntekterResponse.uforeHeleAaret ?
                                     <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd.</Alert> : null }
-                                todo link? open in new tab?
                                 <FormFieldsEps
                                     year={selectedYear}
                                     errors={epsErrors}

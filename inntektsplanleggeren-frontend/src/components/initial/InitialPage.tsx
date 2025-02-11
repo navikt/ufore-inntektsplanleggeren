@@ -10,7 +10,7 @@ import {
     VStack
 } from "@navikt/ds-react";
 import {InntektsgrenseCard} from "@/components/initial/DinInntektsgrenseCard";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import React, {useContext, useState} from "react";
 import {YearView} from "@/components/initial/YearView";
 import "./InitialView.css"
@@ -148,8 +148,6 @@ export function InitialPage() {
                         <VStack gap="8">
                             <BodyShort>Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss så godt du kan.</BodyShort>
                             <BodyShort>Ser du at inntekten din blir annerledes enn det du tidligere har meldt inn, bør du melde fra til oss så fort som mulig.</BodyShort>
-                            <BodyShort><Link target="_blank" to="/">På nav.no finner du mer informasjon om hvordan du legger inn riktig inntekt, og eksempler på beregning når inntekten din endrer seg.</Link>
-                                {/*    TODO link missing*/}</BodyShort>
                         </VStack>
                     </Accordion.Content>
                 </Accordion.Item>
