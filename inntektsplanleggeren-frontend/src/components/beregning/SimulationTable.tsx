@@ -36,12 +36,12 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                         </Table.Row>
                         { (barnetilleggSaerkullsbarn || barnetilleggFellesbarn) &&
                             <Table.Row>
-                                <Table.DataCell scope="row">Barnetillegg</Table.DataCell>
+                                <Table.DataCell scope="row">Barnetillegg uføretrygd</Table.DataCell>
                                 {isBeforeValuesAvailable && <Table.DataCell align="right"><FormatKroner value={(barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)}/></Table.DataCell>}
                                 <Table.DataCell align="right"><FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}/></Table.DataCell>
                             </Table.Row> }
                         <Table.Row>
-                            <Table.DataCell scope="row">Forventet inntekt</Table.DataCell>
+                            <Table.DataCell scope="row">Din forventede inntekt</Table.DataCell>
                             {isBeforeValuesAvailable && <Table.DataCell align="right"><FormatKroner value={forventetInntekt.yearly.before ?? 0}/></Table.DataCell>}
                             <Table.DataCell align="right"><FormatKroner value={forventetInntekt.yearly.after}/></Table.DataCell>
                         </Table.Row>
@@ -68,7 +68,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                         <Table.Row>
                             <Table.DataCell>
                             <VStack gap="1">
-                                <BodyShort><strong>Forventet Inntekt</strong></BodyShort>
+                                <BodyShort><strong>Din forventede inntekt</strong></BodyShort>
                                 {isBeforeValuesAvailable && <BodyShort>I dag: <FormatKroner value={forventetInntekt.yearly.before ?? 0}/></BodyShort>}
                                 <BodyShort>Med dine endringer: <FormatKroner value={forventetInntekt.yearly.after}/></BodyShort>
                             </VStack>
@@ -78,7 +78,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                             <Table.Row>
                                 <Table.DataCell>
                                     <VStack gap="1">
-                                        <BodyShort><strong>Barnetillegg</strong></BodyShort>
+                                        <BodyShort><strong>Barnetillegg uføretrygd</strong></BodyShort>
                                         {isBeforeValuesAvailable && <BodyShort>I dag: <FormatKroner value={(barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)}/></BodyShort>}
                                         <BodyShort>Med dine endringer: <FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}/></BodyShort>
                                     </VStack>
