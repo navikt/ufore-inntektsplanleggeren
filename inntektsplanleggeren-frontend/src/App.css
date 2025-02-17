@@ -38,7 +38,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 
   /* These are technically the same, but use both */

@@ -1,4 +1,4 @@
-import {BodyLong, BodyShort, Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
+import {Bleed, BodyLong, BodyShort, Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
 import {DataContext} from "@/DataContextProvider";
