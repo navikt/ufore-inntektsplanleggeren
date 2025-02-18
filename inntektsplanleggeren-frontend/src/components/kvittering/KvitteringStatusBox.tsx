@@ -5,7 +5,7 @@ import {FormatKroner} from "@/components/utils/FormatKroner";
 import {useContext} from "react";
 import {FormStateContext} from "@/context/FormData";
 import {Link} from "react-router-dom";
-import {FormatDate, FormatDateTime} from "@/components/utils/FormatDate";
+import {FormatDateLong, FormatDateTime} from "@/components/utils/FormatDate";
 
 interface Props {
     statusResponse: StatusResponse
@@ -45,7 +45,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                                 <Heading size="small">Ny inntekt er mottatt av oss og saken er behandlet</Heading>
                                 <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt}/> (før skatt)</strong></BodyShort>
                                 { epsRegisteredInntekt != null && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt}/> (før skatt)</strong></BodyShort> }
-                                { statusResponse.maandedligeUtbetalinger != null && <BodyShort>Din nye månedlige utbetaling fra <FormatDate value={statusResponse.maandedligeUtbetalinger.fom}/>: <strong><FormatKroner
+                                { statusResponse.maandedligeUtbetalinger != null && <BodyShort>Din nye månedlige utbetaling fra <FormatDateLong value={statusResponse.maandedligeUtbetalinger.fom}/>: <strong><FormatKroner
                                     value={statusResponse.maandedligeUtbetalinger?.beloep}/> (før skatt)</strong></BodyShort> }                {/*    todo display date in nice format*/}
                             </VStack>
                         </Alert>
