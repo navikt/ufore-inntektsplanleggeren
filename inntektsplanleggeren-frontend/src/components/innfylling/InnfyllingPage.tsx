@@ -165,7 +165,7 @@ export const InnfyllingPage = () => {
 
             <form onSubmit={handleSubmit}>
                 <VStack gap="4">
-                    <Bleed marginInline="0 20">
+                    <Bleed marginInline={{md: "0 20" }} >
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <VStack gap="4">
                                 <Heading level="2" size="small" spacing>Din inntekt {selectedYear}</Heading>
@@ -185,7 +185,7 @@ export const InnfyllingPage = () => {
                     </Bleed>
 
                     {inntekterResponse?.forventedeInntekter.eps ?
-                        <Bleed marginInline="0 20">
+                        <Bleed marginInline={{ md: "0 20" }}>
                             <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                                 <VStack gap="4">
                                     <Heading level="2" size="small" spacing>Annen forelders inntekt {selectedYear}</Heading>
