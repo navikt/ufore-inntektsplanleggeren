@@ -36,7 +36,7 @@ export const AppRoutes = () => (
 const YearGuard = () => {
     const { selectedYear } = useContext(FormStateContext);
 
-    if (selectedYear === null) {
+    if (selectedYear === null || selectedYear === 0) {
         return <Navigate to="/" replace />;
     }
 
