@@ -1,5 +1,5 @@
 import {
-    Alert,
+    Alert, Bleed,
     BodyLong,
     Box,
     Button,
@@ -165,44 +165,48 @@ export const InnfyllingPage = () => {
 
             <form onSubmit={handleSubmit}>
                 <VStack gap="4">
-                    <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
-                        <VStack gap="4">
-                            <Heading level="2" size="small" spacing>Din inntekt {selectedYear}</Heading>
-                            <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
-                            { !inntekterResponse.uforeHeleAaret ?
-                                <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.</Alert> : null }
-                            <FormFieldsUser
-                                year={selectedYear}
-                                errors={brukerErrors}
-                                setErrors={setBrukerErrors}
-                                setInntekt={(field, belop) => setBrukerinntekt(b => ({...b, [field]:  belop }))}
-                                forventedeInntekter={brukerinntekt}
-                                inntektSum={getBrukerinntektSum()}
-                            />
-                        </VStack>
-                    </Box>
-
-                    {inntekterResponse?.forventedeInntekter.eps ?
+                    <Bleed marginInline="0 20">
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <VStack gap="4">
-                                <Heading level="2" size="small" spacing>Annen forelders inntekt {selectedYear}</Heading>
-                                <BodyLong>Fordi du mottar barnetillegg til uføretrygden, må du også registrere den forventede inntekten til forelderen som du bor sammen med.</BodyLong>
-                                <BodyLong><strong>Du skal oppgi inntekten til forelder med fødselsnummer {inntekterResponse.epsPid}</strong></BodyLong>
-                                <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Inntekten til den andre forelderen har bare betydning for størrelsen på
-                                    barnetillegget ditt. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
-
+                                <Heading level="2" size="small" spacing>Din inntekt {selectedYear}</Heading>
+                                <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
                                 { !inntekterResponse.uforeHeleAaret ?
-                                    <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd.</Alert> : null }
-                                <FormFieldsEps
+                                    <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.</Alert> : null }
+                                <FormFieldsUser
                                     year={selectedYear}
-                                    errors={epsErrors}
-                                    setErrors={setEpsErrors}
-                                    setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
-                                    forventedeInntekter={annenForelderInntekt || {} as PersonInntekter}
-                                    inntektSum={getAnnenForelderInntektSum() || 0}
+                                    errors={brukerErrors}
+                                    setErrors={setBrukerErrors}
+                                    setInntekt={(field, belop) => setBrukerinntekt(b => ({...b, [field]:  belop }))}
+                                    forventedeInntekter={brukerinntekt}
+                                    inntektSum={getBrukerinntektSum()}
                                 />
                             </VStack>
-                        </Box> : null
+                        </Box>
+                    </Bleed>
+
+                    {inntekterResponse?.forventedeInntekter.eps ?
+                        <Bleed marginInline="0 20">
+                            <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
+                                <VStack gap="4">
+                                    <Heading level="2" size="small" spacing>Annen forelders inntekt {selectedYear}</Heading>
+                                    <BodyLong>Fordi du mottar barnetillegg til uføretrygden, må du også registrere den forventede inntekten til forelderen som du bor sammen med.</BodyLong>
+                                    <BodyLong><strong>Du skal oppgi inntekten til forelder med fødselsnummer {inntekterResponse.epsPid}</strong></BodyLong>
+                                    <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Inntekten til den andre forelderen har bare betydning for størrelsen på
+                                        barnetillegget ditt. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
+
+                                    { !inntekterResponse.uforeHeleAaret ?
+                                        <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har uføretrygd.</Alert> : null }
+                                    <FormFieldsEps
+                                        year={selectedYear}
+                                        errors={epsErrors}
+                                        setErrors={setEpsErrors}
+                                        setInntekt={(field, belop) => setAnnenForelderInntekt(b => b ? {...b, [field]: belop} : null)}
+                                        forventedeInntekter={annenForelderInntekt || {} as PersonInntekter}
+                                        inntektSum={getAnnenForelderInntektSum() || 0}
+                                    />
+                                </VStack>
+                            </Box>
+                        </Bleed>: null
                     }
 
 
