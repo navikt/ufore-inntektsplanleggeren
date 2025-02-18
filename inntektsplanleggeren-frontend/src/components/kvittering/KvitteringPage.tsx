@@ -27,13 +27,14 @@ export const KvitteringPage = () => {
         let attempts = 0;
         setIsWaiting(true);
         const intervalId = setInterval(() => {
-            if (attempts >= 10) {
+            if (attempts >= 13) {
                 console.log("attempts exceeded", attempts);
                 setIsWaiting(false);
                 clearInterval(intervalId);
                 return;
             }
-            if (selectedYear && sendResponse?.innsendingsTidspunkt) {
+
+            if (selectedYear && sendResponse?.innsendingsTidspunkt && attempts > 3) {
                 getStatus(selectedYear, sendResponse.innsendingsTidspunkt).then(result => {
                     if(result instanceof ErrorResponse){
                         setSystemErrorMessage(result.message)
