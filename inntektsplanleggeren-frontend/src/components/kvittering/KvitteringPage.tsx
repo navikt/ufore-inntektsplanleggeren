@@ -1,4 +1,4 @@
-import {Bleed, BodyLong, BodyShort, Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
+import {BodyLong, BodyShort, Box, Button, Heading, HStack, List, Loader, VStack} from "@navikt/ds-react";
 import React, {useContext, useEffect, useState} from "react";
 import {FormStateContext} from "@/context/FormData";
 import {DataContext} from "@/DataContextProvider";
@@ -9,10 +9,6 @@ import {StatusCodes} from "@/api/model/StatusCodes";
 import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
 export const KvitteringPage = () => {
-    // const { id } = useParams();
-
-    // TODO: Get application by ID and use creation date to determine if the user has waited long.
-
     const [isWaiting, setIsWaiting] = useState(true);
     const { setFormStep, getBrukerinntektSum, getAnnenForelderInntektSum, selectedYear } = useContext(FormStateContext);
     const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext);
