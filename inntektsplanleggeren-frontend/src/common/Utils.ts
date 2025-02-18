@@ -18,3 +18,8 @@ export function formatDate(value: Date): string {
     return format(value, 'dd.MM.yyyy')
 }
 
+export function formatDateLong(value: Date): string {
+    const date = new Date(value)
+    return date.toLocaleDateString('no-NO', {day: 'numeric', month: 'long', year: 'numeric'})
+}
+
