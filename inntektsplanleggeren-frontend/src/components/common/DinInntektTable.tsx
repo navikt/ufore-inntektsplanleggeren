@@ -75,7 +75,7 @@ const Innhold = (props: { data: InntektDetaljer[], type?: string }) => {
             ))}
             <Table.Row>
                     <Table.HeaderCell scope="row">Sum hittil i år</Table.HeaderCell>
-                    <Table.DataCell><b><FormatKroner value={belopSum(props.data)}/></b></Table.DataCell>
+                    <Table.DataCell><strong><FormatKroner value={belopSum(props.data)}/></strong></Table.DataCell>
                     <Table.DataCell></Table.DataCell>
             </Table.Row>
             </Table.Body>
@@ -91,7 +91,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[], type?: string }) => {
                     <Table.Row key={i}>
                         <Table.DataCell>
                             <div>
-                                <b>{Month[maned]}</b>
+                                <strong>{Month[maned]}</strong>
                                 <div><FormatKroner value={belop}/></div>
                                 {inntektsgivere.length > 0 ? <div>{props.type === "pensjonsordning" ? "Pensjonsordning" : "Arbeidsgiver"}: {inntektsgivere.join(", ")}</div> : null}
                             </div>
@@ -100,7 +100,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[], type?: string }) => {
                 ))}
                 <Table.Row>
                     <Table.DataCell>
-                        <b> Sum hittil i år: <FormatKroner value={belopSum(props.data)}/></b>
+                        <strong>Sum hittil i år: <FormatKroner value={belopSum(props.data)}/></strong>
                     </Table.DataCell>
                 </Table.Row>
             </Table.Body>

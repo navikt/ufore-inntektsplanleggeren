@@ -89,9 +89,9 @@ export function InntektsgrenseCard(props: {
                                     Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes inntekt. Derfor skal du bare
                                     fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere bor sammen.
                                     <List>
-                                        <List.Item>Tjener dere tilsammen mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggFellesbarn}/></b>,
+                                        <List.Item>Tjener dere tilsammen mer enn <strong><FormatKroner value={props.displayData.fribelopBarnetilleggFellesbarn}/></strong>,
                                             blir barnetillegget for barn dere har sammen mindre.</List.Item>
-                                        <List.Item>Tjener dere tilsammen mer enn <b><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggFellesbarn}/></b>,
+                                        <List.Item>Tjener dere tilsammen mer enn <strong><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggFellesbarn}/></strong>,
                                             får du ikke utbetalt barnetillegget for barn dere har sammen.
                                             Får dere lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
                                         </List.Item>
@@ -106,8 +106,8 @@ export function InntektsgrenseCard(props: {
                                 <BodyLong style={{ wordBreak:"normal"}}>
                                     Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du skal kun oppgi din inntekt i inntektsplanleggeren.
                                     <List>
-                                        <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.fribelopBarnetilleggSaerkullsbarn}/>,</b> blir barnetillegget for særkullsbarn mindre.</List.Item>
-                                        <List.Item>Tjener du mer enn <b><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggSaerkullsbarn}/></b>,
+                                        <List.Item>Tjener du mer enn <strong><FormatKroner value={props.displayData.fribelopBarnetilleggSaerkullsbarn}/>,</strong> blir barnetillegget for særkullsbarn mindre.</List.Item>
+                                        <List.Item>Tjener du mer enn <strong><FormatKroner value={props.displayData.grenseStoppAvBarnetilleggSaerkullsbarn}/></strong>,
                                                 får du ikke utbetalt barnetillegget for særkullsbarn. Får du lavere inntekt i framtiden, kan du igjen få utbetalt barnetillegget.
                                         </List.Item>
                                     </List>
