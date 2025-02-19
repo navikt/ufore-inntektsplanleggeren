@@ -29,14 +29,14 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                 <Heading size="small">Registrert forventet inntekt for {year}</Heading>
                 <BodyLong> {"Din forventede inntekt: "}
                     {expectedIncome !== null && expectedIncome !== undefined ?
-                        <b><FormatKroner value={expectedIncome}/></b>
-                        : <b>Ingen registrert forventet inntekt funnet</b>}
+                        <strong><FormatKroner value={expectedIncome}/></strong>
+                        : <strong>Ingen registrert forventet inntekt funnet</strong>}
                 </BodyLong>
                 {hasBarnetilleggFellesbarn ?
                         <BodyLong> {"Annen forelder du bor med sin forventede inntekt: "}
                             {expectedIncomeAnnenForelder !== null && expectedIncomeAnnenForelder !== undefined ?
-                                <b><FormatKroner value={expectedIncomeAnnenForelder}/></b>
-                                : <b>Ingen registrert forventet inntekt funnet</b>}
+                                <strong><FormatKroner value={expectedIncomeAnnenForelder}/></strong>
+                                : <strong>Ingen registrert forventet inntekt funnet</strong>}
                         </BodyLong>
                     : <></>
                 }
