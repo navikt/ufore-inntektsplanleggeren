@@ -50,7 +50,7 @@ export function InntektsgrenseCard(props: {
                             <Label as="p">Din trekkprosent (kompensasjonsgrad): <FormatDecimalNumber value={props.displayData.kompensasjonsgrad}/> prosent</Label>
                             <BodyLong style={{ wordBreak:"normal"}}>
                                 Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
-                                Vi trekker {props.displayData.kompensasjonsgrad} prosent kun av det du har tjent over inntektsgrensen.
+                                Vi trekker <FormatDecimalNumber value={props.displayData.kompensasjonsgrad}/> prosent kun av det du har tjent over inntektsgrensen.
                                 Du vil fortsatt få utbetalt redusert uføretrygd i tillegg til lønnen din.
                             </BodyLong>
                         </section>
