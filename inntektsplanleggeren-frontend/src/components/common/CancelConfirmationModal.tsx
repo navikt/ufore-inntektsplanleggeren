@@ -23,7 +23,7 @@ export function CancelConfirmationModal() {
                     <Button type="button" variant="primary" onClick={() => {setOpen(false)}}>
                         Nei
                     </Button>
-                    <Button type="button" as="a" href="https://nav.no" variant="secondary">
+                    <Button type="button" as="a" href={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="secondary">
                         Ja
                     </Button>
                 </Modal.Footer>
