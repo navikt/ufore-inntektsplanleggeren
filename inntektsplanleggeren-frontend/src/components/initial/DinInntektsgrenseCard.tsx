@@ -1,10 +1,8 @@
-import {BodyLong, Box, Button, Heading, HStack, Label, List, VStack} from "@navikt/ds-react";
-import {Link} from "react-router-dom";
+import {BodyLong, Box, Button, Heading, HStack, Label, Link, List, VStack} from "@navikt/ds-react";
 import React, {useRef} from "react";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {InitiateData} from "@/api/model/ApiRequests";
-
 
 export function InntektsgrenseCard(props: {
     displayData: InitiateData
@@ -35,7 +33,7 @@ export function InntektsgrenseCard(props: {
                             <Label as="p">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Label>
                             { props.displayData.hasVarigTilrettelagtArbeid ?
                                 <BodyLong style={{ wordBreak:"normal"}}>
-                                    Du har tiltaket <Link to={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil <FormatKroner value={props.displayData.inntektsgrense}></FormatKroner> (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
+                                    Du har tiltaket <Link variant="neutral" href={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil <FormatKroner value={props.displayData.inntektsgrense}></FormatKroner> (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
                                     din av beløpet du tjener over inntektsgrensen. Beløpet opp til inntektsgrensen blir du aldri trukket for. I de fleste tilfeller vil det lønne seg å jobbe, fordi uføretrygd og inntekt er høyere enn uføretrygd alene.
                                 </BodyLong> :
                                 <BodyLong style={{ wordBreak:"normal"}}>
