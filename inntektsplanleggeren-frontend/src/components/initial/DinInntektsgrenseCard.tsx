@@ -4,6 +4,7 @@ import React, {useRef} from "react";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
 import {InitiateData} from "@/api/model/ApiRequests";
+import {FormatDecimalNumber} from "@/components/utils/FormatDecimalNumber";
 
 
 export function InntektsgrenseCard(props: {
@@ -46,7 +47,7 @@ export function InntektsgrenseCard(props: {
                         </section>
 
                         <section>
-                            <Label as="p">Din trekkprosent (kompensasjonsgrad): {props.displayData.kompensasjonsgrad} prosent</Label>
+                            <Label as="p">Din trekkprosent (kompensasjonsgrad): <FormatDecimalNumber value={props.displayData.kompensasjonsgrad}/> prosent</Label>
                             <BodyLong style={{ wordBreak:"normal"}}>
                                 Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
                                 Vi trekker {props.displayData.kompensasjonsgrad} prosent kun av det du har tjent over inntektsgrensen.

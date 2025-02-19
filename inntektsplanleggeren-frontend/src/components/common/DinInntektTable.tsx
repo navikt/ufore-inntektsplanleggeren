@@ -2,7 +2,7 @@ import {Box, Button, HStack, Table, VStack} from "@navikt/ds-react";
 import "./DinInntektTable.css";
 import {InntektDetaljer} from "@/api/model/ApiRequests";
 import {Month} from "@/common/MonthEnum";
-import {belopSum, numberFormatWithKr} from "@/common/Utils";
+import {belopSum} from "@/common/Utils";
 import React, {useEffect, useState} from "react";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
@@ -100,7 +100,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[], type?: string }) => {
                 ))}
                 <Table.Row>
                     <Table.DataCell>
-                        <b> Sum hittil i år: {numberFormatWithKr(belopSum(props.data))}</b>
+                        <b> Sum hittil i år: <FormatKroner value={belopSum(props.data)}/></b>
                     </Table.DataCell>
                 </Table.Row>
             </Table.Body>
