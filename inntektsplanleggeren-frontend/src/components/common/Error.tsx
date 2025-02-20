@@ -25,7 +25,8 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
                     "Vi beklager for dette. Du kan prøve igjen senere. Ta gjerne kontakt med oss hvis problemet fortsetter."
         }
     }
-    return <Alert variant="error" role="alert">{getErrorMessage()}</Alert>
+    return <>{props.message!==null && <Alert variant="error" role="alert">{getErrorMessage()}</Alert>}</>
+
 }
 
 export class ErrorResponse {
