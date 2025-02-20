@@ -79,10 +79,15 @@ export function InitialPage() {
         return (<Alert variant="warning">
             Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
         </Alert>)
+    } else if (initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET)){
+            return <Alert variant="warning">
+                Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
+            </Alert>
     } else if (initiateResponse.messages.some(message => message.type === MessageTypes.ERROR)){
         return <ErrorView message={errorMessage}/>
     }
 
+    console.log("c")
     return (
         <VStack gap="10">
             <Warnings messages={initiateResponse.messages}/>
