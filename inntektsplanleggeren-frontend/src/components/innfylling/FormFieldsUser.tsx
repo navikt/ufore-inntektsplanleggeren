@@ -131,7 +131,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                                 <List.Item>uføretrygd fra oss</List.Item>
                             </List>
                             <List description="Du skal for eksempel legge inn">
-                                <List.Item>uførepensjon</List.Item>
+                                <List.Item>uførepensjon fra andre enn oss</List.Item>
                                 <List.Item>tjenestepensjon</List.Item>
                             </List>
                             <BodyLong>Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.</BodyLong>
