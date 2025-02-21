@@ -1,0 +1,59 @@
+name: "Dev: inntektsplanleggeren-frontend deploy"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-frontend-and-publish-docker-borger:
+    name: Build frontend borger application
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      path: inntektsplanleggeren-frontend/
+      team: pensjonselvbetjening
+      app: inntektsplanleggeren-frontend
+      build_script_command: build
+      node_version: 20
+      prune_dev_dependencies: true
+    secrets: inherit
+
+    build-frontend-and-publish-docker-veileder:
+      name: Build frontend veileder application
+      uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+      permissions:
+        contents: "read"
+        id-token: "write"
+      with:
+        path: inntektsplanleggeren-frontend/
+        team: pensjonselvbetjening
+        app: inntektsplanleggeren-frontend
+        build_script_command: build:development:veileder
+        node_version: 20
+        prune_dev_dependencies: true
+      secrets: inherit
+
+  deploy-frontend-borger-to-q2:
+    needs: build-frontend-and-publish-docker-borger
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      cluster: dev-gcp
+      image: ${{ needs.build-frontend-and-publish-docker-borger.outputs.image }}
+      team: pensjonselvbetjening
+      nais-template: inntektsplanleggeren-frontend/.nais/dev-borger.yaml
+
+  deploy-frontend-veileder-to-q2:
+    needs: build-frontend-and-publish-docker-veileder
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      cluster: dev-gcp
+      image: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
+      team: pensjonselvbetjening
+      nais-template: inntektsplanleggeren-frontend/.nais/dev-veileder.yaml

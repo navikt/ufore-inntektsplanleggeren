@@ -8,6 +8,7 @@
     "dev": "concurrently --kill-others-on-fail  \"vite \" \"node mock/server.cjs\"",
     "dev-q2": "concurrently --kill-others-on-fail  \"vite --mode development-q2 \" \"NODE_ENV=development npm run build:server && NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js\"",
     "build": "tsc && vite build --mode development && npm run build:server",
+    "build:development:veileder": "tsc && vite build --mode dev-veileder",
     "build:production": "tsc && vite build && npm run build:server",
     "build:server": "tsc -p tsconfig.server.json",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
