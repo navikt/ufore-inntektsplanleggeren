@@ -65,8 +65,8 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
             <form onSubmit={onSubmitStart}>
                 <VStack>
                     {availableYears.length === 1 ?
-                        <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekter for {firstYear}</Heading> :
-                        <Heading size="medium" level="2">Du kan registrere inntekter
+                        <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekt for {firstYear}</Heading> :
+                        <Heading size="medium" level="2">Du kan registrere inntekt
                             for {firstYear} og {secondYear}</Heading>
                     }
 

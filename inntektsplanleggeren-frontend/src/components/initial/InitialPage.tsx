@@ -20,7 +20,6 @@ import {getInntekter} from "@/api/apiFetching";
 import {ExpectedIncomeBox} from "@/components/initial/ExpectedIncomeBox";
 import {MessageCodes, MessageTypes} from "@/api/model/MessageCodes";
 import {getFullPathForPage, PageLinks} from "@/FormContainer";
-import {Warnings} from "@/components/common/Warnings";
 import {LoadingBox} from "@/components/initial/LoadingBox";
 import {ErrorCode, ErrorResponse, ErrorView} from "@/components/common/Error";
 
@@ -79,13 +78,16 @@ export function InitialPage() {
         return (<Alert variant="warning">
             Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.
         </Alert>)
+    } else if (initiateResponse.messages.some(message => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET)){
+        return <Alert variant="warning">
+            Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
+        </Alert>
     } else if (initiateResponse.messages.some(message => message.type === MessageTypes.ERROR)){
         return <ErrorView message={errorMessage}/>
     }
 
     return (
         <VStack gap="10">
-            <Warnings messages={initiateResponse.messages}/>
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>

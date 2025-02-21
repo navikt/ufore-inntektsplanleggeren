@@ -26,6 +26,7 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
         }
     }
     return <>{props.message!==null && <Alert variant="error" role="alert">{getErrorMessage()}</Alert>}</>
+
 }
 
 export class ErrorResponse {

@@ -164,7 +164,8 @@ export const InnfyllingPage = () => {
             </List>
 
             <form onSubmit={handleSubmit}>
-                <VStack gap="4">
+                    <VStack gap="4">
+                        <VStack gap="4" marginBlock="0 24">
                     <Bleed marginInline={{md: "0 20" }} >
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <VStack gap="4">
@@ -208,6 +209,7 @@ export const InnfyllingPage = () => {
                             </Box>
                         </Bleed>: null
                     }
+                    </VStack>
 
 
                     {checkForFieldErrors() ?

@@ -21,7 +21,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
         <VStack>
             { !statusResponse || statusResponse.status === StatusCodes.TIL_BEHANDLING &&
                 <VStack gap="5">
-                    <Bleed marginInline="0 20">
+                    <Bleed marginInline={{ md: "0 20" }}>
                         <Alert variant="info">
                             <VStack gap="3">
                                 <Heading size="small">Nav har mottatt opplysninger om inntekten din</Heading>
@@ -39,7 +39,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
 
             { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING &&
                 <VStack gap="5">
-                    <Bleed marginInline="0 20">
+                    <Bleed marginInline={{ md: "0 20" }}>
                         <Alert variant="success">
                             <VStack gap="3">
                                 <Heading size="small">Ny inntekt er mottatt av oss og saken er behandlet</Heading>
@@ -61,7 +61,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
 
             { statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING &&
                 <VStack gap="5">
-                    <Bleed marginInline="0 20">
+                    <Bleed marginInline={{ md: "0 20" }}>
                         <Alert variant="success">
                             <VStack gap="3">
                                 <Heading size="small">Nye inntekter er registrert, og de påvirker ikke utbetalingen din</Heading>
