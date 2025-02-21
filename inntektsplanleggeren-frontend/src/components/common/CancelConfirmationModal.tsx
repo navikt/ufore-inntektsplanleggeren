@@ -1,9 +1,18 @@
 
 import React, {useState} from "react";
 import {BodyLong, Button, HStack, Modal} from "@navikt/ds-react";
+import {getPidQueryParamString} from "@/components/utils/UrlUtil";
 
 export function CancelConfirmationModal() {
     const [open, setOpen] = useState(false)
+
+    const getUrl = () => {
+        const url = import.meta.env.VITE_DIN_UFORETRYGD_URL;
+        if(import.meta.env.MODE === "veileder") {
+            return url + "?pid=" + getPidQueryParamString();
+        }
+        return url
+    }
 
     return (
         <>
@@ -23,7 +32,7 @@ export function CancelConfirmationModal() {
                     <Button type="button" variant="primary" onClick={() => {setOpen(false)}}>
                         Nei
                     </Button>
-                    <Button type="button" as="a" href={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="secondary">
+                    <Button type="button" as="a" href={getUrl()} variant="secondary">
                         Ja
                     </Button>
                 </Modal.Footer>

@@ -5,6 +5,7 @@ import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
 import {DataContext} from "@/DataContextProvider";
 import {ErrorView} from "@/components/common/Error";
+import {getPidQueryParamString} from "@/components/utils/UrlUtil";
 
 export const DESKTOP_WIDTH = 768
 
@@ -123,15 +124,6 @@ const getPage = (index: number): string => {
         default:
             return PAGE_LINKS[0];
     }
-}
-
-const getPidQueryParamString = () => {
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid = searchParams.get('pid')
-    if (pid === null) {
-        return ''
-    }
-    return '?pid=' + pid
 }
 
 const getPreviousPage = (index: number): string => getPage(index) + getPidQueryParamString();
