@@ -19,20 +19,20 @@ jobs:
       prune_dev_dependencies: true
     secrets: inherit
 
-    build-frontend-and-publish-docker-veileder:
-      name: Build frontend veileder application
-      uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
-      permissions:
-        contents: "read"
-        id-token: "write"
-      with:
-        path: inntektsplanleggeren-frontend/
-        team: pensjonselvbetjening
-        app: inntektsplanleggeren-frontend
-        build_script_command: build:development:veileder
-        node_version: 20
-        prune_dev_dependencies: true
-      secrets: inherit
+  build-frontend-and-publish-docker-veileder:
+    name: Build frontend veileder application
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      path: inntektsplanleggeren-frontend/
+      team: pensjonselvbetjening
+      app: inntektsplanleggeren-frontend
+      build_script_command: build:development:veileder
+      node_version: 20
+      prune_dev_dependencies: true
+    secrets: inherit
 
   deploy-frontend-borger-to-q2:
     needs: build-frontend-and-publish-docker-borger
