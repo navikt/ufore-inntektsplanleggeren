@@ -102,7 +102,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
                 }
             },
             align: 'left',
-            x: 37,
+            x: 0,
             enableMouseTracking: false,
             symbolHeight: 15, //size of legend circle
             itemHoverStyle: {
@@ -110,7 +110,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
             },
             itemStyle: {
                 color: '#010B18AD',
-                fontSize: '17px',
+                fontSize: '18px',
                 newLine: true,
                 cursor: 'auto'
             },
@@ -159,8 +159,8 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
         <VStack>
             <HighchartsReact highcharts={Highcharts} options={{...GRAPH_DATA(isBeforeValuesAvailable, isDesktop, numberOfItems(props.simulationResult)), tooltip, series: [{
                 ...COLUMN_STYLE(isBeforeValuesAvailable),
-                name: props.simulationResult.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd',
-                data: [
+                    name: props.simulationResult.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd',
+                    data: [
                     isBeforeValuesAvailable ? ((props.simulationResult.uforetrygd.yearly.before ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0)) : undefined,
                     (props.simulationResult.uforetrygd.yearly.after ?? 0) + (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0)].filter(isNotUndefined),
                 color: 'var(--a-deepblue-500)',
