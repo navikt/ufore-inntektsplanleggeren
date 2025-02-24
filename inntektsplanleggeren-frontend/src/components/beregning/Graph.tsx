@@ -186,4 +186,4 @@ export const Graph = (props : { simulationResult : SimulationResult}) => {
     )
 }
 
-const isNotUndefined = <T,>(value: T | undefined): value is T => value !== undefined;
+const isNotUndefined = <T,>(value: T | undefined): value is T => value !== undefined && value !== null && value !== 0;

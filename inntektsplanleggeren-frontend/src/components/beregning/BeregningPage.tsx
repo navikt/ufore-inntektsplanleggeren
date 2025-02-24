@@ -66,7 +66,7 @@ export const BeregningPage = () => {
                 <>
                     <VStack gap="3">
                         <Heading size={"medium"}>Oversikt i graf</Heading>
-                        <Graph simulationResult={simulationResponse?.result}/>
+                        <Graph simulationResult={simulationResponse?.result} aria-hidden={true}/>
                     </VStack>
 
                     <VStack>
