@@ -20,6 +20,7 @@ export function App() {
         <div className="contentWrapper">
           <representasjon-banner
             representasjonstyper="PENSJON_FULLSTENDIG,PENSJON_BEGRENSET,UFORETRYGD_SKRIV,UFORETRYGD_KOMMUNISER,UFORETRYGD_LES,PENSJON_SUPERADMIN"
+            className="representasjon-banner"
             redirectTo={`${window.location.origin}/uforetrygd/selvbetjening/inntektsplanleggeren`}>
           </representasjon-banner>
           <Heading size="xlarge" level="1" className="main-header">Inntektsplanleggeren</Heading>

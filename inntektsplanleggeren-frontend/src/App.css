@@ -52,3 +52,7 @@
 .header {
   margin-bottom: var(--a-spacing-3);
 }
+
+.representasjon-banner {
+  margin-bottom: var(--a-spacing-9)
+}
