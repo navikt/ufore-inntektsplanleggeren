@@ -45,9 +45,6 @@ export const InnfyllingPage = () => {
   const checkForFieldErrors = (): boolean => {
     const errorMessages = Object.values(brukerErrors).concat(Object.values(epsErrors)).filter((message) => message !== undefined)
     const hasErrors = errorMessages.length > 0
-    if (!hasErrors && formDiry) {
-      setFormDirty(false)
-    }
     return hasErrors
   }
 
@@ -64,7 +61,7 @@ export const InnfyllingPage = () => {
         if (message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_BRUKER") {
           bErrors["arbeidsinntekt"] = `Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]} kr, fordi du allerede har fått dette i lønn og pengestøtte`
         } else if (message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS") {
-          eErrors["arbeidsinntekt"] = `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte hittil i år. Den andre forelderen kan se inntekter som er registrert hittil i år hos Skatteetaten.`;
+          eErrors["arbeidsinntekt"] = `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte hittil i år. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten.`;
         }
       }
       else if (message.messageCode === MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR) {
@@ -72,7 +69,7 @@ export const InnfyllingPage = () => {
         if (message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_BRUKER") {
           bErrors["andrePensjonsgivendeYtelser"] = `Beløpet kan ikke være mindre enn ${message.metadata["SUM_HITTIL_I_AAR"]} kr, fordi du allerede har fått dette i pensjoner fra andre enn folketrygden hittil i år.`;
         } else if (message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS") {
-          eErrors["andrePensjonsgivendeYtelser"] = `Beløpet må være høyere enn det den andre forelderen har fått i pensjoner hittil i år. Den andre forelderen kan se inntekter som er registrert hittil i år hos Skatteetaten.`;
+          eErrors["andrePensjonsgivendeYtelser"] = `Beløpet må være høyere enn det den andre forelderen har fått i pensjoner hittil i år. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten.`;
         }
       }
     }
