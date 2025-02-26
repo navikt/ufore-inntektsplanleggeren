@@ -44,16 +44,16 @@ export const BeregningPage = () => {
       }
       <section>
         <Heading level="3" size="medium" style={{ marginBottom: "20px" }}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
-        <ReadMore header="Inntekten du har lagt inn">
+        <ReadMore header="Inntekt du har lagt inn">
           <VStack gap="7">
             <VStack>
-              <Heading level="4" size="small">Din forventet inntekt i {selectedYear}</Heading>
+              <Heading level="4" size="small">Din forventede inntekt i {selectedYear}</Heading>
               <InputSummary inntekter={brukerinntekt}></InputSummary>
             </VStack>
             {annenForelderInntekt ?
               <VStack>
                 <Heading level="4" size="small">Annen forelders forventede inntekt i {selectedYear}</Heading>
-                <InputSummary inntekter={annenForelderInntekt}></InputSummary>
+                <InputSummary inntekter={annenForelderInntekt} sumOverrideText="Sum annen forelders inntekt"></InputSummary>
               </VStack> : null}
           </VStack>
         </ReadMore>
