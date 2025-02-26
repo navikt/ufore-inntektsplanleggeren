@@ -73,7 +73,7 @@ export const PreviousExpectedIncomeTable = (props: {personInntekter: PersonInnte
                     <Table.Row>
                         <Table.DataCell>
                             <VStack gap="1">
-                                <BodyShort><strong>{"Næringsinntek"}</strong></BodyShort>
+                                <BodyShort><strong>{"Næringsinntekt"}</strong></BodyShort>
                                 <BodyShort>Beløp før skatt: <FormatKroner value={naeringsinntekt || 0}/></BodyShort>
                             </VStack>
                         </Table.DataCell>

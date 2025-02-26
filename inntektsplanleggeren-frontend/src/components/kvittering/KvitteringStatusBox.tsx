@@ -30,7 +30,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
               </VStack>
             </Alert>
           </Bleed>
-          <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>  {/*    todo display date in nice format*/}
+          <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>
           <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
 
         </VStack>
@@ -46,12 +46,12 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                 <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
                 {epsRegisteredInntekt != null && <BodyShort>Annen forelders forventede inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
                 {statusResponse.maandedligeUtbetalinger != null && <BodyShort>Din månedlige utbetaling fra <FormatDateLong value={statusResponse.maandedligeUtbetalinger.fom} />: <strong><FormatKroner
-                  value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort>}                {/*    todo display date in nice format*/}
+                  value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort>}
               </VStack>
             </Alert>
           </Bleed>
           <VStack>
-            <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>  {/*    todo display date in nice format*/}
+            <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
           <BodyLong>
