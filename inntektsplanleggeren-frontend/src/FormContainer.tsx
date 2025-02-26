@@ -30,22 +30,22 @@ export const FormContainer = () => {
         <FormProgress.Step
           as={RouterLink}
           to={getFullPathForPage(PageLinks.FORVENTET_INNTEKT)}
-          completed={isStepCompleted(formStep, 2)}
-          interactive={isStepEnabled(formStep, 2)}>
+          completed={isStepCompleted(formStep, 1)}
+          interactive={isStepEnabled(formStep, 1)}>
           {getPageName(1)}
         </FormProgress.Step>
         <FormProgress.Step
           as={RouterLink}
           to={getFullPathForPage(PageLinks.BEREGNING)}
-          completed={isStepCompleted(formStep, 3)}
-          interactive={isStepEnabled(formStep, 3)}>
+          completed={isStepCompleted(formStep, 2)}
+          interactive={isStepEnabled(formStep, 2)}>
           {getPageName(2)}
         </FormProgress.Step>
         <FormProgress.Step
           as={RouterLink}
           to={getFullPathForPage(PageLinks.OPPSUMMERING)}
-          completed={isStepCompleted(formStep, 4)}
-          interactive={isStepEnabled(formStep, 4)}>
+          completed={isStepCompleted(formStep, 3)}
+          interactive={isStepEnabled(formStep, 3)}>
           {getPageName(3)}
         </FormProgress.Step>
       </FormProgress>}
