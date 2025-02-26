@@ -48,3 +48,7 @@
   /* Adds a hyphen where the word breaks, if supported (No Blink) */
   hyphens: auto;
 }
+
+.header {
+  margin-bottom: var(--a-spacing-3);
+}

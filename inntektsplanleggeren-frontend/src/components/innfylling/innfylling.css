@@ -27,7 +27,3 @@
 .readmorePensjonFraAndre ul {
     margin-top: 0;
 }
-
-.header {
-  margin-bottom: var(--a-spacing-3); /* TODO: Flytt header til App.css */
-}
