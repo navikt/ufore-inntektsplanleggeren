@@ -54,7 +54,6 @@ export const InnfyllingPage = () => {
     const eErrors: Partial<Record<keyof PersonInntekter, string>> = {};
     let isError = false
 
-    // TODO: review texts below
     for (const message of response.messages) {
       if (message.messageCode === MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR) {
         isError = true
@@ -138,7 +137,7 @@ export const InnfyllingPage = () => {
 
   return (
     <VStack className="form-container">
-      {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
+      {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
         <VStack>
           <Heading level="3" size="medium">Din inntekt hittil i år</Heading>
           <BodyLong> Under kan du se hvilken inntekt som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for

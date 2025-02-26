@@ -88,7 +88,7 @@ export const KvitteringPage = () => {
       }
 
       <section>
-        <Heading className="header" level="3" size={"large"}>Etteroppgjør</Heading> {/* TODO: Token 3 margin bottom */}
+        <Heading className="header" level="3" size={"large"}>Etteroppgjør</Heading>
         <BodyLong>
           Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant annet Skatteetaten.
           Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake.
