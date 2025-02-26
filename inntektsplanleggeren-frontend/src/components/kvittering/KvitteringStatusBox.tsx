@@ -25,8 +25,8 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             <Alert variant="info">
               <VStack gap="3">
                 <Heading level="3" size="small">Nav har mottatt opplysninger om inntekten din</Heading>
-                <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
-                {epsRegisteredInntekt != null && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
+                <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
+                {epsRegisteredInntekt != null && <BodyShort>Annen forelders forventende inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
               </VStack>
             </Alert>
           </Bleed>
@@ -43,9 +43,9 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             <Alert variant="success">
               <VStack gap="3">
                 <Heading level="3" size="small">Ny inntekt er mottatt av oss og saken er behandlet</Heading>
-                <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
-                {epsRegisteredInntekt != null && <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
-                {statusResponse.maandedligeUtbetalinger != null && <BodyShort>Din nye månedlige utbetaling fra <FormatDateLong value={statusResponse.maandedligeUtbetalinger.fom} />: <strong><FormatKroner
+                <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
+                {epsRegisteredInntekt != null && <BodyShort>Annen forelders forventede inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
+                {statusResponse.maandedligeUtbetalinger != null && <BodyShort>Din månedlige utbetaling fra <FormatDateLong value={statusResponse.maandedligeUtbetalinger.fom} />: <strong><FormatKroner
                   value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort>}                {/*    todo display date in nice format*/}
               </VStack>
             </Alert>
@@ -64,11 +64,11 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
           <Bleed marginInline={{ md: "0 20" }}>
             <Alert variant="success">
               <VStack gap="3">
-                <Heading level="3" size="small">Nye inntekter er registrert, og de påvirker ikke utbetalingen din</Heading>
-                <BodyShort>Din registrerte inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
-                {epsRegisteredInntekt != null ? <BodyShort>Annen forelders registrerte inntekt i {selectedYear}: <strong><FormatKroner
+                <Heading level="3" size="small">Ny inntekt er registrert, og den påvirker ikke utbetalingen din</Heading>
+                <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
+                {epsRegisteredInntekt != null ? <BodyShort>Annen forelders forventede inntekt i {selectedYear}: <strong><FormatKroner
                   value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort> : null}
-                {statusResponse.maandedligeUtbetalinger != null ? <BodyShort>Du får månedlig utbetalt: <strong><FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort> : null}
+                {statusResponse.maandedligeUtbetalinger != null ? <BodyShort>Din månedlige utbetaling: <strong><FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort> : null}
               </VStack>
             </Alert>
           </Bleed>
@@ -77,7 +77,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
           <BodyLong>
-            Inntekten du har sendt inn endrer ikke utbetalingen din. Du får derfor ikke et nytt vedtaksbrev fra oss.
+            Inntekt du har sendt inn endrer ikke utbetalingen din. Du får derfor ikke et nytt vedtaksbrev fra oss.
           </BodyLong>
         </VStack>
       }

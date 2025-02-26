@@ -34,7 +34,7 @@ export const PreviousYearPage = () => {
             setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
         setIsLoading(false)
-        navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
+        navigate(getFullPathForPage(PageLinks.FORVENTET_INNTEKT));
     }
 
     if(previousYearInntekterResponse === null) {

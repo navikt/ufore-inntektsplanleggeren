@@ -61,7 +61,7 @@ export function InitialPage() {
       } catch {
         setErrorMessage(ErrorCode.GENERIC_ERROR)
       }
-      navigate(getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER));
+      navigate(getFullPathForPage(PageLinks.FORVENTET_INNTEKT));
     }
     setIsLoading(false)
   }

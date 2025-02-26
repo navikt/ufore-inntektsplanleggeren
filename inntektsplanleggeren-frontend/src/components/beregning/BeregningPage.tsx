@@ -47,7 +47,7 @@ export const BeregningPage = () => {
         <ReadMore header="Inntekten du har lagt inn">
           <VStack gap="7">
             <VStack>
-              <Heading level="4" size="small">Dine forventede inntekter i {selectedYear}</Heading>
+              <Heading level="4" size="small">Din forventet inntekt i {selectedYear}</Heading>
               <InputSummary inntekter={brukerinntekt}></InputSummary>
             </VStack>
             {annenForelderInntekt ?
@@ -106,7 +106,7 @@ export const BeregningPage = () => {
 
       <VStack gap="3">
         <HStack gap="4">
-          <Button as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+          <Button as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTET_INNTEKT)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
             Endre beløp i beregning
           </Button>
           <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit}>
