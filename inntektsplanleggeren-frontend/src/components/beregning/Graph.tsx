@@ -115,9 +115,8 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         newLine: true,
         cursor: 'auto'
       },
-      itemDistance: 80,
+      itemDistance: 20,
       itemMarginBottom: 15
-      // itemWidth: 250,
     }
   }
 };
