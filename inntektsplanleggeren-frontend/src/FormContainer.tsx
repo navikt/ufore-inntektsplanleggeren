@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
-import {Link as RouterLink, Link, Outlet} from "react-router-dom";
-import {Heading, FormProgress, VStack, Button, HStack} from "@navikt/ds-react";
+import {Link as RouterLink, Outlet} from "react-router-dom";
+import {Heading, FormProgress, VStack, Button, HStack, Link} from "@navikt/ds-react";
 import {FormStateContext} from "@/context/FormData";
 import {ArrowLeftIcon} from "@navikt/aksel-icons";
 import {DataContext} from "@/DataContextProvider";
@@ -18,14 +18,14 @@ export const FormContainer = () => {
     }
 
     return (
-        <VStack gap="5">
-            { (formStep !== null) ?
-                <VStack>
-                    <HStack>
-                        <Button as={Link} to={(previousYear === null && formStep === 1) ? getPreviousPage(0) : getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
-                    </HStack>
+        <VStack gap="8">
+            {(formStep !== null) &&
+                <VStack gap="6">
+                    <div>
+                      <Link as={RouterLink} to={(previousYear === null && formStep === 1) ? getPreviousPage(0) : getPreviousPage(formStep)} ><ArrowLeftIcon aria-hidden /> Tilbake</Link>
+                    </div>
                     <Heading level="2" size="large">{getPageName(formStep)}</Heading>
-                </VStack> : null }
+                </VStack>}
             { formStep && <FormProgress totalSteps={3} activeStep={formStep}>
                 <FormProgress.Step
                     as={RouterLink}
