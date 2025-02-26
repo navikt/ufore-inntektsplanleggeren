@@ -66,13 +66,13 @@ const AUTH_PROVIDER = (() => {
 const env =
   AUTH_PROVIDER === "tokenx"
     ? ensureEnv({
-        oboAudience: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE",
-        inntektsplanleggerenBackendUrl: "INNTEKTSPLANLEGGEREN_BACKEND_URL",
-      })
+      oboAudience: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE",
+      inntektsplanleggerenBackendUrl: "INNTEKTSPLANLEGGEREN_BACKEND_URL",
+    })
     : ensureEnv({
-        oboAudience: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE",
-        inntektsplanleggerenBackendUrl: "INNTEKTSPLANLEGGEREN_BACKEND_URL",
-      });
+      oboAudience: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE",
+      inntektsplanleggerenBackendUrl: "INNTEKTSPLANLEGGEREN_BACKEND_URL",
+    });
 
 const getOboToken = async (req: Request) => {
   if (isDevelopment && process.env.ACCESS_TOKEN) {
@@ -118,23 +118,22 @@ app.use(
 
 app.use(
   `${BASE_PATH}/api`,
-  async (req: Request, res: Response, next: NextFunction) => {
-    let oboToken: string;
-    try {
-      oboToken = await getOboToken(req);
-    } catch {
-      return res.sendStatus(401);
-    }
-
-    return createProxyMiddleware({
-      target: `${env.inntektsplanleggerenBackendUrl}/api`,
-      changeOrigin: true,
-      headers: {
-        Authorization: `Bearer ${oboToken}`,
-      },
-      logger: logger,
-    })(req, res, next);
-  },
+  (req: Request, res: Response, next: NextFunction) => {
+    getOboToken(req)
+      .then((oboToken) => {
+        createProxyMiddleware({
+          target: `${env.inntektsplanleggerenBackendUrl}/api`,
+          changeOrigin: true,
+          headers: {
+            Authorization: `Bearer ${oboToken}`,
+          },
+          logger: logger,
+        })(req, res, next);
+      })
+      .catch(() => {
+        res.sendStatus(401);
+      });
+  }
 );
 
 app.get("*", (_req, res) => {
