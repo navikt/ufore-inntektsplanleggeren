@@ -8,7 +8,7 @@
   z-index: 1;
   hyphens: none;
 
-  @media (min-width: 480px) { /* Media queries støtter enda ikke variabler */
+  @media (min-width: 576px) { /* Media queries støtter enda ikke variabler */
     margin: 4rem 0 8rem 0;
   }
 }
