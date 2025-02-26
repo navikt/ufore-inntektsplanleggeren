@@ -67,6 +67,7 @@ export const OppsummeringPage = () => {
                 </Alert>
             }
 
+          <VStack gap="3">
             <HStack gap="4">
                 <Button as={RouterLink} to={getFullPathForPage(PageLinks.BEREGNING)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Tilbake
@@ -75,9 +76,8 @@ export const OppsummeringPage = () => {
                     Send inn
                 </Button>
             </HStack>
-            <HStack>
-                <CancelConfirmationModal/>
-            </HStack>
+            <CancelConfirmationModal/>
+          </VStack>
         </VStack>
     )
 

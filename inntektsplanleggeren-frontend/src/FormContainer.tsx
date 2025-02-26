@@ -24,7 +24,7 @@ export const FormContainer = () => {
                     <HStack>
                         <Button as={Link} to={(previousYear === null && formStep === 1) ? getPreviousPage(0) : getPreviousPage(formStep)} variant="tertiary"  iconPosition="left" icon={<ArrowLeftIcon aria-hidden />}>Tilbake</Button>
                     </HStack>
-                    <Heading level="1" size="large">{getPageName(formStep)}</Heading>
+                    <Heading level="2" size="large">{getPageName(formStep)}</Heading>
                 </VStack> : null }
             { formStep && <FormProgress totalSteps={3} activeStep={formStep}>
                 <FormProgress.Step

@@ -104,7 +104,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
 
 
                         {Object.values(errors).some(Boolean) && (
-                            <ErrorSummary ref={errorSummaryRef} heading="Du må rette disse feilene før du kan fortsette:">
+                            <ErrorSummary ref={errorSummaryRef} heading="Du må rette disse feilene før du kan fortsette">
                                 {Object.entries(errors)
                                     .filter(([, error]) => error)
                                     .map(([key, error]) => (

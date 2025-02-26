@@ -136,7 +136,7 @@ export const InnfyllingPage = () => {
         <VStack className="form-container">
             {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
                 <VStack>
-                    <Heading level="2" size="medium">Din inntekt hittil i år</Heading>
+                    <Heading level="3" size="medium">Din inntekt hittil i år</Heading>
                     <BodyLong> Under kan du se hvilken inntekt som er registrert via A-meldingen. Det er likevel viktig at du sender inn forventet inntekt for
                         {inntekterResponse.uforeHeleAaret ? " hele året til oss. " : " den delen av året du får uføretrygd. "}
                         Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.</BodyLong>
@@ -144,32 +144,34 @@ export const InnfyllingPage = () => {
 
             {(inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.arbeidsinntektOgYtelserHittilIAar} type="arbeidsgiver">
-                    <Heading size={"xsmall"}>Arbeidsinntekt og pengestøtter</Heading>
+                    <Heading level="4" size={"xsmall"}>Arbeidsinntekt og pengestøtter</Heading>
                     <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.arbeidsinntektOgYtelserHittilIAar)}/></strong> i arbeidsinntekt og pengestøtter
                         {inntekterResponse.uforeHeleAaret ? " hittil i år." : " i perioden du har hatt uføretrygd."} </BodyLong>
                 </DinInntektTable>
             }
             {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0) &&
                 <DinInntektTable data={inntekterResponse.pensjonFraAndreHittilIAar} type="pensjonsordning">
-                    <Heading size={"xsmall"}>Pensjoner fra andre enn folketrygden</Heading>
+                    <Heading level="4" size={"xsmall"}>Pensjoner fra andre enn folketrygden</Heading>
                     <BodyLong>Vi har registrert at du har fått <strong><FormatKroner value={belopSum(inntekterResponse.pensjonFraAndreHittilIAar)}/></strong> i pensjoner fra andre enn folketrygden
                         {inntekterResponse.uforeHeleAaret ? " hittil i år." : " i perioden du har hatt uføretrygd."} </BodyLong>
                 </DinInntektTable>
             }
 
-            <Heading level="2" size="medium">Slik skal du oppgi inntekten</Heading>
-            <List>
-                <List.Item>skriv inntekten du forventer å få utbetalt før skatt</List.Item>
-                <List.Item>alltid i norske kroner</List.Item>
-            </List>
+            <div>
+              <Heading level="2" size="medium">Slik skal du oppgi inntekten</Heading>
+              <List>
+                  <List.Item>skriv inntekten du forventer å få utbetalt før skatt</List.Item>
+                  <List.Item>alltid i norske kroner</List.Item>
+              </List>
+            </div>
 
             <form onSubmit={handleSubmit}>
                     <VStack gap="4">
-                        <VStack gap="4" marginBlock="0 24">
-                    <Bleed marginInline={{md: "0 20" }} >
+                        <VStack gap="4">
+                    <Bleed marginInline={{md: "0 20" }} asChild>
                         <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                             <VStack gap="4">
-                                <Heading level="2" size="small" spacing>Din inntekt {selectedYear}</Heading>
+                                <Heading size="medium" level="3" spacing>Din inntekt {selectedYear}</Heading>
                                 <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året. </BodyLong>
                                 { !inntekterResponse.uforeHeleAaret ?
                                     <Alert inline variant="info">Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.</Alert> : null }
@@ -189,7 +191,7 @@ export const InnfyllingPage = () => {
                         <Bleed marginInline={{ md: "0 20" }}>
                             <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
                                 <VStack gap="4">
-                                    <Heading level="2" size="small" spacing>Annen forelders inntekt {selectedYear}</Heading>
+                                    <Heading level="3" size="medium" spacing>Annen forelders inntekt {selectedYear}</Heading>
                                     <BodyLong>Fordi du mottar barnetillegg til uføretrygden, må du også registrere den forventede inntekten til forelderen som du bor sammen med.</BodyLong>
                                     <BodyLong><strong>Du skal oppgi inntekten til forelder med fødselsnummer {inntekterResponse.epsPid}</strong></BodyLong>
                                     <BodyLong>Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Inntekten til den andre forelderen har bare betydning for størrelsen på
@@ -210,25 +212,23 @@ export const InnfyllingPage = () => {
                         </Bleed>: null
                     }
                     </VStack>
-
-
                     {checkForFieldErrors() ?
-                        (<ErrorSummary heading="Du må rette disse feilene før du kan fortsette:">
+                        (<ErrorSummary headingTag="h3" heading="Du må rette disse feilene før du kan fortsette:" className="button-container">
                             {errorSummary(brukerErrors, "bruker")}
                             {errorSummary(epsErrors, "eps")}
                     </ErrorSummary>) : null}
 
-                    <HStack gap="4">
-                        <Button as={RouterLink} to={previousYear != null ? getFullPathForPage(PageLinks.FORRIGE_INNTEKTER) : getFullPathForPage(PageLinks.INDEX)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
-                            Tilbake
-                        </Button>
-                        <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>
-                            Gå videre og se resultat
-                        </Button>
-                    </HStack>
-                    <HStack>
-                        <CancelConfirmationModal/>
-                    </HStack>
+                    <VStack gap="3" className="button-container">
+                      <HStack gap="4">
+                          <Button as={RouterLink} to={previousYear != null ? getFullPathForPage(PageLinks.FORRIGE_INNTEKTER) : getFullPathForPage(PageLinks.INDEX)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
+                              Tilbake
+                          </Button>
+                          <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit} loading={isLoading}>
+                              Gå videre og se resultat
+                          </Button>
+                      </HStack>
+                      <CancelConfirmationModal/>
+                    </VStack>
                 </VStack>
             </form>
         </VStack>

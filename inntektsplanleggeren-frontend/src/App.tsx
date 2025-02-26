@@ -22,10 +22,10 @@ export function App() {
                     redirectTo={`${window.location.origin}/uforetrygd/selvbetjening/inntektsplanleggeren`}>
                 </representasjon-banner>
 
-                <article className="contentWrapper">
+                <div className="contentWrapper">
                     <Heading size="xlarge" level="1" className="main-header">Inntektsplanleggeren</Heading>
                     <Outlet/>
-                </article>
+                </div>
             </main>
         </FormStateComponent>
     )

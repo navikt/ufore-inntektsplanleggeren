@@ -87,7 +87,7 @@ export function InitialPage() {
     }
 
     return (
-        <VStack gap="10">
+        <VStack className="form-container">
 
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>Greit å vite</Heading>
@@ -99,7 +99,7 @@ export function InitialPage() {
             </GuidePanel>
 
             <section>
-                <List title="I inntektsplanleggeren kan du" size="medium">
+                <List headingTag="h2" title="I inntektsplanleggeren kan du" size="medium">
                     <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
                     <List.Item>melde inn forventet inntekt til oss</List.Item>
                 </List>

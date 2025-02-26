@@ -1,5 +1,5 @@
 import {Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link} from "@navikt/ds-react";
-import React, {FormEvent, MouseEvent, useContext, useEffect} from "react";
+import {FormEvent, MouseEvent, useContext, useEffect} from "react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {FormStateContext} from "@/context/FormData";
 import {SimulationTable} from "@/components/beregning/SimulationTable";
@@ -42,19 +42,16 @@ export const BeregningPage = () => {
                     Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
                 </Alert> : null
             }
-
-            <Heading size={"large"}>Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
-
+            <Heading level="3" size="medium">Din inntekt og uføretrygd før skatt i {selectedYear}</Heading>
             <ReadMore header="Inntekten du har lagt inn">
-
                 <VStack gap="7">
                     <VStack>
-                        <Heading size="small">Dine forventede inntekter i {selectedYear}</Heading>
+                        <Heading level="4" size="small">Dine forventede inntekter i {selectedYear}</Heading>
                         <InputSummary inntekter={brukerinntekt}></InputSummary>
                     </VStack>
                     {annenForelderInntekt ?
                         <VStack>
-                            <Heading size="small">Annen forelders forventede inntekt i {selectedYear}</Heading>
+                            <Heading level="4" size="small">Annen forelders forventede inntekt i {selectedYear}</Heading>
                             <InputSummary inntekter={annenForelderInntekt}></InputSummary>
                         </VStack> : null }
                     </VStack>
@@ -63,41 +60,37 @@ export const BeregningPage = () => {
             <BeregningWarnings messages={simulationResponse.messages}/>
 
             {showSimulering ?
-                <>
-                    <VStack gap="3">
-                        <Heading size={"medium"}>Oversikt i graf</Heading>
-                        <Graph simulationResult={simulationResponse?.result} aria-hidden={true}/>
-                    </VStack>
+              <>
+                <section>
+                  <Heading level="3" size="medium">Oversikt i graf</Heading>
+                  <Graph simulationResult={simulationResponse?.result} aria-hidden={true}/>
+                </section>
 
-                    <VStack>
-                        <Heading size={"medium"}>Oversikt i tabell</Heading>
-                        <VStack gap="12">
-                            {simulationResponse?.result &&
-                                <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
-                            <VStack>
-                                <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før
-                                    skatt: <FormatKroner
-                                        value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
-                                <ReadMore header="Månedsbeløp spesifisert">
-                                    <VStack>
-                                        <BodyLong>{simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
-                                            <FormatKroner
-                                                value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
-                                        {simulationResponse?.result.barnetilleggFellesbarn !== null ?
-                                            <BodyLong>Barnetillegg for fellesbarn: <FormatKroner
-                                                value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                                        {simulationResponse?.result.barnetilleggSaerkullsbarn !== null ?
-                                            <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner
-                                                value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
-                                        {simulationResponse?.result.sum.monthly.after !== null ?
-                                            <BodyLong><strong>Totalt per måned: <FormatKroner
-                                                value={simulationResponse?.result.sum.monthly.after}/></strong></BodyLong> : null}
-                                    </VStack>
-                                </ReadMore>
-                            </VStack>
-                        </VStack>
-                    </VStack>
-                </>
+                <section>
+                  <Heading level="3" size="medium">Oversikt i tabell</Heading>
+                  {simulationResponse?.result &&
+                    <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
+                </section>
+                <section>
+                  <BodyLong><strong>Månedlig utbetaling av uføretrygd med dine endringer, før
+                    skatt: <FormatKroner
+                      value={simulationResponse?.result.sum.monthly.after ?? 0}/></strong></BodyLong>
+                  <ReadMore header="Månedsbeløp spesifisert">
+                    <BodyLong>{simulationResponse?.result?.gjenlevendetillegg ? "Uføretrygd inkludert gjenlevendetillegg: " : "Uføretrygd: "}
+                      <FormatKroner
+                        value={(simulationResponse?.result?.uforetrygd.monthly.after ?? 0) + (simulationResponse?.result.gjenlevendetillegg?.monthly.after ?? 0)}/></BodyLong>
+                    {simulationResponse?.result.barnetilleggFellesbarn !== null ?
+                      <BodyLong>Barnetillegg for fellesbarn: <FormatKroner
+                        value={(simulationResponse?.result.barnetilleggFellesbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                    {simulationResponse?.result.barnetilleggSaerkullsbarn !== null ?
+                      <BodyLong>Barnetillegg for særkullsbarn: <FormatKroner
+                        value={(simulationResponse?.result.barnetilleggSaerkullsbarn.monthly.after ?? 0)}/></BodyLong> : null}
+                    {simulationResponse?.result.sum.monthly.after !== null ?
+                      <BodyLong><strong>Totalt per måned: <FormatKroner
+                        value={simulationResponse?.result.sum.monthly.after}/></strong></BodyLong> : null}
+                  </ReadMore>
+                </section>
+              </>
                 :
                 <Alert variant="warning">
                     Vi kan dessverre ikke vise hvordan den nye inntekten din vil påvirke utbetalingen din av uføretrygd.
@@ -107,6 +100,7 @@ export const BeregningPage = () => {
             
             <BodyLong><strong>Har du spørsmål? <Link href={PageLinks.KONTAKT} target="_blank">Kontakt oss (åpnes i ny fane)</Link></strong></BodyLong>
 
+          <VStack gap="3">
             <HStack gap="4">
                 <Button as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTEDE_INNTEKTER)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Endre beløp i beregning
@@ -115,9 +109,8 @@ export const BeregningPage = () => {
                     Gå til innsending
                 </Button>
             </HStack>
-            <HStack>
-                <CancelConfirmationModal/>
-            </HStack>
+            <CancelConfirmationModal/>
+          </VStack>
         </VStack>
     );
 };

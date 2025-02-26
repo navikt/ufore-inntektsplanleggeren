@@ -12,7 +12,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  margin: 4rem 1rem 12rem;
+  margin: 4rem 1rem 8rem;
   z-index: 1;
   hyphens: none;
 }

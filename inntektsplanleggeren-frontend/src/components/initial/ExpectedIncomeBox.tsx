@@ -26,7 +26,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
         const expectedIncomeAnnenForelder = expectedIncomeAnnenForelderMap.get(year)
         return (
             <section>
-                <Heading size="small">Registrert forventet inntekt for {year}</Heading>
+                <Heading level="2" size="small">Registrert forventet inntekt for {year}</Heading>
                 <BodyLong> {"Din forventede inntekt: "}
                     {expectedIncome !== null && expectedIncome !== undefined ?
                         <strong><FormatKroner value={expectedIncome}/></strong>

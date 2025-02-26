@@ -13,7 +13,11 @@
 }
 
 .form-container {
-    gap: 20px; /* Adjust the value as needed */
+    gap: var(--a-spacing-12);
+}
+
+.button-container {
+    margin-top: var(--a-spacing-8);
 }
 
 .readmorePensjonFraAndre li {

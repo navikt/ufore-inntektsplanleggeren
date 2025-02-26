@@ -1,4 +1,4 @@
-import {BodyLong, Box, Button, Heading, HStack, Label, Link, List, VStack} from "@navikt/ds-react";
+import {BodyLong, Box, Button, Heading, HStack, Link, List, VStack} from "@navikt/ds-react";
 import React, {useRef} from "react";
 import {ChevronDownIcon, ChevronUpIcon} from "@navikt/aksel-icons";
 import {FormatKroner} from "@/components/utils/FormatKroner";
@@ -23,7 +23,7 @@ export function InntektsgrenseCard(props: {
     return (
         <Box borderRadius="xlarge" padding="4" className="top-box" ref={inntektsgrenseCardRef}>
             <VStack gap="2">
-                <Heading size="small">Inntektsgrenser og trekkprosent</Heading>
+                <Heading level="2" size="small">Inntektsgrenser og trekkprosent</Heading>
                 <VStack gap="5">
                     <BodyLong style={{ whiteSpace: "pre-wrap" }}>
                         Dine inntektsgrenser sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
@@ -31,7 +31,7 @@ export function InntektsgrenseCard(props: {
 
                     {isOpen ? <VStack gap="5">
                         <section>
-                            <Label as="p">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Label>
+                            <Heading size="xsmall" level="3">Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense}/></Heading>
                             { props.displayData.hasVarigTilrettelagtArbeid ?
                                 <BodyLong style={{ wordBreak:"normal"}}>
                                     Du har tiltaket <Link variant="neutral" href={"https://www.nav.no/varig-tilrettelagt-arbeid"}>Varig tilrettelagt arbeid</Link>. Bonuslønnen din kan være inntil <FormatKroner value={props.displayData.inntektsgrense}></FormatKroner> (som tilsvarer 1 G). Tjener du mer enn dette, vil du få lavere utbetaling av uføretrygd. Vi reduserer uføretrygden
@@ -45,7 +45,7 @@ export function InntektsgrenseCard(props: {
                         </section>
 
                         <section>
-                            <Label as="p">Din trekkprosent (kompensasjonsgrad): <FormatDecimalNumber value={props.displayData.kompensasjonsgrad}/> prosent</Label>
+                            <Heading size="xsmall" level="3">Din trekkprosent (kompensasjonsgrad): <FormatDecimalNumber value={props.displayData.kompensasjonsgrad}/> prosent</Heading>
                             <BodyLong style={{ wordBreak:"normal"}}>
                                 Tjener du mer enn inntektsgrensen, får du lavere utbetaling av uføretrygd, ut fra din trekkprosent.
                                 Vi trekker <FormatDecimalNumber value={props.displayData.kompensasjonsgrad}/> prosent kun av det du har tjent over inntektsgrensen.
@@ -54,7 +54,7 @@ export function InntektsgrenseCard(props: {
                         </section>
 
                         <section>
-                            <Label as="p">Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> får du ikke utbetalt uføretrygd</Label>
+                            <Heading size="xsmall" level="3">Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> får du ikke utbetalt uføretrygd</Heading>
                             <List>
                                 <List.Item>Har du inntekt på mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> per år, får du ikke utbetaling av uføretrygd det aktuelle året.</List.Item>
                                 <List.Item>Tjener du mer enn <FormatKroner value={props.displayData.grenseStoppAvUfoeretrygd}/> et kalenderår,  må du betale tilbake det du har fått i uføretrygd det året.</List.Item>
@@ -64,7 +64,7 @@ export function InntektsgrenseCard(props: {
 
                         { props.displayData.hasGjenlevendeTillegg ?
                             <section>
-                                <Label as="p"> Gjenlevendetillegg </Label>
+                                <Heading size="xsmall" level="3">Gjenlevendetillegg</Heading>
                                 <BodyLong style={{ wordBreak:"normal"}}>
                                     Tjener du mer enn inntektsgrensen din, reduseres også utbetalingen av gjenlevendetillegget ditt.
                                 </BodyLong>
@@ -73,7 +73,7 @@ export function InntektsgrenseCard(props: {
 
                         { props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? //todo check if this condition is right!
                             <section>
-                                <Label as="p">Barnetillegg har egne inntektsgrenser (fribeløp)</Label>
+                                <Heading size="xsmall" level="3">Barnetillegg har egne inntektsgrenser (fribeløp)</Heading>
                                 <BodyLong style={{ wordBreak:"normal"}}>
                                     Fribeløpet er grensen for hva foreldre kan tjene før barnetillegget blir mindre.
                                 </BodyLong>
@@ -82,7 +82,7 @@ export function InntektsgrenseCard(props: {
 
                         { props.displayData.hasBarneTilleggFellesbarn ?
                             <section>
-                                <Label as="p">Fribeløp for felles barn</Label>
+                                <Heading size="xsmall" level="3">Fribeløp for felles barn</Heading>
                                 <BodyLong style={{ wordBreak:"normal"}}>
                                     Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes inntekt. Derfor skal du bare
                                     fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere bor sammen.
@@ -100,7 +100,7 @@ export function InntektsgrenseCard(props: {
 
                         { props.displayData.hasBarnetilleggSaerkullsbarn ?
                             <section>
-                                <Label as="p">Fribeløp for særkullsbarn</Label>
+                                <Heading size="xsmall" level="3">Fribeløp for særkullsbarn</Heading>
                                 <BodyLong style={{ wordBreak:"normal"}}>
                                     Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du skal kun oppgi din inntekt i inntektsplanleggeren.
                                     <List>
