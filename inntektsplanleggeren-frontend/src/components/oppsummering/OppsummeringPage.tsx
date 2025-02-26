@@ -42,7 +42,7 @@ export const OppsummeringPage = () => {
   }
 
   return (
-    <VStack gap="16">
+    <VStack gap="12">
       <FormSummary>
         <FormSummary.Header>
           <FormSummary.Heading level="3">Opplysningene du sender inn</FormSummary.Heading>
