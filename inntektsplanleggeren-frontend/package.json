@@ -14,8 +14,8 @@
     "build:server": "tsc -p tsconfig.server.json",
     "preview": "vite preview",
     "test": "vitest",
-    "format": "prettier --write src/",
-    "format:check": "prettier --check src/",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint ./src ./server",
     "lint:fix": "eslint --fix ./src ./server"
   },
