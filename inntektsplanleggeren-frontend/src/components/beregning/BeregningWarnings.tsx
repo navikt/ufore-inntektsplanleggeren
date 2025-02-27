@@ -18,10 +18,10 @@ export function BeregningWarnings(props: { messages: Message[] }) {
         (message) => message.messageCode === MessageCodes.OPPGITT_INNTEKT_GIVES_LOWER_UFORETRYGD_THAN_ALREADY_UTBETALT
       ) && (
         <Alert variant="warning">
-          Inntekten du har lagt inn, er høyere enn inntekten vi har brukt til å beregne uføretrygden din. Din nye
-          inntekt viser at du har fått utbetalt for mye uføretrygd. Derfor kan det være at du ikke får utbetalt
-          uføretrygd resten av året. Får du barnetillegg, kan det hende at du ikke får det utbetalt resten av året. Har
-          du fortsatt fått for mye utbetalt ved slutten av året, kan du få et etteroppgjør hvor du må betale tilbake.
+          Inntekten du har lagt inn, er høyere enn inntekten vi har brukt til å beregne uføretrygden din. Derfor kan det
+          være at du ikke får utbetalt uføretrygd resten av året. Får du barnetillegg, kan det hende at du ikke får det
+          utbetalt resten av året. Har du fortsatt fått for mye utbetalt ved slutten av året, kan du få et etteroppgjør
+          hvor du må betale tilbake.
         </Alert>
       )}
 
