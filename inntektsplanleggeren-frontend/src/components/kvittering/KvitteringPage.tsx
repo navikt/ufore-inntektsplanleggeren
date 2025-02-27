@@ -139,7 +139,7 @@ export const KvitteringPage = () => {
         <BodyLong>
           Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres.{' '}
           <Link to={import.meta.env.VITE_SKATTEETATEN_SKATTEKORT_URL} target="_blank">
-            Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane)
+            Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane).
           </Link>
         </BodyLong>
       </section>
