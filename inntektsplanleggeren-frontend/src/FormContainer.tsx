@@ -69,7 +69,7 @@ export const FormContainer = () => {
 
 export enum PageNames {
   FORRIGE_INNTEKTER = 'Forrige inntekter',
-  FORVENTEDE_INNTEKTER = 'Forventede inntekter',
+  FORVENTEDE_INNTEKTER = 'Forvent inntekt',
   BEREGNING = 'Beregning',
   OPPSUMMERING = 'Oppsummering - se over før du sender inn',
   KVIITTERING = 'Kvittering',
