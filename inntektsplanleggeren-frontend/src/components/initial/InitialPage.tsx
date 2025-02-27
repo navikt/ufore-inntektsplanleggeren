@@ -148,7 +148,7 @@ export function InitialPage() {
               </List.Item>
               <List.Item>
                 Når du melder inn en endring i inntekten din, lager vi en ny beregning. Hvis inntekten du melder inn
-                påvirker uføreutbetalingene dine, vil alle dine månedlige utbetalingene bli justert.
+                påvirker uføreutbetalingene dine, vil alle dine månedlige utbetalinger bli justert.
               </List.Item>
               <List.Item>
                 Får du for mye utbetalt, må du betale tilbake. Får du for lite utbetalt, betaler Nav penger tilbake til
