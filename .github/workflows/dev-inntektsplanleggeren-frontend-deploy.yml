@@ -15,7 +15,7 @@ jobs:
       team: pensjonselvbetjening
       app: inntektsplanleggeren-frontend
       build_script_command: build
-      node_version: 20
+      node_version: 22
       prune_dev_dependencies: true
     secrets: inherit
 
@@ -30,7 +30,7 @@ jobs:
       team: pensjonselvbetjening
       app: inntektsplanleggeren-frontend
       build_script_command: build:development:veileder
-      node_version: 20
+      node_version: 22
       prune_dev_dependencies: true
     secrets: inherit
 
