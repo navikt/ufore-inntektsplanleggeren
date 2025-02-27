@@ -1,11 +1,11 @@
-import { Alert, Bleed, BodyLong, BodyShort, Heading, VStack } from "@navikt/ds-react";
-import { StatusCodes } from "@/api/model/StatusCodes";
-import { StatusResponse } from "@/api/model/ApiRequests";
-import { FormatKroner } from "@/components/utils/FormatKroner";
-import { useContext } from "react";
-import { FormStateContext } from "@/context/FormData";
-import { Link } from "react-router-dom";
-import { FormatDateLong, FormatDateTime } from "@/components/utils/FormatDate";
+import { Alert, Bleed, BodyLong, BodyShort, Heading, VStack } from '@navikt/ds-react'
+import { StatusCodes } from '@/api/model/StatusCodes'
+import { StatusResponse } from '@/api/model/ApiRequests'
+import { FormatKroner } from '@/components/utils/FormatKroner'
+import { useContext } from 'react'
+import { FormStateContext } from '@/context/FormData'
+import { Link } from 'react-router-dom'
+import { FormatDateLong, FormatDateTime } from '@/components/utils/FormatDate'
 
 interface Props {
   statusResponse: StatusResponse
@@ -16,74 +16,135 @@ interface Props {
 export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegisteredInntekt }: Props) => {
   const { selectedYear } = useContext(FormStateContext)
 
-
   return (
     <VStack>
-      {!statusResponse || statusResponse.status === StatusCodes.TIL_BEHANDLING &&
+      {!statusResponse ||
+        (statusResponse.status === StatusCodes.TIL_BEHANDLING && (
+          <VStack gap="5">
+            <Bleed marginInline={{ md: '0 20' }}>
+              <Alert variant="info">
+                <VStack gap="3">
+                  <Heading level="3" size="small">
+                    Nav har mottatt opplysninger om inntekten din
+                  </Heading>
+                  <BodyShort>
+                    Din forventende inntekt i {selectedYear}:{' '}
+                    <strong>
+                      <FormatKroner value={registeredInntekt} /> (før skatt)
+                    </strong>
+                  </BodyShort>
+                  {epsRegisteredInntekt != null && (
+                    <BodyShort>
+                      Annen forelders forventende inntekt i {selectedYear}:{' '}
+                      <strong>
+                        <FormatKroner value={epsRegisteredInntekt} /> (før skatt)
+                      </strong>
+                    </BodyShort>
+                  )}
+                </VStack>
+              </Alert>
+            </Bleed>
+            <BodyShort>
+              Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} />
+            </BodyShort>
+            <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
+          </VStack>
+        ))}
+
+      {statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING && (
         <VStack gap="5">
-          <Bleed marginInline={{ md: "0 20" }}>
-            <Alert variant="info">
-              <VStack gap="3">
-                <Heading level="3" size="small">Nav har mottatt opplysninger om inntekten din</Heading>
-                <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
-                {epsRegisteredInntekt != null && <BodyShort>Annen forelders forventende inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
-              </VStack>
-            </Alert>
-          </Bleed>
-          <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>
-          <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
-
-        </VStack>
-      }
-
-
-      {statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING &&
-        <VStack gap="5">
-          <Bleed marginInline={{ md: "0 20" }}>
+          <Bleed marginInline={{ md: '0 20' }}>
             <Alert variant="success">
               <VStack gap="3">
-                <Heading level="3" size="small">Ny inntekt er mottatt av oss og saken er behandlet</Heading>
-                <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
-                {epsRegisteredInntekt != null && <BodyShort>Annen forelders forventede inntekt i {selectedYear}: <strong><FormatKroner value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort>}
-                {statusResponse.maandedligeUtbetalinger != null && <BodyShort>Din månedlige utbetaling fra <FormatDateLong value={statusResponse.maandedligeUtbetalinger.fom} />: <strong><FormatKroner
-                  value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort>}
+                <Heading level="3" size="small">
+                  Ny inntekt er mottatt av oss og saken er behandlet
+                </Heading>
+                <BodyShort>
+                  Din forventende inntekt i {selectedYear}:{' '}
+                  <strong>
+                    <FormatKroner value={registeredInntekt} /> (før skatt)
+                  </strong>
+                </BodyShort>
+                {epsRegisteredInntekt != null && (
+                  <BodyShort>
+                    Annen forelders forventede inntekt i {selectedYear}:{' '}
+                    <strong>
+                      <FormatKroner value={epsRegisteredInntekt} /> (før skatt)
+                    </strong>
+                  </BodyShort>
+                )}
+                {statusResponse.maandedligeUtbetalinger != null && (
+                  <BodyShort>
+                    Din månedlige utbetaling fra <FormatDateLong value={statusResponse.maandedligeUtbetalinger.fom} />:{' '}
+                    <strong>
+                      <FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)
+                    </strong>
+                  </BodyShort>
+                )}
               </VStack>
             </Alert>
           </Bleed>
           <VStack>
-            <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>
+            <BodyShort>
+              Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} />
+            </BodyShort>
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
           <BodyLong>
-            Vi har behandlet saken din og du vil snart motta et vedtaksbrev i <Link target="_blank" to={import.meta.env.VITE_NAV_INNBOKS_URL}>Din innboks (åpnes i ny fane)</Link>.
+            Vi har behandlet saken din og du vil snart motta et vedtaksbrev i{' '}
+            <Link target="_blank" to={import.meta.env.VITE_NAV_INNBOKS_URL}>
+              Din innboks (åpnes i ny fane)
+            </Link>
+            .
           </BodyLong>
-        </VStack>}
+        </VStack>
+      )}
 
-      {statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING &&
+      {statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING && (
         <VStack gap="5">
-          <Bleed marginInline={{ md: "0 20" }}>
+          <Bleed marginInline={{ md: '0 20' }}>
             <Alert variant="success">
               <VStack gap="3">
-                <Heading level="3" size="small">Ny inntekt er registrert, og den påvirker ikke utbetalingen din</Heading>
-                <BodyShort>Din forventende inntekt i {selectedYear}: <strong><FormatKroner value={registeredInntekt} /> (før skatt)</strong></BodyShort>
-                {epsRegisteredInntekt != null ? <BodyShort>Annen forelders forventede inntekt i {selectedYear}: <strong><FormatKroner
-                  value={epsRegisteredInntekt} /> (før skatt)</strong></BodyShort> : null}
-                {statusResponse.maandedligeUtbetalinger != null ? <BodyShort>Din månedlige utbetaling: <strong><FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)</strong></BodyShort> : null}
+                <Heading level="3" size="small">
+                  Ny inntekt er registrert, og den påvirker ikke utbetalingen din
+                </Heading>
+                <BodyShort>
+                  Din forventende inntekt i {selectedYear}:{' '}
+                  <strong>
+                    <FormatKroner value={registeredInntekt} /> (før skatt)
+                  </strong>
+                </BodyShort>
+                {epsRegisteredInntekt != null ? (
+                  <BodyShort>
+                    Annen forelders forventede inntekt i {selectedYear}:{' '}
+                    <strong>
+                      <FormatKroner value={epsRegisteredInntekt} /> (før skatt)
+                    </strong>
+                  </BodyShort>
+                ) : null}
+                {statusResponse.maandedligeUtbetalinger != null ? (
+                  <BodyShort>
+                    Din månedlige utbetaling:{' '}
+                    <strong>
+                      <FormatKroner value={statusResponse.maandedligeUtbetalinger?.beloep} /> (før skatt)
+                    </strong>
+                  </BodyShort>
+                ) : null}
               </VStack>
             </Alert>
           </Bleed>
           <VStack>
-            <BodyShort>Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} /></BodyShort>  {/*    todo display date in nice format*/}
+            <BodyShort>
+              Mottatt av Nav: <FormatDateTime value={statusResponse.registeringsTidspunktEndring} />
+            </BodyShort>{' '}
+            {/*    todo display date in nice format*/}
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
           <BodyLong>
             Inntekt du har sendt inn endrer ikke utbetalingen din. Du får derfor ikke et nytt vedtaksbrev fra oss.
           </BodyLong>
         </VStack>
-      }
-
-
+      )}
     </VStack>
   )
-
 }

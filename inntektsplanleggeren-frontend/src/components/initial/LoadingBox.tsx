@@ -1,5 +1,5 @@
-import { BodyShort, Box, Loader, VStack } from "@navikt/ds-react";
-import React from "react";
+import { BodyShort, Box, Loader, VStack } from '@navikt/ds-react'
+import React from 'react'
 
 export function LoadingBox() {
   return (
@@ -9,5 +9,5 @@ export function LoadingBox() {
         <BodyShort align="center">Vent mens vi laster inn siden.</BodyShort>
       </VStack>
     </Box>
-  );
+  )
 }

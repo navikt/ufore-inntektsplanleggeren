@@ -8,100 +8,110 @@ import {
   Radio,
   RadioGroup,
   ReadMore,
-  VStack
-} from "@navikt/ds-react";
-import { ArrowRightIcon } from "@navikt/aksel-icons";
-import { useContext, useRef, useState } from "react";
-import { FormStateContext } from "@/context/FormData";
+  VStack,
+} from '@navikt/ds-react'
+import { ArrowRightIcon } from '@navikt/aksel-icons'
+import { useContext, useRef, useState } from 'react'
+import { FormStateContext } from '@/context/FormData'
 
 interface Props {
-  availableYears: number[],
-  anotherAvalableYear: number | null;
-  handleSubmit: (year: number, previousYear: number | null) => void;
-  isLoading: boolean;
+  availableYears: number[]
+  anotherAvalableYear: number | null
+  handleSubmit: (year: number, previousYear: number | null) => void
+  isLoading: boolean
 }
 
 export function YearView({ availableYears, anotherAvalableYear, handleSubmit, isLoading }: Props) {
   const { setPreviousYear } = useContext(FormStateContext)
-  const [firstYear, secondYear] = availableYears;
-  const [year, setYear] = useState<number | undefined>(undefined);
+  const [firstYear, secondYear] = availableYears
+  const [year, setYear] = useState<number | undefined>(undefined)
   const [errors, setErrors] = useState({
-    year: ""
-  });
-  const errorSummaryRef = useRef<HTMLDivElement>(null);
+    year: '',
+  })
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
 
   if (availableYears.length === 0) {
-    return null;
+    return null
   }
 
   if (firstYear !== undefined && secondYear === undefined && !year) {
-    setYear(firstYear);
+    setYear(firstYear)
   }
 
   function onSubmitStart(event: React.FormEvent) {
-    event.preventDefault();
+    event.preventDefault()
     const newErrors = {
-      year: year ? "" : "Du må velge et år før du kan starte inntektsplanleggeren.",
-    };
-    setErrors(newErrors);
+      year: year ? '' : 'Du må velge et år før du kan starte inntektsplanleggeren.',
+    }
+    setErrors(newErrors)
 
     if (year && !Object.values(newErrors).some(Boolean)) {
-      setPreviousYear(null);
-      handleSubmit(year, null);
+      setPreviousYear(null)
+      handleSubmit(year, null)
     }
   }
 
   function onSubmitSeePreviousYear(event: React.FormEvent) {
-    event.preventDefault();
+    event.preventDefault()
 
     if (year) {
-      setPreviousYear(anotherAvalableYear);
-      handleSubmit(year, anotherAvalableYear);
+      setPreviousYear(anotherAvalableYear)
+      handleSubmit(year, anotherAvalableYear)
     }
   }
-
 
   return (
     <form onSubmit={onSubmitStart}>
       <VStack>
-        {availableYears.length === 1 ?
-          <Heading size={"medium"} level={"2"} spacing>Du kan registrere inntekt for {firstYear}</Heading> :
-          <Heading size="medium" level="2">Du kan registrere inntekt
-            for {firstYear} og {secondYear}</Heading>
-        }
+        {availableYears.length === 1 ? (
+          <Heading size={'medium'} level={'2'} spacing>
+            Du kan registrere inntekt for {firstYear}
+          </Heading>
+        ) : (
+          <Heading size="medium" level="2">
+            Du kan registrere inntekt for {firstYear} og {secondYear}
+          </Heading>
+        )}
 
         <VStack gap="7">
           <ReadMore header="Tidspunkt for å registrere inntekt">
             <List>
-              <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekt for dette
-                året.</List.Item>
-              <List.Item>Fra 1. oktober - 30. november kan du både legge inn inntekt for dette året og
-                neste år.</List.Item>
-              <List.Item>Fra 1. til 31. desember kan du bare registrere inntekt for neste år, fordi
-                endringen ikke vil påvirke utbetalingen din før til neste år.</List.Item>
+              <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekt for dette året.</List.Item>
+              <List.Item>
+                Fra 1. oktober - 30. november kan du både legge inn inntekt for dette året og neste år.
+              </List.Item>
+              <List.Item>
+                Fra 1. til 31. desember kan du bare registrere inntekt for neste år, fordi endringen ikke vil påvirke
+                utbetalingen din før til neste år.
+              </List.Item>
             </List>
           </ReadMore>
 
-          {anotherAvalableYear !== null || (firstYear !== undefined && secondYear !== undefined) ?
-            <Alert variant="info">Hvis du ikke sender inn ny forventet inntekt for neste år, lager vi en
-              forventet inntekt for deg. Den vil være litt høyere enn den forventede inntekten din for
-              året vi er i nå. </Alert> : null
-          }
+          {anotherAvalableYear !== null || (firstYear !== undefined && secondYear !== undefined) ? (
+            <Alert variant="info">
+              Hvis du ikke sender inn ny forventet inntekt for neste år, lager vi en forventet inntekt for deg. Den vil
+              være litt høyere enn den forventede inntekten din for året vi er i nå.{' '}
+            </Alert>
+          ) : null}
 
-          {(anotherAvalableYear == null && firstYear !== undefined && secondYear !== undefined) ?
-            <RadioGroup id="year"
+          {anotherAvalableYear == null && firstYear !== undefined && secondYear !== undefined ? (
+            <RadioGroup
+              id="year"
               error={errors.year}
               legend="Hvilket år ønsker du å registrere inntekter for?"
               value={year}
               onChange={(newValue) => {
-                setYear(newValue);
-                setErrors({ ...errors, year: "" });
-              }}>
-              {availableYears.map(year => <Radio key={year} value={year}>{year.toString(10)}</Radio>)}
-            </RadioGroup> : null
-          }
-
-
+                setYear(newValue)
+                setErrors({ ...errors, year: '' })
+              }}
+            >
+              {availableYears.map((year) => (
+                <Radio key={year} value={year}>
+                  {year.toString(10)}
+                </Radio>
+              ))}
+            </RadioGroup>
+          ) : null}
 
           {Object.values(errors).some(Boolean) && (
             <ErrorSummary ref={errorSummaryRef} heading="Du må rette disse feilene før du kan fortsette">
@@ -115,12 +125,20 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
             </ErrorSummary>
           )}
 
-          {anotherAvalableYear == null ?
+          {anotherAvalableYear == null ? (
             <HStack>
-              <Button type="submit" onClick={onSubmitStart} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
+              <Button
+                type="submit"
+                onClick={onSubmitStart}
+                variant="primary"
+                loading={isLoading}
+                iconPosition="right"
+                icon={<ArrowRightIcon aria-hidden />}
+              >
                 Start inntektsplanlegger
               </Button>
-            </HStack> :
+            </HStack>
+          ) : (
             <VStack gap="3">
               <HStack>
                 <Button variant="secondary" onClick={onSubmitSeePreviousYear} loading={isLoading}>
@@ -128,16 +146,21 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
                 </Button>
               </HStack>
               <HStack>
-                <Button type="submit" onClick={onSubmitStart} variant="primary" loading={isLoading} iconPosition="right" icon={<ArrowRightIcon aria-hidden />}>
+                <Button
+                  type="submit"
+                  onClick={onSubmitStart}
+                  variant="primary"
+                  loading={isLoading}
+                  iconPosition="right"
+                  icon={<ArrowRightIcon aria-hidden />}
+                >
                   Registrer inntekter for {year}
                 </Button>
               </HStack>
-            </VStack>}
+            </VStack>
+          )}
         </VStack>
       </VStack>
     </form>
   )
 }
-
-
-
