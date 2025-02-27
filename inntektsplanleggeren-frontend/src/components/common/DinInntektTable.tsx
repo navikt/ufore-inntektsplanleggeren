@@ -104,7 +104,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[]; type?: string }) => {
               <div>
                 <strong>{Month[maned]}</strong>
                 <div>
-                  <FormatKroner value={belop} />
+                  Beløp per måned: <FormatKroner value={belop} />
                 </div>
                 {inntektsgivere.length > 0 ? (
                   <div>
