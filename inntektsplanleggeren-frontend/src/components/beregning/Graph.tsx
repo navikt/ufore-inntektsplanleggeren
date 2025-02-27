@@ -115,7 +115,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         newLine: true,
         cursor: 'auto'
       },
-      itemDistance: 20,
+      itemDistance: numberOfItems > 2 ? 80 : 20,
       itemMarginBottom: 15
     }
   }
