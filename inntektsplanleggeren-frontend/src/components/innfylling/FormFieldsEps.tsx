@@ -180,7 +180,7 @@ export const FormFieldsEps = ({
         </VStack>
       )}
 
-      <Box padding="4" background="surface-info-subtle" borderRadius="large">
+      <Box padding="4" background="surface-subtle" borderRadius="large">
         <VStack>
           <Heading size="small"> Annen forelder sin samlede inntekt i {year}: </Heading>
           <BodyShort className="sum">
