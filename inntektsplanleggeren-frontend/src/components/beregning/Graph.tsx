@@ -130,8 +130,6 @@ const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
         opacity: 1,
       },
     },
-    maxPointWidth: isBeforeValuesAvailable ? undefined : 200,
-    minPointLength: undefined,
     dataLabels: {
       enabled: false,
     },
@@ -168,13 +166,12 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
                 ? 'Uføretrygd inkludert gjenlevendetillegg'
                 : 'Uføretrygd',
               data: [
-                isBeforeValuesAvailable
-                  ? (props.simulationResult.uforetrygd.yearly.before ?? 0) +
-                    (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0)
-                  : undefined,
+                isBeforeValuesAvailable &&
+                  (props.simulationResult.uforetrygd.yearly.before ?? 0) +
+                    (props.simulationResult.gjenlevendetillegg?.yearly.before ?? 0),
                 (props.simulationResult.uforetrygd.yearly.after ?? 0) +
                   (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0),
-              ].filter(isNotUndefined),
+              ].filter(isNotFalse),
               color: 'var(--a-deepblue-500)',
             },
             props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn
@@ -182,13 +179,12 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
                   ...COLUMN_STYLE(isBeforeValuesAvailable),
                   name: 'Barnetillegg uføretrygd',
                   data: [
-                    isBeforeValuesAvailable
-                      ? (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) +
-                        (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0)
-                      : undefined,
+                    isBeforeValuesAvailable &&
+                      (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.before ?? 0) +
+                        (props.simulationResult.barnetilleggFellesbarn?.yearly.before ?? 0),
                     (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.after ?? 0) +
                       (props.simulationResult.barnetilleggFellesbarn?.yearly.after ?? 0),
-                  ].filter(isNotUndefined),
+                  ].filter(isNotFalse),
                   color: 'var(--a-purple-400)',
                 }
               : undefined,
@@ -196,16 +192,16 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
               ...COLUMN_STYLE(isBeforeValuesAvailable),
               name: 'Din forventede inntekt',
               data: [
-                isBeforeValuesAvailable ? (props.simulationResult.forventetInntekt.yearly.before ?? 0) : undefined,
+                isBeforeValuesAvailable && (props.simulationResult.forventetInntekt.yearly.before ?? 0),
                 props.simulationResult.forventetInntekt.yearly.after ?? 0,
-              ].filter(isNotUndefined),
+              ].filter(isNotFalse),
               color: 'var(--a-green-400)',
             },
-          ].filter(isNotUndefined),
+          ].filter(isNotFalse),
         }}
       />
     </VStack>
   )
 }
 
-const isNotUndefined = <T,>(value: T | undefined): value is T => value !== undefined && value !== null && value !== 0
+const isNotFalse = <T,>(value: T | undefined): value is T => value !== false
