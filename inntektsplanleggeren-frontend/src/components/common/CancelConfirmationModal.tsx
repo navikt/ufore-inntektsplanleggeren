@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { BodyLong, Button, HStack, Modal } from '@navikt/ds-react'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 

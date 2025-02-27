@@ -1,7 +1,7 @@
 import { PersonInntekter } from '@/api/model/ApiRequests'
 import { BodyShort, Table, VStack } from '@navikt/ds-react'
 import { FormatKroner } from '@/components/utils/FormatKroner'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DESKTOP_WIDTH } from '@/FormContainer'
 
 export const PreviousExpectedIncomeTable = (props: {

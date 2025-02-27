@@ -1,7 +1,6 @@
 import { Message } from '@/api/model/ApiRequests'
 import { Alert, VStack } from '@navikt/ds-react'
 import { MessageCodes } from '@/api/model/MessageCodes'
-import React from 'react'
 
 export function BeregningWarnings(props: { messages: Message[] }) {
   return (

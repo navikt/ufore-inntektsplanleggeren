@@ -1,5 +1,4 @@
 import { Alert, BodyShort } from '@navikt/ds-react'
-import React from 'react'
 
 export const ErrorView = (props: { message: ErrorCode | null }) => {
   const getErrorMessage = () => {

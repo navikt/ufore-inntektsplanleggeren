@@ -1,5 +1,4 @@
 import { BodyShort, Box, Loader, VStack } from '@navikt/ds-react'
-import React from 'react'
 
 export function LoadingBox() {
   return (

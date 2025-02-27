@@ -1,9 +1,9 @@
 import './App.css'
 import '@navikt/ds-css'
-import { Box, Heading } from '@navikt/ds-react'
+import { Heading } from '@navikt/ds-react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { FormStateComponent } from '@/context/FormData'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 export function App() {
   const location = useLocation()

@@ -11,7 +11,7 @@ import {
 } from '@navikt/ds-react'
 import { InntektsgrenseCard } from '@/components/initial/DinInntektsgrenseCard'
 import { useNavigate } from 'react-router-dom'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { YearView } from '@/components/initial/YearView'
 import './InitialView.css'
 import { DataContext } from '@/DataContextProvider'

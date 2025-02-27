@@ -1,5 +1,5 @@
 import { BodyLong, Button, Heading, HStack, Loader, VStack } from '@navikt/ds-react'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import './PreviousYearPage.css'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'

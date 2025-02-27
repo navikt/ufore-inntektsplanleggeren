@@ -4,7 +4,7 @@ import { FormatKroner } from '@/components/utils/FormatKroner'
 
 interface IProps {
   inntekter: PersonInntekter
-  sumOverrideText?: String
+  sumOverrideText?: string
 }
 
 export const InputSummary: React.FC<IProps> = (props) => {

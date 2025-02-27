@@ -120,20 +120,18 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
   }
 }
 
-const COLUMN_STYLE = (isBeforeValuesAvailable: boolean) => {
-  return {
-    states: {
-      hover: {
-        enabled: false,
-      },
-      inactive: {
-        opacity: 1,
-      },
-    },
-    dataLabels: {
+const COLUMN_STYLE = {
+  states: {
+    hover: {
       enabled: false,
     },
-  }
+    inactive: {
+      opacity: 1,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
 }
 
 export const Graph = (props: { simulationResult: SimulationResult }) => {
@@ -161,7 +159,7 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
           tooltip,
           series: [
             {
-              ...COLUMN_STYLE(isBeforeValuesAvailable),
+              ...COLUMN_STYLE,
               name: props.simulationResult.gjenlevendetillegg
                 ? 'Uføretrygd inkludert gjenlevendetillegg'
                 : 'Uføretrygd',
@@ -176,7 +174,7 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
             },
             props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn
               ? {
-                  ...COLUMN_STYLE(isBeforeValuesAvailable),
+                  ...COLUMN_STYLE,
                   name: 'Barnetillegg uføretrygd',
                   data: [
                     isBeforeValuesAvailable &&
@@ -189,7 +187,7 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
                 }
               : undefined,
             {
-              ...COLUMN_STYLE(isBeforeValuesAvailable),
+              ...COLUMN_STYLE,
               name: 'Din forventede inntekt',
               data: [
                 isBeforeValuesAvailable && (props.simulationResult.forventetInntekt.yearly.before ?? 0),

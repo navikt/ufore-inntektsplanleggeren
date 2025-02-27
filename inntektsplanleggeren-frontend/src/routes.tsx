@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { Routes, Route, BrowserRouter, Outlet, Navigate } from 'react-router-dom'
 import { InitialPage } from '@/components/initial/InitialPage'
 import App from '@/App'
@@ -45,17 +45,3 @@ const YearGuard = () => {
     </SelectedYearProvider>
   )
 }
-
-// const AccessControl = () => {
-//     const user = getuser();
-//
-//     if (loading) {
-//         return <Loader />;
-//     }
-//
-//     if (user === undefined) {
-//         return <Navigate to="/login"/>;
-//     }
-//
-//     return <Outlet/>;
-// };

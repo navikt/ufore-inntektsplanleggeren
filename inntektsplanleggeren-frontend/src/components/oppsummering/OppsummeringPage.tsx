@@ -3,7 +3,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
-import React, { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
+import { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
 import { send } from '@/api/apiFetching'
 import { FormStateContext } from '@/context/FormData'
 import { DataContext } from '@/DataContextProvider'
@@ -40,7 +40,7 @@ export const OppsummeringPage = () => {
         setSendResponse(result)
         navigate(getFullPathForPage(PageLinks.KVITTERING))
       }
-    } catch (error) {
+    } catch {
       setErrorMessage(ErrorCode.GENERIC_ERROR)
       setIsLoading(false)
     }

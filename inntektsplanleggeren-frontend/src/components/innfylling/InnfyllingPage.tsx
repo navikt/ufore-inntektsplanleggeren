@@ -11,7 +11,7 @@ import {
   Loader,
   VStack,
 } from '@navikt/ds-react'
-import React, { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
+import { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
 import './innfylling.css'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
@@ -116,7 +116,7 @@ export const InnfyllingPage = () => {
           navigate(getFullPathForPage(PageLinks.BEREGNING))
         }
       }
-    } catch (error) {
+    } catch {
       setIsLoading(false)
       setErrorMessage(ErrorCode.GENERIC_ERROR)
     }

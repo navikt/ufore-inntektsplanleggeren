@@ -130,7 +130,7 @@ function DataContextProvider(props: DataContextProviderProps) {
           } else {
             setInitiateResponse(inntektsPlanleggerenResponse)
           }
-        } catch (e) {
+        } catch {
           setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
         setRefetch(false)
