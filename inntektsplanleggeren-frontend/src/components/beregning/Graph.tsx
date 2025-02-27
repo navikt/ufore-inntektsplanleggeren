@@ -40,7 +40,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
       categories: getXAxisCategories(isBeforeValuesAvailable),
       labels: {
         style: {
-          fontSize: isDesktop ? 18 : 12,
+          fontSize: isDesktop ? 18 : 16,
           fontWeight: 600,
           fontFamily: 'var(--a-font-family)',
           color: 'var(--a-grayalpha-700)',
@@ -65,11 +65,11 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
       stackLabels: {
         enabled: true,
         formatter(this: Highcharts.StackItemObject) {
-          return 'Sum ' + NUMBER_FORMATTER.format(this.total) + ' kr'
+          return `Sum ${NUMBER_FORMATTER.format(this.total)} kr`
         },
         backgroundColor: 'white',
         style: {
-          fontSize: isDesktop ? 18 : 12,
+          fontSize: isDesktop ? 18 : 16,
           color: 'var(--a-grayalpha-700)',
           textOutline: false,
           fontWeight: 600,
