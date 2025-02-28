@@ -61,7 +61,7 @@ class InntektServiceTest {
         val expectedFilter = "UfoereA-Inntekt"
         val expectedFormal = "Ufoere"
         val expectedBeloep = 1.0
-        val expectedMonth = YearMonth.of(2025, 2)
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -132,11 +132,11 @@ class InntektServiceTest {
         val expectedFilter = "UfoereA-Inntekt"
         val expectedFormal = "Ufoeretrygdbarnetillegg"
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.of(2025, 2)
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         val expectedBeloepEps = 19898.0
-        val expectedMonthEps = YearMonth.of(2025, 4)
+        val expectedMonthEps = YearMonth.of(year, 4)
         val expectedUtbetaltFraEps = "Matbutikken AS"
 
         `when`(
@@ -225,7 +225,7 @@ class InntektServiceTest {
         val expectedFilter = "UfoereBarnetilleggA-inntekt"
         val expectedFormal = "Ufoeretrygdbarnetillegg"
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.of(2025, 2)
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -283,7 +283,7 @@ class InntektServiceTest {
     fun `should not include inntekt in inntektHittilIAar when inntekt contains avviksbeskrivelse`() {
         val year = LocalDate.now().year
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.of(2025, 2)
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -330,7 +330,7 @@ class InntektServiceTest {
     fun `should include 1 month inntekt in inntektHittilIAar when inntekt for jan feb and date is 4 mar`() {
         val year = LocalDate.now().year
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.of(2025, 1)
+        val expectedMonth = YearMonth.of(year, 1)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -355,7 +355,7 @@ class InntektServiceTest {
                             AbonnerteInntekterMaaned(
                                 543534.98,
                                 null,
-                                YearMonth.of(2025, 2),
+                                YearMonth.of(year, 2),
                                 listOf(
                                     SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
                                 )
@@ -383,8 +383,8 @@ class InntektServiceTest {
     fun `should include 2 month inntekt in inntektHittilIAar when inntekt for jan feb and date is 6 mar`() {
         val year = LocalDate.now().year
         val expectedBeloep = 3927.876
-        val expectedMonth1 = YearMonth.of(2025, 1)
-        val expectedMonth2 = YearMonth.of(2025, 2)
+        val expectedMonth1 = YearMonth.of(year, 1)
+        val expectedMonth2 = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -436,7 +436,7 @@ class InntektServiceTest {
 
     @Test
     fun `should include 1 month inntekt in inntektHittilIAar when inntekt for nov des and date is 15 des`() {
-        val year = 2025
+        val year = LocalDate.now().year
         val expectedBeloep = 3927.876
         val expectedMonth1 = YearMonth.of(year, 11)
         val expectedMonth2 = YearMonth.of(year, 12)
