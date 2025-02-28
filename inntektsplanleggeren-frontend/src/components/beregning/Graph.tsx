@@ -195,11 +195,12 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
               ].filter(isNotFalse),
               color: 'var(--a-green-400)',
             },
-          ].filter(isNotFalse),
+          ].filter(isNotUndefined),
         }}
       />
     </VStack>
   )
 }
 
+const isNotUndefined = (value: unknown | undefined) => value !== undefined
 const isNotFalse = <T,>(value: T | undefined): value is T => value !== false
