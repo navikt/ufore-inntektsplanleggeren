@@ -61,7 +61,7 @@ class InntektServiceTest {
         val expectedFilter = "UfoereA-Inntekt"
         val expectedFormal = "Ufoere"
         val expectedBeloep = 1.0
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(2025, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -132,11 +132,11 @@ class InntektServiceTest {
         val expectedFilter = "UfoereA-Inntekt"
         val expectedFormal = "Ufoeretrygdbarnetillegg"
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.now() //TODO: Fix this
+        val expectedMonth = YearMonth.of(2025, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         val expectedBeloepEps = 19898.0
-        val expectedMonthEps = YearMonth.now().plusMonths(2)  //TODO: Fix this will fail
+        val expectedMonthEps = YearMonth.of(2025, 4)
         val expectedUtbetaltFraEps = "Matbutikken AS"
 
         `when`(
@@ -175,7 +175,7 @@ class InntektServiceTest {
 
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(eregService.getOrganisasjonsnavn("mat")).thenReturn(expectedUtbetaltFraEps)
-        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, LocalDate.now().monthValue+3, 12).plusMonths(3))
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MAY, 12).plusMonths(3))
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             PID,
@@ -225,7 +225,7 @@ class InntektServiceTest {
         val expectedFilter = "UfoereBarnetilleggA-inntekt"
         val expectedFormal = "Ufoeretrygdbarnetillegg"
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(2025, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -283,7 +283,7 @@ class InntektServiceTest {
     fun `should not include inntekt in inntektHittilIAar when inntekt contains avviksbeskrivelse`() {
         val year = LocalDate.now().year
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(2025, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(

@@ -337,7 +337,7 @@ class InntektService(
         sumOpplysningspliktig: SumOpplysningspliktig,
         maaned: YearMonth
     ): Maanedsinntekt? {
-        if (sumOpplysningspliktig.avviksbeskrivelse.isNullOrEmpty() && isBeforeRegistreringsfrist(maaned)) {
+        if (sumOpplysningspliktig.avviksbeskrivelse.isNullOrEmpty() && isEtterRegistreringsfrist(maaned)) {
             val aktorNameMap = mutableMapOf<String, String>()
             return Maanedsinntekt(
                 maaned.monthValue,
@@ -348,7 +348,7 @@ class InntektService(
         return null
     }
 
-    private fun isBeforeRegistreringsfrist(maaned: YearMonth): Boolean {
+    private fun isEtterRegistreringsfrist(maaned: YearMonth): Boolean {
         val now = nowProvider.now()
         val registreringsFrist = if (now.month == Month.DECEMBER) {
             LocalDate.of(maaned.year + 1, Month.JANUARY, 5)
