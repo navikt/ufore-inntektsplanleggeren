@@ -327,6 +327,168 @@ class InntektServiceTest {
     }
 
     @Test
+    fun `should include 1 month inntekt in inntektHittilIAar when inntekt for jan feb and date is 4 mar`() {
+        val year = LocalDate.now().year
+        val expectedBeloep = 3927.876
+        val expectedMonth = YearMonth.of(2025, 1)
+        val expectedUtbetaltFra = "Organisasjonen AS"
+
+        `when`(
+            inntektskomponentClient.hentAbonnerteInntekterBolk(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(
+            HentAbonnerteInntekterBolkResponse(
+                listOf(
+                    AbonnerteInntekterPerIdent(
+                        Aktoer(PID, "NATURLIG_IDENT"), listOf(
+                            AbonnerteInntekterMaaned(
+                                expectedBeloep,
+                                null,
+                                expectedMonth,
+                                listOf(
+                                    SumOpplysningspliktig(expectedBeloep, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            ),
+                            AbonnerteInntekterMaaned(
+                                543534.98,
+                                null,
+                                YearMonth.of(2025, 2),
+                                listOf(
+                                    SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                null
+            )
+        )
+
+        `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 4))
+
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+
+        assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
+
+        assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
+        assertEquals(expectedMonth.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
+        assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
+    }
+
+    @Test
+    fun `should include 2 month inntekt in inntektHittilIAar when inntekt for jan feb and date is 6 mar`() {
+        val year = LocalDate.now().year
+        val expectedBeloep = 3927.876
+        val expectedMonth1 = YearMonth.of(2025, 1)
+        val expectedMonth2 = YearMonth.of(2025, 2)
+        val expectedUtbetaltFra = "Organisasjonen AS"
+
+        `when`(
+            inntektskomponentClient.hentAbonnerteInntekterBolk(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(
+            HentAbonnerteInntekterBolkResponse(
+                listOf(
+                    AbonnerteInntekterPerIdent(
+                        Aktoer(PID, "NATURLIG_IDENT"), listOf(
+                            AbonnerteInntekterMaaned(
+                                expectedBeloep,
+                                null,
+                                expectedMonth1,
+                                listOf(
+                                    SumOpplysningspliktig(expectedBeloep, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            ),
+                            AbonnerteInntekterMaaned(
+                                543534.98,
+                                null,
+                                expectedMonth2,
+                                listOf(
+                                    SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                null
+            )
+        )
+
+        `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 6))
+
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+
+        assertEquals(2, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
+
+        assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
+        assertEquals(expectedMonth1.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
+        assertEquals(expectedMonth2.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[1].maned)
+        assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
+    }
+
+    @Test
+    fun `should include 1 month inntekt in inntektHittilIAar when inntekt for nov des and date is 15 des`() {
+        val year = 2025
+        val expectedBeloep = 3927.876
+        val expectedMonth1 = YearMonth.of(year, 11)
+        val expectedMonth2 = YearMonth.of(year, 12)
+        val expectedUtbetaltFra = "Organisasjonen AS"
+
+        `when`(
+            inntektskomponentClient.hentAbonnerteInntekterBolk(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(
+            HentAbonnerteInntekterBolkResponse(
+                listOf(
+                    AbonnerteInntekterPerIdent(
+                        Aktoer(PID, "NATURLIG_IDENT"), listOf(
+                            AbonnerteInntekterMaaned(
+                                expectedBeloep,
+                                null,
+                                expectedMonth1,
+                                listOf(
+                                    SumOpplysningspliktig(expectedBeloep, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            ),
+                            AbonnerteInntekterMaaned(
+                                543534.98,
+                                null,
+                                expectedMonth2,
+                                listOf(
+                                    SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                null
+            )
+        )
+
+        `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.DECEMBER, 15))
+
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+
+        assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
+
+        assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
+        assertEquals(expectedMonth1.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
+        assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
+    }
+
+    @Test
     fun `should set forventede inntekter to forventede inntekter from krav when open krav exists`() {
         val year = LocalDate.now().year
 

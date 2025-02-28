@@ -350,7 +350,7 @@ class InntektService(
 
     private fun isEtterRegistreringsfrist(maaned: YearMonth): Boolean {
         val now = nowProvider.now()
-        val registreringsFrist = if (now.month == Month.DECEMBER) {
+        val registreringsFrist = if (maaned.month == Month.DECEMBER) {
             LocalDate.of(maaned.year + 1, Month.JANUARY, 5)
         } else {
             LocalDate.of(maaned.year, maaned.month + 1, 5)
