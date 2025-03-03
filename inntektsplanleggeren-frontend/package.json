@@ -55,6 +55,6 @@
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-mock": "^3.0.2",
     "vite-plugin-stylelint": "^5.2.0",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.1"
   }
 }
