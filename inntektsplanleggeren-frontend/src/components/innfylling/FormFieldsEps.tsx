@@ -56,13 +56,13 @@ export const FormFieldsEps = ({
   }
 
   return (
-    <div>
+    <div className="form-fields-wrapper">
       {forventedeInntekter.arbeidsinntekt !== null && (
         <VStack className="vstack-gap">
           <TextField
             id="arbeidsinntekt_eps"
             label="Lønn og pensjonsgivende ytelser"
-            description="Uføretrygd skal ikke tas med."
+            description="Uføretrygd skal ikke tas med"
             inputMode="numeric"
             error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
             value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}

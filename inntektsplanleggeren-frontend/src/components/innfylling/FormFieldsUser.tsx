@@ -56,13 +56,13 @@ export const FormFieldsUser = ({
   }
 
   return (
-    <div>
+    <div className="form-fields-wrapper">
       {forventedeInntekter.arbeidsinntekt !== null && (
         <VStack className="vstack-gap">
           <TextField
             id="arbeidsinntekt_bruker"
             label="Lønn og pensjonsgivende ytelser"
-            description="Du skal ikke ta med uføretrygden."
+            description="Du skal ikke ta med uføretrygden"
             inputMode="numeric"
             error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
             value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}
@@ -174,7 +174,7 @@ export const FormFieldsUser = ({
       )}
 
       <Box padding="4" background="surface-subtle" borderRadius="large">
-        <VStack>
+        <VStack gap={{ xs: '2', sm: '1' }}>
           <Heading level="4" size="small">
             {' '}
             Din samlede forventede inntekt i {year}:{' '}
