@@ -108,7 +108,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[]; type?: string }) => {
                 </div>
                 {inntektsgivere.length > 0 ? (
                   <div>
-                    {props.type === 'pensjonsordning' ? 'Pensjonsordning' : 'Arbeidsgiver'}: {inntektsgivere.join(', ')}
+                    {props.type === 'pensjonsordning' ? 'Pensjonsordning' : 'Utbetaler'}: {inntektsgivere.join(', ')}
                   </div>
                 ) : null}
               </div>
