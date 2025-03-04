@@ -166,8 +166,8 @@ export const InnfyllingPage = () => {
       {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 ||
         inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) && (
         <VStack>
-          <Heading level="3" size="medium">
-            Din inntekt hittil i år
+          <Heading level="3" size="medium" spacing>
+            Din inntekt hittil i {selectedYear}
           </Heading>
           <BodyLong>
             {' '}
@@ -211,7 +211,7 @@ export const InnfyllingPage = () => {
       )}
 
       <div>
-        <Heading level="2" size="medium">
+        <Heading level="3" size="medium">
           Slik skal du oppgi inntekten
         </Heading>
         <List>
@@ -224,8 +224,8 @@ export const InnfyllingPage = () => {
         <VStack gap="4">
           <VStack gap="4">
             <Bleed marginInline={{ md: '0 20' }} asChild>
-              <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
-                <VStack gap="4">
+              <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }}>
+                <VStack gap="6">
                   <Heading size="medium" level="3" spacing>
                     Din inntekt {selectedYear}
                   </Heading>
@@ -254,8 +254,8 @@ export const InnfyllingPage = () => {
 
             {inntekterResponse?.forventedeInntekter.eps ? (
               <Bleed marginInline={{ md: '0 20' }}>
-                <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding="8">
-                  <VStack gap="4">
+                <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }}>
+                  <VStack gap="6">
                     <Heading level="3" size="medium" spacing>
                       Annen forelders inntekt {selectedYear}
                     </Heading>
