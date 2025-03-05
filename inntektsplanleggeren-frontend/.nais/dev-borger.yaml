@@ -13,6 +13,7 @@ spec:
   ingresses:
     - https://borger.intern.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
     - https://borger.ansatt.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+    - https://borger.ekstern.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 1
