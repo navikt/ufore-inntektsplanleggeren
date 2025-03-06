@@ -69,7 +69,7 @@ export const FormContainer = () => {
 
 export enum PageNames {
   FORRIGE_INNTEKTER = 'Forrige inntekter',
-  FORVENTEDE_INNTEKTER = 'Forvent inntekt',
+  FORVENTET_INNTEKT = 'Forventet inntekt',
   BEREGNING = 'Beregning',
   OPPSUMMERING = 'Oppsummering - se over før du sender inn',
   KVIITTERING = 'Kvittering',
@@ -86,7 +86,7 @@ const isStepCompleted = (currentStepIndex: number, stepToCheckIndex: number) => 
 const getPageName = (index: number): string => {
   switch (index) {
     case 1:
-      return PageNames.FORVENTEDE_INNTEKTER
+      return PageNames.FORVENTET_INNTEKT
     case 2:
       return PageNames.BEREGNING
     case 3:
@@ -94,7 +94,7 @@ const getPageName = (index: number): string => {
     case 4:
       return PageNames.KVIITTERING
     default:
-      return PageNames.FORVENTEDE_INNTEKTER
+      return PageNames.FORVENTET_INNTEKT
   }
 }
 
