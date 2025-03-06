@@ -6,17 +6,19 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
+import java.time.YearMonth
 import java.time.temporal.TemporalAdjusters
-import java.time.temporal.TemporalAdjusters.firstDayOfMonth
 import java.time.temporal.TemporalAdjusters.lastDayOfMonth
 
 @Service
 class InntektService(
     private val inntektskomponentClient: InntektskomponentClient,
-    private val eregService: EregService
+    private val eregService: EregService,
+    private val nowProvider: NowProvider
 ) {
     fun getInntekterHittilIAar(
         pid: String,
@@ -324,7 +326,7 @@ class InntektService(
             return abonnertInntekt.sumOpplysningspliktigListe.mapNotNull {
                 convertSumOpplysningspliktigToMaanedsinntekt(
                     it,
-                    abonnertInntekt.maaned.monthValue
+                    abonnertInntekt.maaned
                 )
             }
         }
@@ -333,17 +335,27 @@ class InntektService(
 
     private fun convertSumOpplysningspliktigToMaanedsinntekt(
         sumOpplysningspliktig: SumOpplysningspliktig,
-        maaned: Int
+        maaned: YearMonth
     ): Maanedsinntekt? {
-        if (sumOpplysningspliktig.avviksbeskrivelse.isNullOrEmpty()) {
+        if (sumOpplysningspliktig.avviksbeskrivelse.isNullOrEmpty() && isEtterRegistreringsfrist(maaned)) {
             val aktorNameMap = mutableMapOf<String, String>()
             return Maanedsinntekt(
-                maaned,
+                maaned.monthValue,
                 sumOpplysningspliktig.beloep ?: 0.0,
                 getAktorName(aktorNameMap, sumOpplysningspliktig.opplysningspliktig)
             )
         }
         return null
+    }
+
+    private fun isEtterRegistreringsfrist(maaned: YearMonth): Boolean {
+        val now = nowProvider.now()
+        val registreringsFrist = if (maaned.month == Month.DECEMBER) {
+            LocalDate.of(maaned.year + 1, Month.JANUARY, 5)
+        } else {
+            LocalDate.of(maaned.year, maaned.month + 1, 5)
+        }
+        return now.isAfter(registreringsFrist)
     }
 
     private fun getAktorName(aktorNameMap: MutableMap<String, String>, aktor: Aktoer): String {
