@@ -22,7 +22,7 @@ jobs:
       app: inntektsplanleggeren-frontend
       prune_dev_dependencies: true
       build_script_command: build:production
-      node_version: 20
+      node_version: 22
     secrets: inherit
 
   trivy-docker:

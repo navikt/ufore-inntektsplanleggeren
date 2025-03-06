@@ -1,14 +1,14 @@
 /* FormFields.css */
 .vstack-gap {
-    margin-bottom: 40px; /* Adjust the value as needed */
-}
-
-.input-short {
-    width: 300px; /* Adjust the value as needed */
+  margin-bottom: var(--a-spacing-10); /* Adjust the value as needed */
 }
 
 .sum {
-    font-weight: bold;
-    font-size: 1.5em;
-    margin: 0;
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.form-fields-wrapper {
+  margin-top: var(--a-spacing-8);
 }

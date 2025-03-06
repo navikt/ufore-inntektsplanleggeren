@@ -1,152 +1,141 @@
-import express, { NextFunction, Request, Response } from "express";
-import winston, { format } from "winston";
-import { createProxyMiddleware } from "http-proxy-middleware";
-import { getToken, requestOboToken, validateToken } from "@navikt/oasis";
-import promBundle from "express-prom-bundle";
-import path from "path";
-import loggerMiddleware from "./middleware/logger.js";
-import dotenv from "dotenv";
-import ensureEnv from "./ensureEnv.js";
+import express, { NextFunction, Request, Response } from 'express'
+import winston, { format } from 'winston'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+import { getToken, requestOboToken, validateToken } from '@navikt/oasis'
+import promBundle from 'express-prom-bundle'
+import path from 'path'
+import loggerMiddleware from './middleware/logger.js'
+import dotenv from 'dotenv'
+import ensureEnv from './ensureEnv.js'
 
-const BASE_PATH = "/uforetrygd/selvbetjening/inntektsplanleggeren";
-const PORT = process.env.PORT || 8080;
+const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
+const PORT = process.env.PORT || 8080
 
-const metricsMiddleware = promBundle({ includeMethod: true });
+const metricsMiddleware = promBundle({ includeMethod: true })
 
-const app = express();
-const __dirname = process.cwd();
+const app = express()
+const __dirname = process.cwd()
 
-const isDevelopment = process.env.NODE_ENV === "development";
+const isDevelopment = process.env.NODE_ENV === 'development'
 
-dotenv.config();
+dotenv.config()
 
 const logger = winston.createLogger({
   format: isDevelopment ? format.simple() : undefined,
   transports: [new winston.transports.Console()],
-});
+})
 
-app.get("/internal/health/liveness", (req, res) => {
+app.get('/internal/health/liveness', (req, res) => {
   res.send({
-    status: "UP",
-  });
-});
+    status: 'UP',
+  })
+})
 
-app.get("/internal/health/readiness", (req, res) => {
+app.get('/internal/health/readiness', (req, res) => {
   res.send({
-    status: "UP",
-  });
-});
+    status: 'UP',
+  })
+})
 
-app.use(metricsMiddleware);
-app.use(loggerMiddleware(logger));
+app.use(metricsMiddleware)
+app.use(loggerMiddleware(logger))
 
 const AUTH_PROVIDER = (() => {
-  const tokenx: boolean = !!process.env.TOKEN_X_ISSUER;
-  const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER;
+  const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
+  const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER
   if (tokenx && azure) {
-    throw new Error(
-      "Both TOKEN_X_ISSUER and AZURE_OPENID_CONFIG_ISSUER are set. Only one of these can be set.",
-    );
+    throw new Error('Both TOKEN_X_ISSUER and AZURE_OPENID_CONFIG_ISSUER are set. Only one of these can be set.')
   }
 
   if (!tokenx && !azure) {
-    throw new Error("No auth provider is set");
+    throw new Error('No auth provider is set')
   }
 
   if (tokenx) {
-    return "tokenx";
+    return 'tokenx'
   }
 
   if (azure) {
-    return "azure";
+    return 'azure'
   }
-})() as "tokenx" | "azure";
+})() as 'tokenx' | 'azure'
 
 // Sett miljøvariabler for veileder eller borger
 const env =
-  AUTH_PROVIDER === "tokenx"
+  AUTH_PROVIDER === 'tokenx'
     ? ensureEnv({
-        oboAudience: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE",
-        inntektsplanleggerenBackendUrl: "INNTEKTSPLANLEGGEREN_BACKEND_URL",
+        oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
+        inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
       })
     : ensureEnv({
-        oboAudience: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE",
-        inntektsplanleggerenBackendUrl: "INNTEKTSPLANLEGGEREN_BACKEND_URL",
-      });
+        oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
+        inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
+      })
 
 const getOboToken = async (req: Request) => {
   if (isDevelopment && process.env.ACCESS_TOKEN) {
-    logger.error("Returning mock ACCESS_TOKEN from enviroment variable");
-    return process.env.ACCESS_TOKEN;
+    logger.error('Returning mock ACCESS_TOKEN from enviroment variable')
+    return process.env.ACCESS_TOKEN
   }
-  const token = getToken(req);
+  const token = getToken(req)
   if (!token) {
-    logger.info("No token found in request", {
-      "x_correlation-id": req.headers["x_correlation-id"],
-    });
-    throw new Error("403");
+    logger.info('No token found in request', {
+      'x_correlation-id': req.headers['x_correlation-id'],
+    })
+    throw new Error('403')
   }
 
-  const validationResult = await validateToken(token);
+  const validationResult = await validateToken(token)
   if (!validationResult.ok) {
-    logger.error("Failed to validate token", {
+    logger.error('Failed to validate token', {
       error: validationResult.error.message,
       errorType: validationResult.errorType,
-      "x_correlation-id": req.headers["x_correlation-id"],
-    });
-    throw new Error("401");
+      'x_correlation-id': req.headers['x_correlation-id'],
+    })
+    throw new Error('401')
   }
 
-  const obo = await requestOboToken(token, env.oboAudience);
+  const obo = await requestOboToken(token, env.oboAudience)
   if (!obo.ok) {
-    logger.error("Failed to get OBO token", {
+    logger.error('Failed to get OBO token', {
       error: obo.error.message,
-      "x_correlation-id": req.headers["x_correlation-id"],
-    });
-    throw new Error("401");
+      'x_correlation-id': req.headers['x_correlation-id'],
+    })
+    throw new Error('401')
   }
-  return obo.token;
-};
+  return obo.token
+}
 
-app.use(
-  `${BASE_PATH}/assets`,
-  (req: Request, res: Response, next: NextFunction) => {
-    const assetFolder = path.join(__dirname, "./dist", "assets");
-    return express.static(assetFolder)(req, res, next);
-  },
-);
+app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {
+  const assetFolder = path.join(__dirname, './dist', 'assets')
+  return express.static(assetFolder)(req, res, next)
+})
 
-app.use(
-  `${BASE_PATH}/api`,
-  async (req: Request, res: Response, next: NextFunction) => {
-    let oboToken: string;
-    try {
-      oboToken = await getOboToken(req);
-    } catch {
-      return res.sendStatus(401);
-    }
+app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) => {
+  getOboToken(req)
+    .then((oboToken) => {
+      createProxyMiddleware({
+        target: `${env.inntektsplanleggerenBackendUrl}/api`,
+        changeOrigin: true,
+        headers: {
+          Authorization: `Bearer ${oboToken}`,
+        },
+        logger: logger,
+      })(req, res, next)
+    })
+    .catch(() => {
+      res.sendStatus(401)
+    })
+})
 
-    return createProxyMiddleware({
-      target: `${env.inntektsplanleggerenBackendUrl}/api`,
-      changeOrigin: true,
-      headers: {
-        Authorization: `Bearer ${oboToken}`,
-      },
-      logger: logger,
-    })(req, res, next);
-  },
-);
-
-app.get("*", (_req, res) => {
-  if (AUTH_PROVIDER === "azure") {
-    res.sendFile(path.resolve(__dirname, "./dist", "index-veileder.html"));
+app.get('*', (_req, res) => {
+  if (AUTH_PROVIDER === 'azure') {
+    res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
   } else {
-    res.sendFile(path.resolve(__dirname, "./dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
   }
-});
+})
 
 app.listen(PORT, () => {
-  logger.info(
-    `Started server with AUTH_PROVIDER ${AUTH_PROVIDER} on port ${PORT}`,
-  );
-});
+  logger.info(`Started server with AUTH_PROVIDER ${AUTH_PROVIDER} on port ${PORT}`)
+})
