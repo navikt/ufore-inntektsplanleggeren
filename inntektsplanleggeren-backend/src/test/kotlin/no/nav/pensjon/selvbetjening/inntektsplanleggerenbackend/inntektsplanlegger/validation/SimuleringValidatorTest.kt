@@ -2,7 +2,6 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.PersonInntekter
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.SimulerEndringUforetrygdResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.UforetrygdSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.UforetrygdYtelseskomponenter
@@ -199,7 +198,7 @@ class SimuleringValidatorTest {
     @Test
     fun `should return OPPGITT_INNTEKT_GIVES_MORE_UFORETRYGD_THAN_ALREADY_UTBETALT when simulering gives less uforetrygd than current with tomDato first in month after 67`() {
         val sumBruttoRestArWithoutBTandET = 60000.0
-        val sumNettoRestArWithoutBTandET = 20001
+        val sumNettoRestArWithoutBTandET = 20003
         val simuleringFom = LocalDate.of(2023,3,1)
         val firstInMonthAfter67 = simuleringFom.plusMonths(4)
 
