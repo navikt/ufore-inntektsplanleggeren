@@ -81,7 +81,7 @@ export const BeregningPage = () => {
         {showSimulering ? (
           <>
             <section>
-              <Heading level="3" size="medium">
+              <Heading level="4" size="medium">
                 Oversikt i graf
               </Heading>
               <div style={{ marginTop: '10px' }}>
@@ -90,7 +90,7 @@ export const BeregningPage = () => {
             </section>
 
             <section>
-              <Heading level="3" size="medium">
+              <Heading level="4" size="medium">
                 Oversikt i tabell
               </Heading>
               {simulationResponse?.result && (
