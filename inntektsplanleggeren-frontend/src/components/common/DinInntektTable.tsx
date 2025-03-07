@@ -66,7 +66,7 @@ const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
           <Table.HeaderCell scope="col">Måned</Table.HeaderCell>
           <Table.HeaderCell scope="col">Beløp per måned</Table.HeaderCell>
           <Table.HeaderCell scope="col">
-            {props.type === 'pensjonsordning' ? 'Pensjonsordning' : 'Arbeidsgiver'}{' '}
+            {props.type === 'pensjonsordning' ? 'Pensjonsordning' : 'Utbetaler'}{' '}
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
