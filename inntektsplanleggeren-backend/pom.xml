@@ -22,8 +22,8 @@
 		<logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
 		<spring-boot-starter-security.version>3.4.3</spring-boot-starter-security.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
-		<micrometer.version>1.14.4</micrometer.version>
-		<logback.version>1.5.16</logback.version>
+		<micrometer.version>1.14.5</micrometer.version>
+		<logback.version>1.5.17</logback.version>
 		<logback-access.version>2.0.6</logback-access.version>
 	</properties>
 	<dependencies>
