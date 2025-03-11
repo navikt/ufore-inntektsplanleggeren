@@ -6,11 +6,11 @@ export function CancelConfirmationModal() {
   const [open, setOpen] = useState(false)
 
   const getUrl = () => {
-    const url = import.meta.env.VITE_DIN_UFORETRYGD_URL
-    if (import.meta.env.MODE === 'veileder') {
-      return url + '?pid=' + getPidQueryParamString()
+    const url = new URL(import.meta.env.VITE_DIN_UFORETRYGD_URL)
+    if (import.meta.env.VITE_MODE === 'veileder') {
+      url.searchParams.append('pid', getPidQueryParamString())
     }
-    return url
+    return url.toString()
   }
 
   return (
