@@ -1,0 +1,11 @@
+.vstack-gap {
+  margin-bottom: var(--a-spacing-10); /* Adjust the value as needed */
+}
+
+.sum {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+

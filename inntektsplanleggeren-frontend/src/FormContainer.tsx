@@ -118,8 +118,8 @@ export const PAGE_LINKS = {
   5: '/kvittering',
 }
 
-export const getFullPathForPage = (pageLink: PageLinks) => {
-  return pageLink + getPidQueryParamString()
+export const getFullPathForPage = (pageLink: PageLinks, href?: string) => {
+  return pageLink + (href ? `#${href}` : "")  + getPidQueryParamString()
 }
 
 const getPage = (index: number): string => {
