@@ -53,7 +53,7 @@ export const OppsummeringPage = () => {
     <VStack gap="12">
       <InntektSummaryBruker inntekt={brukerinntekt} messages={simulationResponse?.messages.filter(m => m.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_BRUKER" || m.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_BRUKER")} inntektSum={getBrukerinntektSum()}/>
         {annenForelderInntekt && (
-            <InntektSummaryEps inntekt={brukerinntekt} messages={simulationResponse?.messages.filter(m => m.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS" || m.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS")} inntektSum={getAnnenForelderInntektSum()!}/>
+            <InntektSummaryEps inntekt={annenForelderInntekt} messages={simulationResponse?.messages.filter(m => m.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS" || m.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS")} inntektSum={getAnnenForelderInntektSum()!}/>
         )}
 
       {simulationResponse?.messages.some((message) => message.messageCode === 'EPS_INNTEKT_CHANGED') && (

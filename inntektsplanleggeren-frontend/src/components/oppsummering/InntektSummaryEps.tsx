@@ -14,7 +14,6 @@ export const InntektSummaryEps = (props: { inntekt: PersonInntekter, messages: M
     const arbeidsinntektMessage = props.messages?.find(message => message.messageCode === MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR && message.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS")
     const andreYttelserMessage = props.messages?.find(message => message.messageCode === MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR && message.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS")
 
-
     return (
       <FormSummary>
         <FormSummary.Header>
@@ -26,6 +25,7 @@ export const InntektSummaryEps = (props: { inntekt: PersonInntekter, messages: M
               <FormSummary.Answer>
                 <FormSummary.Label>Lønn og pensjonsgivende ytelser</FormSummary.Label>
                 <FormSummary.Value>
+                    <FormatKroner value={props.inntekt.arbeidsinntekt}/>
                     {arbeidsinntektMessage !== undefined &&
                         <Alert variant="warning">
                             <Heading level="4" size="small">Ojsann! Dette beløpet var litt lavt!</Heading>
@@ -77,9 +77,14 @@ export const InntektSummaryEps = (props: { inntekt: PersonInntekter, messages: M
           )}
             <FormSummary.Answer>
                 <Box padding="4" background="surface-subtle" borderRadius="large">
-                    <VStack>
-                        <Heading size="small">Annen forelder sin samlede inntekt i {selectedYear}: </Heading>
-                        <BodyShort className="sum"> <FormatKroner value={props.inntektSum}/> før skatt </BodyShort>
+                    <VStack gap={{ xs: '2', sm: '1' }}>
+                        <Heading level="4" size="small">
+                            {' '}
+                            Din samlede forventede inntekt i {selectedYear}:{' '}
+                        </Heading>
+                        <BodyShort className="sum">
+                            <FormatKroner value={props.inntektSum} /> før skatt
+                        </BodyShort>
                     </VStack>
                 </Box>
             </FormSummary.Answer>
