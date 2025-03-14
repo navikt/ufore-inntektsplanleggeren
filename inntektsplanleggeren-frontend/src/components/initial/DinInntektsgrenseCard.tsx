@@ -101,7 +101,7 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
                 </section>
               ) : null}
 
-              {props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? ( //todo check if this condition is right!
+              {props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? (
                 <section>
                   <Heading size="xsmall" level="3">
                     Barnetillegg har egne inntektsgrenser (fribeløp)

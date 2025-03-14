@@ -1,14 +1,14 @@
-import { Alert, Button, FormSummary, HStack, VStack } from '@navikt/ds-react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
-import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
-import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
-import { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
-import { send } from '@/api/apiFetching'
-import { FormStateContext } from '@/context/FormData'
-import { DataContext } from '@/DataContextProvider'
-import { FormatKroner } from '@/components/utils/FormatKroner'
-import { ErrorCode, ErrorResponse } from '@/components/common/Error'
+import {Alert, Button, HStack, VStack} from '@navikt/ds-react'
+import {Link as RouterLink, useNavigate} from 'react-router-dom'
+import {getFullPathForPage, PageLinks} from '@/FormContainer'
+import {ArrowLeftIcon, ArrowRightIcon} from '@navikt/aksel-icons'
+import {CancelConfirmationModal} from '@/components/common/CancelConfirmationModal'
+import {FormEvent, MouseEvent, useContext, useEffect, useState} from 'react'
+import {send} from '@/api/apiFetching'
+import {FormStateContext} from '@/context/FormData'
+import {DataContext} from '@/DataContextProvider'
+import {ErrorCode, ErrorResponse} from '@/components/common/Error'
+import {InntektSummary} from "@/components/oppsummering/InntektSummary";
 
 export const OppsummeringPage = () => {
   const navigate = useNavigate()
@@ -50,28 +50,10 @@ export const OppsummeringPage = () => {
 
   return (
     <VStack gap="12">
-      <FormSummary>
-        <FormSummary.Header>
-          <FormSummary.Heading level="3">Opplysningene du sender inn</FormSummary.Heading>
-          <FormSummary.EditLink as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTET_INNTEKT)} />
-        </FormSummary.Header>
-        <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>Din forventede inntekt i {selectedYear}</FormSummary.Label>
-            <FormSummary.Value>
-              <FormatKroner value={getBrukerinntektSum()} />
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          {annenForelderInntekt && (
-            <FormSummary.Answer>
-              <FormSummary.Label>Annen forelders forventede inntekt i {selectedYear}</FormSummary.Label>
-              <FormSummary.Value>
-                <FormatKroner value={getAnnenForelderInntektSum() ?? 0} />
-              </FormSummary.Value>
-            </FormSummary.Answer>
-          )}
-        </FormSummary.Answers>
-      </FormSummary>
+      <InntektSummary inntekt={brukerinntekt} inntektSum={getBrukerinntektSum()} type="bruker"/>
+        {annenForelderInntekt && (
+            <InntektSummary inntekt={annenForelderInntekt} inntektSum={getAnnenForelderInntektSum()!} type="eps"/>
+        )}
 
       {simulationResponse?.messages.some((message) => message.messageCode === 'EPS_INNTEKT_CHANGED') && (
         <Alert variant="info">
