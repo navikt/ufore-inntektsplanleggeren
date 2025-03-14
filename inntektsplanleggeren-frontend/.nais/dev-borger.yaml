@@ -47,6 +47,8 @@ spec:
     outbound:
       rules:
         - application: inntektsplanleggeren-backend-q2
+          cluster: dev-gcp
+          namespace: pensjonselvbetjening
   env:
     - name: "VITE_DECORATOR_URL"
       value: "https://dekoratoren.ekstern.dev.nav.no"

@@ -10,8 +10,8 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 spec:
   image: "{{ image }}"
-  ingresses:
-    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+#  ingresses:
+#    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 2
@@ -41,8 +41,6 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: nav-dekoratoren
-          namespace: personbruker
         - application: inntektsplanleggeren-backend
           cluster: prod-gcp
           namespace: pensjonselvbetjening

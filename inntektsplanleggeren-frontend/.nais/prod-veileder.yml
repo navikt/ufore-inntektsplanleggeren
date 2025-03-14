@@ -51,8 +51,6 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: nav-dekoratoren
-          namespace: personbruker
         - application: inntektsplanleggeren-backend
           cluster: prod-gcp
           namespace: pensjonselvbetjening
