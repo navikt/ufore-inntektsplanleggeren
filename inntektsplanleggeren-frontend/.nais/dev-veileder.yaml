@@ -54,8 +54,6 @@ spec:
           cluster: dev-gcp
     outbound:
       rules:
-        - application: nav-dekoratoren # TODO: trenger vi denne
-          namespace: personbruker
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp
           namespace: pensjonselvbetjening
