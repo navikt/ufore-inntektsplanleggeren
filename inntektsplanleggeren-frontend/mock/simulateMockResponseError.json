@@ -1,0 +1,11 @@
+{
+  "messages": [
+    {
+      "messageCode": "MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN",
+      "details": "Når bruker har barnetillegg for fellesbarn skal alltid alle EPS sine inntekter oppgis. Hvis EPS ikke har en eller flere av disse inntektene, skal 0 sendes inn.",
+      "type": "ERROR",
+      "metadata": {}
+    }
+  ],
+  "result": null
+}
