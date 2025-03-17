@@ -47,6 +47,8 @@ spec:
     outbound:
       rules:
         - application: inntektsplanleggeren-backend-q2
+          cluster: dev-gcp
+          namespace: pensjonselvbetjening
   env:
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend-q2"

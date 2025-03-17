@@ -181,7 +181,7 @@ export const FormFieldsEps = ({
       )}
 
       <Box padding="4" background="surface-subtle" borderRadius="large">
-        <VStack>
+        <VStack gap={{ xs: '2', sm: '1' }}>
           <Heading size="small"> Annen forelder sin samlede inntekt i {year}: </Heading>
           <BodyShort className="sum">
             <FormatKroner value={inntektSum} /> før skatt

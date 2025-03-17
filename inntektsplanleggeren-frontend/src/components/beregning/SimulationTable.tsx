@@ -119,23 +119,6 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
             </VStack>
           </Table.DataCell>
         </Table.Row>
-        <Table.Row>
-          <Table.DataCell>
-            <VStack gap="1">
-              <BodyShort>
-                <strong>Din forventede inntekt</strong>
-              </BodyShort>
-              {isBeforeValuesAvailable && (
-                <BodyShort>
-                  I dag: <FormatKroner value={forventetInntekt.yearly.before ?? 0} />
-                </BodyShort>
-              )}
-              <BodyShort>
-                Med dine endringer: <FormatKroner value={forventetInntekt.yearly.after} />
-              </BodyShort>
-            </VStack>
-          </Table.DataCell>
-        </Table.Row>
         {barnetilleggSaerkullsbarn || barnetilleggFellesbarn ? (
           <Table.Row>
             <Table.DataCell>
@@ -163,6 +146,24 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
             </Table.DataCell>
           </Table.Row>
         ) : null}
+        <Table.Row>
+          <Table.DataCell>
+            <VStack gap="1">
+              <BodyShort>
+                <strong>Din forventede inntekt</strong>
+              </BodyShort>
+              {isBeforeValuesAvailable && (
+                <BodyShort>
+                  I dag: <FormatKroner value={forventetInntekt.yearly.before ?? 0} />
+                </BodyShort>
+              )}
+              <BodyShort>
+                Med dine endringer: <FormatKroner value={forventetInntekt.yearly.after} />
+              </BodyShort>
+            </VStack>
+          </Table.DataCell>
+        </Table.Row>
+
         <Table.Row>
           <Table.DataCell style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
             <VStack gap="1">

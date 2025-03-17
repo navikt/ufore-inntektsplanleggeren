@@ -67,7 +67,6 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         formatter(this: Highcharts.StackItemObject) {
           return `Sum ${NUMBER_FORMATTER.format(this.total)} kr`
         },
-        backgroundColor: 'white',
         style: {
           fontSize: isDesktop ? 18 : 16,
           color: 'var(--a-grayalpha-700)',
