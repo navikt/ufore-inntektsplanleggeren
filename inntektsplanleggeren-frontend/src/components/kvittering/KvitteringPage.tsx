@@ -7,6 +7,7 @@ import { KvitteringStatusBox } from '@/components/kvittering/KvitteringStatusBox
 import { getStatus } from '@/api/apiFetching'
 import { StatusCodes } from '@/api/model/StatusCodes'
 import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import {getUrlUforeInnboks} from "@/components/utils/UrlUtil";
 
 export const KvitteringPage = () => {
   const [isWaiting, setIsWaiting] = useState(true)
@@ -99,7 +100,7 @@ export const KvitteringPage = () => {
             <List.Item>Din nye inntekt vil ikke vises i inntektsplanleggeren før vi har behandlet saken.</List.Item>
             <List.Item>
               Når saken er ferdig behandlet vil du finne vedtaksbrevet i{' '}
-              <Link to={import.meta.env.VITE_NAV_INNBOKS_URL} target="_blank">
+              <Link to={getUrlUforeInnboks()} target="_blank">
                 Din innboks (åpnes i ny fane).
               </Link>
             </List.Item>
