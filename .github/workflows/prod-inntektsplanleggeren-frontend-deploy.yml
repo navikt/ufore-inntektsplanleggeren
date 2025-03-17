@@ -49,7 +49,7 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml
 
   deploy-frontend-veileder-to-prod:
     if: github.ref == 'refs/heads/main'
@@ -62,4 +62,4 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml
