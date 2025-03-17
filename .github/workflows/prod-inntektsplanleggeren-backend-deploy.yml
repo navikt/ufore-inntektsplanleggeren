@@ -45,4 +45,4 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-backend/.nais/prod.yml
+      nais-template: inntektsplanleggeren-backend/.nais/prod.yaml
