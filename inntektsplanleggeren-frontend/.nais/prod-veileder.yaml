@@ -58,3 +58,5 @@ spec:
       value: "http://inntektsplanleggeren-backend"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
       value: "api://prod-gcp.pensjonselvbetjening.inntektsplanleggeren-backend/.default"
+  envFrom:
+    - secret: inntektsplanleggeren-frontend-unleash-api-token
