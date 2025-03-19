@@ -10,7 +10,7 @@ export function CancelConfirmationModal() {
         if (import.meta.env.VITE_MODE === 'veileder') {
             url = url + getPidQueryParamString()
         }
-        return url.toString()
+        return url
     }
 
     return (
