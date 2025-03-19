@@ -102,6 +102,9 @@ export const InnfyllingPage = () => {
 
     setBrukerErrors(bErrors)
     setEpsErrors(eErrors)
+    if (isError) {
+      document.getElementById('error-summary')?.scrollIntoView()
+    }
     return isError
   }
 
@@ -309,46 +312,49 @@ export const InnfyllingPage = () => {
               ) : null}
           </VStack>
           {checkForFieldErrors() && formDiry ? (
-            <ErrorSummary
-              headingTag="h3"
-              heading="Du må rette disse feilene før du kan fortsette:"
-              className="button-container"
-            >
-              {errorSummary(brukerErrors, 'bruker')}
-              {errorSummary(epsErrors, 'eps')}
-            </ErrorSummary>
+              <div ref={errorSummaryDiv => errorSummaryDiv?.scrollIntoView()}>
+                <ErrorSummary
+                    id="error-summary"
+                    headingTag="h3"
+                    heading="Du må rette disse feilene før du kan fortsette:"
+                    className="button-container"
+                >
+                  {errorSummary(brukerErrors, 'bruker')}
+                  {errorSummary(epsErrors, 'eps')}
+                </ErrorSummary>
+              </div>
           ) : null}
 
-          <VStack gap="3" className="button-container">
-            <HStack gap="4">
-              <Button
-                as={RouterLink}
-                to={
-                  previousYear != null
-                    ? getFullPathForPage(PageLinks.FORRIGE_INNTEKTER)
-                    : getFullPathForPage(PageLinks.INDEX)
-                }
-                iconPosition="left"
-                icon={<ArrowLeftIcon aria-hidden />}
-                variant="secondary"
-              >
-                Tilbake
-              </Button>
-              <Button
-                type="button"
-                variant="primary"
-                iconPosition="right"
-                icon={<ArrowRightIcon aria-hidden />}
-                onClick={handleSubmit}
-                loading={isLoading}
-              >
-                Gå videre og se resultat
-              </Button>
-            </HStack>
-            <CancelConfirmationModal />
-          </VStack>
-        </VStack>
-      </form>
-    </VStack>
+                  <VStack gap="3" className="button-container">
+                    <HStack gap="4">
+                      <Button
+                          as={RouterLink}
+                          to={
+                            previousYear != null
+                                ? getFullPathForPage(PageLinks.FORRIGE_INNTEKTER)
+                                : getFullPathForPage(PageLinks.INDEX)
+                          }
+                          iconPosition="left"
+                          icon={<ArrowLeftIcon aria-hidden/>}
+                          variant="secondary"
+                      >
+                        Tilbake
+                      </Button>
+                      <Button
+                          type="button"
+                          variant="primary"
+                          iconPosition="right"
+                          icon={<ArrowRightIcon aria-hidden/>}
+                          onClick={handleSubmit}
+                          loading={isLoading}
+                      >
+                        Gå videre og se resultat
+                      </Button>
+                    </HStack>
+                    <CancelConfirmationModal/>
+                  </VStack>
+                </VStack>
+              </form>
+            </VStack>
   )
 }
