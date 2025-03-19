@@ -24,7 +24,6 @@ export const KvitteringPage = () => {
     setIsWaiting(true)
     const intervalId = setInterval(() => {
       if (attempts >= 13) {
-        console.log('attempts exceeded', attempts)
         setIsWaiting(false)
         clearInterval(intervalId)
         return

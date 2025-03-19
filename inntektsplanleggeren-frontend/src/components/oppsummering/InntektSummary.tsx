@@ -60,9 +60,13 @@ export const InntektSummary = (props: { inntekt: PersonInntekter, inntektSum: nu
           )}
             <FormSummary.Answer>
                 <Box padding="4" background="surface-subtle" borderRadius="large">
-                    <VStack>
-                        <Heading size="small">{props.type == "bruker" ? `Din samlede forventede inntekt i ${selectedYear}` : `Annen forelder sin samlede inntekt i ${selectedYear}:`} </Heading>
-                        <BodyShort className="sum"> <FormatKroner value={props.inntektSum}/> før skatt </BodyShort>
+                    <VStack gap={{ xs: '2', sm: '1' }}>
+                        <Heading level="4" size="small">
+                            {props.type == "bruker" ? `Din samlede forventede inntekt i ${selectedYear}:` : `Annen forelder sin samlede inntekt i ${selectedYear}:`}
+                        </Heading>
+                        <BodyShort className="sum">
+                            <FormatKroner value={props.inntektSum} /> før skatt
+                        </BodyShort>
                     </VStack>
                 </Box>
             </FormSummary.Answer>
