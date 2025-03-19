@@ -179,7 +179,7 @@ export const InnfyllingPage = () => {
         inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) && (
         <VStack>
           <Heading level="3" size="medium" spacing>
-            Din inntekt hittil i {selectedYear}
+            {inntekterResponse.uforeHeleAaret ? `Din inntekt hittil i ${selectedYear}` : `Din inntekt samtidig med uføretrygd i ${selectedYear}`}
           </Heading>
           <BodyLong>
             {' '}
