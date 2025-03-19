@@ -72,7 +72,38 @@ export const InnfyllingPage = () => {
     return hasErrors
   }
 
+  const checkForSendingErrors = (response: SimulationResponse): boolean => {
+    setFormDirty(true)
+    const bErrors: Partial<Record<keyof PersonInntekter, string>> = {}
+    const eErrors: Partial<Record<keyof PersonInntekter, string>> = {}
+    let isError = false
 
+    for (const message of response.messages) {
+      if (message.messageCode === MessageCodes.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR) {
+        isError = true
+        if (message.metadata['AFFECTED_FIELD'] === 'ARBEIDSINNTEKT_BRUKER') {
+          bErrors['arbeidsinntekt'] =
+            `Beløpet kan ikke være mindre enn ${message.metadata['SUM_HITTIL_I_AAR']} kr, fordi du allerede har fått dette i lønn og pengestøtte`
+        } else if (message.metadata['AFFECTED_FIELD'] === 'ARBEIDSINNTEKT_EPS') {
+          eErrors['arbeidsinntekt'] =
+            `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte hittil i år. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten.`
+        }
+      } else if (message.messageCode === MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR) {
+        isError = true
+        if (message.metadata['AFFECTED_FIELD'] === 'ANDRE_YTELSER_BRUKER') {
+          bErrors['andrePensjonsgivendeYtelser'] =
+            `Beløpet kan ikke være mindre enn ${message.metadata['SUM_HITTIL_I_AAR']} kr, fordi du allerede har fått dette i pensjoner fra andre enn folketrygden hittil i år.`
+        } else if (message.metadata['AFFECTED_FIELD'] === 'ANDRE_YTELSER_EPS') {
+          eErrors['andrePensjonsgivendeYtelser'] =
+            `Beløpet må være høyere enn det den andre forelderen har fått i pensjoner hittil i år. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten.`
+        }
+      }
+    }
+
+    setBrukerErrors(bErrors)
+    setEpsErrors(eErrors)
+    return isError
+  }
 
   const handleSubmit = async (e: MouseEvent | FormEvent) => {
     e.preventDefault()
@@ -89,9 +120,13 @@ export const InnfyllingPage = () => {
         setErrorMessage(result.message)
         setIsLoading(false)
       } else {
+        if (checkForSendingErrors(result)) {
+          setIsLoading(false)
+        } else {
           setIsLoading(false)
           setSimulationResponse(result)
           navigate(getFullPathForPage(PageLinks.BEREGNING))
+        }
       }
     } catch {
       setIsLoading(false)
