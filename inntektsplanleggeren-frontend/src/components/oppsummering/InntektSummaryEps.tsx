@@ -80,7 +80,7 @@ export const InntektSummaryEps = (props: { inntekt: PersonInntekter, messages: M
                     <VStack gap={{ xs: '2', sm: '1' }}>
                         <Heading level="4" size="small">
                             {' '}
-                            Din samlede forventede inntekt i {selectedYear}:{' '}
+                            Annen forelder sin samlede forventede inntekt i {selectedYear}:{' '}
                         </Heading>
                         <BodyShort className="sum">
                             <FormatKroner value={props.inntektSum} /> før skatt

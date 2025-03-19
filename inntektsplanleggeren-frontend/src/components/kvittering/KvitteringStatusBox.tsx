@@ -28,14 +28,14 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                     Nav har mottatt opplysninger om inntekten din
                   </Heading>
                   <BodyShort>
-                    Din forventende inntekt i {selectedYear}:{' '}
+                    Din forventede inntekt i {selectedYear}:{' '}
                     <strong>
                       <FormatKroner value={registeredInntekt} /> (før skatt)
                     </strong>
                   </BodyShort>
                   {epsRegisteredInntekt != null && (
                     <BodyShort>
-                      Annen forelders forventende inntekt i {selectedYear}:{' '}
+                      Annen forelders forventede inntekt i {selectedYear}:{' '}
                       <strong>
                         <FormatKroner value={epsRegisteredInntekt} /> (før skatt)
                       </strong>
@@ -60,7 +60,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                   Ny inntekt er mottatt av oss og saken er behandlet
                 </Heading>
                 <BodyShort>
-                  Din forventende inntekt i {selectedYear}:{' '}
+                  Din forventede inntekt i {selectedYear}:{' '}
                   <strong>
                     <FormatKroner value={registeredInntekt} /> (før skatt)
                   </strong>
@@ -109,7 +109,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
                   Ny inntekt er registrert, og den påvirker ikke utbetalingen din
                 </Heading>
                 <BodyShort>
-                  Din forventende inntekt i {selectedYear}:{' '}
+                  Din forventede inntekt i {selectedYear}:{' '}
                   <strong>
                     <FormatKroner value={registeredInntekt} /> (før skatt)
                   </strong>

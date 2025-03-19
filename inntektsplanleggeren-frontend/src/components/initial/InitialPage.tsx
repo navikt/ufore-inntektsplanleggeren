@@ -32,8 +32,9 @@ export function InitialPage() {
 
   const handleButtonClick = async (year: number, previousYear: number | null) => {
     setIsLoading(true)
+    console.log(previousYear)
     setSelectedYear(year)
-
+    console.log(year)
     if (previousYear !== null) {
       try {
         const data = await getInntekter(previousYear)
