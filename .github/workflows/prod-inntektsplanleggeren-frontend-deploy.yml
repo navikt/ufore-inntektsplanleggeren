@@ -9,7 +9,6 @@ on:
 #      - inntektsplanleggeren-frontend/**
 
 jobs:
-
   build-frontend-and-publish-docker:
     name: Build frontend application
     uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
@@ -49,7 +48,7 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yaml
 
   deploy-frontend-veileder-to-prod:
     if: github.ref == 'refs/heads/main'
@@ -62,4 +61,4 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yaml

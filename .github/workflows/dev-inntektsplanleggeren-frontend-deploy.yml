@@ -44,7 +44,7 @@ jobs:
       cluster: dev-gcp
       image: ${{ needs.build-frontend-and-publish-docker-borger.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/dev-borger.yaml
+      nais-template: inntektsplanleggeren-frontend/.nais/dev-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-development.yml
 
   deploy-frontend-veileder-to-q2:
     needs: build-frontend-and-publish-docker-veileder
@@ -56,4 +56,4 @@ jobs:
       cluster: dev-gcp
       image: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/dev-veileder.yaml
+      nais-template: inntektsplanleggeren-frontend/.nais/dev-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-development.yml
