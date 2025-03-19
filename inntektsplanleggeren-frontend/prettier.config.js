@@ -1,9 +1,9 @@
 const config = {
   trailingComma: "es5",
-  tabWidth: 4,
+  tabWidth: 2,
   semi: false,
   singleQuote: true,
-  printWidth: 160,
+  printWidth: 120,
   bracketSpacing: true,
   arrowParens: "always",
   endOfLine: "lf",

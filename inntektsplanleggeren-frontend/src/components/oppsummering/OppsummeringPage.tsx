@@ -8,8 +8,7 @@ import {send} from '@/api/apiFetching'
 import {FormStateContext} from '@/context/FormData'
 import {DataContext} from '@/DataContextProvider'
 import {ErrorCode, ErrorResponse} from '@/components/common/Error'
-import {InntektSummaryEps} from "@/components/oppsummering/InntektSummaryEps";
-import {InntektSummaryBruker} from "@/components/oppsummering/InntektSummaryBruker";
+import {InntektSummary} from "@/components/oppsummering/InntektSummary";
 
 export const OppsummeringPage = () => {
   const navigate = useNavigate()
@@ -51,9 +50,9 @@ export const OppsummeringPage = () => {
 
   return (
     <VStack gap="12">
-      <InntektSummaryBruker inntekt={brukerinntekt} messages={simulationResponse?.messages.filter(m => m.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_BRUKER" || m.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_BRUKER")} inntektSum={getBrukerinntektSum()}/>
+      <InntektSummary inntekt={brukerinntekt} inntektSum={getBrukerinntektSum()} type="bruker"/>
         {annenForelderInntekt && (
-            <InntektSummaryEps inntekt={annenForelderInntekt} messages={simulationResponse?.messages.filter(m => m.metadata["AFFECTED_FIELD"] === "ARBEIDSINNTEKT_EPS" || m.metadata["AFFECTED_FIELD"] === "ANDRE_YTELSER_EPS")} inntektSum={getAnnenForelderInntektSum()!}/>
+            <InntektSummary inntekt={annenForelderInntekt} inntektSum={getAnnenForelderInntektSum()!} type="eps"/>
         )}
 
       {simulationResponse?.messages.some((message) => message.messageCode === 'EPS_INNTEKT_CHANGED') && (
