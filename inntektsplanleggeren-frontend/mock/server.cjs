@@ -9,6 +9,7 @@ const mockInitiateResponseError = JSON.parse(fs.readFileSync('mock/initiateMockR
 const mockForbiddenResponse = JSON.parse(fs.readFileSync('mock/mockForbiddenResponse.json', 'utf8'));
 const mockInntekterResponse = JSON.parse(fs.readFileSync('mock/inntekterMockResponse.json', 'utf8'));
 const mockSimulationResponse = JSON.parse(fs.readFileSync('mock/simulateMockResponse.json', 'utf8'));
+const mockSimulationResponseError = JSON.parse(fs.readFileSync('mock/simulateMockResponseError.json', 'utf8'));
 const mockSendResponse = JSON.parse(fs.readFileSync('mock/sendMockResponse.json', 'utf8'));
 const mockStatusResponse = JSON.parse(fs.readFileSync('mock/statusMockResponse.json', 'utf8'));
 
@@ -47,6 +48,9 @@ app.post('/uforetrygd/selvbetjening/inntektsplanleggeren/api/simuler', (req, res
 
     //200 response
     res.status(200).send(mockSimulationResponse)
+
+    //500 response
+    // res.status(200).send(mockSimulationResponseError)
 })
 
 app.post('/uforetrygd/selvbetjening/inntektsplanleggeren/api/send', (req, res) => {

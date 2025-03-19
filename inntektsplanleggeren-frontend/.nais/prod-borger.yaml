@@ -28,14 +28,14 @@ spec:
     periodSeconds: 20
     failureThreshold: 5
     timeout: 1
-  idporten:
-    enabled: true
-    sidecar:
-      level: idporten-loa-substantial
-      enabled: true
-      autoLogin: true
-      autoLoginIgnorePaths:
-        - /internal/ping
+#  idporten:
+#    enabled: true
+#    sidecar:
+#      level: idporten-loa-substantial
+#      enabled: true
+#      autoLogin: true
+#      autoLoginIgnorePaths:
+#        - /internal/ping
   tokenx:
     enabled: true
   accessPolicy:

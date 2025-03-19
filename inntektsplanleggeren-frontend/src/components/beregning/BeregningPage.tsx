@@ -5,7 +5,7 @@ import { FormStateContext } from '@/context/FormData'
 import { SimulationTable } from '@/components/beregning/SimulationTable'
 import { DataContext } from '@/DataContextProvider'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import { MessageCodes } from '@/api/model/MessageCodes'
+import {MessageCodes, MessageTypes} from '@/api/model/MessageCodes'
 import { Graph } from '@/components/beregning/Graph'
 import { InputSummary } from '@/components/beregning/InputSummary'
 import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
@@ -36,6 +36,10 @@ export const BeregningPage = () => {
 
   if (errorMessage) {
     return <ErrorView message={errorMessage} />
+  }
+
+  if(simulationResponse?.messages.some((message) => message.type === MessageTypes.ERROR)) {
+    return <ErrorView message={null}/>
   }
 
   if (simulationResponse?.result)

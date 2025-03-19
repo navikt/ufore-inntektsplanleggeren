@@ -5,7 +5,41 @@
          "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
          "type": "WARNING",
          "metadata": {}
-     }
+     },
+    {
+      "messageCode": "ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR",
+      "details": "bla.",
+      "type": "WARNING",
+      "metadata": {
+        "AFFECTED_FIELD": "ARBEIDSINNTEKT_BRUKER",
+        "SUM_HITTIL_I_AAR" : 111
+      }
+    },
+    {
+      "messageCode": "ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR",
+      "details": "bla.",
+      "type": "WARNING",
+      "metadata": {
+        "AFFECTED_FIELD": "ARBEIDSINNTEKT_EPS"
+      }
+    },
+    {
+      "messageCode": "ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR",
+      "details": "bla.",
+      "type": "WARNING",
+      "metadata": {
+        "AFFECTED_FIELD": "ANDRE_YTELSER_BRUKER",
+        "SUM_HITTIL_I_AAR" : 222
+      }
+    },
+    {
+      "messageCode": "ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR",
+      "details": "bla.",
+      "type": "WARNING",
+      "metadata": {
+        "AFFECTED_FIELD": "ANDRE_YTELSER_EPS"
+      }
+    }
   ],
   "result": {
     "uforetrygd": {
