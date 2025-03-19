@@ -58,8 +58,6 @@ spec:
           cluster: dev-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: "MODE"
-      value: "veileder"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend-q2"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
