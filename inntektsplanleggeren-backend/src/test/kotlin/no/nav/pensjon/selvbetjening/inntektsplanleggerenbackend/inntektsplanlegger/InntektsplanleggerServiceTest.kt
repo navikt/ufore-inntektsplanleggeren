@@ -467,6 +467,8 @@ class InntektsplanleggerServiceTest {
         val expectedValideringsresultatSimulering =
             listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FAKTOROMREGNET_ELLER_MANUELT_OVERSTYRT))
         val expectedSimuleringsresultat = simuleringsresultat()
+        val expectedSimuleringsresultatFraJan = simuleringsresultatFraJan()
+        val expectedSimuleringsresultatKombinert = simuleringsresultatKombinert()
 
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
@@ -496,11 +498,21 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(expectedValideringsresultatSimulering, expectedSimuleringsresultat)
         )
-
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                LocalDate.of(year, Month.JANUARY, 1)
+            )
+        ).thenReturn(
+            SimuleringData(expectedValideringsresultatSimulering, expectedSimuleringsresultatFraJan)
+        )
         val simulering = inntektsplanleggerService.simulerInntektsendring(PID, year, expectedOppgitteInntekter)
 
         assertEquals(expectedValideringsresultatInntekt + expectedValideringsresultatSimulering, simulering.messages)
-        assertEquals(expectedSimuleringsresultat, simulering.result)
+        assertEquals(expectedSimuleringsresultatKombinert, simulering.result)
     }
 
     @Test
@@ -540,6 +552,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -549,6 +562,7 @@ class InntektsplanleggerServiceTest {
 
         val expectedOppgitteInntekter = oppgitteInntekter()
         val expectedSimuleringsresultat = simuleringsresultat()
+        val expectedSimuleringsresultatFraJan = simuleringsresultatFraJan()
         val expectedForventedeInntekter = forventedeInntekterRegistrert()
 
         `when`(penClient.fetchInntektsplanleggerData(PID, expectedSimuleringFom)).thenReturn(pensjonsdata)
@@ -579,6 +593,17 @@ class InntektsplanleggerServiceTest {
             )
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultatFraJan)
         )
 
         inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
@@ -665,6 +690,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -705,6 +731,17 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
         )
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
 
         val innsending = inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
 
@@ -719,6 +756,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -759,7 +797,17 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
         )
-
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
         val innsending = inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
 
 
@@ -772,6 +820,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -812,7 +861,17 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
         )
-
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
         val innsending = inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
 
 
@@ -931,6 +990,26 @@ class InntektsplanleggerServiceTest {
     private fun simuleringsresultat() = Simuleringsresultat(
         SimuleringAmounts(
             BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 89023)
+        ), SimuleringAmounts(
+            BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
+        ), null, null, null, SimuleringAmounts(
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 89023)
+        )
+    )
+
+    private fun simuleringsresultatFraJan() = Simuleringsresultat(
+        SimuleringAmounts(
+            BeforeAndAfterValues(10231, 8823), BeforeAndAfterValues(100923, 189023)
+        ), SimuleringAmounts(
+            BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
+        ), null, null, null, SimuleringAmounts(
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 89023)
+        )
+    )
+
+    private fun simuleringsresultatKombinert() = Simuleringsresultat(
+        SimuleringAmounts(
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 189023)
         ), SimuleringAmounts(
             BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
         ), null, null, null, SimuleringAmounts(
