@@ -7,6 +7,8 @@ import path from 'path'
 import loggerMiddleware from './middleware/logger.js'
 import dotenv from 'dotenv'
 import ensureEnv from './ensureEnv.js'
+import { initialize } from 'unleash-client'
+import crypto from 'crypto'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
@@ -21,121 +23,181 @@ const isDevelopment = process.env.NODE_ENV === 'development'
 dotenv.config()
 
 const logger = winston.createLogger({
-  format: isDevelopment ? format.simple() : undefined,
-  transports: [new winston.transports.Console()],
+    format: isDevelopment ? format.simple() : undefined,
+    transports: [new winston.transports.Console()],
 })
 
 app.get('/internal/health/liveness', (req, res) => {
-  res.send({
-    status: 'UP',
-  })
+    res.send({
+        status: 'UP',
+    })
 })
 
 app.get('/internal/health/readiness', (req, res) => {
-  res.send({
-    status: 'UP',
-  })
+    res.send({
+        status: 'UP',
+    })
 })
 
 app.use(metricsMiddleware)
 app.use(loggerMiddleware(logger))
 
 const AUTH_PROVIDER = (() => {
-  const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
-  const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER
-  if (tokenx && azure) {
-    throw new Error('Both TOKEN_X_ISSUER and AZURE_OPENID_CONFIG_ISSUER are set. Only one of these can be set.')
-  }
+    const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
+    const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER
+    if (tokenx && azure) {
+        throw new Error('Both TOKEN_X_ISSUER and AZURE_OPENID_CONFIG_ISSUER are set. Only one of these can be set.')
+    }
 
-  if (!tokenx && !azure) {
-    throw new Error('No auth provider is set')
-  }
+    if (!tokenx && !azure) {
+        throw new Error('No auth provider is set')
+    }
 
-  if (tokenx) {
-    return 'tokenx'
-  }
+    if (tokenx) {
+        return 'tokenx'
+    }
 
-  if (azure) {
-    return 'azure'
-  }
+    if (azure) {
+        return 'azure'
+    }
 })() as 'tokenx' | 'azure'
+
+const unleashUrl = process.env.UNLEASH_SERVER_API_URL
+const unleashToken = process.env.UNLEASH_SERVER_API_TOKEN
+const unleashEnv = process.env.UNLEASH_SERVER_API_ENV
 
 // Sett miljøvariabler for veileder eller borger
 const env =
-  AUTH_PROVIDER === 'tokenx'
-    ? ensureEnv({
-        oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
-        inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-      })
-    : ensureEnv({
-        oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
-        inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-      })
+    AUTH_PROVIDER === 'tokenx'
+        ? ensureEnv({
+              oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
+              inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
+          })
+        : ensureEnv({
+              oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
+              inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
+          })
+
+const unleash = initialize({
+    disableAutoStart: !(unleashToken && unleashUrl && unleashEnv),
+    url: `${unleashUrl}/api`,
+    appName: 'inntektsplanleggeren-frontend',
+    environment: unleashEnv,
+    customHeaders: {
+        Authorization: unleashToken ?? '',
+    },
+})
+
+unleash.on('synchronized', () => {
+    logger.info('Unleash synchronized')
+})
 
 const getOboToken = async (req: Request) => {
-  if (isDevelopment && process.env.ACCESS_TOKEN) {
-    logger.error('Returning mock ACCESS_TOKEN from enviroment variable')
-    return process.env.ACCESS_TOKEN
-  }
-  const token = getToken(req)
-  if (!token) {
-    logger.info('No token found in request', {
-      'x_correlation-id': req.headers['x_correlation-id'],
-    })
-    throw new Error('403')
-  }
+    if (isDevelopment && process.env.ACCESS_TOKEN) {
+        logger.error('Returning mock ACCESS_TOKEN from enviroment variable')
+        return process.env.ACCESS_TOKEN
+    }
+    const token = getToken(req)
+    if (!token) {
+        logger.info('No token found in request', {
+            'x_correlation-id': req.headers['x_correlation-id'],
+        })
+        throw new Error('403')
+    }
 
-  const validationResult = await validateToken(token)
-  if (!validationResult.ok) {
-    logger.error('Failed to validate token', {
-      error: validationResult.error.message,
-      errorType: validationResult.errorType,
-      'x_correlation-id': req.headers['x_correlation-id'],
-    })
-    throw new Error('401')
-  }
+    const validationResult = await validateToken(token)
+    if (!validationResult.ok) {
+        logger.error('Failed to validate token', {
+            error: validationResult.error.message,
+            errorType: validationResult.errorType,
+            'x_correlation-id': req.headers['x_correlation-id'],
+        })
+        throw new Error('401')
+    }
 
-  const obo = await requestOboToken(token, env.oboAudience)
-  if (!obo.ok) {
-    logger.error('Failed to get OBO token', {
-      error: obo.error.message,
-      'x_correlation-id': req.headers['x_correlation-id'],
-    })
-    throw new Error('401')
-  }
-  return obo.token
+    const obo = await requestOboToken(token, env.oboAudience)
+    if (!obo.ok) {
+        logger.error('Failed to get OBO token', {
+            error: obo.error.message,
+            'x_correlation-id': req.headers['x_correlation-id'],
+        })
+        throw new Error('401')
+    }
+    return obo.token
+}
+
+const getUniqueUserId = async (req: Request) => {
+    // TODO: Better error handling
+    const token = getOboToken(req)
+    try {
+        const tokenValue = await token
+        const tokenParts = tokenValue.split('.')
+        if (tokenParts.length !== 3) {
+            throw new Error('Invalid JWT token format')
+        }
+
+        // Decode the payload (middle part) of JWT
+        const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString())
+
+        if (!payload.sub) {
+            throw new Error('No subject found in token')
+        }
+
+        console.log('payload.sub', payload.sub)
+
+        // Create SHA-256 hash of the subject
+        const hash = crypto.createHash('sha256').update(payload.sub).digest('hex')
+
+        console.log('hash fnr', hash)
+        return hash
+    } catch (error) {
+        logger.error('Failed to extract and hash user ID from token', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+        })
+        throw new Error('Failed to identify user')
+    }
 }
 
 app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {
-  const assetFolder = path.join(__dirname, './dist', 'assets')
-  return express.static(assetFolder)(req, res, next)
+    const assetFolder = path.join(__dirname, './dist', 'assets')
+    return express.static(assetFolder)(req, res, next)
 })
 
 app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) => {
-  getOboToken(req)
-    .then((oboToken) => {
-      createProxyMiddleware({
-        target: `${env.inntektsplanleggerenBackendUrl}/api`,
-        changeOrigin: true,
-        headers: {
-          Authorization: `Bearer ${oboToken}`,
-        },
-        logger: logger,
-      })(req, res, next)
-    })
-    .catch(() => {
-      res.sendStatus(401)
-    })
+    getOboToken(req)
+        .then((oboToken) => {
+            createProxyMiddleware({
+                target: `${env.inntektsplanleggerenBackendUrl}/api`,
+                changeOrigin: true,
+                headers: {
+                    Authorization: `Bearer ${oboToken}`,
+                },
+                logger: logger,
+            })(req, res, next)
+        })
+        .catch(() => {
+            res.sendStatus(401)
+        })
 })
 
-app.get('*', (_req, res) => {
-  if (AUTH_PROVIDER === 'azure') {
-    res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
-  } else {
-    res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
-  }
+app.get('*', async (req, res) => {
+    if (AUTH_PROVIDER === 'azure') {
+        res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
+    } else {
+        const uniqueUserId = await getUniqueUserId(req)
+        const enableNyInntektsplanlegger = unleash.isEnabled('ny-inntektsplanlegger', {
+            userId: uniqueUserId,
+        })
+        console.log('Enable ny inntektsplanlegger?', enableNyInntektsplanlegger)
+        if (enableNyInntektsplanlegger) {
+            res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
+        } else {
+            // Perform a temporary redirect to the official Norwegian welfare administration site
+            res.redirect(307, 'https://www.nav.no') // TODO: Update with the correct URL
+        }
+    }
 })
 
 app.listen(PORT, () => {
-  logger.info(`Started server with AUTH_PROVIDER ${AUTH_PROVIDER} on port ${PORT}`)
+    logger.info(`Started server with AUTH_PROVIDER ${AUTH_PROVIDER} on port ${PORT}`)
 })
