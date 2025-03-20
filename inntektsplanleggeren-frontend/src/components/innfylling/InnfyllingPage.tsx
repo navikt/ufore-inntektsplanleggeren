@@ -18,7 +18,7 @@ import { FormStateContext } from '@/context/FormData'
 import { FormFieldsUser } from './FormFieldsUser'
 import { simulate } from '@/api/apiFetching'
 import { DinInntektTable } from '@/components/common/DinInntektTable'
-import { belopSum } from '@/common/Utils'
+import {belopSum, numberFormatWithKr} from '@/common/Utils'
 import { DataContext } from '@/DataContextProvider'
 import { PersonInntekter, SimulationResponse } from '@/api/model/ApiRequests'
 import { FormatKroner } from '@/components/utils/FormatKroner'
@@ -83,19 +83,19 @@ export const InnfyllingPage = () => {
         isError = true
         if (message.metadata['AFFECTED_FIELD'] === 'ARBEIDSINNTEKT_BRUKER') {
           bErrors['arbeidsinntekt'] =
-            `Beløpet kan ikke være mindre enn ${message.metadata['SUM_HITTIL_I_AAR']} kr, fordi du allerede har fått dette i lønn og pengestøtte`
+              `Beløpet kan ikke være mindre enn ${numberFormatWithKr(Number(message.metadata['SUM_HITTIL_I_AAR']))}, fordi du allerede har fått dette i lønn og pengestøtte. Kontakt oss hvis du har fått inntekt som ikke skal føre til lavere utbetaling av uføretrygden.`
         } else if (message.metadata['AFFECTED_FIELD'] === 'ARBEIDSINNTEKT_EPS') {
           eErrors['arbeidsinntekt'] =
-            `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte hittil i år. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten.`
+          `Beløpet må være høyere enn det den andre forelderen har fått i lønn og pengestøtte allerede. Kontakt oss hvis den andre forelderen har fått inntekt som ikke skal føre til lavere utbetaling av barnetilleget.`
         }
       } else if (message.messageCode === MessageCodes.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR) {
         isError = true
         if (message.metadata['AFFECTED_FIELD'] === 'ANDRE_YTELSER_BRUKER') {
           bErrors['andrePensjonsgivendeYtelser'] =
-            `Beløpet kan ikke være mindre enn ${message.metadata['SUM_HITTIL_I_AAR']} kr, fordi du allerede har fått dette i pensjoner fra andre enn folketrygden hittil i år.`
+          `Beløpet kan ikke være mindre enn ${numberFormatWithKr(Number(message.metadata['SUM_HITTIL_I_AAR']))}, fordi du allerede har fått dette i pensjon. Kontakt oss hvis du har mottatt pensjon som ikke skal føre til lavere utbetaling av barnetillegget.`
         } else if (message.metadata['AFFECTED_FIELD'] === 'ANDRE_YTELSER_EPS') {
           eErrors['andrePensjonsgivendeYtelser'] =
-            `Beløpet må være høyere enn det den andre forelderen har fått i pensjoner hittil i år. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten.`
+          `Beløpet må være høyere enn det den andre forelderen har fått i pensjon allerede. Kontakt oss hvis den andre forelderen har mottatt pensjon som ikke skal føre til lavere utbetaling av barnetillegget.`
         }
       }
     }
