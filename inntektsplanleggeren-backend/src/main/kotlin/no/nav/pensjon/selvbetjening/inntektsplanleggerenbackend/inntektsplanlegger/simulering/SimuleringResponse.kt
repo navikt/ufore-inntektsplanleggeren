@@ -18,7 +18,7 @@ data class Simuleringsresultat(
 
 data class SimuleringAmounts(
     val monthly: BeforeAndAfterValues,
-    val yearly: BeforeAndAfterValues
+    var yearly: BeforeAndAfterValues
 )
 
 data class BeforeAndAfterValues(val before: Int?, val after: Int)
