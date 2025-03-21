@@ -6,6 +6,7 @@ import { useContext } from 'react'
 import { FormStateContext } from '@/context/FormData'
 import { Link } from 'react-router-dom'
 import { FormatDateLong, FormatDateTime } from '@/components/utils/FormatDate'
+import {getUrlUforeInnboks} from "@/components/utils/UrlUtil";
 
 interface Props {
   statusResponse: StatusResponse
@@ -92,7 +93,7 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
           </VStack>
           <BodyLong>
             Vi har behandlet saken din og du vil snart motta et vedtaksbrev i{' '}
-            <Link target="_blank" to={import.meta.env.VITE_NAV_INNBOKS_URL}>
+            <Link to={getUrlUforeInnboks()} target="_blank">
               Din innboks (åpnes i ny fane)
             </Link>
             .
