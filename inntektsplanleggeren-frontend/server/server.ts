@@ -193,8 +193,10 @@ app.get('*', async (req, res) => {
 
         const isNyInntektsplanleggerEnabled = shouldEnableNyInntektsplanlegger()
         if (isNyInntektsplanleggerEnabled) {
+            logger.info('Serving new inntektsplanleggeren')
             res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
         } else {
+            logger.info('Redirecting to legacy inntektsplanleggeren')
             res.redirect(307, env.pselvUrl)
         }
     }
