@@ -56,5 +56,7 @@ spec:
       value: "http://inntektsplanleggeren-backend-q2"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
       value: "dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2"
+    - name: "LINK_INNTEKTSPLANLEGGER"
+      value: "https://pensjon-pselv-q2-gcp.ansatt.dev.nav.no/pselv/inntektsplanlegger/innledning.jsf?context=ut&simpleMode=true"
   envFrom:
     - secret: inntektsplanleggeren-frontend-unleash-api-token

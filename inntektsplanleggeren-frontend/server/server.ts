@@ -72,10 +72,12 @@ const env =
         ? ensureEnv({
               oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
               inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
+              pselvUrl: 'URL_PSELV_INNTEKTSPLANLEGGER',
           })
         : ensureEnv({
               oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
               inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
+              pselvUrl: 'URL_PSELV_INNTEKTSPLANLEGGER',
           })
 
 const unleash = initialize({
@@ -192,8 +194,7 @@ app.get('*', async (req, res) => {
         if (enableNyInntektsplanlegger) {
             res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
         } else {
-            // Perform a temporary redirect to the official Norwegian welfare administration site
-            res.redirect(307, 'https://www.nav.no') // TODO: Update with the correct URL
+            res.redirect(307, env.pselvUrl)
         }
     }
 })
