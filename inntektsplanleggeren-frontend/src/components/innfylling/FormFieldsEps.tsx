@@ -62,7 +62,7 @@ export const FormFieldsEps = ({
           <TextField
             id="arbeidsinntekt_eps"
             label="Lønn og pensjonsgivende ytelser"
-            description="Uføretrygd skal ikke tas med"
+            description="Uføretrygd skal ikke tas med. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten."
             inputMode="numeric"
             error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
             value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}
@@ -127,7 +127,7 @@ export const FormFieldsEps = ({
           <TextField
             id="andrePensjonsgivendeYtelser_eps"
             label="Uførepensjon og pensjoner fra andre enn Nav"
-            description="For eksempel fra KLP, OPF, SPK, Gjensidige, Storebrand"
+            description="For eksempel fra KLP, OPF, SPK, Gjensidige, Storebrand. Den andre forelderen kan se pensjon som er registrert hittil i år hos Skatteetaten."
             inputMode="numeric"
             error={fieldErrors.andrePensjonsgivendeYtelser ?? errors.andrePensjonsgivendeYtelser}
             value={
@@ -182,7 +182,9 @@ export const FormFieldsEps = ({
 
       <Box padding="4" background="surface-subtle" borderRadius="large">
         <VStack gap={{ xs: '2', sm: '1' }}>
-          <Heading size="small"> Annen forelder sin samlede inntekt i {year}: </Heading>
+          <Heading level="4" size="small">
+            Annen forelder sin samlede inntekt i {year}:
+          </Heading>
           <BodyShort className="sum">
             <FormatKroner value={inntektSum} /> før skatt
           </BodyShort>

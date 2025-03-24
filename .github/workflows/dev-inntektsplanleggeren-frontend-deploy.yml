@@ -28,7 +28,7 @@ jobs:
     with:
       path: inntektsplanleggeren-frontend/
       team: pensjonselvbetjening
-      app: inntektsplanleggeren-frontend
+      app: inntektsplanleggeren-frontend-veileder
       build_script_command: build:development:veileder
       node_version: 22
       prune_dev_dependencies: true

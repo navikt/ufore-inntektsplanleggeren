@@ -11,7 +11,7 @@ metadata:
 spec:
   image: "{{ image }}"
   ingresses:
-    - https://intern.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+    - https://veileder.intern.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 2
@@ -52,8 +52,6 @@ spec:
           cluster: prod-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: MODE
-      value: veileder
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"

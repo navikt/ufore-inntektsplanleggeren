@@ -28,10 +28,8 @@ export function BeregningWarnings(props: { messages: Message[] }) {
         (message) => message.messageCode === MessageCodes.OPPGITT_INNTEKT_GIVES_MORE_UFORETRYGD_THAN_ALREADY_UTBETALT
       ) && (
         <Alert variant="info">
-          Inntekten du nå har lagt inn, er lavere enn inntekten vi har brukt til å beregne uføretrygden din. Din nye
-          inntekt viser at du har fått utbetalt for lite uføretrygd. Derfor vil du ikke få trekk i uføretrygden din
-          resten av året. Har du fortsatt fått for lite utbetalt ved slutten av året, kan du få tilbake penger i
-          etteroppgjøret.
+          Inntekten du har lagt inn, er lavere enn inntekten vi har brukt til å beregne uføretrygden din. Derfor får du ikke trekk i uføretrygden din resten av året.
+          Har du fått utbetalt for lite uføretrygd ved slutten av året, kan du få tilbake penger i etteroppgjøret.
         </Alert>
       )}
 
