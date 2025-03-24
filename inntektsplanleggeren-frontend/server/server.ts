@@ -129,11 +129,9 @@ const getOboToken = async (req: Request) => {
 }
 
 const getUniqueUserId = async (req: Request) => {
-    // TODO: Better error handling
-    const token = getOboToken(req)
     try {
-        const tokenValue = await token
-        const tokenParts = tokenValue.split('.')
+        const token = await getOboToken(req)
+        const tokenParts = token.split('.')
         if (tokenParts.length !== 3) {
             throw new Error('Invalid JWT token format')
         }
@@ -145,18 +143,14 @@ const getUniqueUserId = async (req: Request) => {
             throw new Error('No subject found in token')
         }
 
-        console.log('payload.sub', payload.sub)
-
-        // Create SHA-256 hash of the subject
+        // Create SHA-256 hash av fnr
         const hash = crypto.createHash('sha256').update(payload.sub).digest('hex')
-
-        console.log('hash fnr', hash)
         return hash
     } catch (error) {
         logger.error('Failed to extract and hash user ID from token', {
             error: error instanceof Error ? error.message : 'Unknown error',
         })
-        throw new Error('Failed to identify user')
+        return null
     }
 }
 
@@ -187,11 +181,18 @@ app.get('*', async (req, res) => {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
         const uniqueUserId = await getUniqueUserId(req)
-        const enableNyInntektsplanlegger = unleash.isEnabled('ny-inntektsplanlegger', {
-            userId: uniqueUserId,
-        })
-        console.log('Enable ny inntektsplanlegger?', enableNyInntektsplanlegger)
-        if (enableNyInntektsplanlegger) {
+        const shouldEnableNyInntektsplanlegger = () => {
+            if (uniqueUserId !== null) {
+                return unleash.isEnabled('ny-inntektsplanlegger', {
+                    userId: uniqueUserId,
+                })
+            } else {
+                return false
+            }
+        }
+
+        const isNyInntektsplanleggerEnabled = shouldEnableNyInntektsplanlegger()
+        if (isNyInntektsplanleggerEnabled) {
             res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
         } else {
             res.redirect(307, env.pselvUrl)
