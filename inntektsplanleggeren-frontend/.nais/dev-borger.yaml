@@ -45,6 +45,8 @@ spec:
     enabled: true
   accessPolicy:
     outbound:
+      external:
+        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
       rules:
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp

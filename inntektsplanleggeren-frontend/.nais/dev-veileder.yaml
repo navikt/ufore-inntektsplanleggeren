@@ -53,6 +53,8 @@ spec:
           namespace: aura
           cluster: dev-gcp
     outbound:
+      external:
+        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
       rules:
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp
