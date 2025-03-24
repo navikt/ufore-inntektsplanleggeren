@@ -7,7 +7,7 @@
     "scripts": {
         "dev": "concurrently --kill-others-on-fail  \"vite \" \"node mock/server.cjs\"",
         "dev-veileder": "concurrently --kill-others-on-fail  \"vite --mode dev-veileder \" \"node mock/server.cjs\"",
-        "dev-q2": "concurrently --kill-others-on-fail  \"vite --mode development-q2 \" \"NODE_ENV=development npm run build:server && NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js\"",
+        "dev-q2": "concurrently --kill-others-on-fail  \"vite --mode development-q2 \" \"nodemon --watch server/ --exec 'npm run build:server && NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js'\"",
         "build": "tsc && vite build --mode development && npm run build:server",
         "build:development:veileder": "tsc && vite build --mode dev-veileder && npm run build:server",
         "build:production": "tsc && vite build && npm run build:server",
@@ -47,6 +47,7 @@
         "eslint-plugin-react": "^7.37.4",
         "highcharts": "^12.1.2",
         "highcharts-react-official": "^3.2.1",
+        "nodemon": "^3.1.9",
         "openapi-typescript": "^7.6.1",
         "prettier": "^3.5.2",
         "react": "^19.0.0",
