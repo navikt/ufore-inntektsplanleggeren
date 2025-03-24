@@ -6,6 +6,7 @@
     "main": "src/server/app.js",
     "scripts": {
         "dev": "concurrently --kill-others-on-fail  \"vite \" \"node mock/server.cjs\"",
+        "dev-veileder": "concurrently --kill-others-on-fail  \"vite --mode dev-veileder \" \"node mock/server.cjs\"",
         "dev-q2": "concurrently --kill-others-on-fail  \"vite --mode development-q2 \" \"NODE_ENV=development npm run build:server && NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js\"",
         "build": "tsc && vite build --mode development && npm run build:server",
         "build:development:veileder": "tsc && vite build --mode dev-veileder && npm run build:server",
