@@ -63,7 +63,7 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yaml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yml
 
   deploy-frontend-veileder-to-prod:
     if: github.ref == 'refs/heads/main'
@@ -76,4 +76,4 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yaml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yml
