@@ -10,8 +10,8 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 spec:
   image: "{{ image }}"
-#  ingresses:
-#    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+  ingresses:
+    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 2
@@ -28,18 +28,20 @@ spec:
     periodSeconds: 20
     failureThreshold: 5
     timeout: 1
-#  idporten:
-#    enabled: true
-#    sidecar:
-#      level: idporten-loa-substantial
-#      enabled: true
-#      autoLogin: true
-#      autoLoginIgnorePaths:
-#        - /internal/ping
+  idporten:
+    enabled: true
+    sidecar:
+      level: idporten-loa-substantial
+      enabled: true
+      autoLogin: true
+      autoLoginIgnorePaths:
+        - /internal/ping
   tokenx:
     enabled: true
   accessPolicy:
     outbound:
+      external:
+        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
       rules:
         - application: inntektsplanleggeren-backend
           cluster: prod-gcp
