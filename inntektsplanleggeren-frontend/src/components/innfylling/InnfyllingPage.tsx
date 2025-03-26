@@ -47,22 +47,14 @@ export const InnfyllingPage = () => {
   const [epsErrors, setEpsErrors] = useState<Partial<Record<keyof PersonInntekter, string>>>({})
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [formDiry, setFormDirty] = useState<boolean>(false)
-
-  const brukerFormRef = React.useRef<HTMLDivElement>(null)
-  const epsFormRef = React.useRef<HTMLDivElement>(null)
   const location = useLocation();
 
   useEffect(() => {
-
-      if (location.hash === '#bruker-inntekt') {
-        brukerFormRef.current?.scrollIntoView(true)
-      } else if (location.hash === '#eps-inntekt') {
-        epsFormRef.current?.scrollIntoView(true)
-      } else if (location.hash) {
+    if (location.hash) {
 
       const element = document.getElementById(location.hash.substring(1));
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView();
       }
     }
   }, [location.hash]);
@@ -249,40 +241,37 @@ export const InnfyllingPage = () => {
       <form onSubmit={handleSubmit}>
         <VStack gap="4">
           <VStack gap="4">
-            <div ref={brukerFormRef}>
-                <Bleed marginInline={{md: '0 20'}} asChild>
-                  <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding={{xs: '6', md: '10'}}>
-                    <VStack gap="6">
-                      <Heading size="medium" level="3" spacing>
-                        Din inntekt {selectedYear}
-                      </Heading>
-                      <BodyLong>
-                        Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi
-                        deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året.{' '}
-                      </BodyLong>
-                      {!inntekterResponse.uforeHeleAaret ? (
-                          <Alert inline variant="info">
-                            Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.
-                          </Alert>
-                      ) : null}
-                      <FormFieldsUser
-                          year={selectedYear}
-                          errors={brukerErrors}
-                          setErrors={setBrukerErrors}
-                          setInntekt={(field, belop) => setBrukerinntekt((b) => ({...b, [field]: belop}))}
-                          forventedeInntekter={brukerinntekt}
-                          inntektSum={getBrukerinntektSum()}
-                      />
-                    </VStack>
-                  </Box>
-                </Bleed>
-            </div>
+            <Bleed marginInline={{md: '0 20'}} asChild>
+              <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding={{xs: '6', md: '10'}} id={'bruker-inntekt'}>
+                <VStack gap="6">
+                  <Heading size="medium" level="3" spacing>
+                    Din inntekt {selectedYear}
+                  </Heading>
+                  <BodyLong>
+                    Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi
+                    deg feil utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året.{' '}
+                  </BodyLong>
+                  {!inntekterResponse.uforeHeleAaret ? (
+                      <Alert inline variant="info">
+                        Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.
+                      </Alert>
+                  ) : null}
+                  <FormFieldsUser
+                      year={selectedYear}
+                      errors={brukerErrors}
+                      setErrors={setBrukerErrors}
+                      setInntekt={(field, belop) => setBrukerinntekt((b) => ({...b, [field]: belop}))}
+                      forventedeInntekter={brukerinntekt}
+                      inntektSum={getBrukerinntektSum()}
+                  />
+                </VStack>
+              </Box>
+            </Bleed>
 
               {inntekterResponse?.forventedeInntekter.eps ? (
-                  <div ref={epsFormRef}>
                     <Bleed marginInline={{md: '0 20'}}>
                       <Box borderColor="border-default" borderWidth="1" borderRadius="large"
-                           padding={{xs: '6', md: '10'}}>
+                           padding={{xs: '6', md: '10'}} id={'eps-inntekt'}>
                         <VStack gap="6">
                           <Heading level="3" size="medium" spacing>
                             Annen forelders inntekt {selectedYear}
@@ -319,7 +308,6 @@ export const InnfyllingPage = () => {
                         </VStack>
                       </Box>
                     </Bleed>
-                  </div>
               ) : null}
           </VStack>
           {checkForFieldErrors() && formDiry ? (
