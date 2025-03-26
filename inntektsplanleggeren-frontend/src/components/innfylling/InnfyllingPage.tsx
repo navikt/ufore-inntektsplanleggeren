@@ -11,7 +11,7 @@ import {
   Loader,
   VStack,
 } from '@navikt/ds-react'
-import React, { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
+import React, {FormEvent, MouseEvent, useContext, useEffect, useRef, useState} from 'react'
 import './innfylling.css'
 import {Link as RouterLink, useLocation, useNavigate} from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
@@ -53,12 +53,23 @@ export const InnfyllingPage = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash === '#bruker-inntekt') {
-      brukerFormRef.current?.scrollIntoView(true)
+
+      if (location.hash === '#bruker-inntekt') {
+        brukerFormRef.current?.scrollIntoView(true)
       } else if (location.hash === '#eps-inntekt') {
-      epsFormRef.current?.scrollIntoView(true)
+        epsFormRef.current?.scrollIntoView(true)
+      } else if (location.hash) {
+
+      const element = document.getElementById(location.hash.substring(1));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-  }, []);
+  }, [location.hash]);
+
+ //scroll to element with id like location.hash
+
+
 
   useEffect(() => {
     setFormStep(1)
