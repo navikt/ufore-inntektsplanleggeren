@@ -36,7 +36,7 @@
         "@navikt/ds-css": "^7.14.2",
         "@navikt/ds-react": "^7.14.2",
         "@types/express": "^5.0.1",
-        "@types/node": "^22.13.12",
+        "@types/node": "^22.13.14",
         "@types/react": "^19.0.12",
         "@types/react-dom": "^19.0.4",
         "@vitejs/plugin-react": "^4.3.4",
