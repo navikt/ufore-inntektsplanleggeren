@@ -109,6 +109,7 @@ class SimuleringServiceTest {
                 false,
                 false,
                 LocalDate.now(),
+                null,
                 null
             )
         )
@@ -177,6 +178,7 @@ class SimuleringServiceTest {
             false,
             false,
             LocalDate.now(),
+            null,
             null
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
@@ -255,7 +257,8 @@ class SimuleringServiceTest {
             false,
             false,
             LocalDate.now(),
-            null
+            null,
+            400000
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
@@ -408,7 +411,8 @@ class SimuleringServiceTest {
             false,
             false,
             LocalDate.now(),
-            null
+            null,
+            400000
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
@@ -475,6 +479,7 @@ class SimuleringServiceTest {
             false,
             false,
             LocalDate.now(),
+            null,
             null
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
@@ -541,6 +546,7 @@ class SimuleringServiceTest {
             false,
             false,
             LocalDate.now(),
+            null,
             null
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
@@ -608,6 +614,7 @@ class SimuleringServiceTest {
             false,
             false,
             LocalDate.now(),
+            null,
             null
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)

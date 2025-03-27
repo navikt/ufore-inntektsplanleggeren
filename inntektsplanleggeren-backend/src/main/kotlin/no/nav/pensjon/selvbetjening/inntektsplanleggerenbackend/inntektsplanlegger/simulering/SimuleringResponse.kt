@@ -21,4 +21,4 @@ data class SimuleringAmounts(
     var yearly: BeforeAndAfterValues
 )
 
-data class BeforeAndAfterValues(val before: Int?, val after: Int)
+data class BeforeAndAfterValues(var before: Int?, val after: Int)

@@ -49,10 +49,10 @@ class SimuleringService(
                 )!!,
                 forventetInntekt = SimuleringAmounts(
                     yearly = BeforeAndAfterValues(
-                        before = if (isSimuleringsaarThisYear(simuleringsaar)) forventedeInntekter.sumBenyttedeInntekterBruker else null,
+                        before = if (isSimuleringsaarThisYear(simuleringsaar)) simuleringsresultat.forventedInntektBefore else null,
                         after = forventedeInntekterOppgitt.bruker.sum()
                     ), monthly = BeforeAndAfterValues(
-                        before = if (isSimuleringsaarThisYear(simuleringsaar)) forventedeInntekter.sumBenyttedeInntekterBruker / 12 else null,
+                        before = if (isSimuleringsaarThisYear(simuleringsaar)) (simuleringsresultat.forventedInntektBefore ?:0) / 12 else null,
                         after = forventedeInntekterOppgitt.bruker.sum() / 12
                     )
                 ),
@@ -73,7 +73,7 @@ class SimuleringService(
                 ),
                 sum = SimuleringAmounts(
                     yearly = BeforeAndAfterValues(
-                        before = getSumArligUforetrygdAndInntekt(simuleringsresultat, forventedeInntekter, simuleringsaar),
+                        before = getSumArligUforetrygdAndInntekt(simuleringsresultat, simuleringsresultat.forventedInntektBefore, simuleringsaar),
                         after = getSumArligUforetrygdSimulertAndInntekt(simuleringsresultat, forventedeInntekterOppgitt)
                     ), monthly = BeforeAndAfterValues( //Note: Monthly sums do not include forventet inntekt, this is intentional.
                         before = getSumMaanedligUforetrygd(simuleringsresultat, simuleringsaar),
@@ -118,11 +118,11 @@ class SimuleringService(
 
     private fun getSumArligUforetrygdAndInntekt(
         simuleringsresultat: SimulerEndringUforetrygdResponse,
-        forventedeInntekter: ForventedeInntekterSummary,
+        forventedeInntekter: Int?,
         simuleringsaar: Int
     ): Int? {
         return if (isSimuleringsaarThisYear(simuleringsaar)) {
-            (simuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter ?: 0) + forventedeInntekter.sumBenyttedeInntekterBruker
+            (simuleringsresultat.currentUforetrygdSummary.sumYtelseskomponenter ?: 0) + (forventedeInntekter ?: 0)
         } else {
             null
         }

@@ -120,11 +120,11 @@ class InntektsplanleggerService(
     }
 
     private fun updateSimuleringDataYearlyValues(simuleringData: SimuleringData, simuleringsDataHeleAret: SimuleringData) {
-        simuleringData.simuleringsresultat.uforetrygd.yearly = simuleringsDataHeleAret.simuleringsresultat.uforetrygd.yearly
-        simuleringData.simuleringsresultat.barnetilleggFellesbarn?.yearly  = simuleringsDataHeleAret.simuleringsresultat.barnetilleggFellesbarn!!.yearly
-        simuleringData.simuleringsresultat.barnetilleggSaerkullsbarn?.yearly = simuleringsDataHeleAret.simuleringsresultat.barnetilleggSaerkullsbarn!!.yearly
-        simuleringData.simuleringsresultat.gjenlevendetillegg?.yearly = simuleringsDataHeleAret.simuleringsresultat.gjenlevendetillegg!!.yearly
-        simuleringData.simuleringsresultat.sum.yearly = simuleringsDataHeleAret.simuleringsresultat.sum.yearly
+        simuleringData.simuleringsresultat.uforetrygd.yearly.before = simuleringsDataHeleAret.simuleringsresultat.uforetrygd.yearly.before
+        simuleringData.simuleringsresultat.barnetilleggFellesbarn?.yearly?.before = simuleringsDataHeleAret.simuleringsresultat.barnetilleggFellesbarn!!.yearly.before
+        simuleringData.simuleringsresultat.barnetilleggSaerkullsbarn?.yearly?.before = simuleringsDataHeleAret.simuleringsresultat.barnetilleggSaerkullsbarn!!.yearly.before
+        simuleringData.simuleringsresultat.gjenlevendetillegg?.yearly?.before = simuleringsDataHeleAret.simuleringsresultat.gjenlevendetillegg!!.yearly.before
+        simuleringData.simuleringsresultat.sum.yearly.before = simuleringsDataHeleAret.simuleringsresultat.sum.yearly.before
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {

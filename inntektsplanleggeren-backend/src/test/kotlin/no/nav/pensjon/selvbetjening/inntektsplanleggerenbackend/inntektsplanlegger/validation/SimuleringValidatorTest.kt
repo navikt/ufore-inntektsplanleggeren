@@ -391,7 +391,8 @@ class SimuleringValidatorTest {
         isFaktoromregnetEllerManueltOverstyrt = isFaktoromregnetEllerManueltOverstyrt,
         hasOpenInntektsendringskrav = hasOpenInntektsendringskrav,
         firstVedtakFom = LocalDate.now().withDayOfMonth(1),
-        lastVedtakTom = lastVedtakTom
+        lastVedtakTom = lastVedtakTom,
+        null
     )
 
     companion object {

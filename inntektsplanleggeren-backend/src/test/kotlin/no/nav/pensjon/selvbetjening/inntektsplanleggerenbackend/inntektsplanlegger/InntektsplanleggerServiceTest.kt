@@ -999,7 +999,7 @@ class InntektsplanleggerServiceTest {
 
     private fun simuleringsresultatFraJan() = Simuleringsresultat(
         SimuleringAmounts(
-            BeforeAndAfterValues(10231, 8823), BeforeAndAfterValues(100923, 189023)
+            BeforeAndAfterValues(10231, 8823), BeforeAndAfterValues(10923, 189023)
         ), SimuleringAmounts(
             BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
         ), null, null, null, SimuleringAmounts(
@@ -1009,7 +1009,7 @@ class InntektsplanleggerServiceTest {
 
     private fun simuleringsresultatKombinert() = Simuleringsresultat(
         SimuleringAmounts(
-            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 189023)
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(10923, 89023)
         ), SimuleringAmounts(
             BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
         ), null, null, null, SimuleringAmounts(
