@@ -13,7 +13,7 @@ class InntekterInntektsplanleggerMetricsCounter {
                 countEvent("INNTEKTER_SUCCESS")
 
             } catch(e: Exception){
-                logger.error("Failed counting soknad status")
+                logger.error("Failed counting inntekter status")
             }
         }
 

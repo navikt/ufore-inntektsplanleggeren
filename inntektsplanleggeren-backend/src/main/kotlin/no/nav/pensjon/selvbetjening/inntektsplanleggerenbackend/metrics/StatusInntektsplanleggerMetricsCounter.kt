@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 
 class StatusInntektsplanleggerMetricsCounter {
     companion object{
-        private const val EVENT_NAME = "inntektsplanlegger_status?"
+        private const val EVENT_NAME = "inntektsplanlegger_status"
         private val logger = LoggerFactory.getLogger(StatusInntektsplanleggerMetricsCounter::class.java)
 
         fun count(statusResponse: InntektsplanleggerenStatusResponse?){

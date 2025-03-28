@@ -12,13 +12,18 @@ class InitiateInntektsplanleggerMetricsCounter {
 
         fun count(initiateResponse: InntektsplanleggerenInitialResponse){
             try {
-                if(initiateResponse.messages.any { it.messageCode.type == InntektsplanleggerMessageType.ERROR }){
-                    countEvent("INITIATE_ERROR")
-                } else {
+                if(initiateResponse.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
                     countEvent("INITIATE_SUCCESS")
+                } else {
+                    for (message in initiateResponse.messages) {
+                        if (message.type == InntektsplanleggerMessageType.ERROR) {
+                            countEvent("INITIATE_ERROR.${message.messageCode}")
+                        }
+                    }
                 }
+
             } catch(e: Exception){
-                logger.error("Failed counting soknad status")
+                logger.error("Failed counting initiate status")
             }
         }
 

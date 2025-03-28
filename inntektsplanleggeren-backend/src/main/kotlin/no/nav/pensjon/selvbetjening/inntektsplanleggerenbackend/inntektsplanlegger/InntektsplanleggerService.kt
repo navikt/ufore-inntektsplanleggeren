@@ -41,6 +41,8 @@ class InntektsplanleggerService(
     ): InntektsplanleggerenSendResponse {
         val innsendingsTidspunkt = LocalDateTime.now(ZoneId.of("Europe/Paris"))
         val simulering = simulerInntektsendring(pid, simuleringsaar, oppgitteInntekter)
+        var response: InntektsplanleggerenSendResponse
+
         if (simulering.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val initiertAv = tokenService.determineLoggedInUser()
             val innsending = penClient.sendInntektsendring(
@@ -62,17 +64,20 @@ class InntektsplanleggerService(
 
                     else -> InnsendingStatus.IKKE_SENDT
                 }
-            return InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
+            response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
         }
 
-        val response = InntektsplanleggerenSendResponse(
+        else {
+            response = InntektsplanleggerenSendResponse(
             simulering.messages,
             InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
             innsendingsTidspunkt
         )
 
-        SendInntektsplanleggerMetricsCounter.count(response)
 
+        }
+
+        SendInntektsplanleggerMetricsCounter.count(response)
         return response
     }
 
