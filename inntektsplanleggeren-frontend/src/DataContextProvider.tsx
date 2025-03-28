@@ -1,186 +1,182 @@
-import {createContext, useCallback, useEffect, useState} from "react";
+import { createContext, useCallback, useEffect, useState } from 'react'
+import { getInitiate } from '@/api/apiFetching'
 import {
-    getInitiate,
-} from "@/api/apiFetching";
-import {
-    InitiateData, InitiateResponse,
-    InntekterResponse,
-    Message,
-    SendApplicationResponse,
-    SimulationResponse, StatusResponse
-} from "@/api/model/ApiRequests";
-
-export const InitialViewDefaultData: InitiateData | null = {
-    forventetInntekt: 0,
-    forventetInntektAnnenForelder: 0,
-    inntektsgrense: 0,
-    kompensasjonsgrad: 0,
-    grenseStoppAvUfoeretrygd: 0,
-    aktuelleAar: [],
-    hasVarigTilrettelagtArbeid: false,
-    hasBarneTilleggFellesbarn: false,
-    grenseStoppAvBarnetilleggFellesbarn: null,
-    fribelopBarnetilleggFellesbarn: null,
-    hasBarnetilleggSaerkullsbarn: false,
-    grenseStoppAvBarnetilleggSaerkullsbarn: null,
-    fribelopBarnetilleggSaerkullsbarn: null,
-    hasGjenlevendeTillegg: false
-}
-
-export const messagesDefaultValue: Message[]  = []
-
-
-// export const WarningMessageDefaultValue: Message[] | null = []
+  InitiateResponse,
+  InntekterResponse,
+  SendApplicationResponse,
+  SimulationResponse,
+  StatusResponse,
+} from '@/api/model/ApiRequests'
+import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 
 interface DataContextValue {
-    initiateResponse: InitiateResponse | null;
-    setInitiateResponse: (value: InitiateResponse) => void;
+  initiateResponse: InitiateResponse | null
+  setInitiateResponse: (value: InitiateResponse) => void
 
-    inntekterResponse: InntekterResponse | null;
-    setInntekterResponse: (value: InntekterResponse) => void;
+  previousYearInntekterResponse: InntekterResponse | null
+  setPreviousYearInntekterResponse: (value: InntekterResponse) => void
 
-    simulationResponse: SimulationResponse | null;
-    setSimulationResponse: (value: SimulationResponse) => void;
+  inntekterResponse: InntekterResponse | null
+  setInntekterResponse: (value: InntekterResponse) => void
 
-    sendResponse: SendApplicationResponse | null,
-    setSendResponse: (value: SendApplicationResponse) => void,
+  simulationResponse: SimulationResponse | null
+  setSimulationResponse: (value: SimulationResponse) => void
 
-    statusResponse: StatusResponse | null,
-    setStatusResponse: (value: StatusResponse) => void,
+  sendResponse: SendApplicationResponse | null
+  setSendResponse: (value: SendApplicationResponse) => void
 
-    refetch: boolean;
-    setRefetch: (value: boolean) => void;
-    loading: boolean;
-    setLoading: (loading: boolean) => void;
-    error: boolean;
-    setError: (value: boolean) => void;
-    loadingError: boolean;
-    setLoadingError: (value: boolean) => void;
-    feilmeldingkode: string;
-    setFeilmeldingkode: (value: string) => void;
-    success: boolean;
-    setSuccess: (value: boolean) => void;
+  statusResponse: StatusResponse | null
+  setStatusResponse: (value: StatusResponse) => void
+
+  refetch: boolean
+  setRefetch: (value: boolean) => void
+
+  error: boolean
+  setError: (value: boolean) => void
+  errorMessage: ErrorCode | null
+  setErrorMessage: (value: ErrorCode) => void
+  loadingError: boolean
+  setLoadingError: (value: boolean) => void
+  feilmeldingkode: string
+  setFeilmeldingkode: (value: string) => void
+  success: boolean
+  setSuccess: (value: boolean) => void
 }
 
 const DataContextDefaultValue: DataContextValue = {
-    initiateResponse: null,
-    setInitiateResponse: () => undefined,
+  initiateResponse: null,
+  setInitiateResponse: () => undefined,
 
-    inntekterResponse: null,
-    setInntekterResponse: () => undefined,
+  previousYearInntekterResponse: null,
+  setPreviousYearInntekterResponse: () => undefined,
 
-    simulationResponse: null,
-    setSimulationResponse: () => undefined,
+  inntekterResponse: null,
+  setInntekterResponse: () => undefined,
 
-    sendResponse: null,
-    setSendResponse: () => undefined,
+  simulationResponse: null,
+  setSimulationResponse: () => undefined,
 
-    statusResponse: null,
-    setStatusResponse: () => undefined,
+  sendResponse: null,
+  setSendResponse: () => undefined,
 
-    refetch: true,
-    setRefetch: () => undefined,
-     
-    loading: true,
-    setLoading: () => undefined,
-    error: false,
-    setError: () => undefined,
-    loadingError: false,
-    setLoadingError: () => undefined,
-    feilmeldingkode: "",
-    setFeilmeldingkode: () => undefined,
-    success: false,
-    setSuccess: () => undefined
-};
+  statusResponse: null,
+  setStatusResponse: () => undefined,
 
+  refetch: true,
+  setRefetch: () => undefined,
 
-export const DataContext = createContext(DataContextDefaultValue);
+  error: false,
+  setError: () => undefined,
+  errorMessage: null,
+  setErrorMessage: () => undefined,
+  loadingError: false,
+  setLoadingError: () => undefined,
+  feilmeldingkode: '',
+  setFeilmeldingkode: () => undefined,
+  success: false,
+  setSuccess: () => undefined,
+}
+
+export const DataContext = createContext(DataContextDefaultValue)
 
 interface DataContextProviderProps {
-    children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 function DataContextProvider(props: DataContextProviderProps) {
-    const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
-    const [initiateResponse, setInitiateResponse] = useState(DataContextDefaultValue.initiateResponse)
-    const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
-    const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
-    const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
-    const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
-    const [loading, setLoading] = useState(DataContextDefaultValue.loading)
-    const [error, setError] = useState(DataContextDefaultValue.error)
-    const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
-    const [feilmeldingkode, setFeilmeldingkode] = useState(DataContextDefaultValue.feilmeldingkode)
-    const [success, setSuccess] = useState(DataContextDefaultValue.success)
+  const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
+  const [initiateResponse, setInitiateResponse] = useState(DataContextDefaultValue.initiateResponse)
+  const [previousYearInntekterResponse, setPreviousYearInntekterResponse] = useState(
+    DataContextDefaultValue.previousYearInntekterResponse
+  )
+  const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
+  const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
+  const [sendResponse, setSendResponse] = useState(DataContextDefaultValue.sendResponse)
+  const [statusResponse, setStatusResponse] = useState(DataContextDefaultValue.statusResponse)
+  const [errorMessage, setErrorMessage] = useState(DataContextDefaultValue.errorMessage)
+  const [error, setError] = useState(DataContextDefaultValue.error)
+  const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
+  const [feilmeldingkode, setFeilmeldingkode] = useState(DataContextDefaultValue.feilmeldingkode)
+  const [success, setSuccess] = useState(DataContextDefaultValue.success)
 
-    useCallback(function (res: boolean) {
-        setRefetch(res)
-    }, [setRefetch]);
+  useCallback(
+    function (res: boolean) {
+      setRefetch(res)
+    },
+    [setRefetch]
+  )
 
-    useCallback(function (res: boolean) {
-        setError(res)
-    }, [setError]);
+  useCallback(
+    function (res: boolean) {
+      setError(res)
+    },
+    [setError]
+  )
 
-    useCallback(function (res: boolean) {
-        setLoadingError(res)
-    }, [setLoadingError]);
+  useCallback(
+    function (res: boolean) {
+      setLoadingError(res)
+    },
+    [setLoadingError]
+  )
 
-    useEffect(() => {
-            (async () => {
-                if (refetch) {
-                    try {
-                        setLoading(true)
-
-                        const inntektsPlanleggerenResponse = await getInitiate()
-                        setInitiateResponse(inntektsPlanleggerenResponse)
-
-                        setLoading(false)
-                    } catch (e) {
-                        setLoadingError(true)
-                        setLoading(false)
-                    }
-                    setRefetch(false)
-                }
-            })();
+  useEffect(() => {
+    ;(async () => {
+      if (refetch) {
+        try {
+          const inntektsPlanleggerenResponse = await getInitiate()
+          if (inntektsPlanleggerenResponse instanceof ErrorResponse) {
+            setErrorMessage(inntektsPlanleggerenResponse.message)
+          } else {
+            setInitiateResponse(inntektsPlanleggerenResponse)
+          }
+        } catch {
+          setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
-        , [refetch]);
+        setRefetch(false)
+      }
+    })()
+  }, [refetch])
 
+  return (
+    <DataContext.Provider
+      value={{
+        initiateResponse,
+        setInitiateResponse,
 
-    return (
-        <DataContext.Provider value={{
-            initiateResponse,
-            setInitiateResponse,
+        previousYearInntekterResponse,
+        setPreviousYearInntekterResponse,
 
-            inntekterResponse,
-            setInntekterResponse,
+        inntekterResponse,
+        setInntekterResponse,
 
-            simulationResponse,
-            setSimulationResponse,
+        simulationResponse,
+        setSimulationResponse,
 
-            sendResponse,
-            setSendResponse,
+        sendResponse,
+        setSendResponse,
 
-            statusResponse,
-            setStatusResponse,
+        statusResponse,
+        setStatusResponse,
 
-            refetch,
-            setRefetch,
+        refetch,
+        setRefetch,
 
-            loading,
-            setLoading,
-            error,
-            setError,
-            loadingError,
-            setLoadingError,
-            feilmeldingkode,
-            setFeilmeldingkode,
-            success,
-            setSuccess
-        }}>
-            {props.children}
-        </DataContext.Provider>
-    );
-
+        error,
+        setError,
+        errorMessage,
+        setErrorMessage,
+        loadingError,
+        setLoadingError,
+        feilmeldingkode,
+        setFeilmeldingkode,
+        success,
+        setSuccess,
+      }}
+    >
+      {props.children}
+    </DataContext.Provider>
+  )
 }
 
 export default DataContextProvider

@@ -1,19 +1,32 @@
-import {InntektDetaljer} from "@/api/model/ApiRequests";
-import {format, } from "date-fns";
+import { InntektDetaljer } from '@/api/model/ApiRequests'
+import { format } from 'date-fns'
 
 export function numberFormatWithKr(value: number): string {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " kr";
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' kr'
+}
+
+export function numberFormat(value: number): string {
+  return value.toLocaleString('no-NO')
 }
 
 export function belopSum(data: InntektDetaljer[]): number {
-    return data.reduce((acc, { belop }) => acc + belop, 0);
+  return data.reduce((acc, { belop }) => acc + belop, 0)
 }
 
 export function formatDateTime(value: Date): string {
-    return format(value, 'dd. MMMM yyyy') + ' kl. ' + format(value, 'HH:mm') //todo make it norwegian
+  const date = new Date(value)
+  return (
+    date.toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' }) +
+    ' kl. ' +
+    date.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' })
+  )
 }
 
 export function formatDate(value: Date): string {
-    return format(value, 'dd.MM.yyyy')
+  return format(value, 'dd.MM.yyyy')
 }
 
+export function formatDateLong(value: Date): string {
+  const date = new Date(value)
+  return date.toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' })
+}

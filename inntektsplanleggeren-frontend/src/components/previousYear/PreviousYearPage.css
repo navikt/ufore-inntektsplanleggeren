@@ -1,0 +1,5 @@
+@import '@navikt/ds-tokens';
+
+.page {
+  gap: 30px; /* Adjust the value as needed */
+}

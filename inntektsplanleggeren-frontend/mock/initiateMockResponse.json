@@ -1,0 +1,28 @@
+{
+  "messages": [],
+  "data": {
+    "forventetInntekt": {
+      "2024": 120000,
+      "2025": 89343
+    },
+    "forventetInntektAnnenForelder": {
+      "2024": 3424,
+      "2025": null
+    },
+    "inntektsgrense": 49611,
+    "kompensasjonsgrad": 49.7,
+    "grenseStoppAvUfoeretrygd": 460060,
+    "aktuelleAar": [
+      2025
+    ],
+    "annetRelevantAar": 2014,
+    "hasVarigTilrettelagtArbeid": true,
+    "hasBarneTilleggFellesbarn": true,
+    "grenseStoppAvBarnetilleggFellesbarn": 669751,
+    "fribelopBarnetilleggFellesbarn": 570529,
+    "hasBarnetilleggSaerkullsbarn": true,
+    "grenseStoppAvBarnetilleggSaerkullsbarn": 827,
+    "fribelopBarnetilleggSaerkullsbarn": 242,
+    "hasGjenlevendeTillegg": true
+  }
+}

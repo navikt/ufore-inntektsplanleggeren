@@ -85,7 +85,8 @@ class SimuleringValidator(val personService: PersonService) {
             pid,
             simuleringsaar
         )
-        if (simuleringsresultat.sumNettoRestArWithoutBTandET > maksimaltGjenstaendeIAr) {
+        val ROUNDING_MARGIN = 2
+        if (simuleringsresultat.sumNettoRestArWithoutBTandET > maksimaltGjenstaendeIAr+ROUNDING_MARGIN) {
             return InntektsplanleggerMessage(InntektsplanleggerMessageCode.OPPGITT_INNTEKT_GIVES_MORE_UFORETRYGD_THAN_ALREADY_UTBETALT)
         }
 

@@ -49,6 +49,7 @@ class InntektsplanleggerController(
     @GetMapping("inntekter")
     fun getInntekter(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
+        @RequestParam("fetchForventedeInntekter", required = false) fetchForventedeInntekter: Boolean?,
         @RequestHeader("pid", required=false) pidFromHeader:String?,
         @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntekterResponse> {
@@ -56,7 +57,8 @@ class InntektsplanleggerController(
             ResponseEntity(
                 inntektsPlanleggerService.constructInntekterResponse(
                     SecurityContextUtil.getPidFromContext(),
-                    simuleringsaar
+                    simuleringsaar,
+                    fetchForventedeInntekter?:true
                 ), HttpStatus.OK
             )
         } catch (exception: Exception) {

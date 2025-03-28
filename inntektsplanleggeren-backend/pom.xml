@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -17,23 +17,25 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<kotlin.version>2.0.0</kotlin.version>
+		<kotlin.version>2.1.20</kotlin.version>
 		<jackson-version>2.17.2</jackson-version>
 		<logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
-		<spring-boot-starter-security.version>3.3.5</spring-boot-starter-security.version>
+		<spring-boot-starter-security.version>3.4.4</spring-boot-starter-security.version>
 		<mockwebserver.version>4.12.0</mockwebserver.version>
-		<micrometer.version>1.14.1</micrometer.version>
+		<micrometer.version>1.14.5</micrometer.version>
+		<logback.version>1.5.18</logback.version>
+		<logback-access.version>2.0.6</logback-access.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>6.4.1</version>
+			<version>6.4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.6.0</version>
+			<version>2.8.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.papertrailapp</groupId>
@@ -42,13 +44,48 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.access</groupId>
+			<artifactId>logback-access-common</artifactId>
+			<version>${logback-access.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.access</groupId>
+			<artifactId>logback-access-tomcat</artifactId>
+			<version>${logback-access.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-catalina</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.tomcat</groupId>
+					<artifactId>tomcat-coyote</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>6.2.0</version>
+			<version>6.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -66,7 +103,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>6.4.1</version>
+			<version>6.4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,7 +112,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>6.2.0</version>
+			<version>6.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -88,21 +125,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback.access</groupId>
-			<artifactId>tomcat</artifactId>
-			<version>2.0.3</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-catalina</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-coyote</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -133,7 +156,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
-			<version>2.18.2</version>
+			<version>2.18.3</version>
 		</dependency>
 		<dependency>
 			<groupId>net.logstash.logback</groupId>

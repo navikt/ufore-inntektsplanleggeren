@@ -40,20 +40,18 @@ spec:
     enabled: true
   accessPolicy:
     outbound:
+      external:
+        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
       rules:
-        - application: nav-dekoratoren
-          namespace: personbruker
         - application: inntektsplanleggeren-backend
           cluster: prod-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: MODE
-      value: borger
-    - name: "VITE_DECORATOR_URL"
-      value: "https://www.nav.no/dekoratoren"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
-      value: "api://prod-gcp.pensjonselvbetjening.inntektsplanleggeren-backend/.default"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
       value: "prod-gcp:pensjonselvbetjening:inntektsplanleggeren-backend"
+    - name: "URL_PSELV_INNTEKTSPLANLEGGER"
+      value: "https://www.nav.no/pselv/inntektsplanlegger/innledning.jsf?context=ut&simpleMode=true"
+  envFrom:
+    - secret: inntektsplanleggeren-frontend-unleash-api-token

@@ -1,17 +1,29 @@
-@import "@navikt/ds-tokens";
+@import '@navikt/ds-tokens';
 
 .description-card {
-        /* --ac-expansioncard-bg: var(--a-deepblue-50); */
-        --ac-expansioncard-border-open-color: var(--a-border-alt-3);
-        --ac-expansioncard-border-open-color: var(--a-border-alt-3);
-        --ac-expansioncard-border-hover-color: var(--a-border-alt-3);
-    }
+  /* --ac-expansioncard-bg: var(--a-deepblue-50); */
+  --ac-expansioncard-border-open-color: var(--a-border-alt-3);
+  --ac-expansioncard-border-open-color: var(--a-border-alt-3);
+  --ac-expansioncard-border-hover-color: var(--a-border-alt-3);
+}
 
 .innfylling-container {
-    border: 2px solid black;
-    padding: 16px;
+  border: 2px solid black;
+  padding: 16px;
 }
 
 .form-container {
-    gap: 20px; /* Adjust the value as needed */
+  gap: var(--a-spacing-8);
+}
+
+.button-container {
+  margin-top: var(--a-spacing-8);
+}
+
+.readmorePensjonFraAndre li {
+  margin-bottom: 0;
+}
+
+.readmorePensjonFraAndre ul {
+  margin-top: 0;
 }

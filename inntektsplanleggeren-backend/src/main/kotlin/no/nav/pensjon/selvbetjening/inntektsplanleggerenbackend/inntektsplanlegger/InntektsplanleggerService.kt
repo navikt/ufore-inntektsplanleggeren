@@ -5,6 +5,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektS
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringData
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
+import java.time.ZoneId
 
 @Service
 class InntektsplanleggerService(
@@ -36,7 +38,7 @@ class InntektsplanleggerService(
         simuleringsaar: Int,
         oppgitteInntekter: ForventedeInntekter
     ): InntektsplanleggerenSendResponse {
-        val innsendingsTidspunkt = LocalDateTime.now()
+        val innsendingsTidspunkt = LocalDateTime.now(ZoneId.of("Europe/Paris"))
         val simulering = simulerInntektsendring(pid, simuleringsaar, oppgitteInntekter)
         if (simulering.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val initiertAv = tokenService.determineLoggedInUser()
@@ -93,6 +95,20 @@ class InntektsplanleggerService(
                 simuleringsaar = simuleringsAar,
                 simuleringFomDato = getSimuleringFomDato(simuleringsAar)
             )
+            if ((simuleringsAar == nowProvider.now().year) && (getSimuleringFomDato(simuleringsAar) != LocalDate.of(nowProvider.now().year, Month.JANUARY, 1))) {
+                var simuleringFomDato = LocalDate.of(nowProvider.now().year, Month.JANUARY, 1)
+                if (pensjonsdata.uforeFomDato?.isAfter(simuleringFomDato) == true) {
+                    simuleringFomDato = pensjonsdata.uforeFomDato
+                }
+                val simuleringsDataHeleAret = simuleringService.simulerInntektsendring(
+                    pid = pid,
+                    forventedeInntekterOppgitt = oppgitteInntekter,
+                    forventedeInntekter = gjeldendeForventedeInntekter,
+                    simuleringsaar = nowProvider.now().year,
+                    simuleringFomDato
+                )
+                updateSimuleringDataYearlyValues(simuleringData, simuleringsDataHeleAret)
+            }
 
             return SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
@@ -103,7 +119,15 @@ class InntektsplanleggerService(
         return SimuleringResponse(validationResult, null)
     }
 
-    fun constructInntekterResponse(pid: String, simuleringsaar: Int): InntekterResponse? {
+    private fun updateSimuleringDataYearlyValues(simuleringData: SimuleringData, simuleringsDataHeleAret: SimuleringData) {
+        simuleringData.simuleringsresultat.uforetrygd.yearly = simuleringsDataHeleAret.simuleringsresultat.uforetrygd.yearly
+        simuleringData.simuleringsresultat.barnetilleggFellesbarn?.yearly  = simuleringsDataHeleAret.simuleringsresultat.barnetilleggFellesbarn!!.yearly
+        simuleringData.simuleringsresultat.barnetilleggSaerkullsbarn?.yearly = simuleringsDataHeleAret.simuleringsresultat.barnetilleggSaerkullsbarn!!.yearly
+        simuleringData.simuleringsresultat.gjenlevendetillegg?.yearly = simuleringsDataHeleAret.simuleringsresultat.gjenlevendetillegg!!.yearly
+        simuleringData.simuleringsresultat.sum.yearly = simuleringsDataHeleAret.simuleringsresultat.sum.yearly
+    }
+
+    fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
         val pensjonsdata =
             penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
@@ -115,11 +139,13 @@ class InntektsplanleggerService(
         return InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
-            forventedeInntekter = inntektService.getForventedeInntekter(
-                pid,
-                pensjonsdata,
-                simuleringsaar
-            ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto(),
+            forventedeInntekter = if (fetchForventedeInntekter) {
+                inntektService.getForventedeInntekter(
+                    pid,
+                    pensjonsdata,
+                    simuleringsaar
+                ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto()
+            } else null,
             uforeHeleAaret = pensjonsdata.uforeHeleAaret,
             epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
         )
@@ -139,7 +165,7 @@ class InntektsplanleggerService(
         val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
         return InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(pid, pensjonsdata, simuleringsaar, aktuelleAar, messages)
+            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages)
         )
     }
 
@@ -174,15 +200,15 @@ class InntektsplanleggerService(
     private fun mapInntektsplanleggerenInitialData(
         pid: String,
         pensjonsdata: Pensjonsdata?,
-        simuleringsaar: Int,
         aktuelleAar: List<Int>,
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
         if (pensjonsdata != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
-            val forventedeInntekter = inntektService.getForventedeInntekter(pid, pensjonsdata, simuleringsaar)
+            val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, pensjonsdata, it) }
+
             return InntektsplanleggerenInitialData(
-                forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
-                forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps,
+                forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
+                forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
                 inntektsgrense = pensjonsdata.inntektsgrense,
                 kompensasjonsgrad = pensjonsdata.kompensasjonsgrad,
                 grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,
@@ -194,11 +220,24 @@ class InntektsplanleggerService(
                 grenseStoppAvBarnetilleggSaerkullsbarn = pensjonsdata.grenseStoppAvBarnetilleggSaerkullsbarn,
                 fribelopBarnetilleggSaerkullsbarn = pensjonsdata.fribelopBarnetilleggSaerkullsbarn,
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
-                aktuelleAar = aktuelleAar
+                aktuelleAar = aktuelleAar,
+                annetRelevantAar = getAnnetRelevantAar()
             )
         }
         return null
     }
+
+    private fun getAnnetRelevantAar(): Int? =
+        if (isMonthDecember()) {
+            nowProvider.now().year
+        } else null
+
+    private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> =
+        if (isMonthDecember()) {
+            (listOf(nowProvider.now().year) + aktuelleAar).distinct()
+        } else {
+            aktuelleAar
+        }
 
     private fun getAktuelleAar(
         hasLopendeUforeVedtakThisYear: Boolean?,
@@ -206,7 +245,6 @@ class InntektsplanleggerService(
     ): List<Int> {
         val today = nowProvider.now()
         val isMonthBeforeOctober = today.month.value < Month.OCTOBER.value
-        val isMonthDecember = today.month.value == Month.DECEMBER.value
 
         if (hasLopendeUforeVedtakThisYear == null || hasLopendeUforeVedtakNextYear == null) {
             return emptyList()
@@ -214,7 +252,7 @@ class InntektsplanleggerService(
         if (isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
             return listOf(today.year)
         }
-        if (isMonthDecember && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)){
+        if (isMonthDecember() && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)){
             return listOf(today.year + 1)
         }
         if (!isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
@@ -225,6 +263,8 @@ class InntektsplanleggerService(
         }
         return emptyList()
     }
+
+    private fun isMonthDecember() = nowProvider.now().month.value == Month.DECEMBER.value
 
     private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>?): List<AccumulatedMaanedsinntekt> {
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()

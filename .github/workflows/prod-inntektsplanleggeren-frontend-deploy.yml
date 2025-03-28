@@ -9,7 +9,6 @@ on:
 #      - inntektsplanleggeren-frontend/**
 
 jobs:
-
   build-frontend-and-publish-docker:
     name: Build frontend application
     uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
@@ -22,7 +21,22 @@ jobs:
       app: inntektsplanleggeren-frontend
       prune_dev_dependencies: true
       build_script_command: build:production
-      node_version: 20
+      node_version: 22
+    secrets: inherit
+
+  build-frontend-and-publish-docker-veileder:
+    name: Build frontend veileder application
+    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      path: inntektsplanleggeren-frontend/
+      team: pensjonselvbetjening
+      app: inntektsplanleggeren-frontend-veileder
+      build_script_command: build:production:veileder
+      node_version: 22
+      prune_dev_dependencies: true
     secrets: inherit
 
   trivy-docker:
@@ -49,17 +63,17 @@ jobs:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yml
 
   deploy-frontend-veileder-to-prod:
     if: github.ref == 'refs/heads/main'
-    needs: [build-frontend-and-publish-docker]
+    needs: [build-frontend-and-publish-docker-veileder]
     uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
     permissions:
       contents: read
       id-token: write
     with:
       cluster: prod-gcp
-      image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
+      image: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
       team: pensjonselvbetjening
-      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yml
+      nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yml

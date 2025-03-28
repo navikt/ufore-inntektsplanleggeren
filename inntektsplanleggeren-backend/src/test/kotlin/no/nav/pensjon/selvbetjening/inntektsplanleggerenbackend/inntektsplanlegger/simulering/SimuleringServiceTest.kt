@@ -555,7 +555,7 @@ class SimuleringServiceTest {
     }
 
     @Test
-    fun `should set monthly sums to sum of totalbelopNetto and forventet inntekt for currentUforetrygd and simulert uforetrygd`(){
+    fun `should set monthly sums totalbelopNetto for currentUforetrygd and simulert uforetrygd`(){
         val simuleringsaar = LocalDate.now().year
         val simuleringFomDato = LocalDate.now().plusMonths(1).withDayOfMonth(1)
         val forventedeInntekterOppgitt = ForventedeInntekter(
@@ -617,9 +617,9 @@ class SimuleringServiceTest {
         val result = simuleringService.simulerInntektsendring(
             PID, forventedeInntekterOppgitt, forventedeInntekterRegistrert, simuleringsaar, simuleringFomDato
         )
-        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.totalbelopNetto!! + forventedeInntekterRegistrert.sumBenyttedeInntekterBruker / 12,
+        assertEquals(expectedSimuleringsresultat.currentUforetrygdSummary.totalbelopNetto!!,
             result.simuleringsresultat.sum.monthly.before)
-        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.totalbelopNetto!! + forventedeInntekterOppgitt.bruker.sum() / 12,
+        assertEquals(expectedSimuleringsresultat.simulertUforetrygdSummary.totalbelopNetto!!,
             result.simuleringsresultat.sum.monthly.after)
     }
 

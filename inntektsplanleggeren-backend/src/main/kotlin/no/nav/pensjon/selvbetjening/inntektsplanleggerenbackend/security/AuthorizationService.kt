@@ -35,16 +35,19 @@ class AuthorizationService(
         checkAdressebeskyttetInnbygger(pid)
     }
 
-    fun checkBorgerTilgang(navOnBehalfOfCookie: Cookie?) : AuthenticatedUserDetails {
+    fun checkBorgerTilgang(httpMethod: String, navOnBehalfOfCookie: Cookie?) : AuthenticatedUserDetails {
         val requestingPid = tokenService.determineRequestingPid()
-        if (isFullmaktsCase(navOnBehalfOfCookie, requestingPid)) {
-            val fullmaktsgiverPid = navOnBehalfOfCookie!!.value
-            haandterFullmakt(fullmaktsgiverPid, requestingPid)
-            return AuthenticatedUserDetails(fullmaktsgiverPid, true)
-        }else {
-            checkAdressebeskyttelseAndLoginLevel(requestingPid)
-            return AuthenticatedUserDetails(requestingPid, false)
+        if (navOnBehalfOfCookie != null) {
+            log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
+            val fullmaktsgiverPidKryptert = navOnBehalfOfCookie.value
+            val fullmaktsforhold = haandterFullmakt(httpMethod, fullmaktsgiverPidKryptert, requestingPid)
+            if (fullmaktsforhold.fullmaktsgiverFnr != requestingPid) {
+                return AuthenticatedUserDetails(fullmaktsforhold.fullmaktsgiverFnr, true)
+            }
         }
+
+        checkAdressebeskyttelseAndLoginLevel(requestingPid)
+        return AuthenticatedUserDetails(requestingPid, false)
     }
 
     private fun checkBasisTilgang() {
@@ -93,32 +96,24 @@ class AuthorizationService(
     }
 
     private fun checkAdressebeskyttelseAndLoginLevel(requestingPid: String) {
-        if (!tokenService.isLoginLevelHigh() && personService.hasAdressebeskyttelse(requestingPid)) {
-            log.info("Bruker adressebeskyttet, innloggingsnivå for lavt. Nekter adgang")
-            throw LoginLevelTooLowException()
-        }
-    }
-
-    private fun isFullmaktsCase(navOnBehalfOfCookie: Cookie?, requestingPid: String): Boolean {
-        if (navOnBehalfOfCookie != null) {
-            log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
-            val fullmaktsgiverPid = navOnBehalfOfCookie.value
-            if (requestingPid != "" && requestingPid != fullmaktsgiverPid) {
-                return true
+        if (!tokenService.isLoginLevelHigh()) {
+            val adressebeskyttelse = personService.getAdressebeskyttelsesgrad(requestingPid)
+            if (adressebeskyttelse == PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG || adressebeskyttelse == PdlAdressebeskyttelsesgradering.STRENGT_FORTROLIG_UTLAND) {
+                log.info("Bruker adressebeskyttet - Strengt Fortrolig, innloggingsnivå for lavt. Nekter adgang")
+                throw LoginLevelTooLowException()
             }
         }
-        return false
     }
 
-    private fun haandterFullmakt(fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
+    private fun haandterFullmakt(httpMethod: String, fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
         try {
-            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(fullmaktsgiverPid, requestingPid)
+            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, fullmaktsgiverPid, requestingPid)
             if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
                 log.info("Fullmaktsforhold er ikke funnet. Nekter adgang")
                 throw NoFullmaktPresentException()
             }
 
-            if(personService.hasAdressebeskyttelse(fullmaktsgiverPid)) {
+            if(personService.hasAdressebeskyttelse(harGyldigFullmakt.fullmaktsgiverFnr)) {
                 log.info("Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang")
                 throw NoFullmaktPresentException()
             }

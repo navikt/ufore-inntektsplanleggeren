@@ -63,8 +63,8 @@ class InntektsplanleggerServiceTest {
     fun `should return InntektsplanleggerInitialData from pensjonsdata, validation result and forventede inntekter when constructInitialInntektsplanleggerResponse`() {
         val year = LocalDate.now().year
 
-        val expectedForventetInntektBruker = 5000
-        val expectedForventetInntektEps = 6000
+        val expectedForventetInntektBruker = mapOf(year to 5000)
+        val expectedForventetInntektEps = mapOf(year to 6000)
         val expectedInntektsgrense = 232
         val expectedKompensasjonsgrad = 23.2
         val expectedGrenseStoppAvUfoeretrygd = 564654
@@ -85,6 +85,7 @@ class InntektsplanleggerServiceTest {
             fribelopBarnetilleggFellesbarn = expectedFribelopFellesbarn,
             fribelopBarnetilleggSaerkullsbarn = expectedFribelopSaerkullsbarn,
             hasVarigTilrettelagtArbeid = true,
+            hasLopendeUforeVedtakThisYear = true
         )
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
@@ -95,8 +96,8 @@ class InntektsplanleggerServiceTest {
                     PersonInntekter(null, null, null, null, null),
                     null
                 ),
-                expectedForventetInntektBruker,
-                expectedForventetInntektEps
+                expectedForventetInntektBruker[year]!!,
+                expectedForventetInntektEps[year]!!
             )
         )
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
@@ -104,21 +105,21 @@ class InntektsplanleggerServiceTest {
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
 
         assertEquals(expectedForventetInntektBruker, initialData.data!!.forventetInntekt)
-        assertEquals(expectedForventetInntektEps, initialData.data.forventetInntektAnnenForelder)
-        assertEquals(expectedInntektsgrense, initialData.data.inntektsgrense)
-        assertEquals(expectedKompensasjonsgrad, initialData.data.kompensasjonsgrad)
-        assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.data.grenseStoppAvUfoeretrygd)
-        assertEquals(expectedGrenseStoppAvBarnetilleggFellesbarn, initialData.data.grenseStoppAvBarnetilleggFellesbarn)
+        assertEquals(expectedForventetInntektEps, initialData.data!!.forventetInntektAnnenForelder)
+        assertEquals(expectedInntektsgrense, initialData.data!!.inntektsgrense)
+        assertEquals(expectedKompensasjonsgrad, initialData.data!!.kompensasjonsgrad)
+        assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.data!!.grenseStoppAvUfoeretrygd)
+        assertEquals(expectedGrenseStoppAvBarnetilleggFellesbarn, initialData.data!!.grenseStoppAvBarnetilleggFellesbarn)
         assertEquals(
             expectedGrenseStoppAvBarnetilleggSaerkullsbarn,
-            initialData.data.grenseStoppAvBarnetilleggSaerkullsbarn
+            initialData.data!!.grenseStoppAvBarnetilleggSaerkullsbarn
         )
-        assertEquals(expectedFribelopFellesbarn, initialData.data.fribelopBarnetilleggFellesbarn)
-        assertEquals(expectedFribelopSaerkullsbarn, initialData.data.fribelopBarnetilleggSaerkullsbarn)
-        assertTrue(initialData.data.hasGjenlevendeTillegg)
-        assertTrue(initialData.data.hasVarigTilrettelagtArbeid)
-        assertFalse(initialData.data.hasBarnetilleggSaerkullsbarn)
-        assertTrue(initialData.data.hasBarneTilleggFellesbarn)
+        assertEquals(expectedFribelopFellesbarn, initialData.data!!.fribelopBarnetilleggFellesbarn)
+        assertEquals(expectedFribelopSaerkullsbarn, initialData.data!!.fribelopBarnetilleggSaerkullsbarn)
+        assertTrue(initialData.data!!.hasGjenlevendeTillegg)
+        assertTrue(initialData.data!!.hasVarigTilrettelagtArbeid)
+        assertFalse(initialData.data!!.hasBarnetilleggSaerkullsbarn)
+        assertTrue(initialData.data!!.hasBarneTilleggFellesbarn)
     }
 
     @Test
@@ -140,8 +141,65 @@ class InntektsplanleggerServiceTest {
     }
 
     @Test
+    fun `should set annetRelevantAar to previous year when december`() {
+        val year = LocalDate.now().year
+
+        val pensjonsdata = pensjonsdata(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(
+            inntektService.getForventedeInntekter(
+                PID,
+                pensjonsdata,
+                year
+            )
+        ).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(
+            forventedeInntekterRegistrert()
+        )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+        assertEquals(year, initialData.data!!.annetRelevantAar)
+    }
+
+    @Test
+    fun `should set annetRelevantAar to null when not december`() {
+        val year = LocalDate.now().year
+
+        val pensjonsdata = pensjonsdata(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
+            pensjonsdata
+        )
+        `when`(
+            inntektService.getForventedeInntekter(
+                PID,
+                pensjonsdata,
+                year
+            )
+        ).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(
+            forventedeInntekterRegistrert()
+        )
+        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.NOVEMBER.value))
+
+        val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
+        assertNull(initialData.data!!.annetRelevantAar)
+    }
+
+    @Test
     fun `should set aktuelleAar to current year only when before october and hasLopendeUforeVedtakThisYear`() {
         val year = LocalDate.now().year
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -150,18 +208,23 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.SEPTEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year, initialData.data.aktuelleAar[0])
+        assertEquals(year, initialData.data!!.aktuelleAar[0])
+        assertEquals(setOf(year), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year])
+        assertEquals(setOf(year), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year])
     }
 
     @Test
     fun `should set aktuelleAar to current year and next year when after october and hasLopendeUforeVedtakThisYear`() {
         val year = LocalDate.now().year
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -170,19 +233,30 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(expectedInntekter)
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(2, initialData.data!!.aktuelleAar.size)
-        assertEquals(year, initialData.data.aktuelleAar[0])
-        assertEquals(year + 1, initialData.data.aktuelleAar[1])
+        assertEquals(year, initialData.data!!.aktuelleAar[0])
+        assertEquals(year + 1, initialData.data!!.aktuelleAar[1])
+
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year])
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year])
+
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year + 1])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year + 1])
     }
 
     @Test
     fun `should set aktuelleAar to next year when after october and hasLopendeUforeVedtakNextYear`() {
         val year = LocalDate.now().year
+        val expectedAktueltAar = year + 1
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = false,
@@ -191,18 +265,23 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, expectedAktueltAar)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year + 1, initialData.data.aktuelleAar[0])
+        assertEquals(expectedAktueltAar, initialData.data!!.aktuelleAar[0])
+        assertEquals(setOf(expectedAktueltAar), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[expectedAktueltAar])
+        assertEquals(setOf(expectedAktueltAar), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[expectedAktueltAar])
     }
 
     @Test
-    fun `should always set aktuelleAar to next year when december`() {
+    fun `should always set aktuelleAar to next year when december but include inntekter for this year and next year`() {
         val year = LocalDate.now().year
+        val expectedInntekter = forventedeInntekterRegistrert()
 
         val pensjonsdata = pensjonsdata(
             hasLopendeUforeVedtakThisYear = true,
@@ -211,13 +290,22 @@ class InntektsplanleggerServiceTest {
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
         )
-        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(forventedeInntekterRegistrert())
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year)).thenReturn(expectedInntekter)
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year + 1)).thenReturn(expectedInntekter)
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
         assertEquals(1, initialData.data!!.aktuelleAar.size)
-        assertEquals(year + 1, initialData.data.aktuelleAar[0])
+        assertEquals(year + 1, initialData.data!!.aktuelleAar[0])
+
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntekt.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.data!!.forventetInntekt[year + 1])
+
+        assertEquals(setOf(year, year + 1), initialData.data!!.forventetInntektAnnenForelder.keys)
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year])
+        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.data!!.forventetInntektAnnenForelder[year + 1])
     }
 
     @Test
@@ -315,24 +403,24 @@ class InntektsplanleggerServiceTest {
         )
 
         assertEquals(2, inntektData.pensjonFraAndreHittilIAar!!.size)
-        assertEquals(106.0, inntektData.pensjonFraAndreHittilIAar[0].belop)
-        assertEquals(4, inntektData.pensjonFraAndreHittilIAar[0].maned)
-        assertEquals(listOf("Nav", "Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar[0].inntektsgivere)
-        assertEquals(5436.0, inntektData.pensjonFraAndreHittilIAar[1].belop)
-        assertEquals(5, inntektData.pensjonFraAndreHittilIAar[1].maned)
-        assertEquals(listOf("Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar[1].inntektsgivere)
+        assertEquals(106.0, inntektData.pensjonFraAndreHittilIAar!![0].belop)
+        assertEquals(4, inntektData.pensjonFraAndreHittilIAar!![0].maned)
+        assertEquals(listOf("Nav", "Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar!![0].inntektsgivere)
+        assertEquals(5436.0, inntektData.pensjonFraAndreHittilIAar!![1].belop)
+        assertEquals(5, inntektData.pensjonFraAndreHittilIAar!![1].maned)
+        assertEquals(listOf("Arbeidsgiveren"), inntektData.pensjonFraAndreHittilIAar!![1].inntektsgivere)
 
-        assertEquals(1, inntektData.forventedeInntekter.bruker.arbeidsinntekt)
-        assertEquals(2, inntektData.forventedeInntekter.bruker.naeringsinntekt)
-        assertEquals(3, inntektData.forventedeInntekter.bruker.inntektUtland)
-        assertEquals(4, inntektData.forventedeInntekter.bruker.andrePensjonsgivendeYtelser)
-        assertEquals(5, inntektData.forventedeInntekter.bruker.pensjonUtland)
+        assertEquals(1, inntektData.forventedeInntekter?.bruker?.arbeidsinntekt)
+        assertEquals(2, inntektData.forventedeInntekter?.bruker?.naeringsinntekt)
+        assertEquals(3, inntektData.forventedeInntekter?.bruker?.inntektUtland)
+        assertEquals(4, inntektData.forventedeInntekter?.bruker?.andrePensjonsgivendeYtelser)
+        assertEquals(5, inntektData.forventedeInntekter?.bruker?.pensjonUtland)
 
-        assertEquals(6, inntektData.forventedeInntekter.eps?.arbeidsinntekt)
-        assertEquals(7, inntektData.forventedeInntekter.eps?.naeringsinntekt)
-        assertEquals(8, inntektData.forventedeInntekter.eps?.inntektUtland)
-        assertEquals(9, inntektData.forventedeInntekter.eps?.andrePensjonsgivendeYtelser)
-        assertEquals(10, inntektData.forventedeInntekter.eps?.pensjonUtland)
+        assertEquals(6, inntektData.forventedeInntekter?.eps?.arbeidsinntekt)
+        assertEquals(7, inntektData.forventedeInntekter?.eps?.naeringsinntekt)
+        assertEquals(8, inntektData.forventedeInntekter?.eps?.inntektUtland)
+        assertEquals(9, inntektData.forventedeInntekter?.eps?.andrePensjonsgivendeYtelser)
+        assertEquals(10, inntektData.forventedeInntekter?.eps?.pensjonUtland)
 
         assertTrue(inntektData.uforeHeleAaret)
     }
@@ -379,6 +467,8 @@ class InntektsplanleggerServiceTest {
         val expectedValideringsresultatSimulering =
             listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FAKTOROMREGNET_ELLER_MANUELT_OVERSTYRT))
         val expectedSimuleringsresultat = simuleringsresultat()
+        val expectedSimuleringsresultatFraJan = simuleringsresultatFraJan()
+        val expectedSimuleringsresultatKombinert = simuleringsresultatKombinert()
 
         `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
             pensjonsdata
@@ -408,11 +498,21 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(expectedValideringsresultatSimulering, expectedSimuleringsresultat)
         )
-
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                LocalDate.of(year, Month.JANUARY, 1)
+            )
+        ).thenReturn(
+            SimuleringData(expectedValideringsresultatSimulering, expectedSimuleringsresultatFraJan)
+        )
         val simulering = inntektsplanleggerService.simulerInntektsendring(PID, year, expectedOppgitteInntekter)
 
         assertEquals(expectedValideringsresultatInntekt + expectedValideringsresultatSimulering, simulering.messages)
-        assertEquals(expectedSimuleringsresultat, simulering.result)
+        assertEquals(expectedSimuleringsresultatKombinert, simulering.result)
     }
 
     @Test
@@ -452,6 +552,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -461,6 +562,7 @@ class InntektsplanleggerServiceTest {
 
         val expectedOppgitteInntekter = oppgitteInntekter()
         val expectedSimuleringsresultat = simuleringsresultat()
+        val expectedSimuleringsresultatFraJan = simuleringsresultatFraJan()
         val expectedForventedeInntekter = forventedeInntekterRegistrert()
 
         `when`(penClient.fetchInntektsplanleggerData(PID, expectedSimuleringFom)).thenReturn(pensjonsdata)
@@ -491,6 +593,17 @@ class InntektsplanleggerServiceTest {
             )
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultatFraJan)
         )
 
         inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
@@ -577,6 +690,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -617,6 +731,17 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
         )
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
 
         val innsending = inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
 
@@ -631,6 +756,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -671,7 +797,17 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
         )
-
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
         val innsending = inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
 
 
@@ -684,6 +820,7 @@ class InntektsplanleggerServiceTest {
         val year = LocalDate.now().year
         val pensjonsdata = pensjonsdata()
         val expectedSimuleringFom = LocalDate.now().plusMonths(1).withDayOfMonth(1)
+        val expectedSimuleringFomJan= LocalDate.of(LocalDate.now().year, Month.JANUARY, 1)
 
         val expectedLoggedInUser = "brukeren"
 
@@ -724,7 +861,17 @@ class InntektsplanleggerServiceTest {
         ).thenReturn(
             SimuleringData(emptyList(), expectedSimuleringsresultat)
         )
-
+        `when`(
+            simuleringService.simulerInntektsendring(
+                PID,
+                expectedOppgitteInntekter,
+                expectedForventedeInntekter,
+                year,
+                expectedSimuleringFomJan
+            )
+        ).thenReturn(
+            SimuleringData(emptyList(), expectedSimuleringsresultat)
+        )
         val innsending = inntektsplanleggerService.sendInntektsendring(PID, year, expectedOppgitteInntekter)
 
 
@@ -850,6 +997,26 @@ class InntektsplanleggerServiceTest {
         )
     )
 
+    private fun simuleringsresultatFraJan() = Simuleringsresultat(
+        SimuleringAmounts(
+            BeforeAndAfterValues(10231, 8823), BeforeAndAfterValues(100923, 189023)
+        ), SimuleringAmounts(
+            BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
+        ), null, null, null, SimuleringAmounts(
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 89023)
+        )
+    )
+
+    private fun simuleringsresultatKombinert() = Simuleringsresultat(
+        SimuleringAmounts(
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 189023)
+        ), SimuleringAmounts(
+            BeforeAndAfterValues(0, 0), BeforeAndAfterValues(0, 0)
+        ), null, null, null, SimuleringAmounts(
+            BeforeAndAfterValues(10233, 8823), BeforeAndAfterValues(100923, 89023)
+        )
+    )
+
     private fun forventedeInntekterRegistrert() = ForventedeInntekterSummary(
         ForventedeInntekter(
             PersonInntekter(
@@ -899,15 +1066,16 @@ class InntektsplanleggerServiceTest {
             hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
-            barnetilleggFellesbarn = barnetilleggFellesbarn,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
-            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
             grenseStoppAvBarnetilleggSaerkullsbarn = grenseStoppAvBarnetilleggSaerkullsbarn,
             fribelopBarnetilleggSaerkullsbarn = fribelopBarnetilleggSaerkullsbarn,
+            barnetilleggFellesbarn = barnetilleggFellesbarn,
+            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
             fribelopBarnetilleggFellesbarn = fribelopBarnetilleggFellesbarn,
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
-            inntekterFromOpenKravEps = inntekterFromOpenKravEps
+            inntekterFromOpenKravEps = inntekterFromOpenKravEps,
+            uforeFomDato = null
         )
 
     private fun <T> any(): T = Mockito.any()

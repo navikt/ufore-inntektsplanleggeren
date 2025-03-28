@@ -6,6 +6,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.In
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,7 +32,8 @@ class InntektServiceTest {
 
     private val inntektskomponentClient = mock(InntektskomponentClient::class.java)
     private val eregService = mock(EregService::class.java)
-    private val inntektService = InntektService(inntektskomponentClient, eregService)
+    private val nowProvider = mock(NowProvider::class.java)
+    private val inntektService = InntektService(inntektskomponentClient, eregService, nowProvider)
 
     @BeforeEach
     fun setup() {
@@ -59,7 +61,7 @@ class InntektServiceTest {
         val expectedFilter = "UfoereA-Inntekt"
         val expectedFormal = "Ufoere"
         val expectedBeloep = 1.0
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -87,6 +89,7 @@ class InntektServiceTest {
         )
 
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 15))
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
 
@@ -129,11 +132,11 @@ class InntektServiceTest {
         val expectedFilter = "UfoereA-Inntekt"
         val expectedFormal = "Ufoeretrygdbarnetillegg"
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         val expectedBeloepEps = 19898.0
-        val expectedMonthEps = YearMonth.now().plusMonths(2)
+        val expectedMonthEps = YearMonth.of(year, 4)
         val expectedUtbetaltFraEps = "Matbutikken AS"
 
         `when`(
@@ -172,6 +175,7 @@ class InntektServiceTest {
 
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(eregService.getOrganisasjonsnavn("mat")).thenReturn(expectedUtbetaltFraEps)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MAY, 12).plusMonths(3))
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             PID,
@@ -196,14 +200,14 @@ class InntektServiceTest {
         assertEquals(expectedMonth.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
         assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
 
-        assertEquals(expectedBeloepEps, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps[0].belop)
+        assertEquals(expectedBeloepEps, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps!![0].belop)
         assertEquals(
             expectedMonthEps.monthValue,
-            inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps[0].maned
+            inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps!![0].maned
         )
         assertEquals(
             expectedUtbetaltFraEps,
-            inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps[0].utbetaltFra
+            inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps!![0].utbetaltFra
         )
     }
 
@@ -221,7 +225,7 @@ class InntektServiceTest {
         val expectedFilter = "UfoereBarnetilleggA-inntekt"
         val expectedFormal = "Ufoeretrygdbarnetillegg"
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -249,6 +253,7 @@ class InntektServiceTest {
         )
 
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 10))
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             PID,
@@ -269,8 +274,8 @@ class InntektServiceTest {
         assertEquals(1, inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden!!.size)
         assertNull(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygdenEps)
 
-        assertEquals(expectedBeloep, inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden[0].belop)
-        assertEquals(expectedMonth.monthValue, inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden[0].maned)
+        assertEquals(expectedBeloep, inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden!![0].belop)
+        assertEquals(expectedMonth.monthValue, inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden!![0].maned)
         assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
     }
 
@@ -278,7 +283,7 @@ class InntektServiceTest {
     fun `should not include inntekt in inntektHittilIAar when inntekt contains avviksbeskrivelse`() {
         val year = LocalDate.now().year
         val expectedBeloep = 3927.876
-        val expectedMonth = YearMonth.now()
+        val expectedMonth = YearMonth.of(year, 2)
         val expectedUtbetaltFra = "Organisasjonen AS"
 
         `when`(
@@ -310,6 +315,7 @@ class InntektServiceTest {
         )
 
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 12))
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
 
@@ -317,6 +323,168 @@ class InntektServiceTest {
 
         assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
         assertEquals(expectedMonth.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
+        assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
+    }
+
+    @Test
+    fun `should include 1 month inntekt in inntektHittilIAar when inntekt for jan feb and date is 4 mar`() {
+        val year = LocalDate.now().year
+        val expectedBeloep = 3927.876
+        val expectedMonth = YearMonth.of(year, 1)
+        val expectedUtbetaltFra = "Organisasjonen AS"
+
+        `when`(
+            inntektskomponentClient.hentAbonnerteInntekterBolk(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(
+            HentAbonnerteInntekterBolkResponse(
+                listOf(
+                    AbonnerteInntekterPerIdent(
+                        Aktoer(PID, "NATURLIG_IDENT"), listOf(
+                            AbonnerteInntekterMaaned(
+                                expectedBeloep,
+                                null,
+                                expectedMonth,
+                                listOf(
+                                    SumOpplysningspliktig(expectedBeloep, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            ),
+                            AbonnerteInntekterMaaned(
+                                543534.98,
+                                null,
+                                YearMonth.of(year, 2),
+                                listOf(
+                                    SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                null
+            )
+        )
+
+        `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 4))
+
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+
+        assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
+
+        assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
+        assertEquals(expectedMonth.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
+        assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
+    }
+
+    @Test
+    fun `should include 2 month inntekt in inntektHittilIAar when inntekt for jan feb and date is 6 mar`() {
+        val year = LocalDate.now().year
+        val expectedBeloep = 3927.876
+        val expectedMonth1 = YearMonth.of(year, 1)
+        val expectedMonth2 = YearMonth.of(year, 2)
+        val expectedUtbetaltFra = "Organisasjonen AS"
+
+        `when`(
+            inntektskomponentClient.hentAbonnerteInntekterBolk(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(
+            HentAbonnerteInntekterBolkResponse(
+                listOf(
+                    AbonnerteInntekterPerIdent(
+                        Aktoer(PID, "NATURLIG_IDENT"), listOf(
+                            AbonnerteInntekterMaaned(
+                                expectedBeloep,
+                                null,
+                                expectedMonth1,
+                                listOf(
+                                    SumOpplysningspliktig(expectedBeloep, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            ),
+                            AbonnerteInntekterMaaned(
+                                543534.98,
+                                null,
+                                expectedMonth2,
+                                listOf(
+                                    SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                null
+            )
+        )
+
+        `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 6))
+
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+
+        assertEquals(2, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
+
+        assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
+        assertEquals(expectedMonth1.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
+        assertEquals(expectedMonth2.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[1].maned)
+        assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
+    }
+
+    @Test
+    fun `should include 1 month inntekt in inntektHittilIAar when inntekt for nov des and date is 15 des`() {
+        val year = LocalDate.now().year
+        val expectedBeloep = 3927.876
+        val expectedMonth1 = YearMonth.of(year, 11)
+        val expectedMonth2 = YearMonth.of(year, 12)
+        val expectedUtbetaltFra = "Organisasjonen AS"
+
+        `when`(
+            inntektskomponentClient.hentAbonnerteInntekterBolk(
+                any(),
+                any(),
+                any()
+            )
+        ).thenReturn(
+            HentAbonnerteInntekterBolkResponse(
+                listOf(
+                    AbonnerteInntekterPerIdent(
+                        Aktoer(PID, "NATURLIG_IDENT"), listOf(
+                            AbonnerteInntekterMaaned(
+                                expectedBeloep,
+                                null,
+                                expectedMonth1,
+                                listOf(
+                                    SumOpplysningspliktig(expectedBeloep, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            ),
+                            AbonnerteInntekterMaaned(
+                                543534.98,
+                                null,
+                                expectedMonth2,
+                                listOf(
+                                    SumOpplysningspliktig(543534.98, null, Aktoer("org", "ORGANISASJON"))
+                                )
+                            )
+                        )
+                    )
+                ),
+                null
+            )
+        )
+
+        `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
+        `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.DECEMBER, 15))
+
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+
+        assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
+
+        assertEquals(expectedBeloep, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].belop)
+        assertEquals(expectedMonth1.monthValue, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].maned)
         assertEquals(expectedUtbetaltFra, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser[0].utbetaltFra)
     }
 
@@ -469,6 +637,48 @@ class InntektServiceTest {
             Inntektshendelse.REGISTRERT,
             forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.status
         )
+    }
+
+    @Test
+    fun `should set forventede inntekter to status IKKE_REGISTRERT and belop 0 when open krav exists but inntektsgrunnlag not on krav`() {
+        val year = LocalDate.now().year
+
+        `when`(inntektskomponentClient.hentForventetInntekt(PID, listOf(year))).thenReturn(
+            HentForventetInntektResponse(
+                null
+            )
+        )
+
+        val pensjonsdata = pensjonsdata(
+            barnetilleggFellesbarn = true,
+            inntekterFromOpenKravBruker = emptyList())
+
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata, year)
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.belop)
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.belop)
+
     }
 
     @Test
@@ -688,7 +898,7 @@ class InntektServiceTest {
                     ForventetInntekt(
                         year.toString(),
                         expectedNaeringsinntektEps,
-                        "UFR_forv_naeringsinntekt_EPS",
+                        "UFR_forv_naeringsinnt_EPS",
                         "Benyttet"
                     ),
                     ForventetInntekt(
@@ -833,7 +1043,7 @@ class InntektServiceTest {
                         "Benyttet"
                     ),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -918,7 +1128,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 8723, "UFR_forv_andre_ytelser", "Benyttet"),
                     ForventetInntekt(year.toString(), 5544, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -958,6 +1168,47 @@ class InntektServiceTest {
         assertNull(forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland)
         assertNull(forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser)
         assertNull(forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps)
+    }
+
+    @Test
+    fun `should return inntekter with hendelse IKKE_REGISTRERT and belop 0 when null from inntektskomponenten`() {
+        val year = LocalDate.now().year
+
+        `when`(inntektskomponentClient.hentForventetInntekt(PID, listOf(year))).thenReturn(
+            HentForventetInntektResponse(
+                "",
+                listOf()
+            )
+        )
+        val forventedeInntekter = inntektService.getForventedeInntekter(
+            PID,
+            pensjonsdata(barnetilleggFellesbarn = true, barnetilleggSaerkullsbarn = false),
+            year
+        )
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.pensjonUtland?.belop)
+
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.arbeidsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.naeringsinntekt?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.inntektUtland?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.andrePensjonsgivendeYtelser?.belop)
+        assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.status)
+        assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.eps?.pensjonUtland?.belop)
     }
 
     @Test
@@ -1050,7 +1301,7 @@ class InntektServiceTest {
                         "Benyttet"
                     ),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1099,7 +1350,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 3454, "UFR_forv_andre_ytelser", "Benyttet"),
                     ForventetInntekt(year.toString(), 4355, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
-                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 434, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 5545, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 22, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 46, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1148,7 +1399,7 @@ class InntektServiceTest {
                     ForventetInntekt(
                         year.toString(),
                         expectedNaeringsinntektEps,
-                        "UFR_forv_naeringsinntekt_EPS",
+                        "UFR_forv_naeringsinnt_EPS",
                         "Benyttet"
                     ),
                     ForventetInntekt(
@@ -1200,7 +1451,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 5544, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 234234, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Registrert"),
-                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345345, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 657756, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1228,7 +1479,7 @@ class InntektServiceTest {
                     ForventetInntekt(year.toString(), 5544, "UFR_forv_pensjon_utland", "Benyttet"),
                     ForventetInntekt(year.toString(), 234234, "UFR_forv_arbeidsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 7775, "UFR_forv_arbeidsinnt_EPS", "Registrert"),
-                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinntekt_EPS", "Benyttet"),
+                    ForventetInntekt(year.toString(), 8723, "UFR_forv_naeringsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345, "UFR_forv_utenlandsinnt_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 345345, "UFR_forv_andre_ytelser_EPS", "Benyttet"),
                     ForventetInntekt(year.toString(), 657756, "UFR_forv_pensjon_utland_EPS", "Benyttet")
@@ -1269,15 +1520,16 @@ class InntektServiceTest {
             hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
-            barnetilleggFellesbarn = barnetilleggFellesbarn,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
-            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
             grenseStoppAvBarnetilleggSaerkullsbarn = grenseStoppAvBarnetilleggSaerkullsbarn,
             fribelopBarnetilleggSaerkullsbarn = fribelopBarnetilleggSaerkullsbarn,
+            barnetilleggFellesbarn = barnetilleggFellesbarn,
+            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
             fribelopBarnetilleggFellesbarn = fribelopBarnetilleggFellesbarn,
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
-            inntekterFromOpenKravEps = inntekterFromOpenKravEps
+            inntekterFromOpenKravEps = inntekterFromOpenKravEps,
+            uforeFomDato = null
         )
 
     private fun inntektsgrunnlag(

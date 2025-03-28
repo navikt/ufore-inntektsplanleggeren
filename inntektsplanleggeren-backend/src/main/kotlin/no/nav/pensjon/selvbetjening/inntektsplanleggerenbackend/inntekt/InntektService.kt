@@ -6,15 +6,19 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.Month
+import java.time.YearMonth
+import java.time.temporal.TemporalAdjusters
 import java.time.temporal.TemporalAdjusters.lastDayOfMonth
 
 @Service
 class InntektService(
     private val inntektskomponentClient: InntektskomponentClient,
-    private val eregService: EregService
+    private val eregService: EregService,
+    private val nowProvider: NowProvider
 ) {
     fun getInntekterHittilIAar(
         pid: String,
@@ -132,9 +136,15 @@ class InntektService(
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         type: InntektsgrunnlagType
     ): Personinntekt {
-        val belop = inntektsgrunnlagListe.sortedByDescending { it.endringstidspunkt }
-            .firstOrNull { it.bruk && type.code == it.inntektType }?.belop ?: 0
-        return Personinntekt(belop, Inntektshendelse.REGISTRERT)
+        val belop = inntektsgrunnlagListe
+            .sortedByDescending { it.fomDato }
+            .sortedByDescending { it.endringstidspunkt }
+            .firstOrNull { it.bruk && type.code == it.inntektType }?.belop
+        return if (belop != null) {
+            Personinntekt(belop, Inntektshendelse.REGISTRERT)
+        } else {
+            Personinntekt(0, Inntektshendelse.IKKE_REGISTRERT)
+        }
     }
 
     private fun getForventedeInntekterFromInntektskomponent(
@@ -265,7 +275,7 @@ class InntektService(
                 Inntektshendelse.getHendelseForCode(mostRecentInntektOfType.hendelse)
             )
         }
-        return null
+        return Personinntekt(0, Inntektshendelse.IKKE_REGISTRERT)
     }
 
     private fun fetchArbeidsinntektOgPensjonsgivendeYtelser(
@@ -316,7 +326,7 @@ class InntektService(
             return abonnertInntekt.sumOpplysningspliktigListe.mapNotNull {
                 convertSumOpplysningspliktigToMaanedsinntekt(
                     it,
-                    abonnertInntekt.maaned.monthValue
+                    abonnertInntekt.maaned
                 )
             }
         }
@@ -325,17 +335,27 @@ class InntektService(
 
     private fun convertSumOpplysningspliktigToMaanedsinntekt(
         sumOpplysningspliktig: SumOpplysningspliktig,
-        maaned: Int
+        maaned: YearMonth
     ): Maanedsinntekt? {
-        if (sumOpplysningspliktig.avviksbeskrivelse.isNullOrEmpty()) {
+        if (sumOpplysningspliktig.avviksbeskrivelse.isNullOrEmpty() && isEtterRegistreringsfrist(maaned)) {
             val aktorNameMap = mutableMapOf<String, String>()
             return Maanedsinntekt(
-                maaned,
+                maaned.monthValue,
                 sumOpplysningspliktig.beloep ?: 0.0,
                 getAktorName(aktorNameMap, sumOpplysningspliktig.opplysningspliktig)
             )
         }
         return null
+    }
+
+    private fun isEtterRegistreringsfrist(maaned: YearMonth): Boolean {
+        val now = nowProvider.now()
+        val registreringsFrist = if (maaned.month == Month.DECEMBER) {
+            LocalDate.of(maaned.year + 1, Month.JANUARY, 5)
+        } else {
+            LocalDate.of(maaned.year, maaned.month + 1, 5)
+        }
+        return now.isAfter(registreringsFrist)
     }
 
     private fun getAktorName(aktorNameMap: MutableMap<String, String>, aktor: Aktoer): String {
@@ -356,20 +376,28 @@ class InntektService(
     ): List<AbonnerteInntekterIdentOgPeriode> =
         if (pensjonsdata.hasEpsWithFellesbarn()) {
             listOf(
-                createAbonnerteInntekterIdentOgPeriode(pid),
-                createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!)
+                createAbonnerteInntekterIdentOgPeriode(pid, pensjonsdata.uforeFomDato),
+                createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!, pensjonsdata.uforeFomDato)
             )
         } else {
-            listOf(createAbonnerteInntekterIdentOgPeriode(pid))
+            listOf(createAbonnerteInntekterIdentOgPeriode(pid, pensjonsdata.uforeFomDato))
         }
 
-    private fun createAbonnerteInntekterIdentOgPeriode(pid: String): AbonnerteInntekterIdentOgPeriode {
+    private fun createAbonnerteInntekterIdentOgPeriode(pid: String, uforeFom: LocalDate?): AbonnerteInntekterIdentOgPeriode {
         val year = LocalDate.now().year
         return AbonnerteInntekterIdentOgPeriode(
             ident = Aktoer(pid, "NATURLIG_IDENT"),
-            spoerringPeriodeFom = LocalDate.of(year, Month.JANUARY.value, 1).toString(),
+            spoerringPeriodeFom = decideSpoerringFom(uforeFom).toString(),
             spoerringPeriodeTom = LocalDate.of(year, Month.DECEMBER.value, 1).with(lastDayOfMonth()).toString()
         )
+    }
+
+    private fun decideSpoerringFom(uforeFom: LocalDate?): LocalDate {
+        val firstDayThisYear = LocalDate.now().with(TemporalAdjusters.firstDayOfYear())
+        if (uforeFom == null || uforeFom.isBefore(firstDayThisYear)) {
+            return firstDayThisYear
+        }
+        return uforeFom
     }
 
     private fun decideFormal(isBarnetillegg: Boolean) =

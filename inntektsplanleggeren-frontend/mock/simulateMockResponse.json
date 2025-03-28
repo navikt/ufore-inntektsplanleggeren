@@ -1,0 +1,63 @@
+{
+  "messages":  [
+    {
+      "messageCode": "EPS_INNTEKT_CHANGED",
+      "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
+      "type": "WARNING",
+      "metadata": {}
+    }
+  ],
+  "result": {
+    "uforetrygd": {
+      "monthly": {
+        "before": 30000,
+        "after": 31000
+      },
+      "yearly": {
+        "before": 353000,
+        "after": 354000
+      }
+    },
+    "forventetInntekt": {
+      "monthly": {
+        "before": 30000,
+        "after": 31000
+      },
+      "yearly": {
+        "before": 300000,
+        "after": 310000
+      }
+    },
+    "barnetilleggFellesbarn": {
+      "monthly": {
+        "before": 1000,
+        "after": 500
+      },
+      "yearly": {
+        "before": 500000,
+        "after": 6000
+      }
+    },
+    "barnetilleggSaerkullsbarn": null,
+    "gjenlevendetillegg": {
+      "monthly": {
+        "before": 0,
+        "after": 0
+      },
+      "yearly": {
+        "before": 0,
+        "after": 0
+      }
+    },
+    "sum": {
+      "monthly": {
+        "before": 30000,
+        "after": 25984
+      },
+      "yearly": {
+        "before": 404534,
+        "after": 390238
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ metadata:
 spec:
   image: "{{ image }}"
   ingresses:
-    - https://intern.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+    - https://veileder.intern.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 2
@@ -42,26 +42,23 @@ spec:
           - id: "959ead5b-99b5-466b-a0ff-5fdbc687517b" # VEILEDER
           - id: "7845a796-1516-4d14-b500-fd65c001f35c" # BRUKERHJELPA
           - id: "70ef8e7f-7456-4298-95e0-b13c0ef2422b" # OKONOMI
-          - id: "e750ceb5-b70b-4d94-b4fa-9d22467b786b" # Egne ansatte
-          - id: "ad7b87a6-9180-467c-affc-20a566b0fec0" # Strengt Fortrolig Adresse
-          - id: "9ec6487d-f37a-4aad-a027-cd221c1ac32b" # Fortrolig Adresse
       enabled: true
       tenant: nav.no
 
   accessPolicy:
     outbound:
+      external:
+        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
       rules:
-        - application: nav-dekoratoren
-          namespace: personbruker
         - application: inntektsplanleggeren-backend
           cluster: prod-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: MODE
-      value: veileder
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
       value: "api://prod-gcp.pensjonselvbetjening.inntektsplanleggeren-backend/.default"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
-      value: "prod-gcp:pensjonselvbetjening:inntektsplanleggeren-backend"
+    - name: "URL_PSELV_INNTEKTSPLANLEGGER"
+      value: "https://www.nav.no/pselv/inntektsplanlegger/innledning.jsf?context=ut&simpleMode=true"
+  envFrom:
+    - secret: inntektsplanleggeren-frontend-unleash-api-token

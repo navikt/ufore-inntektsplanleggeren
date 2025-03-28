@@ -53,18 +53,18 @@ spec:
           namespace: aura
           cluster: dev-gcp
     outbound:
+      external:
+        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
       rules:
-        - application: nav-dekoratoren  # TODO: trenger vi denne
-          namespace: personbruker
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp
           namespace: pensjonselvbetjening
   env:
-    - name: "MODE"
-      value: "veileder"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend-q2"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
       value: "api://dev-gcp.pensjonselvbetjening.inntektsplanleggeren-backend-q2/.default"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
-      value: "dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2"
+    - name: "URL_PSELV_INNTEKTSPLANLEGGER"
+      value: "https://pensjon-pselv-q2-gcp.ansatt.dev.nav.no/pselv/inntektsplanlegger/innledning.jsf?context=ut&simpleMode=true"
+  envFrom:
+    - secret: inntektsplanleggeren-frontend-unleash-api-token
