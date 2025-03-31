@@ -12,7 +12,7 @@ class SendInntektsplanleggerMetricsCounter {
 
         fun count(sendResponse: InntektsplanleggerenSendResponse){
             try {
-                if(!sendResponse.messages.any { it.type == InntektsplanleggerMessageType.ERROR }) {
+                if(sendResponse.messages.none() { it.type == InntektsplanleggerMessageType.ERROR }) {
                     countEvent("SEND_SUCCESS.${sendResponse.status}")
                 } else {
                     for (message in sendResponse.messages) {

@@ -12,10 +12,14 @@ class SimulateInntektsplanleggerMetricsCounter {
 
         fun count(simuleringResponse: SimuleringResponse){
             try {
-                if(simuleringResponse.messages.any { it.messageCode.type == InntektsplanleggerMessageType.ERROR }){
-                    countEvent("SIMULATE_ERROR")
-                } else {
+                if(simuleringResponse.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
                     countEvent("SIMULATE_SUCCESS")
+                } else {
+                    for (message in simuleringResponse.messages) {
+                        if (message.type == InntektsplanleggerMessageType.ERROR) {
+                            countEvent("SIMULATE_ERROR.${message.messageCode}")
+                        }
+                    }
                 }
             } catch(e: Exception){
                 logger.error("Failed counting simulate status")
@@ -27,3 +31,4 @@ class SimulateInntektsplanleggerMetricsCounter {
         }
     }
 }
+

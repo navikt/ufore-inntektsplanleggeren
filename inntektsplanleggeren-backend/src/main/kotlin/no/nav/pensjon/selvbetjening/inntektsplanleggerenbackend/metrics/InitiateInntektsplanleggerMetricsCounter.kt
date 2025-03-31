@@ -21,7 +21,6 @@ class InitiateInntektsplanleggerMetricsCounter {
                         }
                     }
                 }
-
             } catch(e: Exception){
                 logger.error("Failed counting initiate status")
             }
