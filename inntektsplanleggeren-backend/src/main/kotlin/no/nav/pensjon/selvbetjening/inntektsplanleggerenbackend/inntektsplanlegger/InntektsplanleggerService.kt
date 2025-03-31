@@ -1,7 +1,8 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
+import no.nav.pensjon.selvbetjening.alderspensjonendringssoknadbackend.metrics.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
@@ -40,6 +41,8 @@ class InntektsplanleggerService(
     ): InntektsplanleggerenSendResponse {
         val innsendingsTidspunkt = LocalDateTime.now(ZoneId.of("Europe/Paris"))
         val simulering = simulerInntektsendring(pid, simuleringsaar, oppgitteInntekter)
+        var response: InntektsplanleggerenSendResponse
+
         if (simulering.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val initiertAv = tokenService.determineLoggedInUser()
             val innsending = penClient.sendInntektsendring(
@@ -61,13 +64,21 @@ class InntektsplanleggerService(
 
                     else -> InnsendingStatus.IKKE_SENDT
                 }
-            return InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
+            response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
         }
-        return InntektsplanleggerenSendResponse(
+
+        else {
+            response = InntektsplanleggerenSendResponse(
             simulering.messages,
             InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
             innsendingsTidspunkt
         )
+
+
+        }
+
+        SendInntektsplanleggerMetricsCounter.count(response)
+        return response
     }
 
     fun simulerInntektsendring(
@@ -86,6 +97,8 @@ class InntektsplanleggerService(
             simuleringsAar,
             getAktuelleAar(pensjonsdata?.hasLopendeUforeVedtakThisYear, pensjonsdata?.hasLopendeUforeVedtakNextYear)
         )
+
+        val response: SimuleringResponse
 
         if (validationResult.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val simuleringData = simuleringService.simulerInntektsendring(
@@ -110,13 +123,18 @@ class InntektsplanleggerService(
                 updateSimuleringDataYearlyValues(simuleringData, simuleringsDataHeleAret)
             }
 
-            return SimuleringResponse(
+            response = SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
                 simuleringData.simuleringsresultat
             )
         }
+        else {
+            response = SimuleringResponse(validationResult, null)
+        }
 
-        return SimuleringResponse(validationResult, null)
+        SimulateInntektsplanleggerMetricsCounter.count(response)
+
+        return response
     }
 
     private fun updateSimuleringDataYearlyValues(simuleringData: SimuleringData, simuleringsDataHeleAret: SimuleringData) {
@@ -136,7 +154,7 @@ class InntektsplanleggerService(
             simuleringsaar
         )
 
-        return InntekterResponse(
+        val response = InntekterResponse(
             arbeidsinntektOgYtelserHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser),
             pensjonFraAndreHittilIAar = accumulateAllInntekterForSameMonth(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden),
             forventedeInntekter = if (fetchForventedeInntekter) {
@@ -149,6 +167,10 @@ class InntektsplanleggerService(
             uforeHeleAaret = pensjonsdata.uforeHeleAaret,
             epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
         )
+
+        InntekterInntektsplanleggerMetricsCounter.count()
+
+        return response
     }
 
     fun constructInitialInntektsplanleggerResponse(
@@ -163,10 +185,15 @@ class InntektsplanleggerService(
             )
         }
         val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
-        return InntektsplanleggerenInitialResponse(
+
+        val response = InntektsplanleggerenInitialResponse(
             messages,
             mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages)
         )
+
+        InitiateInntektsplanleggerMetricsCounter.count(response)
+
+        return response
     }
 
     fun constructStatusResponse(
@@ -178,8 +205,10 @@ class InntektsplanleggerService(
         val penResponse: StatusInnsendingResponse? =
             penClient.fetchInntektsplanleggerStatus(fnr, getSimuleringFomDato(simuleringsAar), innsendingsTidspunkt)
         val forventetInntekt = constructInntekterResponse(fnr, simuleringsAar)
+        var response : InntektsplanleggerenStatusResponse? = null
+
         if (penResponse != null) {
-            return InntektsplanleggerenStatusResponse(
+            response = InntektsplanleggerenStatusResponse(
                 penResponse.status,
                 penResponse.sakId,
                 penResponse.maandedligeUtbetalinger?.fom?.let {
@@ -194,7 +223,10 @@ class InntektsplanleggerService(
                 forventetInntekt?.forventedeInntekter?.eps?.sum()
             )
         }
-        return null
+
+        StatusInntektsplanleggerMetricsCounter.count(response)
+
+        return response
     }
 
     private fun mapInntektsplanleggerenInitialData(
