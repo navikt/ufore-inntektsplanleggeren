@@ -5,7 +5,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.InntektS
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringData
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
@@ -95,21 +94,6 @@ class InntektsplanleggerService(
                 simuleringsaar = simuleringsAar,
                 simuleringFomDato = getSimuleringFomDato(simuleringsAar)
             )
-            if ((simuleringsAar == nowProvider.now().year) && (getSimuleringFomDato(simuleringsAar) != LocalDate.of(nowProvider.now().year, Month.JANUARY, 1))) {
-                var simuleringFomDato = LocalDate.of(nowProvider.now().year, Month.JANUARY, 1)
-                if (pensjonsdata.uforeFomDato?.isAfter(simuleringFomDato) == true) {
-                    simuleringFomDato = pensjonsdata.uforeFomDato
-                }
-                val simuleringsDataHeleAret = simuleringService.simulerInntektsendring(
-                    pid = pid,
-                    forventedeInntekterOppgitt = oppgitteInntekter,
-                    forventedeInntekter = gjeldendeForventedeInntekter,
-                    simuleringsaar = nowProvider.now().year,
-                    simuleringFomDato
-                )
-                updateSimuleringDataYearlyValues(simuleringData, simuleringsDataHeleAret)
-            }
-
             return SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
                 simuleringData.simuleringsresultat
@@ -117,14 +101,6 @@ class InntektsplanleggerService(
         }
 
         return SimuleringResponse(validationResult, null)
-    }
-
-    private fun updateSimuleringDataYearlyValues(simuleringData: SimuleringData, simuleringsDataHeleAret: SimuleringData) {
-        simuleringData.simuleringsresultat.uforetrygd.yearly.before = simuleringsDataHeleAret.simuleringsresultat.uforetrygd.yearly.before
-        simuleringData.simuleringsresultat.barnetilleggFellesbarn?.yearly?.before = simuleringsDataHeleAret.simuleringsresultat.barnetilleggFellesbarn!!.yearly.before
-        simuleringData.simuleringsresultat.barnetilleggSaerkullsbarn?.yearly?.before = simuleringsDataHeleAret.simuleringsresultat.barnetilleggSaerkullsbarn!!.yearly.before
-        simuleringData.simuleringsresultat.gjenlevendetillegg?.yearly?.before = simuleringsDataHeleAret.simuleringsresultat.gjenlevendetillegg!!.yearly.before
-        simuleringData.simuleringsresultat.sum.yearly.before = simuleringsDataHeleAret.simuleringsresultat.sum.yearly.before
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
