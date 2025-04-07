@@ -41,7 +41,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
   function onSubmitStart(event: React.FormEvent) {
     event.preventDefault()
     const newErrors = {
-      year: year ? '' : 'Du må velge et år før du kan starte inntektsplanleggeren.',
+      year: year ? '' : 'Du må velge året du vil registrere inntekt for.',
     }
     setErrors(newErrors)
 
@@ -98,7 +98,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
             <RadioGroup
               id="year"
               error={errors.year}
-              legend="Hvilket år ønsker du å registrere inntekter for?"
+              legend="Hvilket år ønsker du å registrere inntekt for?"
               value={year}
               onChange={(newValue) => {
                 setYear(newValue)

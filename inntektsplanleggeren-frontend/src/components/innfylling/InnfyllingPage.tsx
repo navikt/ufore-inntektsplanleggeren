@@ -188,7 +188,7 @@ export const InnfyllingPage = () => {
             {' '}
             Under kan du se hvilken inntekt som er registrert via A-meldingen. Det er likevel viktig at du sender inn
             forventet inntekt for
-            {inntekterResponse.uforeHeleAaret ? ' hele året til oss. ' : ' den delen av året du får uføretrygd. '}
+            {inntekterResponse.uforeHeleAaret ? ' hele året til oss. ' : ' den delen av året du har hatt uføretrygd. '}
             Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.
           </BodyLong>
         </VStack>
