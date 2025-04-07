@@ -38,17 +38,7 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
   - package-ecosystem: npm
-    directory: "/familieforhold-frontend/server/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: npm
     directory: "/alderspensjon-endringssoknad-frontend/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: npm
-    directory: "/alderspensjon-endringssoknad-frontend/server/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -58,27 +48,12 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
   - package-ecosystem: npm
-    directory: "/opptjening-overforomsorgsopptjening-frontend/server/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: npm
     directory: "/bytt-bruker-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
   - package-ecosystem: npm
-    directory: "/bytt-bruker-frontend/server/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: npm
     directory: "/representasjon-banner-frontend/"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: npm
-    directory: "/representasjon-banner-frontend/server/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
