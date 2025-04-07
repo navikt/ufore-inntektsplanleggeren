@@ -37,41 +37,121 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/alderspensjon-endringssoknad-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/opptjening-overforomsorgsopptjening-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/bytt-bruker-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/representasjon-banner-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/dinpensjon-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/uforetrygd-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
   - package-ecosystem: npm
     directory: "/inntektsplanleggeren-frontend/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    versioning-strategy: increase
+    groups:
+      designsystemet:
+        patterns:
+          - '@navikt/ds*'
+          - '@navikt/aksel*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
 #### GITHUB ACTIONS ####
   - package-ecosystem: github-actions
     directory: "/"
