@@ -104,72 +104,15 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
               {props.displayData.hasBarneTilleggFellesbarn || props.displayData.hasBarnetilleggSaerkullsbarn ? (
                 <section>
                   <Heading size="xsmall" level="3">
-                    Barnetillegg har egne inntektsgrenser (fribeløp)
+                    Barnetillegg
                   </Heading>
                   <BodyLong style={{ wordBreak: 'normal' }}>
-                    Fribeløpet er grensen for hva foreldre kan tjene før barnetillegget blir mindre.
+                    Inntekten din har betydning for hvor mye du får utbetalt i barnetillegg. For barn som bor med begge sine foreldre, bruker vi begge foreldrenes inntekt når vi beregner størrelsen på barnetillegget.
+                    <Link variant="neutral" href={'https://www.nav.no/uforetrygd#tillegg'}>Les mer om barnetillegg til uføretrygden.</Link>
                   </BodyLong>
                 </section>
               ) : null}
 
-              {props.displayData.hasBarneTilleggFellesbarn ? (
-                <section>
-                  <Heading size="xsmall" level="3">
-                    Fribeløp for felles barn
-                  </Heading>
-                  <BodyLong style={{ wordBreak: 'normal' }}>
-                    Bor du sammen med barnets andre forelder, skal barnetillegget reduseres ut fra begge foreldrenes
-                    inntekt. Derfor skal du bare fylle ut den andre forelderens inntekt i inntektsplanleggeren hvis dere
-                    bor sammen.
-                    <List>
-                      <List.Item>
-                        Tjener dere tilsammen mer enn{' '}
-                        <strong>
-                          <FormatKroner value={props.displayData.fribelopBarnetilleggFellesbarn} />
-                        </strong>
-                        , blir barnetillegget for barn dere har sammen mindre.
-                      </List.Item>
-                      <List.Item>
-                        Tjener dere tilsammen mer enn{' '}
-                        <strong>
-                          <FormatKroner value={props.displayData.grenseStoppAvBarnetilleggFellesbarn} />
-                        </strong>
-                        , får du ikke utbetalt barnetillegget for barn dere har sammen. Får dere lavere inntekt i
-                        framtiden, kan du igjen få utbetalt barnetillegget.
-                      </List.Item>
-                    </List>
-                  </BodyLong>
-                </section>
-              ) : null}
-
-              {props.displayData.hasBarnetilleggSaerkullsbarn ? (
-                <section>
-                  <Heading size="xsmall" level="3">
-                    Fribeløp for særkullsbarn
-                  </Heading>
-                  <BodyLong style={{ wordBreak: 'normal' }}>
-                    Bor du ikke sammen med barnets andre forelder reduseres barnetillegget bare fra din inntekt, og du
-                    skal kun oppgi din inntekt i inntektsplanleggeren.
-                    <List>
-                      <List.Item>
-                        Tjener du mer enn{' '}
-                        <strong>
-                          <FormatKroner value={props.displayData.fribelopBarnetilleggSaerkullsbarn} />,
-                        </strong>{' '}
-                        blir barnetillegget for særkullsbarn mindre.
-                      </List.Item>
-                      <List.Item>
-                        Tjener du mer enn{' '}
-                        <strong>
-                          <FormatKroner value={props.displayData.grenseStoppAvBarnetilleggSaerkullsbarn} />
-                        </strong>
-                        , får du ikke utbetalt barnetillegget for særkullsbarn. Får du lavere inntekt i framtiden, kan
-                        du igjen få utbetalt barnetillegget.
-                      </List.Item>
-                    </List>
-                  </BodyLong>
-                </section>
-              ) : null}
             </VStack>
           ) : null}
         </VStack>
