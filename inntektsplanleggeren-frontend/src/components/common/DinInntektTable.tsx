@@ -2,7 +2,7 @@ import { Box, Button, HStack, Table, VStack } from '@navikt/ds-react'
 import './DinInntektTable.css'
 import { InntektDetaljer } from '@/api/model/ApiRequests'
 import { Month } from '@/common/MonthEnum'
-import { belopSum } from '@/common/Utils'
+import {belopSum} from '@/common/Utils'
 import React, { useEffect, useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
@@ -81,10 +81,10 @@ const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
           </Table.Row>
         ))}
         <Table.Row>
-          <Table.HeaderCell scope="row">Sum hittil i år</Table.HeaderCell>
+          <Table.HeaderCell scope="row"><span style={{whiteSpace: 'nowrap'}}>Sum hittil i år</span></Table.HeaderCell>
           <Table.DataCell>
             <strong>
-              <FormatKroner value={belopSum(props.data)} />
+              <FormatKroner value={belopSum(props.data)}/>
             </strong>
           </Table.DataCell>
           <Table.DataCell></Table.DataCell>
