@@ -1,4 +1,4 @@
-import { Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link } from '@navikt/ds-react'
+import {Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link, HelpText, BodyShort} from '@navikt/ds-react'
 import { FormEvent, MouseEvent, useContext, useEffect } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
@@ -13,6 +13,7 @@ import { FormatKroner } from '@/components/utils/FormatKroner'
 import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
 import { BeregningWarnings } from '@/components/beregning/BeregningWarnings'
 import { ErrorView } from '@/components/common/Error'
+import './BeregningPage.css'
 
 export const BeregningPage = () => {
   const { selectedYear, setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext)
@@ -94,9 +95,17 @@ export const BeregningPage = () => {
             </section>
 
             <section>
-              <Heading level="4" size="medium">
-                Oversikt i tabell
-              </Heading>
+
+                <Heading level="4" size="medium">
+                  <HStack>
+                    Oversikt i tabell
+                    <HelpText id="helpbox">
+                      <BodyLong>"I dag" viser årlig beløp hentet fra vedtaket som gjelder nå.</BodyLong>
+                      <BodyLong>"Med dine endringer" viser årlig beløp med endringene du nå har lagt inn.</BodyLong>
+                </HelpText>
+            </HStack>
+                </Heading>
+
               {simulationResponse?.result && (
                 <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>
               )}
