@@ -1,0 +1,5 @@
+#helpbox {
+    position: relative;
+    top: 3px;
+    left: 5px;/* Adjust this value to lower the vertical position */
+}
