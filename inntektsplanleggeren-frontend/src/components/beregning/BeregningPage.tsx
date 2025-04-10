@@ -100,8 +100,8 @@ export const BeregningPage = () => {
                   <HStack>
                     Oversikt i tabell
                     <HelpText id="helpbox">
-                      <BodyLong>"I dag" viser årlig beløp hentet fra vedtaket som gjelder nå.
-                      "Med dine endringer" viser årlig beløp med endringene du nå har lagt inn.</BodyLong>
+                      <BodyLong>"I dag" viser årlig beløp hentet fra vedtaket som gjelder nå.</BodyLong>
+                      <BodyLong>"Med dine endringer" viser årlig beløp med endringene du nå har lagt inn.</BodyLong>
                 </HelpText>
             </HStack>
                 </Heading>
