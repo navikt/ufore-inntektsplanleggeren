@@ -12,7 +12,6 @@ updates:
       interval: weekly
       day: friday
     open-pull-requests-limit: 50
-    versioning-strategy: increase
 
   - package-ecosystem: npm
     directories:
@@ -28,7 +27,6 @@ updates:
       interval: weekly
       day: friday
     open-pull-requests-limit: 50
-    versioning-strategy: increase
     groups:
       designsystemet:
         patterns:
