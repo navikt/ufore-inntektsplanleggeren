@@ -182,7 +182,7 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
                     (props.simulationResult.barnetilleggSaerkullsbarn?.yearly.after ?? 0) +
                       (props.simulationResult.barnetilleggFellesbarn?.yearly.after ?? 0),
                   ].filter(isNotFalse),
-                  color: 'var(--a-purple-400)',
+                  color: '#A33069',
                 }
               : undefined,
             {
