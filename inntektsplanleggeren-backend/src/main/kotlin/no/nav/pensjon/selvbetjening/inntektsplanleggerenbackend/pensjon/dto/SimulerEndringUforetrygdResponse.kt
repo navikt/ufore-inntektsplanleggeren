@@ -14,7 +14,8 @@ data class SimulerEndringUforetrygdResponse(
     val isFaktoromregnetEllerManueltOverstyrt: Boolean,
     val hasOpenInntektsendringskrav: Boolean,
     val firstVedtakFom: LocalDate,
-    val lastVedtakTom: LocalDate?
+    val lastVedtakTom: LocalDate?,
+    val forventedInntektBefore: Int?
 )
 
 data class UforetrygdSummary(

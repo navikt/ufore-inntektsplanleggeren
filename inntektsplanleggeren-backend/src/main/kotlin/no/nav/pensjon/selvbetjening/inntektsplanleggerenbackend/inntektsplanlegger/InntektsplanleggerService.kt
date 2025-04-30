@@ -108,22 +108,7 @@ class InntektsplanleggerService(
                 simuleringsaar = simuleringsAar,
                 simuleringFomDato = getSimuleringFomDato(simuleringsAar)
             )
-            if ((simuleringsAar == nowProvider.now().year) && (getSimuleringFomDato(simuleringsAar) != LocalDate.of(nowProvider.now().year, Month.JANUARY, 1))) {
-                var simuleringFomDato = LocalDate.of(nowProvider.now().year, Month.JANUARY, 1)
-                if (pensjonsdata.uforeFomDato?.isAfter(simuleringFomDato) == true) {
-                    simuleringFomDato = pensjonsdata.uforeFomDato
-                }
-                val simuleringsDataHeleAret = simuleringService.simulerInntektsendring(
-                    pid = pid,
-                    forventedeInntekterOppgitt = oppgitteInntekter,
-                    forventedeInntekter = gjeldendeForventedeInntekter,
-                    simuleringsaar = nowProvider.now().year,
-                    simuleringFomDato
-                )
-                updateSimuleringDataYearlyValues(simuleringData, simuleringsDataHeleAret)
-            }
-
-            response = SimuleringResponse(
+            response =  SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
                 simuleringData.simuleringsresultat
             )
@@ -135,14 +120,6 @@ class InntektsplanleggerService(
         SimulateInntektsplanleggerMetricsCounter.count(response)
 
         return response
-    }
-
-    private fun updateSimuleringDataYearlyValues(simuleringData: SimuleringData, simuleringsDataHeleAret: SimuleringData) {
-        simuleringData.simuleringsresultat.uforetrygd.yearly = simuleringsDataHeleAret.simuleringsresultat.uforetrygd.yearly
-        simuleringData.simuleringsresultat.barnetilleggFellesbarn?.yearly  = simuleringsDataHeleAret.simuleringsresultat.barnetilleggFellesbarn!!.yearly
-        simuleringData.simuleringsresultat.barnetilleggSaerkullsbarn?.yearly = simuleringsDataHeleAret.simuleringsresultat.barnetilleggSaerkullsbarn!!.yearly
-        simuleringData.simuleringsresultat.gjenlevendetillegg?.yearly = simuleringsDataHeleAret.simuleringsresultat.gjenlevendetillegg!!.yearly
-        simuleringData.simuleringsresultat.sum.yearly = simuleringsDataHeleAret.simuleringsresultat.sum.yearly
     }
 
     fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
