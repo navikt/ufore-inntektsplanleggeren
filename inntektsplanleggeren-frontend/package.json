@@ -47,7 +47,7 @@
         "eslint-plugin-react": "^7.37.5",
         "highcharts": "^12.2.0",
         "highcharts-react-official": "^3.2.1",
-        "nodemon": "^3.1.9",
+        "nodemon": "^3.1.10",
         "openapi-typescript": "^7.6.1",
         "prettier": "^3.5.2",
         "react": "^19.1.0",
