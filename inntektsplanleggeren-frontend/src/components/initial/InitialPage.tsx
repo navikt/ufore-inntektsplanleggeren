@@ -111,11 +111,6 @@ export function InitialPage() {
           <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
           <List.Item>melde inn forventet inntekt til oss</List.Item>
         </List>
-        <BodyShort spacing>
-          <NavLink href="https://www.nav.no/uforetrygd#kombinere">
-            Her finner du mer informasjon om å jobbe samtidig som du har uføretrygd.
-          </NavLink>
-        </BodyShort>
       </section>
 
       {initiateResponse.data !== null && (
