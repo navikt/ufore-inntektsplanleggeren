@@ -18,10 +18,6 @@ data class InntektsplanleggerenInitialData(
     val annetRelevantAar: Int?,
     val hasVarigTilrettelagtArbeid: Boolean,
     val hasBarneTilleggFellesbarn: Boolean,
-    val grenseStoppAvBarnetilleggFellesbarn: Int?,
-    val fribelopBarnetilleggFellesbarn: Int?,
     val hasBarnetilleggSaerkullsbarn: Boolean,
-    val grenseStoppAvBarnetilleggSaerkullsbarn: Int?,
-    val fribelopBarnetilleggSaerkullsbarn: Int?,
     val hasGjenlevendeTillegg: Boolean
 )

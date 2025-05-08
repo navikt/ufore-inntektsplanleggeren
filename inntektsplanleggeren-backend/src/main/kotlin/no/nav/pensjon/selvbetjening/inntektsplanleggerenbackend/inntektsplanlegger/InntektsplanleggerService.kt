@@ -6,7 +6,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Ma
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.AccumulatedMaanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringData
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessage
@@ -223,11 +222,7 @@ class InntektsplanleggerService(
                 grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,
                 hasGjenlevendeTillegg = pensjonsdata.hasGjenlevendeTillegg,
                 hasBarneTilleggFellesbarn = pensjonsdata.barnetilleggFellesbarn,
-                grenseStoppAvBarnetilleggFellesbarn = pensjonsdata.grenseStoppAvBarnetilleggFellesbarn,
-                fribelopBarnetilleggFellesbarn = pensjonsdata.fribelopBarnetilleggFellesbarn,
                 hasBarnetilleggSaerkullsbarn = pensjonsdata.barnetilleggSaerkullsbarn,
-                grenseStoppAvBarnetilleggSaerkullsbarn = pensjonsdata.grenseStoppAvBarnetilleggSaerkullsbarn,
-                fribelopBarnetilleggSaerkullsbarn = pensjonsdata.fribelopBarnetilleggSaerkullsbarn,
                 hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
                 aktuelleAar = aktuelleAar,
                 annetRelevantAar = getAnnetRelevantAar()

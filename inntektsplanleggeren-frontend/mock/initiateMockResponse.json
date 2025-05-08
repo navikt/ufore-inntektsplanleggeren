@@ -18,11 +18,7 @@
     "annetRelevantAar": 2014,
     "hasVarigTilrettelagtArbeid": true,
     "hasBarneTilleggFellesbarn": true,
-    "grenseStoppAvBarnetilleggFellesbarn": 669751,
-    "fribelopBarnetilleggFellesbarn": 570529,
     "hasBarnetilleggSaerkullsbarn": true,
-    "grenseStoppAvBarnetilleggSaerkullsbarn": 827,
-    "fribelopBarnetilleggSaerkullsbarn": 242,
     "hasGjenlevendeTillegg": true
   }
 }
