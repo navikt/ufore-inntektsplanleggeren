@@ -109,13 +109,6 @@ class InntektsplanleggerServiceTest {
         assertEquals(expectedInntektsgrense, initialData.data!!.inntektsgrense)
         assertEquals(expectedKompensasjonsgrad, initialData.data!!.kompensasjonsgrad)
         assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.data!!.grenseStoppAvUfoeretrygd)
-        assertEquals(expectedGrenseStoppAvBarnetilleggFellesbarn, initialData.data!!.grenseStoppAvBarnetilleggFellesbarn)
-        assertEquals(
-            expectedGrenseStoppAvBarnetilleggSaerkullsbarn,
-            initialData.data!!.grenseStoppAvBarnetilleggSaerkullsbarn
-        )
-        assertEquals(expectedFribelopFellesbarn, initialData.data!!.fribelopBarnetilleggFellesbarn)
-        assertEquals(expectedFribelopSaerkullsbarn, initialData.data!!.fribelopBarnetilleggSaerkullsbarn)
         assertTrue(initialData.data!!.hasGjenlevendeTillegg)
         assertTrue(initialData.data!!.hasVarigTilrettelagtArbeid)
         assertFalse(initialData.data!!.hasBarnetilleggSaerkullsbarn)
@@ -988,11 +981,7 @@ class InntektsplanleggerServiceTest {
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
-            grenseStoppAvBarnetilleggSaerkullsbarn = grenseStoppAvBarnetilleggSaerkullsbarn,
-            fribelopBarnetilleggSaerkullsbarn = fribelopBarnetilleggSaerkullsbarn,
             barnetilleggFellesbarn = barnetilleggFellesbarn,
-            grenseStoppAvBarnetilleggFellesbarn = grenseStoppAvBarnetilleggFellesbarn,
-            fribelopBarnetilleggFellesbarn = fribelopBarnetilleggFellesbarn,
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
             inntekterFromOpenKravEps = inntekterFromOpenKravEps,

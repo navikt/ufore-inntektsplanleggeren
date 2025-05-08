@@ -32,26 +32,18 @@ export interface BaseInitiateData {
 
 export interface WithBarneTilleggFellesBarn extends BaseInitiateData {
   hasBarneTilleggFellesbarn: true
-  grenseStoppAvBarnetilleggFellesbarn: number
-  fribelopBarnetilleggFellesbarn: number
 }
 
 export interface WithoutBarneTilleggFellesBarn extends BaseInitiateData {
   hasBarneTilleggFellesbarn: false
-  grenseStoppAvBarnetilleggFellesbarn: null
-  fribelopBarnetilleggFellesbarn: null
 }
 
 export interface WithBarnetilleggSaerkullsbarn extends BaseInitiateData {
   hasBarnetilleggSaerkullsbarn: true
-  grenseStoppAvBarnetilleggSaerkullsbarn: number
-  fribelopBarnetilleggSaerkullsbarn: number
 }
 
 export interface WithoutBarnetilleggSaerkullsbarn extends BaseInitiateData {
   hasBarnetilleggSaerkullsbarn: false
-  grenseStoppAvBarnetilleggSaerkullsbarn: null
-  fribelopBarnetilleggSaerkullsbarn: null
 }
 
 export type InitiateData = (WithBarneTilleggFellesBarn | WithoutBarneTilleggFellesBarn) &
