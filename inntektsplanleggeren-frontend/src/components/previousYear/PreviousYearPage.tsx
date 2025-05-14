@@ -51,7 +51,7 @@ export const PreviousYearPage = () => {
                             {previousYearInntekterResponse.uforeHeleAaret ? `Din inntekt hittil i ${previousYear}` : `Din inntekt samtidig med uføretrygd i ${previousYear}`}
                         </Heading>
                         <BodyLong>
-                            Under kan du se hvilken inntekt som er registrert via A-meldingen
+                            Under kan du se hvilken inntekt som er registrert hos Skatteetaten
                             {previousYearInntekterResponse.uforeHeleAaret ? '.' : ' den delen av året du har hatt uføretrygd.'}
                         </BodyLong>
                     </VStack>
