@@ -10,6 +10,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Abon
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Aktoer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import okhttp3.mockwebserver.MockResponse
 import org.junit.jupiter.api.BeforeEach
@@ -24,13 +25,14 @@ import kotlin.test.assertEquals
 
 class InntektskomponentClientTest: WebClientTest()  {
     val tokenService = Mockito.mock(TokenService::class.java)
+    val azureAdService = Mockito.mock(AzureAdService::class.java)
     lateinit var inntektskomponentClient: InntektskomponentClient
 
     @BeforeEach
     override fun setup() {
         super.setup()
         inntektskomponentClient = InntektskomponentClient(
-            url = baseUrl, webClient = WebClient.create(), scope = "", audience = "", tokenService = tokenService
+            url = baseUrl, webClient = WebClient.create(), scope = "", audience = "", tokenService = tokenService, azureAdService = azureAdService
         )
     }
 
