@@ -11,6 +11,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Hent
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,6 +29,7 @@ class InntektskomponentClient(
     @Value("\${inntektskomponenten.audience}") private val audience: String,
     private val webClient: WebClient,
     private val tokenService: TokenService,
+    private val azureAdService: AzureAdService
 ) {
     private val logger: Logger = LoggerFactory.getLogger(InntektskomponentClient::class.java)
 
@@ -37,7 +39,7 @@ class InntektskomponentClient(
     ): HentForventetInntektResponse {
         val path = "/api/v1/forventetinntekt"
         try {
-            return tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .get()
