@@ -81,7 +81,7 @@ class InntektskomponentClient(
             abonnerteInntekterIdentOgPeriodeListe
         )
         try {
-            return tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .post()
