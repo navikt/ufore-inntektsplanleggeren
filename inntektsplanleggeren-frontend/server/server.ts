@@ -9,6 +9,7 @@ import dotenv from 'dotenv'
 import ensureEnv from './ensureEnv.js'
 import { initialize } from 'unleash-client'
 import crypto from 'crypto'
+import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
@@ -39,6 +40,7 @@ app.get('/internal/health/readiness', (req, res) => {
     })
 })
 
+app.use(stengForReguleringMiddleware({ env: 'dev' }))
 app.use(metricsMiddleware)
 app.use(loggerMiddleware(logger))
 
