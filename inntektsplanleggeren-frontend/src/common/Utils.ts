@@ -2,7 +2,7 @@ import { InntektDetaljer } from '@/api/model/ApiRequests'
 import { format } from 'date-fns'
 
 export function numberFormatWithKr(value: number): string {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' kr'
+  return Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' kr'
 }
 
 export function numberFormat(value: number): string {
