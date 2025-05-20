@@ -28,22 +28,6 @@ const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
 })
 
-app.get('/internal/health/liveness', (req, res) => {
-    res.send({
-        status: 'UP',
-    })
-})
-
-app.get('/internal/health/readiness', (req, res) => {
-    res.send({
-        status: 'UP',
-    })
-})
-
-app.use(stengForReguleringMiddleware({ env: 'dev' }))
-app.use(metricsMiddleware)
-app.use(loggerMiddleware(logger))
-
 const AUTH_PROVIDER = (() => {
     const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
     const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER
@@ -155,6 +139,21 @@ const getUniqueUserId = async (req: Request) => {
         return null
     }
 }
+
+app.get('/internal/health/liveness', (req, res) => {
+    res.send({
+        status: 'UP',
+    })
+})
+
+app.get('/internal/health/readiness', (req, res) => {
+    res.send({
+        status: 'UP',
+    })
+})
+app.use(stengForReguleringMiddleware({ env: 'dev', unleashClient: unleash }))
+app.use(metricsMiddleware)
+app.use(loggerMiddleware(logger))
 
 app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {
     const assetFolder = path.join(__dirname, './dist', 'assets')
