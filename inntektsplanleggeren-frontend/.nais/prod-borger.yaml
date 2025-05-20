@@ -10,6 +10,14 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 spec:
   image: "{{ image }}"
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
   ingresses:
     - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
