@@ -151,7 +151,7 @@ app.get('/internal/health/readiness', (req, res) => {
         status: 'UP',
     })
 })
-app.use(stengForReguleringMiddleware({ env: 'dev', unleashClient: unleash }))
+app.use(stengForReguleringMiddleware({ env: isDevelopment ? 'dev' : 'prod', unleashClient: unleash }))
 app.use(metricsMiddleware)
 app.use(loggerMiddleware(logger))
 
