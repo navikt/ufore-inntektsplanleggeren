@@ -9,6 +9,7 @@ import dotenv from 'dotenv'
 import ensureEnv from './ensureEnv.js'
 import { initialize } from 'unleash-client'
 import crypto from 'crypto'
+import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
@@ -26,21 +27,6 @@ const logger = winston.createLogger({
     format: isDevelopment ? format.simple() : undefined,
     transports: [new winston.transports.Console()],
 })
-
-app.get('/internal/health/liveness', (req, res) => {
-    res.send({
-        status: 'UP',
-    })
-})
-
-app.get('/internal/health/readiness', (req, res) => {
-    res.send({
-        status: 'UP',
-    })
-})
-
-app.use(metricsMiddleware)
-app.use(loggerMiddleware(logger))
 
 const AUTH_PROVIDER = (() => {
     const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
@@ -153,6 +139,21 @@ const getUniqueUserId = async (req: Request) => {
         return null
     }
 }
+
+app.get('/internal/health/liveness', (req, res) => {
+    res.send({
+        status: 'UP',
+    })
+})
+
+app.get('/internal/health/readiness', (req, res) => {
+    res.send({
+        status: 'UP',
+    })
+})
+app.use(stengForReguleringMiddleware({ env: isDevelopment ? 'dev' : 'prod', unleashClient: unleash }))
+app.use(metricsMiddleware)
+app.use(loggerMiddleware(logger))
 
 app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {
     const assetFolder = path.join(__dirname, './dist', 'assets')
