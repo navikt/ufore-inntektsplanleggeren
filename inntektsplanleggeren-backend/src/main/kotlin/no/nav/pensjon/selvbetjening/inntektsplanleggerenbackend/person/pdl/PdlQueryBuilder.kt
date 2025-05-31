@@ -7,7 +7,7 @@ class PdlQueryBuilder {
         }
 
         fun getFoedselQuery(pid: String): PdlPersonQuery {
-            return getPdlQuery(pid, "/pdl/foedsel.graphql", false)
+            return getPdlQuery(pid, "/pdl/foedselsdato.graphql", false)
         }
 
         fun getAdressebeskyttelseQuery(pid: String): PdlPersonQuery {

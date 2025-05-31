@@ -2,13 +2,13 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallel
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebskyttelse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlFoedsel
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlFoedselsdato
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlNavn
 
 
-data class FoedselParallelleSannheterContainer(@JsonProperty("foedsel") val foedsel: List<PdlFoedsel>?)
-    : ParallelleSannheterContainer<PdlFoedsel>(foedsel) {
-    override fun lockDecision(): FoedselParallelleSannheterContainer {
+data class FoedselsdatoParallelleSannheterContainer(@JsonProperty("foedselsdato") val foedselsdato: List<PdlFoedselsdato>?)
+    : ParallelleSannheterContainer<PdlFoedselsdato>(foedselsdato) {
+    override fun lockDecision(): FoedselsdatoParallelleSannheterContainer {
         super.lockDecision()
         return this
     }

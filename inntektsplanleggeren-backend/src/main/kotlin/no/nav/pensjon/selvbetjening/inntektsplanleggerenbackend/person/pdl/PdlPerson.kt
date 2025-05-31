@@ -8,15 +8,14 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class PdlPerson(
-    @JsonProperty("foedsel") val foedsel: List<PdlFoedsel>?,
+    @JsonProperty("foedselsdato") val foedselsdato: List<PdlFoedselsdato>?,
     @JsonProperty("navn") val navn: List<PdlNavn>?,
     @JsonProperty("adressebeskyttelse") val adressebeskyttelse: List<PdlAdressebskyttelse>?,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class PdlFoedsel(
+data class PdlFoedselsdato(
     @JsonProperty("foedselsdato") val foedselsdato: LocalDate?,
-    @JsonProperty("foedeland") val foedeland: String?,
     @JsonProperty("metadata") val metadata: PdlMetadata?,
     @JsonProperty("folkeregistermetadata") override val folkeregistermetadata: PdlFolkeregisterMetadata?
 ) : ParallellSannhet(metadata, folkeregistermetadata)
