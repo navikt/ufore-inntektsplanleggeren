@@ -19,11 +19,3 @@
 .button-container {
     margin-top: var(--a-spacing-8);
 }
-
-.readmoreCompact li {
-    margin-bottom: 0;
-}
-
-.readmoreCompact ul {
-    margin-top: 0;
-}

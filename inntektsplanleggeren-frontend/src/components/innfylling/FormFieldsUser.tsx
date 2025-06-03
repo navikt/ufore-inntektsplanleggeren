@@ -67,7 +67,8 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     <div className="description-card">
                         <ReadMore header="Inntekt du skal legge inn">
                             <p>Du skal legge inn pensjonsgivende inntekter.</p>
-                            <List as="ul" description="Lønn og fordeler du skal legge inn">
+                            <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
+                            <List className="listCompact">
                                 <List.Item>lønn fra arbeidsgiver</List.Item>
                                 <List.Item>bonus, ekstratimer, overtidsbetaling og feriepenger</List.Item>
                                 <List.Item>skattepliktige fordeler fra arbeidsgiver (for eksempel kost og losji, lån fra arbeidsgiver, telefon)</List.Item>
@@ -75,7 +76,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                                 <List.Item>andre pensjonsgivende inntekter</List.Item>
                             </List>
                             Pengestøtter fra Nav du skal legge inn
-                            <List>
+                            <List className="listCompact">
                                 <List.Item>sykepenger</List.Item>
                                 <List.Item>arbeidsavklaringspenger (AAP)</List.Item>
                                 <List.Item>dagpenger</List.Item>
@@ -87,7 +88,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                                 <List.Item>andre pengestøtter fra Nav som er pensjonsgivende</List.Item>
                             </List>
                             Du skal ikke legge inn
-                            <List>
+                            <List className="listCompact">
                                 <List.Item>uføretrygd</List.Item>
                                 <List.Item>alderspensjon</List.Item>
                                 <List.Item>uførepensjon fra andre enn Nav skal oppgis i et annet felt dersom du har barnetillegg</List.Item>
@@ -150,7 +151,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange('andrePensjonsgivendeYtelser')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn" className="readmoreCompact">
+                    <ReadMore header="Pensjoner du skal legge inn" className="listCompact">
                         <VStack gap="4">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss, før skatt.</BodyLong>
                             <List as="ul" description="Du skal ikke legge inn">

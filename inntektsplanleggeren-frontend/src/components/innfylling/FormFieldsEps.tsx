@@ -54,7 +54,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                 <VStack className="vstack-gap">
                     <TextField
                         id="arbeidsinntekt_eps"
-                        label="Lønn og pensjonsgivende ytelser"
+                        label="Lønn, fordeler og noen pengestøtter fra Nav"
                         description="Uføretrygd skal ikke tas med. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten."
                         inputMode="numeric"
                         error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
@@ -66,10 +66,34 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     />
                     <div className="description-card">
                         <ReadMore header="Inntekt du skal legge inn">
-                            Legg inn annen forelders lønn fra arbeidsgiver som et årsbeløp. Ta med eventuell bonus, ekstratimer, overtidsbetaling og feriepenger
-                            for det gjeldende året. Inntekter som er pensjonsgivende skal meldes inn. Vanlige pensjonsgivende ytelser er sykepenger,
-                            arbeidsavklaringspenger (AAP), dagpenger, foreldrepenger, svangerskapspenger, overgangsstønad, omsorgs-, pleie- eller
-                            opplæringspenger fra oss. Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
+                            <p>Du skal legge inn pensjonsgivende inntekter.</p>
+                            <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
+                            <List className="listCompact">
+                                <List.Item>lønn fra arbeidsgiver</List.Item>
+                                <List.Item>bonus, ekstratimer, overtidsbetaling og feriepenger</List.Item>
+                                <List.Item>skattepliktige fordeler fra arbeidsgiver (for eksempel kost og losji, lån fra arbeidsgiver, telefon)</List.Item>
+                                <List.Item>honorar og godtgjørelser</List.Item>
+                                <List.Item>andre pensjonsgivende inntekter</List.Item>
+                            </List>
+                            <BodyShort>Pengestøtter fra Nav du skal legge inn</BodyShort>
+                            <List className="listCompact">
+                                <List.Item>sykepenger</List.Item>
+                                <List.Item>arbeidsavklaringspenger (AAP)</List.Item>
+                                <List.Item>dagpenger</List.Item>
+                                <List.Item>foreldrepenger</List.Item>
+                                <List.Item>overgangsstønad</List.Item>
+                                <List.Item>svangerskapspenger</List.Item>
+                                <List.Item>omsorgs-, pleie- eller opplæringspenger</List.Item>
+                                <List.Item>andre pengestøtter fra Nav som er pensjonsgivende</List.Item>
+                            </List>
+                            <BodyShort>Du skal ikke legge inn</BodyShort>
+                            <List className="listCompact">
+                                <List.Item>uføretrygd</List.Item>
+                                <List.Item>alderspensjon</List.Item>
+                                <List.Item>uførepensjon fra andre enn Nav skal oppgis i et annet felt</List.Item>
+                                <List.Item>kapitalinntekt</List.Item>
+                            </List>
+                            Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
                         </ReadMore>
                     </div>
                 </VStack>
