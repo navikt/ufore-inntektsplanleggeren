@@ -1,11 +1,11 @@
 name: "Prod: Inntektsplanleggeren backend deploy"
 on:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - inntektsplanleggeren-backend/**
+  push:
+    branches:
+      - main
+    paths:
+      - inntektsplanleggeren-backend/**
 
 jobs:
   build-backend-and-publish-docker:

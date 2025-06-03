@@ -2,11 +2,11 @@ name: "Prod: Inntektsplanleggeren frontend deploy"
 
 on:
   workflow_dispatch:
-#  push:            //TODO: activate when ready
-#    branches:
-#      - main
-#    paths:
-#      - inntektsplanleggeren-frontend/**
+  push:
+    branches:
+      - main
+    paths:
+      - inntektsplanleggeren-frontend/**
 
 jobs:
   build-frontend-and-publish-docker:
