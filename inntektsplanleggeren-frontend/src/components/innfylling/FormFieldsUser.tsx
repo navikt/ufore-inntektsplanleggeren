@@ -55,7 +55,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     <TextField
                         id="arbeidsinntekt_bruker"
                         label="Lønn, fordeler og noen pengestøtter fra Nav"
-                        description="Du skal ikke ta med uføretrygden"
+                        description="Du skal ikke legge inn uføretrygden. Se hva du skal legge inn i beskrivelsen under."
                         inputMode="numeric"
                         error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
                         value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}

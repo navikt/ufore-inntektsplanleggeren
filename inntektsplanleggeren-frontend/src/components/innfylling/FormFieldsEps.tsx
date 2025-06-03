@@ -55,7 +55,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <TextField
                         id="arbeidsinntekt_eps"
                         label="Lønn, fordeler og noen pengestøtter fra Nav"
-                        description="Uføretrygd skal ikke tas med. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten."
+                        description="Uføretrygd skal ikke tas med. Se hva du skal legge inn i beskrivelsen under. Den andre forelderen kan se inntekt som er registrert hittil i år hos Skatteetaten."
                         inputMode="numeric"
                         error={fieldErrors.arbeidsinntekt ?? errors.arbeidsinntekt}
                         value={inputData.arbeidsinntekt ?? formatInntekt(forventedeInntekter.arbeidsinntekt)}
