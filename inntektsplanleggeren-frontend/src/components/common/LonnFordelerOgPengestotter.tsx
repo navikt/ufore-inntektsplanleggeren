@@ -16,7 +16,7 @@ const LonnFordelerOgPengestotter: React.FC<IProps> = (props) => {
 
             {props.uforeHeleAaret ? (
                 <BodyLong>
-                    Vi har registert at du har fått{' '}
+                    Vi har registrert at du har fått{' '}
                     <strong>
                         <FormatKroner value={belopSum(props.inntekter)} />
                     </strong>{' '}
