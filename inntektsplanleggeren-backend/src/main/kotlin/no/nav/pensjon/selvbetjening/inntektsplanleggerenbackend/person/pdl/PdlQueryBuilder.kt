@@ -2,12 +2,8 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl
 
 class PdlQueryBuilder {
     companion object {
-        fun getPersondataQuery(pid: String): PdlPersonQuery {
-            return getPdlQuery(pid, "/pdl/persondata.graphql", false)
-        }
-
         fun getFoedselQuery(pid: String): PdlPersonQuery {
-            return getPdlQuery(pid, "/pdl/foedsel.graphql", false)
+            return getPdlQuery(pid, "/pdl/foedselsdato.graphql", false)
         }
 
         fun getAdressebeskyttelseQuery(pid: String): PdlPersonQuery {

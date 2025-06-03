@@ -12,7 +12,7 @@ class PersonService(
 ) {
 
     fun getFodselsdato(pid: String): LocalDate {
-        val fodselsdato = pdlClient.performQuery(PdlQueryBuilder.getFoedselQuery(pid)).foedsel
+        val fodselsdato = pdlClient.performQuery(PdlQueryBuilder.getFoedselQuery(pid)).foedselsdato
         return parallelleSannheterService.decideFodselsdato(fodselsdato)
             ?: throw IllegalStateException("Not able to determine fodselsdato for user")
     }

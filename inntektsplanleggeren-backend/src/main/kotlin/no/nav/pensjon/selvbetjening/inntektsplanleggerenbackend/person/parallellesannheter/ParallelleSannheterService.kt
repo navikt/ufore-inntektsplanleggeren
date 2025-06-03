@@ -1,10 +1,10 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.AdressebeskyttelseParallelleSannheterContainer
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.FoedselParallelleSannheterContainer
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.FoedselsdatoParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.NavnParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebskyttelse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlFoedsel
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlFoedselsdato
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlNavn
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -12,12 +12,12 @@ import java.time.LocalDate
 @Service
 class ParallelleSannheterService(private val parallelleSannheterClient: ParallelleSannheterClient) {
 
-    fun decideFodselsdato(foedsel: List<PdlFoedsel>?): LocalDate? {
-        val foedselParallellSannhetContainer = FoedselParallelleSannheterContainer(foedsel)
-        return if (foedselParallellSannhetContainer.isDecisionNecessary()) {
-            parallelleSannheterClient.decideFoedsel(foedselParallellSannhetContainer).getSannhet().firstOrNull()?.foedselsdato
+    fun decideFodselsdato(foedselsdato: List<PdlFoedselsdato>?): LocalDate? {
+        val foedselsdatoParallellSannhetContainer = FoedselsdatoParallelleSannheterContainer(foedselsdato)
+        return if (foedselsdatoParallellSannhetContainer.isDecisionNecessary()) {
+            parallelleSannheterClient.decideFoedselsdato(foedselsdatoParallellSannhetContainer).getSannhet().firstOrNull()?.foedselsdato
         } else {
-            foedselParallellSannhetContainer.lockDecision().getSannhet().firstOrNull()?.foedselsdato
+            foedselsdatoParallellSannhetContainer.lockDecision().getSannhet().firstOrNull()?.foedselsdato
         }
     }
 

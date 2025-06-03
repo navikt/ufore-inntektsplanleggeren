@@ -40,10 +40,10 @@ class PersonServiceTest {
     }
 
     fun getPdlPerson(bekyttelse: PdlAdressebeskyttelsesgradering): PdlPerson {
-        val pdlFoedsel = PdlFoedsel(LocalDate.of(2000, 1, 1), null, null, null)
+        val pdlFoedselsdato = PdlFoedselsdato(LocalDate.of(2000, 1, 1), null, null)
         val pdlNavn = PdlNavn("Name", "MiddleName", "LastName", null, null)
         val pdlAdressebskyttelse = PdlAdressebskyttelse(bekyttelse, null, null)
-        return PdlPerson(Lists.list(pdlFoedsel), Lists.list(pdlNavn), Lists.list(pdlAdressebskyttelse))
+        return PdlPerson(Lists.list(pdlFoedselsdato), Lists.list(pdlNavn), Lists.list(pdlAdressebskyttelse))
     }
 
     private fun <T> any(): T = Mockito.any()

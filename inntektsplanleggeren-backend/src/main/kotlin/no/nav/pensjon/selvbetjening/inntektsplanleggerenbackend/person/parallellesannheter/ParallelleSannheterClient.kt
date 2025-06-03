@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.AdressebeskyttelseParallelleSannheterContainer
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.FoedselParallelleSannheterContainer
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.FoedselsdatoParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.NavnParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import org.slf4j.Logger
@@ -20,29 +20,29 @@ class ParallelleSannheterClient(private val webClient: WebClient,
 
     private val logger: Logger = LoggerFactory.getLogger(ParallelleSannheterClient::class.java)
 
-    fun decideFoedsel(foedselSannheter: FoedselParallelleSannheterContainer): FoedselParallelleSannheterContainer {
-        val path = "/api/foedsel"
+    fun decideFoedselsdato(foedselsdatoSannheter: FoedselsdatoParallelleSannheterContainer): FoedselsdatoParallelleSannheterContainer {
+        val path = "/api/foedselsdato"
         try {
             return webClient
                 .post()
                 .uri("$url$path")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .bodyValue(foedselSannheter)
+                .bodyValue(foedselsdatoSannheter)
                 .retrieve()
-                .bodyToMono(FoedselParallelleSannheterContainer::class.java)
+                .bodyToMono(FoedselsdatoParallelleSannheterContainer::class.java)
                 .block()
-                ?.lockDecision()?: FoedselParallelleSannheterContainer(null)
+                ?.lockDecision()?: FoedselsdatoParallelleSannheterContainer(null)
         } catch (e: WebClientResponseException) {
             handleErrorResponse(e, path)
         } catch (e: Exception) {
             handleUnexpectedError(e, path)
         }
 
-        return FoedselParallelleSannheterContainer(null)
+        return FoedselsdatoParallelleSannheterContainer(null)
     }
 
     fun decideNavn(navnSannheter: NavnParallelleSannheterContainer): NavnParallelleSannheterContainer {
-        val path = "/api/foedsel"
+        val path = "/api/navn"
         try {
             return webClient
                 .post()
