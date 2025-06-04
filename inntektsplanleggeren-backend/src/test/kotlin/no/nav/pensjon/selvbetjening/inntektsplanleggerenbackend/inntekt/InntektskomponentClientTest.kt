@@ -32,7 +32,7 @@ class InntektskomponentClientTest: WebClientTest()  {
     override fun setup() {
         super.setup()
         inntektskomponentClient = InntektskomponentClient(
-            url = baseUrl, webClient = WebClient.create(), scope = "", audience = "", tokenService = tokenService, azureAdService = azureAdService
+            url = baseUrl, webClient = WebClient.create(), scope = "", tokenService = tokenService, azureAdService = azureAdService
         )
     }
 

@@ -26,7 +26,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 class InntektskomponentClient(
     @Value("\${inntektskomponenten.endpoint.url}") private val url: String,
     @Value("\${inntektskomponenten.scope}") private val scope: String,
-    @Value("\${inntektskomponenten.audience}") private val audience: String,
     private val webClient: WebClient,
     private val tokenService: TokenService,
     private val azureAdService: AzureAdService
@@ -39,7 +38,7 @@ class InntektskomponentClient(
     ): HentForventetInntektResponse {
         val path = "/api/v1/forventetinntekt"
         try {
-            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .get()
@@ -81,7 +80,7 @@ class InntektskomponentClient(
             abonnerteInntekterIdentOgPeriodeListe
         )
         try {
-            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .post()
