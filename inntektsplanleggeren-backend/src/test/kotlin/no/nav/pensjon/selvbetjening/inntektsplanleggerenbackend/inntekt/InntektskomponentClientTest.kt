@@ -64,7 +64,7 @@ class InntektskomponentClientTest: WebClientTest()  {
             inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal")
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
-        assertEquals("/api/v1/hentabonnerteinntekterbolk", exception.service)
+        assertEquals("/rs/api/v1/hentabonnerteinntekterbolk", exception.service)
     }
 
     @Test
@@ -74,7 +74,7 @@ class InntektskomponentClientTest: WebClientTest()  {
             inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal")
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
-        assertEquals("/api/v1/hentabonnerteinntekterbolk", exception.service)
+        assertEquals("/rs/api/v1/hentabonnerteinntekterbolk", exception.service)
     }
 
     @Test
@@ -89,7 +89,7 @@ class InntektskomponentClientTest: WebClientTest()  {
             inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal")
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
-        assertEquals("/api/v1/hentabonnerteinntekterbolk", exception.service)
+        assertEquals("/rs/api/v1/hentabonnerteinntekterbolk", exception.service)
         val logsList = listAppender.list
         assertEquals("Bad request {\"msg\": \"The request is bad\"}", logsList.get(0).getMessage())
     }
@@ -207,7 +207,7 @@ class InntektskomponentClientTest: WebClientTest()  {
             inntektskomponentClient.hentForventetInntekt("12345678901", listOf(2024))
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
-        assertEquals("/api/v1/forventetinntekt", exception.service)
+        assertEquals("/rs/api/v1/forventetinntekt", exception.service)
     }
 
     @Test
@@ -217,7 +217,7 @@ class InntektskomponentClientTest: WebClientTest()  {
             inntektskomponentClient.hentForventetInntekt("12345678901", listOf(2024))
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
-        assertEquals("/api/v1/forventetinntekt", exception.service)
+        assertEquals("/rs/api/v1/forventetinntekt", exception.service)
     }
 
     private fun hentForventetInntektResponse200(): MockResponse {
