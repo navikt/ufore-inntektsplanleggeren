@@ -66,7 +66,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     />
                     <div className="description-card">
                         <ReadMore header="Inntekt du skal legge inn">
-                            <p>Du skal legge inn pensjonsgivende inntekter.</p>
+                            <p>Du skal legge inn annen forelders pensjonsgivende inntekter.</p>
                             <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
                             <List className="listCompact">
                                 <List.Item>lønn fra arbeidsgiver</List.Item>
@@ -153,21 +153,25 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <ReadMore header="Pensjoner du skal legge inn" className="readmoreCompact">
                         <VStack gap="4">
                             <BodyLong>Legg inn annen forelders pensjoner før skatt. Legg inn pensjoner fra både private og offentlige ordninger.</BodyLong>
-                            <BodyShort>Du skal ikke legge inn</BodyShort>
-                            <List as="ul">
-                                <List.Item>alderspensjon fra oss</List.Item>
-                                <List.Item>uføretrygd fra oss</List.Item>
-                                <List.Item>AFP i privat sektor</List.Item>
-                                <List.Item>AFP fra Statens pensjonskasse hvis du er under 65 år</List.Item>
-                            </List>
-                            <BodyShort>Du skal for eksempel legge inn</BodyShort>
-                            <List as="ul">
-                                <List.Item>AFP offentlig</List.Item>
-                                <List.Item>uførepensjon fra andre enn oss</List.Item>
-                                <List.Item>introduksjonsstønad</List.Item>
-                                <List.Item>barnepensjon</List.Item>
-                                <List.Item>supplerende stønad</List.Item>
-                            </List>
+                            <div>
+                                <BodyShort>Du skal ikke legge inn</BodyShort>
+                                <List className="listCompact">
+                                    <List.Item>alderspensjon fra oss</List.Item>
+                                    <List.Item>uføretrygd fra oss</List.Item>
+                                    <List.Item>AFP i privat sektor</List.Item>
+                                    <List.Item>AFP fra Statens pensjonskasse hvis du er under 65 år</List.Item>
+                                </List>
+                            </div>
+                            <div>
+                                <BodyShort>Du skal for eksempel legge inn</BodyShort>
+                                <List className="listCompact">
+                                    <List.Item>AFP offentlig</List.Item>
+                                    <List.Item>uførepensjon fra andre enn oss</List.Item>
+                                    <List.Item>introduksjonsstønad</List.Item>
+                                    <List.Item>barnepensjon</List.Item>
+                                    <List.Item>supplerende stønad</List.Item>
+                                </List>
+                            </div>
                         </VStack>
                     </ReadMore>
                 </VStack>

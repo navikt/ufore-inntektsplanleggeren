@@ -151,17 +151,24 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange('andrePensjonsgivendeYtelser')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn" className="listCompact">
+                    <ReadMore header="Pensjoner du skal legge inn">
                         <VStack gap="4">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss, før skatt.</BodyLong>
-                            <List as="ul" description="Du skal ikke legge inn">
-                                <List.Item>alderspensjon fra oss</List.Item>
-                                <List.Item>uføretrygd fra oss</List.Item>
-                            </List>
-                            <List description="Du skal for eksempel legge inn">
-                                <List.Item>uførepensjon fra andre enn oss</List.Item>
-                                <List.Item>tjenestepensjon</List.Item>
-                            </List>
+
+                            <div>
+                                <BodyShort>Du skal ikke legge inn</BodyShort>
+                                <List className="listCompact">
+                                    <List.Item>alderspensjon fra oss</List.Item>
+                                    <List.Item>uføretrygd fra oss</List.Item>
+                                </List>
+                            </div>
+                            <div>
+                                <BodyShort>Du skal for eksempel legge inn</BodyShort>
+                                <List className="listCompact">
+                                    <List.Item>uførepensjon fra andre enn oss</List.Item>
+                                    <List.Item>tjenestepensjon</List.Item>
+                                </List>
+                            </div>
                             <BodyLong>Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.</BodyLong>
                         </VStack>
                     </ReadMore>
