@@ -1,22 +1,24 @@
-import {BodyLong, Button, Heading, HStack, Loader, VStack} from '@navikt/ds-react'
-import {useContext, useState} from 'react'
+import { BodyLong, Button, Heading, HStack, Loader, VStack } from '@navikt/ds-react'
+import { useContext, useState } from 'react'
 import './PreviousYearPage.css'
-import {Link as RouterLink, useNavigate} from 'react-router-dom'
-import {FormStateContext} from '@/context/FormData'
-import {getInntekter} from '@/api/apiFetching'
-import {DinInntektTable} from '@/components/common/DinInntektTable'
-import {belopSum} from '@/common/Utils'
-import {DataContext} from '@/DataContextProvider'
-import {FormatKroner} from '@/components/utils/FormatKroner'
-import {ArrowLeftIcon, ArrowRightIcon} from '@navikt/aksel-icons'
-import {getFullPathForPage, PageLinks} from '@/FormContainer'
-import {ErrorCode, ErrorResponse} from '@/components/common/Error'
-import {PreviousExpectedIncomeTable} from '@/components/previousYear/PreviousExpectedIncomeTable'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { FormStateContext } from '@/context/FormData'
+import { getInntekter } from '@/api/apiFetching'
+import { DinInntektTable } from '@/components/common/DinInntektTable'
+import { belopSum } from '@/common/Utils'
+import { DataContext } from '@/DataContextProvider'
+import { FormatKroner } from '@/components/utils/FormatKroner'
+import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
+import { getFullPathForPage, PageLinks } from '@/FormContainer'
+import { ErrorCode, ErrorResponse } from '@/components/common/Error'
+import { PreviousExpectedIncomeTable } from '@/components/previousYear/PreviousExpectedIncomeTable'
+import LonnFordelerOgPengestotter from '../common/LonnFordelerOgPengestotter'
+import PensjonFraAndreEnnNav from '../common/PensjonFraAndreEnnNav'
 
 export const PreviousYearPage = () => {
     const navigate = useNavigate()
-    const {previousYearInntekterResponse, setInntekterResponse, setErrorMessage} = useContext(DataContext)
-    const {selectedYear, previousYear, setBrukerinntekt, setAnnenForelderInntekt} = useContext(FormStateContext)
+    const { previousYearInntekterResponse, setInntekterResponse, setErrorMessage } = useContext(DataContext)
+    const { selectedYear, previousYear, setBrukerinntekt, setAnnenForelderInntekt } = useContext(FormStateContext)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const onClickButton = async () => {
@@ -37,61 +39,41 @@ export const PreviousYearPage = () => {
     }
 
     if (previousYearInntekterResponse === null) {
-        return <Loader/>
+        return <Loader />
     }
 
     return (
-        <VStack className='page'>
+        <VStack className="page">
             <VStack className="page">
-            <VStack gap="4">
-                {(previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 ||
-                    previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0) && (
-                    <VStack>
-                        <Heading level="2" size="medium">
-                            {previousYearInntekterResponse.uforeHeleAaret ? `Din inntekt hittil i ${previousYear}` : `Din inntekt samtidig med uføretrygd i ${previousYear}`}
-                        </Heading>
-                        <BodyLong>
-                            Under kan du se hvilken inntekt som er registrert hos Skatteetaten
-                            {previousYearInntekterResponse.uforeHeleAaret ? '.' : ' den delen av året du har hatt uføretrygd.'}
-                        </BodyLong>
-                    </VStack>
-                )}
+                <VStack gap="4">
+                    {(previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 ||
+                        previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0) && (
+                        <VStack>
+                            <Heading level="2" size="medium">
+                                {previousYearInntekterResponse.uforeHeleAaret
+                                    ? `Din inntekt hittil i ${previousYear}`
+                                    : `Din inntekt samtidig med uføretrygd i ${previousYear}`}
+                            </Heading>
+                            <BodyLong>
+                                Under kan du se hvilken inntekt som er registrert hos Skatteetaten
+                                {previousYearInntekterResponse.uforeHeleAaret ? '.' : ' den delen av året du har hatt uføretrygd.'}
+                            </BodyLong>
+                        </VStack>
+                    )}
 
-                {previousYearInntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0 && (
-                    <DinInntektTable data={previousYearInntekterResponse.arbeidsinntektOgYtelserHittilIAar}
-                                     type="arbeidsgiver">
-                        <Heading size={'xsmall'}>Arbeidsinntekt og pengestøtter</Heading>
-                        <BodyLong>
-                            Vi har registrert at du har fått{' '}
-                            <strong>
-                                <FormatKroner
-                                    value={belopSum(previousYearInntekterResponse.arbeidsinntektOgYtelserHittilIAar)}/>
-                            </strong>{' '}
-                            i arbeidsinntekt og pengestøtter
-                            {previousYearInntekterResponse.uforeHeleAaret
-                                ? ' hittil i år.'
-                                : ' i perioden du har hatt uføretrygd.'}{' '}
-                        </BodyLong>
-                    </DinInntektTable>
-                )}
-                {previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
-                    <DinInntektTable data={previousYearInntekterResponse.pensjonFraAndreHittilIAar}
-                                     type="pensjonsordning">
-                        <Heading size={'xsmall'}>Pensjoner fra andre enn folketrygden</Heading>
-                        <BodyLong>
-                            Vi har registrert at du har fått{' '}
-                            <strong>
-                                <FormatKroner
-                                    value={belopSum(previousYearInntekterResponse.pensjonFraAndreHittilIAar)}/>
-                            </strong>{' '}
-                            i pensjoner fra andre enn folketrygden
-                            {previousYearInntekterResponse.uforeHeleAaret
-                                ? ' hittil i år.'
-                                : ' i perioden du har hatt uføretrygd.'}{' '}
-                        </BodyLong>
-                    </DinInntektTable>
-                )}
-            </VStack>
+                    {previousYearInntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0 && (
+                        <LonnFordelerOgPengestotter
+                            uforeHeleAaret={previousYearInntekterResponse.uforeHeleAaret}
+                            inntekter={previousYearInntekterResponse.arbeidsinntektOgYtelserHittilIAar}
+                        />
+                    )}
+                    {previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
+                        <PensjonFraAndreEnnNav
+                            pensjonFraAndre={previousYearInntekterResponse.pensjonFraAndreHittilIAar}
+                            uforeHeleAaret={previousYearInntekterResponse.uforeHeleAaret}
+                        />
+                    )}
+                </VStack>
 
                 <VStack gap="4">
                     <Heading level="2" size="medium">
@@ -117,23 +99,10 @@ export const PreviousYearPage = () => {
             </VStack>
 
             <HStack gap="4">
-                <Button
-                    as={RouterLink}
-                    to={getFullPathForPage(PageLinks.INDEX)}
-                    iconPosition="left"
-                    icon={<ArrowLeftIcon aria-hidden/>}
-                    variant="secondary"
-                >
+                <Button as={RouterLink} to={getFullPathForPage(PageLinks.INDEX)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
                     Tilbake
                 </Button>
-                <Button
-                    type="button"
-                    variant="primary"
-                    iconPosition="right"
-                    icon={<ArrowRightIcon aria-hidden/>}
-                    onClick={onClickButton}
-                    loading={isLoading}
-                >
+                <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={onClickButton} loading={isLoading}>
                     Registrer inntekt for {selectedYear}
                 </Button>
             </HStack>
