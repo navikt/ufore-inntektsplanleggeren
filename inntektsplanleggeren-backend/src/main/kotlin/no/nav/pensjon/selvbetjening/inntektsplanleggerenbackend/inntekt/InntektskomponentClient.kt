@@ -36,7 +36,7 @@ class InntektskomponentClient(
         pid: String,
         inntektsAar: List<Int>
     ): HentForventetInntektResponse {
-        val path = "/api/v1/forventetinntekt"
+        val path = "/rs/api/v1/forventetinntekt"
         try {
             return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
@@ -72,7 +72,7 @@ class InntektskomponentClient(
         ainntektsfilter: String,
         formaal: String
     ): HentAbonnerteInntekterBolkResponse {
-        val path = "/api/v1/hentabonnerteinntekterbolk"
+        val path = "/rs/api/v1/hentabonnerteinntekterbolk"
         val request = HentAbonnerteInntekterBolkRequest(
             ainntektsfilter,
             null,           // filterversion, use null
