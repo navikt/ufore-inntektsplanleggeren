@@ -95,11 +95,9 @@ spec:
     - name: SKJERMING_SCOPE
       value: api://prod-gcp.nom.skjermede-personer-pip/.default
     - name: INNTEKTSKOMPONENTEN_URL
-      value: https://team-inntekt-proxy.prod-fss-pub.nais.io/proxy/inntektskomponenten/rs
+      value: https://ikomp.prod-fss-pub.nais.io
     - name: INNTEKTSKOMPONENTEN_SCOPE
-      value: api://prod-fss.team-inntekt.inntektskomponenten/.default
-    - name: INNTEKTSKOMPONENTEN_AUD
-      value: prod-fss.team-inntekt.inntektskomponenten
+      value: api://prod-fss.team-inntekt.ikomp/.default
     - name: EREG_SERVICES_URL
       value: https://ereg-services.prod-fss-pub.nais.io
     - name: SKJERMET_TILGANG_GROUP_ID

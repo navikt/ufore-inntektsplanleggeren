@@ -26,7 +26,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 class InntektskomponentClient(
     @Value("\${inntektskomponenten.endpoint.url}") private val url: String,
     @Value("\${inntektskomponenten.scope}") private val scope: String,
-    @Value("\${inntektskomponenten.audience}") private val audience: String,
     private val webClient: WebClient,
     private val tokenService: TokenService,
     private val azureAdService: AzureAdService
@@ -37,9 +36,9 @@ class InntektskomponentClient(
         pid: String,
         inntektsAar: List<Int>
     ): HentForventetInntektResponse {
-        val path = "/api/v1/forventetinntekt"
+        val path = "/rs/api/v1/forventetinntekt"
         try {
-            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .get()
@@ -73,7 +72,7 @@ class InntektskomponentClient(
         ainntektsfilter: String,
         formaal: String
     ): HentAbonnerteInntekterBolkResponse {
-        val path = "/api/v1/hentabonnerteinntekterbolk"
+        val path = "/rs/api/v1/hentabonnerteinntekterbolk"
         val request = HentAbonnerteInntekterBolkRequest(
             ainntektsfilter,
             null,           // filterversion, use null
@@ -81,7 +80,7 @@ class InntektskomponentClient(
             abonnerteInntekterIdentOgPeriodeListe
         )
         try {
-            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, audience = audience, "", AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .post()
