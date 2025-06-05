@@ -90,6 +90,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                             Du skal ikke legge inn
                             <List className="listCompact">
                                 <List.Item>uføretrygd</List.Item>
+                                <List.Item>barnetrygd</List.Item>
                                 <List.Item>alderspensjon</List.Item>
                                 <List.Item>uførepensjon fra andre enn Nav skal oppgis i et annet felt dersom du har barnetillegg</List.Item>
                                 <List.Item>kapitalinntekt</List.Item>
