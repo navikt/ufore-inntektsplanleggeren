@@ -14,7 +14,7 @@ spec:
           for: 1m
           annotations:
             consequence: inntektsplanleggeren backend application is unavailable
-            action: https://logs.adeo.no/app/r/s/FEsy4
+            action: https://logs.adeo.no/app/r/s/sbvib
           labels:
             namespace: pensjonselvbetjening # required
             severity: critical
@@ -23,7 +23,7 @@ spec:
           for: 5m
           annotations:
             consequence: inntektsplanleggeren backend failing deployment
-            action: https://logs.adeo.no/app/r/s/FEsy4
+            action: https://logs.adeo.no/app/r/s/sbvib
           labels:
             namespace: pensjonselvbetjening # required
             severity: critical
@@ -32,7 +32,7 @@ spec:
           for: 1m
           annotations:
             consequence: inntektsplanleggeren backend 401 Unauthorized
-            action: https://logs.adeo.no/app/r/s/FEsy4
+            action: https://logs.adeo.no/app/r/s/sbvib
           labels:
             namespace: pensjonselvbetjening # required
             severity: warning
@@ -41,7 +41,7 @@ spec:
           for: 1m
           annotations:
             consequence: inntektsplanleggeren backend 500 Internal Server Error
-            action: https://logs.adeo.no/app/r/s/FEsy4
+            action: https://logs.adeo.no/app/r/s/sbvib
           labels:
             namespace: pensjonselvbetjening # required
             severity: warning
