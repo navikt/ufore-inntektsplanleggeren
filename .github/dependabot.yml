@@ -2,11 +2,6 @@ version: 2
 updates:
   - package-ecosystem: maven
     directories:
-      - /familieforhold-backend/
-      - /alderspensjon-endringssoknad-backend/
-      - /opptjening-overforomsorgsopptjening-backend/
-      - /dinpensjon-backend/
-      - /uforetrygd-backend/
       - /inntektsplanleggeren-backend/
     schedule:
       interval: weekly
@@ -15,13 +10,6 @@ updates:
 
   - package-ecosystem: npm
     directories:
-      - /familieforhold-frontend/
-      - /alderspensjon-endringssoknad-frontend/
-      - /opptjening-overforomsorgsopptjening-frontend/
-      - /bytt-bruker-frontend/
-      - /representasjon-banner-frontend/
-      - /dinpensjon-frontend/
-      - /uforetrygd-frontend/
       - /inntektsplanleggeren-frontend/
     schedule:
       interval: weekly
