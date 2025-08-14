@@ -1,6 +1,6 @@
-= Pensjon-selvbetjening Inntektsplanleggeren
+= Inntektsplanleggeren
 :toc: left
-:toclevels: 3
+:toclevels: 2
 :doctype: book
 :revnumber: 1.1
 :revdate: 2024-11-25
@@ -15,8 +15,6 @@
 
 include::beskrivelse.adoc[]
 
-include::apier.adoc[]
+include::backend.adoc[]
 
-include::tilgangskontroll.adoc[]
-
-include::auditlogg.adoc[]
+include::frontend.adoc[]
