@@ -1,0 +1,7 @@
+== Inntektsplanleggeren backend
+
+include::apier.adoc[]
+
+include::tilgangskontroll.adoc[]
+
+include::auditlogg.adoc[]
