@@ -1,2 +1,2 @@
 == Inntektsplanleggeren frontend
-tbc.
+Documentation for the frontend module will be added here, including architecture overview, setup instructions, and usage guidelines.
