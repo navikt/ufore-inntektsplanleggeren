@@ -1,0 +1,35 @@
+name: Label dependabot pull requests
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  label-dependabot-pr:
+    name: Label dependabot PRs per app
+    permissions:
+      pull-requests: write
+      repository-projects: read
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && !github.event.pull_request.head.repo.fork }}
+    timeout-minutes: 15
+    steps:
+      - name: Fetch Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+
+      - name: Label major
+        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' }}
+        run: gh pr edit "$PR_URL" --add-label pensjonsbruker-major-update --repo $GITHUB_REPOSITORY
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Label patch and minor
+        if: ${{ 
+          (steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor')
+          }}
+        run: gh pr edit "$PR_URL" --add-label automerge${{ steps.dependabot-metadata.outputs.directory }} --repo $GITHUB_REPOSITORY
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
