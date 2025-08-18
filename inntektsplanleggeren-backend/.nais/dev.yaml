@@ -48,8 +48,6 @@ spec:
     requests:
       cpu: 200m
       memory: 256Mi
-  secureLogs:
-    enabled: true
   prometheus:
     enabled: true
     path: actuator/prometheus
@@ -94,7 +92,7 @@ spec:
       value: https://pensjon-parallelle-sannheter.intern.dev.nav.no
     - name: PDL_URL
       value: https://pdl-api.dev-fss-pub.nais.io/graphql
-    - name: PDL_SCOPE
+    - name: PDL_SCOPEls -labels
       value: api://dev-fss.pdl.pdl-api/.default
     - name: PDL_AUDIENCE
       value: dev-fss:pdl:pdl-api
