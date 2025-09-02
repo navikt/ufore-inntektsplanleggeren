@@ -1,4 +1,4 @@
-import { Alert, BodyLong, Button, Heading, HStack, ReadMore, VStack, Link, HelpText, BodyShort } from '@navikt/ds-react'
+import { Alert, BodyLong, Button, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
 import { FormEvent, MouseEvent, useContext, useEffect } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
@@ -78,28 +78,32 @@ export const BeregningPage = () => {
 
                 {showSimulering ? (
                     <>
-                        <section aria-hidden={true}>
-                            <Heading level="4" size="medium">
-                                Oversikt i graf
-                            </Heading>
-                            <div style={{ marginTop: '10px' }}>
-                                <Graph simulationResult={simulationResponse?.result} />
-                            </div>
-                        </section>
+                        {!simulationResponse?.messages.some((message) => message.messageCode === MessageCodes.SIMULERING_CONTAINS_OPPHORTE_YTELSER) && (
+                            <>
+                                <section aria-hidden={true}>
+                                    <Heading level="4" size="medium">
+                                        Oversikt i graf
+                                    </Heading>
+                                    <div style={{ marginTop: '10px' }}>
+                                        <Graph simulationResult={simulationResponse?.result} />
+                                    </div>
+                                </section>
 
-                        <section>
-                            <Heading level="4" size="medium">
-                                <HStack>
-                                    Oversikt i tabell
-                                    <HelpText id="helpbox">
-                                        <BodyLong>"I dag" viser årlig beløp hentet fra vedtaket som gjelder nå.</BodyLong>
-                                        <BodyLong>"Med dine endringer" viser årlig beløp med endringene du nå har lagt inn.</BodyLong>
-                                    </HelpText>
-                                </HStack>
-                            </Heading>
+                                <section>
+                                    <Heading level="4" size="medium">
+                                        <HStack>
+                                            Oversikt i tabell
+                                            <HelpText id="helpbox">
+                                                <BodyLong>"I dag" viser årlig beløp hentet fra vedtaket som gjelder nå.</BodyLong>
+                                                <BodyLong>"Med dine endringer" viser årlig beløp med endringene du nå har lagt inn.</BodyLong>
+                                            </HelpText>
+                                        </HStack>
+                                    </Heading>
 
-                            {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
-                        </section>
+                                    {simulationResponse?.result && <SimulationTable simulationResult={simulationResponse.result}></SimulationTable>}
+                                </section>
+                            </>
+                        )}
                         <section>
                             <BodyLong>
                                 <strong>
@@ -138,6 +142,9 @@ export const BeregningPage = () => {
                                 ) : null}
                             </ReadMore>
                         </section>
+                        {simulationResponse?.messages.some((message) => message.messageCode === MessageCodes.SIMULERING_CONTAINS_OPPHORTE_YTELSER) && (
+                            <Alert variant="info">Total årlig beregning vil først være mulig å se fra neste år.</Alert>
+                        )}
                     </>
                 ) : (
                     <Alert variant="warning">

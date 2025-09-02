@@ -75,7 +75,7 @@ export type SimulationResult = {
   barnetilleggFellesbarn: SimulationDetail | null
   barnetilleggSaerkullsbarn: SimulationDetail | null
   gjenlevendetillegg: SimulationDetail | null
-  sum: SimulationDetail
+  sum: SimulationDetail,
 }
 
 export type SendApplicationResponse = {
