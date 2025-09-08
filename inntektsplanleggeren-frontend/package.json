@@ -22,7 +22,7 @@
     },
     "dependencies": {
         "@navikt/oasis": "^3.7.0",
-        "@navikt/steng-for-regulering": "^0.0.6",
+        "@navikt/steng-for-regulering": "^0.0.7",
         "cors": "^2.8.5",
         "dotenv": "17.2.2",
         "express": "^4.21.2",
