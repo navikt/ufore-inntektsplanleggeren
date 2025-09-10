@@ -258,7 +258,8 @@ class SimuleringServiceTest {
             false,
             LocalDate.now(),
             null,
-            400000
+            400000,
+            false
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
@@ -412,7 +413,8 @@ class SimuleringServiceTest {
             false,
             LocalDate.now(),
             null,
-            400000
+            400000,
+            false
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
@@ -480,7 +482,8 @@ class SimuleringServiceTest {
             false,
             LocalDate.now(),
             null,
-            null
+            null,
+            false
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
@@ -547,7 +550,9 @@ class SimuleringServiceTest {
             false,
             LocalDate.now(),
             null,
-            null
+            null,
+            false
+
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")
@@ -615,7 +620,9 @@ class SimuleringServiceTest {
             false,
             LocalDate.now(),
             null,
-            null
+            null,
+            false
+
         )
         `when`(penClient.simulerInntektsendring(any(), any(), any(), any())).thenReturn(expectedSimuleringsresultat)
         `when`(tokenService.determineLoggedInUser()).thenReturn("Saksbehandler Sak Sakbehandlersen")

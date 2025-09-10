@@ -29,6 +29,8 @@ class SimuleringValidator(val personService: PersonService) {
 
         validateMotregning(simuleringsresultat)?.let { messages.add(it) }
 
+        validateOpphørteYtelser(simuleringsresultat)?.let { messages.add(it) }
+
         return messages
     }
 
@@ -158,6 +160,13 @@ class SimuleringValidator(val personService: PersonService) {
     private fun validateMotregning(simuleringsresultat: SimulerEndringUforetrygdResponse): InntektsplanleggerMessage? {
         if (simuleringsresultat.containsMotregning) {
             return InntektsplanleggerMessage(InntektsplanleggerMessageCode.SIMULERING_CONTAINS_MOTREGNING)
+        }
+        return null
+    }
+
+    private fun validateOpphørteYtelser(simuleringsresultat: SimulerEndringUforetrygdResponse): InntektsplanleggerMessage? {
+        if(simuleringsresultat.harOpphorteYtelseskomponenter) {
+            return InntektsplanleggerMessage(InntektsplanleggerMessageCode.SIMULERING_CONTAINS_OPPHORTE_YTELSER)
         }
         return null
     }

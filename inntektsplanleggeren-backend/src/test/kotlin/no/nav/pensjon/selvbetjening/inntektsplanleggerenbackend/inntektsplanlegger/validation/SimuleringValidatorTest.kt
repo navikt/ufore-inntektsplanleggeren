@@ -392,7 +392,8 @@ class SimuleringValidatorTest {
         hasOpenInntektsendringskrav = hasOpenInntektsendringskrav,
         firstVedtakFom = LocalDate.now().withDayOfMonth(1),
         lastVedtakTom = lastVedtakTom,
-        null
+        null,
+        false
     )
 
     companion object {

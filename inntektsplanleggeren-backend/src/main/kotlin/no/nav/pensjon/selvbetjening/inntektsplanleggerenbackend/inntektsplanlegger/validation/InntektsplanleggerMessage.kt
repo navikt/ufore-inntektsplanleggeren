@@ -91,6 +91,10 @@ enum class InntektsplanleggerMessageCode(val type: InntektsplanleggerMessageType
     ILLEGAL_SIMULERINGSAAR(
         InntektsplanleggerMessageType.ERROR,
         "Valgt simuleringsår er ikke et gyldig valg på nåværende tidspunkt."
+    ),
+    SIMULERING_CONTAINS_OPPHORTE_YTELSER(
+        InntektsplanleggerMessageType.WARNING,
+        "Bruker har opphørte delytelser som gjør at årlig beregnet uføretrygd kan bli misvisende."
     )
 }
 

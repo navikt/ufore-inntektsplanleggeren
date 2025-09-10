@@ -13,7 +13,7 @@ data class Simuleringsresultat(
     val barnetilleggFellesbarn: SimuleringAmounts?,
     val barnetilleggSaerkullsbarn: SimuleringAmounts?,
     val gjenlevendetillegg: SimuleringAmounts?,
-    val sum: SimuleringAmounts
+    val sum: SimuleringAmounts,
 )
 
 data class SimuleringAmounts(
