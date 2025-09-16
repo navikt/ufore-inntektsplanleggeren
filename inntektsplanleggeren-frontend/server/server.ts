@@ -24,14 +24,9 @@ const isDevelopment = process.env.NODE_ENV === 'dev' || process.env.NODE_ENV ===
 dotenv.config()
 
 if (process.env.NODE_ENV === 'dev') {
-    dotenv.config({ path: '.env.dev' })
-    dotenv.config({ path: '.env.local' })
-
+    dotenv.config({ path: ['.env.dev', '.env.local'], override: true })
 } else if (process.env.NODE_ENV === 'dev-local') {
-    dotenv.config({ path: '.env.dev' })
-    dotenv.config({ path: '.env.dev-local' })
-    dotenv.config({ path: '.env.local' })
-
+    dotenv.config({ path: ['.env.dev', '.env.dev-local', '.env.local'], override: true })
 }
 
 const logger = winston.createLogger({
