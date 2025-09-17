@@ -177,7 +177,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
         })
 })
 
-app.get('*', async (req, res) => {
+app.get('/*splat', async (req, res) => {
     if (AUTH_PROVIDER === 'azure') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
