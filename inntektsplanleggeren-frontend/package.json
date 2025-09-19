@@ -25,7 +25,7 @@
         "@navikt/steng-for-regulering": "^0.0.7",
         "cors": "^2.8.5",
         "dotenv": "17.2.2",
-        "express": "^4.21.2",
+        "express": "^5.1.0",
         "express-prom-bundle": "^8.0.0",
         "http-proxy-middleware": "^3.0.5",
         "unleash-client": "^6.7.0",
