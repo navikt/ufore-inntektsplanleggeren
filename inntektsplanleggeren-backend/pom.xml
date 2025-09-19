@@ -18,9 +18,8 @@
 	<properties>
 		<java.version>21</java.version>
 		<kotlin.version>2.2.10</kotlin.version>
-		<jackson-version>2.20.0</jackson-version>
+		<jackson.version>2.20.0</jackson.version>
 		<logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
-		<spring-boot-starter-security.version>3.5.6</spring-boot-starter-security.version>
 		<mockwebserver.version>5.1.0</mockwebserver.version>
 		<micrometer.version>1.15.4</micrometer.version>
 		<logback.version>1.5.18</logback.version>
@@ -30,7 +29,6 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>6.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -85,7 +83,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>6.2.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -98,12 +95,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>${spring-boot-starter-security.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>6.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -112,7 +108,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>6.2.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -156,30 +151,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
-			<version>${jackson-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<!-- TODO: Endre til jackson-version ved neste oppdatering -->
-			<version>2.20</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
 			<artifactId>logstash-logback-encoder</artifactId>
 			<version>${logstash-logback-encoder.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
