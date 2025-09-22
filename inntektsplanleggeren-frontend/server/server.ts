@@ -19,14 +19,14 @@ const metricsMiddleware = promBundle({ includeMethod: true })
 const app = express()
 const __dirname = process.cwd()
 
-const isDevelopment = process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'dev-local'
+const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development-local'
 
 dotenv.config()
 
-if (process.env.NODE_ENV === 'dev') {
-    dotenv.config({ path: ['.env.dev', '.env.local'], override: true })
-} else if (process.env.NODE_ENV === 'dev-local') {
-    dotenv.config({ path: ['.env.dev', '.env.dev-local', '.env.local'], override: true })
+if (process.env.NODE_ENV === 'development') {
+    dotenv.config({ path: ['.env.development', '.env.local'], override: true })
+} else if (process.env.NODE_ENV === 'development-local') {
+    dotenv.config({ path: ['.env.development', '.env.development-local', '.env.local'], override: true })
 }
 
 const logger = winston.createLogger({
