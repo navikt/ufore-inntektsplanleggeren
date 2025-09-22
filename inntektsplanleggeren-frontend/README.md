@@ -1,18 +1,12 @@
 # Inntektsplanleggeren
 
 ## Start mock
-
 1. Installer avhentigheter: `npm i`
-2. Start: `npm run dev`
+2. Start: `npm run mock`
 
-## Start mot Q2
-
+## Start mot Q2 eller lokal backend
 1. `env-fetch-secrets`
-2. Sett miljøvariabler:
-
-- `INNTEKTSPLANLEGGEREN_BACKEND_URL`: <https://inntektsplanleggeren-backend-q2.intern.dev.nav.no>
-- `INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE`: dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2
-
-3. Hent access token fra <https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2>
-4. Sett `ACCESS_TOKEN` miljøvariabel
-5. Start: `npm run dev-q2`
+2. Lag filen .env.local og legg til variablen `ACCESS_TOKEN` i den. Fila skal ignoreres av git.
+   - Du finner tokenet her <https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2>
+3. Start: `npm run q2` eller `npm run local`
+    - For lokal kjøring, kjør opp backend på samme port som ligger i .env.development-local
