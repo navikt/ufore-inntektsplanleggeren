@@ -2,12 +2,13 @@ name: "(Automerge): Inntektsplanleggeren backend"
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0,10,20,30 11 * * 1,2,3,4,5'
+    # 8 betyr 9 vintertid og 10 sommertid
+    - cron: '0,10,20,30 8 * * 1,2,3,4,5'
 
 jobs:
   merge-dependabot-pr-inntektsplanleggeren-backend:
     name: Merge dependabot pr for inntektsplanleggeren backend
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/merge-dependabot-pr.yml@main
+    uses: ./.github/workflows/merge-dependabot-pr.yml
     permissions:
       actions: write
       checks: read
