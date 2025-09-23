@@ -1,3 +1,4 @@
+#Hentet og modifisert fra https://github.com/navikt/pensjonsbruker-github-actions-workflows
 name: Merge dependabot pr
 on:
   workflow_call:
@@ -96,7 +97,7 @@ jobs:
 
             const allePrs = await Promise.all(filtrert)
             const mergeablePromise = allePrs
-                .filter((it) => it.checksOk)
+                .filter((it) => it.checksOk) //sjekker om alle githubsjekker er ok
                 .map(async (it) => {
                     const prdata = await github.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
                         owner: context.repo.owner,
@@ -110,13 +111,14 @@ jobs:
                     }
                 })
 
-
+            //mergeable er pr-er som faktisk kan merges
             const mergeable = (await Promise.all(mergeablePromise))
                 .filter((it) => {
                   return it.mergeable;
                 })
             console.log("mergeable: " + mergeable.length)
             
+            //Merger første pr i mergeable
             if (mergeable.length > 0) {
                 const pr = mergeable[0]
                 console.log('Merger PR', pr.title)
@@ -129,6 +131,7 @@ jobs:
             
               console.log('Starter main workflow')
             
+            //Kjører neste workflow som definert i WORKFLOW_ID
               await github.request(
                   'POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches',
                   {
