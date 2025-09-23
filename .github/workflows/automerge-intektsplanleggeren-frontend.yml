@@ -8,7 +8,7 @@ on:
 jobs:
   merge-dependabot-pr-inntektsplanleggeren-frontend:
     name: Merge dependabot pr for inntektsplanleggeren frontend
-    uses: ./.github/workflows/merge-dependabot-pr.yml@main
+    uses: ./.github/workflows/merge-dependabot-pr.yml
     permissions:
       actions: write
       checks: read
