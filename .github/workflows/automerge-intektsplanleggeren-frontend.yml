@@ -2,6 +2,7 @@ name: "(Automerge): Inntektsplanleggeren frontend"
 on:
   workflow_dispatch:
   schedule:
+    # 8 betyr 9 vintertid og 10 sommertid
     - cron: '35,40,45,50 8 * * 1,2,3,4,5'
 
 jobs:
