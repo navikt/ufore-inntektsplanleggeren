@@ -2,7 +2,25 @@
 <configuration>
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashAccessEncoder"/>
+        <encoder class="net.logstash.logback.encoder.AccessEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <statusCode/>
+                <requestedUrl/>
+                <elapsedTime/>
+                <contentLength/>
+                <remoteHost/>
+                <protocol/>
+                <threadName/>
+                <pattern>
+                    <pattern>
+                        {
+                        "nav-call-id": "%header{nav-call-id}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
 
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.access.common.net.URLEvaluator">

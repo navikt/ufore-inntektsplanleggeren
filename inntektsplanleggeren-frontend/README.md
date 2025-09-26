@@ -5,7 +5,7 @@
 2. Start: `npm run mock`
 
 ## Start mot Q2 eller lokal backend
-1. `env-fetch-secrets`
+1. Kjør `env-fetch-secrets` (krever nais login). Velg namespace pensjonselvbetjening og deployment inntektsplanleggeren-frontend-borger-q2
 2. Lag filen .env.local og legg til variablen `ACCESS_TOKEN` i den. Fila skal ignoreres av git.
    - Du finner tokenet her <https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2>
 3. Start: `npm run q2` eller `npm run local`

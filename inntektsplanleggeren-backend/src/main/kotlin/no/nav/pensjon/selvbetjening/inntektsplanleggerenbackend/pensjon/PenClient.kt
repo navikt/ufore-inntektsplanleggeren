@@ -1,8 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
@@ -45,7 +44,7 @@ class PenClient(
                         .post()
                         .uri("$url$path")
                         .header("Authorization", "Bearer $accessToken")
-                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .header(NAV_CALL_ID, getCurrentCallId())
                         .accept(MediaType.APPLICATION_JSON)
                         .bodyValue(
                             InnsendingRequest(
@@ -85,7 +84,7 @@ class PenClient(
                         .post()
                         .uri("$url$path")
                         .header("Authorization", "Bearer $accessToken")
-                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .header(NAV_CALL_ID, getCurrentCallId())
                         .accept(MediaType.APPLICATION_JSON)
                         .bodyValue(
                             SimuleringEndringUforetrygdRequest(
@@ -119,7 +118,7 @@ class PenClient(
                         .uri("$url$path?simuleringFom=$simuleringFom")
                         .header("fnr", pid)
                         .header("Authorization", "Bearer $accessToken")
-                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .header(NAV_CALL_ID, getCurrentCallId())
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(Pensjonsdata::class.java)
@@ -149,7 +148,7 @@ class PenClient(
                         .uri("$url$path?fom=$tidspkt&endringFom=$simuleringFom")
                         .header("fnr", pid)
                         .header("Authorization", "Bearer $accessToken")
-                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .header(NAV_CALL_ID, getCurrentCallId())
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(StatusInnsendingResponse::class.java)
