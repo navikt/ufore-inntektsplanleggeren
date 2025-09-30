@@ -10,6 +10,7 @@ import ensureEnv from './ensureEnv.js'
 import { initialize } from 'unleash-client'
 import crypto from 'crypto'
 import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
+import correlationIdMiddleware from './middleware/correlationId.js'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
@@ -159,6 +160,7 @@ app.get('/internal/health/readiness', (req, res) => {
 })
 app.use(stengForReguleringMiddleware({ env: isDevelopment ? 'dev' : 'prod', unleashClient: unleash }))
 app.use(metricsMiddleware)
+app.use(correlationIdMiddleware)
 app.use(loggerMiddleware(logger))
 
 app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {

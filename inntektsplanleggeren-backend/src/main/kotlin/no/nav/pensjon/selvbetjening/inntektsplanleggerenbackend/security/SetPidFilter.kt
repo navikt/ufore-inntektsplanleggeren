@@ -33,9 +33,10 @@ class SetPidFilter(
         } catch (e: Exception) {
             val path = request.requestURI
             when (e) {
-                is NoFullmaktPresentException -> forbiddenResponse(response, ErrorCode.NO_FULLMAKT_PRESENT, path)
-                is LoginLevelTooLowException -> forbiddenResponse(response, ErrorCode.LOGIN_LEVEL_TOO_LOW, path)
-                is VeilederUnauthorizedException -> forbiddenResponse(response, ErrorCode.VEILEDER_UNAUTHORIZED, path)
+                is NoFullmaktPresentException -> response.errorResponse(ErrorCode.NO_FULLMAKT_PRESENT, path, HttpStatus.FORBIDDEN)
+                is LoginLevelTooLowException -> response.errorResponse(ErrorCode.LOGIN_LEVEL_TOO_LOW, path, HttpStatus.FORBIDDEN)
+                is VeilederUnauthorizedException -> response.errorResponse(ErrorCode.VEILEDER_UNAUTHORIZED, path, HttpStatus.FORBIDDEN)
+                is ResponseStatusException -> response.errorResponse(ErrorCode.NO_PID_PRESENT, path, HttpStatus.BAD_REQUEST)
                 else -> throw e
             }
         }
@@ -68,21 +69,22 @@ class SetPidFilter(
         filterChain.doFilter(request, response)
     }
 
-    private fun forbiddenResponse(response: HttpServletResponse, errorCode: ErrorCode, path: String
+    private fun HttpServletResponse.errorResponse(
+        error: ErrorCode,
+        path: String,
+        status: HttpStatus,
     ) {
-        val forbiddenStatus = HttpStatus.FORBIDDEN.value()
-        val mapper = ObjectMapper()
         val errorResponse = SetPidFilterErrorResponse(
             timestamp = LocalDateTime.now().toString(),
-            status = forbiddenStatus,
-            error = HttpStatus.FORBIDDEN.name,
-            message = errorCode,
+            status = status.value(),
+            error = status.name,
+            message = error,
             path = path
         )
-        response.apply {
-            status = forbiddenStatus
-            setHeader("Content-Type", "application/json")
-            writer.write(mapper.writeValueAsString(errorResponse))
+        this.apply {
+            this.status = status.value()
+            this.setHeader("Content-Type", "application/json")
+            this.writer.write(ObjectMapper().writeValueAsString(errorResponse))
         }
     }
 

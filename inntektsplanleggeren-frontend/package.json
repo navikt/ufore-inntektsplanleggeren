@@ -6,9 +6,12 @@
     "main": "src/server/app.js",
     "scripts": {
         "local": "concurrently --kill-others-on-fail  \"vite --mode development \" \"nodemon --watch server/ --exec 'npm run build:server && NODE_ENV=development-local NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js'\"",
+        "local-veileder": "concurrently --kill-others-on-fail  \"vite --mode development-veileder \" \"nodemon --watch server/ --exec 'npm run build:server && NODE_ENV=development-local NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js'\"",
+        "debug": "concurrently --kill-others-on-fail \"vite --mode development\" \"nodemon --watch server/ --ext ts,js --exec 'npm run build:server && NODE_ENV=development-local NODE_TLS_REJECT_UNAUTHORIZED=0 node --inspect-brk=9229 dist/server/server.js'\"",
         "mock": "concurrently --kill-others-on-fail  \"vite --mode development-mock \" \"node mock/server.cjs\"",
         "mock-veileder": "concurrently --kill-others-on-fail  \"vite --mode development-veileder \" \"node mock/server.cjs\"",
         "q2": "concurrently --kill-others-on-fail  \"vite --mode development \" \"nodemon --watch server/ --exec 'npm run build:server && NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js'\"",
+        "q2-veileder": "concurrently --kill-others-on-fail  \"vite --mode development-veileder \" \"nodemon --watch server/ --exec 'npm run build:server && NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server/server.js'\"",
         "build": "tsc && vite build --mode development && npm run build:server",
         "build:development:veileder": "tsc && vite build --mode development-veileder && npm run build:server",
         "build:production": "tsc && vite build && npm run build:server",

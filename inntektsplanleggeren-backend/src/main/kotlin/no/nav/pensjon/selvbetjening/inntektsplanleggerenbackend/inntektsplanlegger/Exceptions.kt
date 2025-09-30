@@ -1,7 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -50,7 +49,7 @@ class ErrorHandler {
             val failedResponseMessage =
                 "Request failed with status: $statusCode ${message?.let { "and message: \"$it\" " } ?: ""}for pid ${
                     Masker.maskPid(pid)
-                }. NAV-Call-ID: ${CallIdUtil.getCallIdFromMdc()}"
+                }. NAV-Call-ID: ${getCurrentCallId()}"
             when (statusCode) {
                 HttpStatus.INTERNAL_SERVER_ERROR -> logger.error(failedResponseMessage, e)
                 else -> logger.warn(failedResponseMessage, e)

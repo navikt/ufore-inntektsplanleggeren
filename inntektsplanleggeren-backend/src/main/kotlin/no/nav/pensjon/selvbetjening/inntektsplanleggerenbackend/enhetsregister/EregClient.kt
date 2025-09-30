@@ -1,8 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister.dto.Organisasjon
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
@@ -32,7 +31,7 @@ class EregClient(
                     webClient
                         .get()
                         .uri("$url$path")
-                        .header(NAV_CALL_ID, CallIdUtil.getCallIdFromMdc())
+                        .header(NAV_CALL_ID, getCurrentCallId())
                         .header("Nav-Consumer_id", "ufoere")
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
