@@ -1,0 +1,24 @@
+name: Automerge Dependabot PRer for Inntektsplanleggeren
+
+on:
+  schedule:
+    - cron: '0 9-14 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      merged-pr-count: ${{ steps.automerge.outputs.merged-pr-count }}
+    steps:
+      - name: Automerge Dependabot PRs
+        uses: navikt/automerge-dependabot@v1
+        with:
+          token: ${{ github.token }}
+          blackout-periods: 'Sat,Sun,Dec 24-Jan 2'
+          semver-filter: 'patch,minor'
+      - name: Skriv resultater
+        run: |
+          echo "Antall merga PR-er: ${{ steps.automerge.outputs.merged-pr-count }}"
