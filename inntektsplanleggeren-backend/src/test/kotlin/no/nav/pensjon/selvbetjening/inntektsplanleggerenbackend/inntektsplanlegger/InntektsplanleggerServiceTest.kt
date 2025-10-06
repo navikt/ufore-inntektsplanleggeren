@@ -100,12 +100,22 @@ class InntektsplanleggerServiceTest {
                 expectedForventetInntektEps[year]!!
             )
         )
+        `when`(inntektService.getForventedeInntekter(PID, pensjonsdata, year+1)).thenReturn(
+            ForventedeInntekterSummary(
+                ForventedeInntekter(
+                    PersonInntekter(null, null, null, null, null),
+                    null
+                ),
+                mapOf(year to 0)[year]!!,
+                mapOf(year to 0)[year]!!
+            )
+        )
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
 
         val initialData = inntektsplanleggerService.constructInitialInntektsplanleggerResponse(PID, year)
 
-        assertEquals(expectedForventetInntektBruker, initialData.data!!.forventetInntekt)
-        assertEquals(expectedForventetInntektEps, initialData.data!!.forventetInntektAnnenForelder)
+        assertEquals(expectedForventetInntektBruker, initialData.data!!.forventetInntekt[year]?.let { mapOf(year to it) })
+        assertEquals(expectedForventetInntektEps, initialData.data!!.forventetInntektAnnenForelder[year]?.let { mapOf(year to it) })
         assertEquals(expectedInntektsgrense, initialData.data!!.inntektsgrense)
         assertEquals(expectedKompensasjonsgrad, initialData.data!!.kompensasjonsgrad)
         assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.data!!.grenseStoppAvUfoeretrygd)
