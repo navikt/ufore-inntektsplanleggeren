@@ -17,7 +17,6 @@ export interface InitiateResponse {
 export interface GetInntektsgrenseResponse {
   messages: Message[]
   data: InitiateData
-  pid: string
 }
 
 export interface InitiateData {
@@ -59,7 +58,6 @@ export type InntekterResponse = {
   forventedeInntekter: ForventedeInntekterResponse
   uforeHeleAaret: boolean
   epsPid: string | null
-  pid: string
 }
 
 export type SubmitInntekterRequest = {
@@ -70,7 +68,6 @@ export type SubmitInntekterRequest = {
 export type SimulationResponse = {
   messages: Message[]
   result: SimulationResult
-  pid: string
 }
 
 export type SimulationResult = {
@@ -86,7 +83,6 @@ export type SendApplicationResponse = {
   messages: Message[]
   status: string
   innsendingsTidspunkt: string
-  pid: string
 }
 
 export type SimulationDetail = {
@@ -110,7 +106,6 @@ export type StatusResponse = {
   mottarBarnetilleggForFellesBarn: boolean
   forventetAarligInntekt: number | null
   forventetAarligInntektEps: number | null
-  pid: string
 }
 
 export type FormState = {

@@ -14,8 +14,7 @@ data class InntektsplanleggerenStatusResponse(
     val registeringsTidspunktEndring: LocalDateTime?,
     val mottarBarnetilleggForFellesBarn: Boolean = false,
     val forventetAarligInntekt: Int? = null,
-    val forventetAarligInntektEps: Int? = null,
-    val pid: String)
+    val forventetAarligInntektEps: Int? = null,)
 
 enum class StatusKrav{
     BEHANDLET_MEDFOERER_ENDRING,

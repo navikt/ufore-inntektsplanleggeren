@@ -63,15 +63,14 @@ class InntektsplanleggerService(
 
                     else -> InnsendingStatus.IKKE_SENDT
                 }
-            response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt, pid)
+            response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
         }
 
         else {
             response = InntektsplanleggerenSendResponse(
             simulering.messages,
             InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
-            innsendingsTidspunkt,
-            pid
+            innsendingsTidspunkt
         )
 
 
@@ -110,12 +109,11 @@ class InntektsplanleggerService(
             )
             response =  SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
-                simuleringData.simuleringsresultat,
-                pid
+                simuleringData.simuleringsresultat
             )
         }
         else {
-            response = SimuleringResponse(validationResult, null, pid)
+            response = SimuleringResponse(validationResult, null)
         }
 
         SimulateInntektsplanleggerMetricsCounter.count(response)
@@ -143,8 +141,7 @@ class InntektsplanleggerService(
                 ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto()
             } else null,
             uforeHeleAaret = pensjonsdata.uforeHeleAaret,
-            epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" },
-            pid
+            epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
         )
 
         InntekterInntektsplanleggerMetricsCounter.count()
@@ -200,8 +197,7 @@ class InntektsplanleggerService(
                 penResponse.endringRegistertTidspunkt,
                 penResponse.mottarBarnetilleggForFellesBarn,
                 forventetInntekt?.forventedeInntekter?.bruker?.sum(),
-                forventetInntekt?.forventedeInntekter?.eps?.sum(),
-                fnr
+                forventetInntekt?.forventedeInntekter?.eps?.sum()
             )
         }
 

@@ -6,8 +6,7 @@ data class InntekterResponse(
     val pensjonFraAndreHittilIAar: List<AccumulatedMaanedsinntekt>?,
     val forventedeInntekter: ForventedeInntekter?,
     val uforeHeleAaret: Boolean,
-    val epsPid: String?,
-    val pid: String
+    val epsPid: String?
 )
 
 data class AccumulatedMaanedsinntekt(val maned: Int, val belop: Double?, val inntektsgivere: List<String>)
