@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: read
     outputs:
       merged-pr-count: ${{ steps.automerge.outputs.merged-pr-count }}
     steps:
       - name: Automerge Dependabot PRs
-        uses: navikt/automerge-dependabot@main
+        uses: navikt/automerge-dependabot@v1.2.2
         with:
           token: ${{ github.token }}
           blackout-periods: 'Sat,Sun,Dec 24-Jan 2'
