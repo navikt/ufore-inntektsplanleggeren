@@ -17,6 +17,7 @@ export interface InitiateResponse {
 export interface GetInntektsgrenseResponse {
   messages: Message[]
   data: InitiateData
+  pid: string
 }
 
 export interface InitiateData {
