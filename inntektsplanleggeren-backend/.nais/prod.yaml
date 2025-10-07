@@ -59,6 +59,10 @@ spec:
           namespace: pensjonselvbetjening
           cluster: prod-gcp
     outbound:
+    outbound:
+      rules:
+        - application: pensjon-pid-encryption
+          namespace: pensjon-person
       external:
         - host: pdl-api.prod-fss-pub.nais.io
         - host: pensjon-pen.prod-fss-pub.nais.io
@@ -112,3 +116,7 @@ spec:
       value: 7845a796-1516-4d14-b500-fd65c001f35c
     - name: PENSJON_UFOERE_OKONOMI_GROUP_ID
       value: 70ef8e7f-7456-4298-95e0-b13c0ef2422b
+    - name: PID_ENCRYPTION_URL
+      value: http://pensjon-pid-encryption.pensjon-person
+    - name: PID_ENCRYPTION_SCOPE
+      value: api://prod-gcp.pensjon-person.pensjon-pid-encryption/.default

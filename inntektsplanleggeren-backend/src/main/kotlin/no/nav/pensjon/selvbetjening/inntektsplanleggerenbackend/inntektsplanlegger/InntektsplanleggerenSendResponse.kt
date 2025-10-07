@@ -9,7 +9,8 @@ data class InntektsplanleggerenSendResponse(val messages: List<Inntektsplanlegge
                                             val status: InnsendingStatus,
                                             @JsonProperty("innsendingsTidspunkt")
                                             @JsonFormat(pattern = "yyyy-MM-dd' 'HH:mm:ss")
-                                            val innsendingsTidspunkt: LocalDateTime)
+                                            val innsendingsTidspunkt: LocalDateTime,
+                                            val pid: String)
 
 enum class InnsendingStatus{
     AUTOMATISK_BEHANDLING,

@@ -63,14 +63,15 @@ class InntektsplanleggerService(
 
                     else -> InnsendingStatus.IKKE_SENDT
                 }
-            response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
+            response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt, pid)
         }
 
         else {
             response = InntektsplanleggerenSendResponse(
             simulering.messages,
             InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
-            innsendingsTidspunkt
+            innsendingsTidspunkt,
+            pid
         )
 
 
@@ -109,11 +110,12 @@ class InntektsplanleggerService(
             )
             response =  SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
-                simuleringData.simuleringsresultat
+                simuleringData.simuleringsresultat,
+                pid
             )
         }
         else {
-            response = SimuleringResponse(validationResult, null)
+            response = SimuleringResponse(validationResult, null, pid)
         }
 
         SimulateInntektsplanleggerMetricsCounter.count(response)
@@ -141,7 +143,8 @@ class InntektsplanleggerService(
                 ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto()
             } else null,
             uforeHeleAaret = pensjonsdata.uforeHeleAaret,
-            epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
+            epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" },
+            pid
         )
 
         InntekterInntektsplanleggerMetricsCounter.count()
@@ -164,7 +167,8 @@ class InntektsplanleggerService(
 
         val response = InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages)
+            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages),
+            pid
         )
 
         InitiateInntektsplanleggerMetricsCounter.count(response)
@@ -196,7 +200,8 @@ class InntektsplanleggerService(
                 penResponse.endringRegistertTidspunkt,
                 penResponse.mottarBarnetilleggForFellesBarn,
                 forventetInntekt?.forventedeInntekter?.bruker?.sum(),
-                forventetInntekt?.forventedeInntekter?.eps?.sum()
+                forventetInntekt?.forventedeInntekter?.eps?.sum(),
+                fnr
             )
         }
 
