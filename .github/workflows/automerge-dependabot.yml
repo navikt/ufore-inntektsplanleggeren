@@ -8,12 +8,11 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: read
+    permissions: write-all
     outputs:
       merged-pr-count: ${{ steps.automerge.outputs.merged-pr-count }}
     steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
       - name: Automerge Dependabot PRs
         uses: navikt/automerge-dependabot@v1.2.2
         with:
