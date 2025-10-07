@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.matcher.DispatcherTypeRequestMatcher
-import org.springframework.web.reactive.function.client.WebClient
 import java.time.Duration
 
 @Configuration
@@ -64,7 +63,7 @@ class SecurityConfiguration(
 
     @Primary
     @Bean("jwtDecoderAzureAd")
-    fun jwtDecoderAzureAd(@Qualifier("webClientProxy") webClient: WebClient): NimbusJwtDecoder {
+    fun jwtDecoderAzureAd(): NimbusJwtDecoder {
         val jwtDecoder = NimbusJwtDecoder
             .withJwkSetUri(azureAdJsonWebKeyUri)
             .build()

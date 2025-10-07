@@ -11,11 +11,13 @@ export type Message = {
 export interface InitiateResponse {
   messages: Message[]
   data: InitiateData
+  pid: string
 }
 
 export interface GetInntektsgrenseResponse {
   messages: Message[]
   data: InitiateData
+  pid: string
 }
 
 export interface InitiateData {

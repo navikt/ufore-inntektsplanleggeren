@@ -18,7 +18,8 @@ import java.time.LocalDateTime
 @Component
 class SetPidFilter(
     private val tokenService: TokenService,
-    private val authorizationService: AuthorizationService
+    private val authorizationService: AuthorizationService,
+    private val pidEncryptionClient: PidEncryptionClient
 ): OncePerRequestFilter() {
 
     private val log: Logger = LoggerFactory.getLogger(SetPidFilter::class.java)
@@ -57,8 +58,15 @@ class SetPidFilter(
 
                 authenticatedUserDetails = authorizationService.checkBorgerTilgang(request.method, navOnBehalfOfCookie)
             } else {
-                val pid = request.getHeader("pid")
+                val pidFromHeader = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
+                val pid = if (isEncryptedPid(pidFromHeader)) {
+                    logger.info("Pid is encrypted. Decrypting...")
+                    pidEncryptionClient.decrypt(pidFromHeader)!!
+                } else {
+                    logger.warn("Using unencrypted PID from request")
+                    pidFromHeader
+                }
                 log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
                 authorizationService.checkVeilederTilgangTilInnbygger(pid)
                 authenticatedUserDetails = AuthenticatedUserDetails(pid, false)
@@ -68,6 +76,8 @@ class SetPidFilter(
         }
         filterChain.doFilter(request, response)
     }
+
+    private fun isEncryptedPid(pid: String): Boolean = pid.contains('.')
 
     private fun HttpServletResponse.errorResponse(
         error: ErrorCode,

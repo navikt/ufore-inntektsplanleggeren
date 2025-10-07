@@ -164,7 +164,8 @@ class InntektsplanleggerService(
 
         val response = InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages)
+            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages),
+            pid
         )
 
         InitiateInntektsplanleggerMetricsCounter.count(response)
