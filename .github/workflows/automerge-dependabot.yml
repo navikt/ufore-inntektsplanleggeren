@@ -8,17 +8,14 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    permissions: write-all
-    outputs:
-      merged-pr-count: ${{ steps.automerge.outputs.merged-pr-count }}
+    permissions:
+      pull-requests: read
+      statuses: read
+      contents: write
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
       - name: Automerge Dependabot PRs
         uses: navikt/automerge-dependabot@v1.2.2
         with:
           token: ${{ github.token }}
           blackout-periods: 'Sat,Sun,Dec 24-Jan 2'
           semver-filter: 'patch,minor'
-      - name: Skriv resultater
-        run: |
-          echo "Antall merga PR-er: ${{ steps.automerge.outputs.merged-pr-count }}"
