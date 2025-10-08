@@ -15,7 +15,7 @@
                 <pattern>
                     <pattern>
                         {
-                        "nav-call-id": "%header{nav-call-id}"
+                        "Nav-Call-Id": "%header{nav-call-id}"
                         }
                     </pattern>
                 </pattern>

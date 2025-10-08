@@ -12,7 +12,7 @@ const loggerMiddleware =
                 method: req.method,
                 duration,
                 statusCode: res.statusCode,
-                'nav-call-id': req.headers['Nav-Call-Id'],
+                'Nav-Call-Id': req.headers['Nav-Call-Id'],
             }
 
             const logMessage = `${req.method} ${req.path} ${res.statusCode}`
