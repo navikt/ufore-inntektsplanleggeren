@@ -305,8 +305,7 @@ class InntektService(
             .hentAbonnerteInntekterBolk(
                 constructAbonnerteInntekterIdentOgPerioder(pid, pensjonsdata),
                 inntektFilterCode,
-                decideFormal(pensjonsdata.hasBarnetillegg()),
-                pid
+                decideFormal(pensjonsdata.hasBarnetillegg())
             )
             .abonnerteInntekterPerIdentListe
         val inntektYtelseMap = mutableMapOf<String, List<Maanedsinntekt>>()

@@ -1,8 +1,5 @@
 # Inntektsplanleggeren
 
-## Først
-1. Gå til utils/fetch.secrets-to-env og følg readme
-
 ## Start mock
 1. Installer avhentigheter: `npm i`
 2. Start: `npm run mock`

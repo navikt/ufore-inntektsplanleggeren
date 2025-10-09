@@ -30,9 +30,6 @@ class InntektServiceTest {
     @Captor
     private lateinit var formalCaptor: ArgumentCaptor<String>
 
-    @Captor
-    private lateinit var pidCaptor: ArgumentCaptor<String>
-
     private val inntektskomponentClient = mock(InntektskomponentClient::class.java)
     private val eregService = mock(EregService::class.java)
     private val nowProvider = mock(NowProvider::class.java)
@@ -71,8 +68,7 @@ class InntektServiceTest {
             inntektskomponentClient.hentAbonnerteInntekterBolk(
                 expectedaAbonnerteInntekterIdentOgPeriodeListe,
                 expectedFilter,
-                expectedFormal,
-                PID
+                expectedFormal
             )
         ).thenReturn(
             HentAbonnerteInntekterBolkResponse(
@@ -100,14 +96,12 @@ class InntektServiceTest {
         verify(inntektskomponentClient, times(1)).hentAbonnerteInntekterBolk(
             capture(abonnerteInntekterCaptor),
             capture(filterCaptor),
-            capture(formalCaptor),
-            capture(pidCaptor)
+            capture(formalCaptor)
         )
 
         assertEquals(expectedaAbonnerteInntekterIdentOgPeriodeListe, abonnerteInntekterCaptor.allValues[0])
         assertEquals(expectedFilter, filterCaptor.allValues[0])
         assertEquals(expectedFormal, formalCaptor.allValues[0])
-        assertEquals(PID, pidCaptor.allValues[0])
 
         assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
         assertNull(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden)
@@ -147,7 +141,6 @@ class InntektServiceTest {
 
         `when`(
             inntektskomponentClient.hentAbonnerteInntekterBolk(
-                any(),
                 any(),
                 any(),
                 any()
@@ -193,14 +186,12 @@ class InntektServiceTest {
         verify(inntektskomponentClient, times(2)).hentAbonnerteInntekterBolk(
             capture(abonnerteInntekterCaptor),
             capture(filterCaptor),
-            capture(formalCaptor),
-            capture(pidCaptor)
+            capture(formalCaptor)
         )
 
         assertEquals(expectedaAbonnerteInntekterIdentOgPeriodeListe, abonnerteInntekterCaptor.allValues[0])
         assertEquals(expectedFilter, filterCaptor.allValues[0])
         assertEquals(expectedFormal, formalCaptor.allValues[0])
-        assertEquals(PID, pidCaptor.allValues[0])
 
         assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
         assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelserEps!!.size)
@@ -241,7 +232,6 @@ class InntektServiceTest {
             inntektskomponentClient.hentAbonnerteInntekterBolk(
                 any(),
                 any(),
-                any(),
                 any()
             )
         ).thenReturn(
@@ -274,14 +264,12 @@ class InntektServiceTest {
         verify(inntektskomponentClient, times(2)).hentAbonnerteInntekterBolk(
             capture(abonnerteInntekterCaptor),
             capture(filterCaptor),
-            capture(formalCaptor),
-            capture(pidCaptor)
+            capture(formalCaptor)
         )
 
         assertEquals(expectedaAbonnerteInntekterIdentOgPeriodeListe, abonnerteInntekterCaptor.allValues[1])
         assertEquals(expectedFilter, filterCaptor.allValues[1])
         assertEquals(expectedFormal, formalCaptor.allValues[1])
-        assertEquals(PID, pidCaptor.allValues[0])
 
         assertEquals(1, inntekterHittilIAar.pensjonerFraAndreEnnFolketrygden!!.size)
         assertNull(inntekterHittilIAar.pensjonerFraAndreEnnFolketrygdenEps)
@@ -300,7 +288,6 @@ class InntektServiceTest {
 
         `when`(
             inntektskomponentClient.hentAbonnerteInntekterBolk(
-                any(),
                 any(),
                 any(),
                 any()
@@ -348,7 +335,6 @@ class InntektServiceTest {
 
         `when`(
             inntektskomponentClient.hentAbonnerteInntekterBolk(
-                any(),
                 any(),
                 any(),
                 any()
@@ -405,7 +391,6 @@ class InntektServiceTest {
             inntektskomponentClient.hentAbonnerteInntekterBolk(
                 any(),
                 any(),
-                any(),
                 any()
             )
         ).thenReturn(
@@ -459,7 +444,6 @@ class InntektServiceTest {
 
         `when`(
             inntektskomponentClient.hentAbonnerteInntekterBolk(
-                any(),
                 any(),
                 any(),
                 any()

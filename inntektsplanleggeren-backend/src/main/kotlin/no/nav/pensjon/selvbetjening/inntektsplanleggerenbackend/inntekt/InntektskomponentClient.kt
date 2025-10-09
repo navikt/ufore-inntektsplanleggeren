@@ -10,6 +10,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.Hent
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -25,7 +26,8 @@ class InntektskomponentClient(
     @Value("\${inntektskomponenten.endpoint.url}") private val url: String,
     @Value("\${inntektskomponenten.scope}") private val scope: String,
     private val webClient: WebClient,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val azureAdService: AzureAdService
 ) {
     private val logger: Logger = LoggerFactory.getLogger(InntektskomponentClient::class.java)
 
@@ -35,7 +37,7 @@ class InntektskomponentClient(
     ): HentForventetInntektResponse {
         val path = "/rs/api/v1/forventetinntekt"
         try {
-            return tokenService.getEgressToken(scope = scope, pid = pid, appId = AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .get()
@@ -67,8 +69,7 @@ class InntektskomponentClient(
     fun hentAbonnerteInntekterBolk(
         abonnerteInntekterIdentOgPeriodeListe: List<AbonnerteInntekterIdentOgPeriode>,
         ainntektsfilter: String,
-        formaal: String,
-        pid: String
+        formaal: String
     ): HentAbonnerteInntekterBolkResponse {
         val path = "/rs/api/v1/hentabonnerteinntekterbolk"
         val request = HentAbonnerteInntekterBolkRequest(
@@ -78,7 +79,7 @@ class InntektskomponentClient(
             abonnerteInntekterIdentOgPeriodeListe
         )
         try {
-            return tokenService.getEgressToken(scope = scope, pid = pid, appId = AppId.INNTEKTSKOMPONENTEN)
+            return azureAdService.retrieveClientCredentialsToken(listOf(scope)) //TODO: Temp fix original code: tokenService.getEgressToken(scope = scope, "", AppId.INNTEKTSKOMPONENTEN)
                 .let { accessToken ->
                     webClient
                         .post()
