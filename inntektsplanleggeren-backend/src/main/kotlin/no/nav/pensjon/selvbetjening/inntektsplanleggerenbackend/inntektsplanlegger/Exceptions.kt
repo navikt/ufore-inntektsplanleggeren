@@ -33,8 +33,6 @@ open class ForbiddenException(
 ) :
     RuntimeException("Access denied when calling service $service in $system. DetailMessage:  $message", cause)
 
-open class InitiationException(val response: InntektsplanleggerenInitialResponse, override val message: String?): RuntimeException(message)
-data class ErrorResponse(val message: String, val callId: String)
 
 class ErrorHandler {
     companion object {
