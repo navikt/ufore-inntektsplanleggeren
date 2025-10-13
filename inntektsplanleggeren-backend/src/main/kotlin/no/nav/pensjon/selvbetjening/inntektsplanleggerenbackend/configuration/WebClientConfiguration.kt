@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.logstash.logback.argument.StructuredArguments.kv
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -41,9 +42,10 @@ class WebClientConfiguration {
                 .build())
     }
 
-    private fun logRequest(): ExchangeFilterFunction = ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
-        logger.info("Request: ${clientRequest.method()} ${clientRequest.url()}")
-        Mono.just(clientRequest)
+    private fun logRequest(): ExchangeFilterFunction = ExchangeFilterFunction.ofResponseProcessor { response ->
+        logger.info("${response.request().method} ${response.statusCode().value()} ${response.request().uri}",
+            kv("status_code", response.statusCode().value()))
+        Mono.just(response)
     }
 
 }
