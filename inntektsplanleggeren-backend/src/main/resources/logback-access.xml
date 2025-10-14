@@ -12,7 +12,14 @@
                 <remoteHost/>
                 <protocol/>
                 <threadName/>
-                <provider class="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.MdcProvider"/>
+                <pattern>
+                    <pattern>
+                        {
+                        "nav_call_id": "%header{nav-call-id}"
+                        }
+                    </pattern>
+                </pattern>
+                <provider class="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AuthorizationJsonProvider"/>
             </providers>
         </encoder>
 
