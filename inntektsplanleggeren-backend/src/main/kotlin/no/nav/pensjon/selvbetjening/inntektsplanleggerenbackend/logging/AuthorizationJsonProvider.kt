@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.logging
 
 import ch.qos.logback.access.common.spi.IAccessEvent
 import com.fasterxml.jackson.core.JsonGenerator
@@ -18,7 +18,7 @@ class AuthorizationJsonProvider : AbstractJsonProvider<IAccessEvent>() {
                         generator.writeStringField("nav_ident", navIdent)
                     }
                     jwt.jwtClaimsSet.getStringClaim("pid")?.let { pid ->
-                        generator.writeStringField("pid", Masker.maskPid(pid))
+                        generator.writeStringField("pid", Masker.Companion.maskPid(pid))
                     }
                 } catch (e: Exception) {
                     //Trenger ingen videre håndtering

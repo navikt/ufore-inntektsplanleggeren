@@ -1,4 +1,4 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util
 
 import org.slf4j.MDC
 

@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.AbonnerteInntekterIdentOgPeriode
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.HentAbonnerteInntekterBolkRequest
