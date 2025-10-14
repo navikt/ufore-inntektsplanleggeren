@@ -21,10 +21,12 @@ class MdcFilter: OncePerRequestFilter() {
     ) {
         MDC.put(NAV_CALL_ID, request.getHeader(NAV_CALL_ID) ?: UUID.randomUUID().toString())
 
-        (SecurityContextHolder.getContext().authentication as JwtAuthenticationToken).token.getClaim<String>("NAVident")
-            ?.let { saksbehandler ->
-                MDC.put("saksbehandler", saksbehandler)
-            }
+        if (SecurityContextHolder.getContext().authentication is JwtAuthenticationToken) {
+            (SecurityContextHolder.getContext().authentication as JwtAuthenticationToken).token.getClaim<String>("NAVident")
+                ?.let { saksbehandler ->
+                    MDC.put("saksbehandler", saksbehandler)
+                }
+        }
 
         filterChain.doFilter(request, response)
     }
