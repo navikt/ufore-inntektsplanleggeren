@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType

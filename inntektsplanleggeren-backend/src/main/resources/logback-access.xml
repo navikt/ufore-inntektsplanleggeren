@@ -19,7 +19,7 @@
                         }
                     </pattern>
                 </pattern>
-                <provider class="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AuthorizationJsonProvider"/>
+                <provider class="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.logging.AuthorizationJsonProvider"/>
             </providers>
         </encoder>
 

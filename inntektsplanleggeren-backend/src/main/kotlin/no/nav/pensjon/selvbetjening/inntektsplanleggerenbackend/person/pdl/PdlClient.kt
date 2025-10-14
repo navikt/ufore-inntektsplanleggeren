@@ -1,8 +1,8 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.NAV_CALL_ID
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException

@@ -1,10 +1,10 @@
-package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
+package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.logging
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.NAV_CALL_ID
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.NAV_CALL_ID_MDC
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_MDC
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
 import org.slf4j.MDC
 import org.springframework.security.core.context.SecurityContextHolder

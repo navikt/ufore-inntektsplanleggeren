@@ -1,6 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
