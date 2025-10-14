@@ -64,7 +64,7 @@ class SetPidFilter(
                     logger.info("Pid is encrypted. Decrypting...")
                     pidEncryptionClient.decrypt(pidFromHeader)!!
                 } else {
-                    logger.warn("Using unencrypted PID from request")
+                    logger.info("Using unencrypted PID from request :-(")
                     pidFromHeader
                 }
                 log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
