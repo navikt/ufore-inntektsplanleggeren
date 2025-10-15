@@ -12,7 +12,6 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.util.UriComponentsBuilder
 
 @Component
@@ -43,16 +42,8 @@ class FullmaktClient(
             }
 
         } catch (e: WebClientResponseException) {
-            logger.error("Kall til fullmaktstjenesten feilet med melding: ${e.responseBodyAsString}")
-            throw FullmaktException(
-                SERVICE,
-                "hasValidRepresentasjonsforhold",
-                "Failed to call service: " + e.responseBodyAsString,
-                e
-            )
-        } catch (e: ResponseStatusException) {
-            logger.error("Kall til fullmaktstjenesten feilet med statuskode ${e.statusCode}: ${e.message}")
-            throw FullmaktException(SERVICE, "hasValidRepresentasjonsforhold", "Failed to call service", e)
+            logger.error("Kall til fullmaktstjenesten feilet med melding: ${e.responseBodyAsString}", e)
+            throw FullmaktException(SERVICE, "hasValidRepresentasjonsforhold", "Failed to call service: " + e.responseBodyAsString, e)
         } catch (e: RuntimeException) { // e.g. when connection broken
             logger.error("Kall til fullmaktstjenesten feilet: ${e.message}")
             throw FullmaktException(SERVICE, "hasValidRepresentasjonsforhold", "Failed to call service", e)

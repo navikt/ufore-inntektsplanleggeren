@@ -1,14 +1,10 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-
-open class InitialException(val response: InntektsplanleggerenInitialResponse, override val message: String?) :
-    RuntimeException(message)
 
 open class PersonNotFoundException(
     override val system: String,
@@ -38,40 +34,28 @@ class ErrorHandler {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(ErrorHandler::class.java)
 
-        fun handleResponseStatusException(
-            statusCode: HttpStatus,
-            pid: String,
-            e: Throwable? = null,
-            message: String? = null,
-        ): ResponseStatusException {
-            val failedResponseMessage =
-                "Request failed with status: $statusCode ${message?.let { "and message: \"$it\" " } ?: ""}for pid ${
-                    Masker.maskPid(pid)
-                }. NAV-Call-ID: ${getCurrentCallId()}"
-            when (statusCode) {
-                HttpStatus.INTERNAL_SERVER_ERROR -> logger.error(failedResponseMessage, e)
-                else -> logger.warn(failedResponseMessage, e)
-            }
-
-            return ResponseStatusException(statusCode, failedResponseMessage)
-        }
-
-        fun exceptionToErrorResponse(exception: Throwable, pid: String): ResponseStatusException {
-
+        fun exceptionToErrorResponse(exception: Throwable): ResponseStatusException {
             return when (exception) {
-                is ForbiddenException -> forbidden(exception, pid)
-                is ClientException -> internalServerError(exception, pid)
-                else -> internalServerError(exception, pid)
+                is ForbiddenException -> handleResponseStatusException(exception)
+                else -> handleResponseStatusException(exception)
             }
         }
 
-        private fun forbidden(exception: Throwable, pid: String): ResponseStatusException {
-            return handleResponseStatusException(HttpStatus.FORBIDDEN, pid, exception, exception.message ?: "Access denied with unknown cause")
-        }
+        fun handleResponseStatusException(
+            e: Throwable,
+        ): ResponseStatusException {
+            var statusCode: HttpStatus
+            if(e is ForbiddenException) {
+                statusCode = HttpStatus.FORBIDDEN
+                logger.warn("Request failed with status: $statusCode", e)
+            }
+            else {
+                statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+                logger.error("Request failed with status: $statusCode", e)
+            }
 
-        private fun internalServerError(exception: Throwable, pid: String): ResponseStatusException{
-            return handleResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, pid, exception, exception.message ?: "Unknown error occurred")
+            return ResponseStatusException(statusCode,
+                "Request failed with status: $statusCode ${e.message?.let { "and message: \"$it\" " } ?: ""}. NAV-Call-ID: ${getCurrentCallId()}")
         }
     }
-
 }
