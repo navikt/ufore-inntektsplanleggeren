@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_HEADER
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
@@ -40,7 +40,7 @@ class PdlClient(
                 .post()
                 .uri(url)
                 .header("Authorization", "Bearer $it")
-                .header(NAV_CALL_ID, getCurrentCallId())
+                .header(NAV_CALL_ID_HEADER, getCurrentCallId())
                 .header(PDL_BEHANDLINGSNUMMER_KEY, PDL_BEHANDLINGSNUMMER_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(query)
