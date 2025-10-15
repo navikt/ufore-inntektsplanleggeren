@@ -11,6 +11,8 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_IDENT
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.OBO_PID
 import org.slf4j.MDC
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.util.UUID
@@ -24,11 +26,13 @@ class MdcFilter(val tokenService: TokenService) : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         MDC.put(NAV_CALL_ID_MDC, request.getHeader(NAV_CALL_ID_HEADER) ?: UUID.randomUUID().toString())
-        if(tokenService.isUserLoggedInAsSaksbehandler()) {
-            MDC.put(NAV_IDENT, tokenService.determineLoggedInUserId())
-        }
-        if(tokenService.isUserLoggedInAsPerson()) {
-            MDC.put(LOGGED_IN_PID, Masker.maskPid(tokenService.determineLoggedInUserId()))
+        if(SecurityContextHolder.getContext().authentication is JwtAuthenticationToken) {
+            if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                MDC.put(NAV_IDENT, tokenService.determineLoggedInUserId())
+            }
+            if (tokenService.isUserLoggedInAsPerson()) {
+                MDC.put(LOGGED_IN_PID, Masker.maskPid(tokenService.determineLoggedInUserId()))
+            }
         }
         request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }?.let { cookie ->
             MDC.put(OBO_PID, Masker.maskPid(cookie.value))
