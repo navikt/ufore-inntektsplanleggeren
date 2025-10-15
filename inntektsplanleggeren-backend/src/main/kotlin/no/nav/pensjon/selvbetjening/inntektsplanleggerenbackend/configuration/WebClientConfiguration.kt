@@ -52,7 +52,7 @@ class WebClientConfiguration {
         Mono.deferContextual { ctx ->
             val mdcMap = ctx.getOrDefault("mdc", emptyMap<String, String>()) as Map<String, String>
             val allKv = mdcMap.map { kv -> kv(kv.key, kv.value) } + kv("status_code", response.statusCode().value())
-            logger.info("${response.request().method} ${response.statusCode().value()} ${response.request().uri}", *allKv.toTypedArray())
+            logger.info("Utgående: ${response.request().method} ${response.statusCode().value()} ${response.request().uri}", *allKv.toTypedArray())
             Mono.just(response)
         }
     }
