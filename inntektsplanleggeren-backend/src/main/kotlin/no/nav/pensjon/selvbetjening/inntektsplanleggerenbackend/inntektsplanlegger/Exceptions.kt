@@ -38,11 +38,11 @@ class ErrorHandler {
             var statusCode: HttpStatus
             if(e is ForbiddenException) {
                 statusCode = HttpStatus.FORBIDDEN
-                logger.warn("Request failed with status: $statusCode", e)
+                logger.warn("Request failed with status: $statusCode and message: " + e.message, e)
             }
             else {
                 statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-                logger.error("Request failed with status: $statusCode", e)
+                logger.error("Request failed with status: $statusCode and message: " + e.message, e)
             }
 
             return ResponseStatusException(statusCode,
