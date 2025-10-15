@@ -15,6 +15,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClien
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
@@ -30,7 +31,8 @@ class InntektsplanleggerService(
     private val inntektService: InntektService,
     private val simuleringService: SimuleringService,
     private val tokenService: TokenService,
-    private val nowProvider: NowProvider
+    private val nowProvider: NowProvider,
+    private val personService: PersonService
 ) {
 
     fun sendInntektsendring(
@@ -64,14 +66,12 @@ class InntektsplanleggerService(
                     else -> InnsendingStatus.IKKE_SENDT
                 }
             response = InntektsplanleggerenSendResponse(simulering.messages, status, innsendingsTidspunkt)
-        }
-
-        else {
+        } else {
             response = InntektsplanleggerenSendResponse(
-            simulering.messages,
-            InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
-            innsendingsTidspunkt
-        )
+                simulering.messages,
+                InnsendingStatus.IKKE_SENDT_VALIDERING_FEILET,
+                innsendingsTidspunkt
+            )
 
 
         }
@@ -107,12 +107,12 @@ class InntektsplanleggerService(
                 simuleringsaar = simuleringsAar,
                 simuleringFomDato = getSimuleringFomDato(simuleringsAar)
             )
-            response =  SimuleringResponse(
+            response = SimuleringResponse(
                 validationResult + simuleringData.valideringsresultat,
                 simuleringData.simuleringsresultat
             )
-        }
-        else {
+
+        } else {
             response = SimuleringResponse(validationResult, null)
         }
 
@@ -161,11 +161,15 @@ class InntektsplanleggerService(
             )
         }
         val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
+        val navn = personService.getNavn(pid)
+        val loggetInnSom = tokenService.determineLoggedInUser()
 
         val response = InntektsplanleggerenInitialResponse(
             messages,
             mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages),
-            pid
+            pid,
+            navn,
+            loggetInnSom
         )
 
         InitiateInntektsplanleggerMetricsCounter.count(response)
@@ -182,7 +186,7 @@ class InntektsplanleggerService(
         val penResponse: StatusInnsendingResponse? =
             penClient.fetchInntektsplanleggerStatus(fnr, getSimuleringFomDato(simuleringsAar), innsendingsTidspunkt)
         val forventetInntekt = constructInntekterResponse(fnr, simuleringsAar)
-        var response : InntektsplanleggerenStatusResponse? = null
+        var response: InntektsplanleggerenStatusResponse? = null
 
         if (penResponse != null) {
             response = InntektsplanleggerenStatusResponse(
@@ -257,7 +261,7 @@ class InntektsplanleggerService(
         if (isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {
             return listOf(today.year)
         }
-        if (isMonthDecember() && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)){
+        if (isMonthDecember() && (hasLopendeUforeVedtakNextYear || hasLopendeUforeVedtakThisYear)) {
             return listOf(today.year + 1)
         }
         if (!isMonthBeforeOctober && hasLopendeUforeVedtakThisYear) {

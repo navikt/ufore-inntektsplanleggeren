@@ -6,6 +6,8 @@ data class InntektsplanleggerenInitialResponse(
     val messages: List<InntektsplanleggerMessage>,
     val data: InntektsplanleggerenInitialData?,
     val pid: String,
+    val navn: String?,
+    val loggetInnSom: String?
 )
 
 
