@@ -22,8 +22,6 @@ class InntektsplanleggerController(
     private val auditor: Auditor,
     private val tokenService: TokenService
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(InntektsplanleggerController::class.java)
-
     @GetMapping("initiate")
     fun getInntektsplanleggerenInitialData(
         @RequestHeader("pid", required=false) pidFromHeader:String?,
@@ -42,7 +40,7 @@ class InntektsplanleggerController(
             }
             return response
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+            throw ErrorHandler.exceptionToErrorResponse(exception)
         }
     }
 
@@ -62,7 +60,7 @@ class InntektsplanleggerController(
                 ), HttpStatus.OK
             )
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+            throw ErrorHandler.exceptionToErrorResponse(exception)
         }
     }
 
@@ -82,7 +80,7 @@ class InntektsplanleggerController(
                 ), HttpStatus.OK
             )
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+            throw ErrorHandler.exceptionToErrorResponse(exception)
         }
     }
 
@@ -109,7 +107,7 @@ class InntektsplanleggerController(
             }
             return response
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+            throw ErrorHandler.exceptionToErrorResponse(exception)
         }
     }
 
@@ -125,11 +123,11 @@ class InntektsplanleggerController(
                 inntektsPlanleggerService.constructStatusResponse(
                     SecurityContextUtil.getPidFromContext(),
                     valgtAr,
-                    innsendingsTidspunkt.minusSeconds(3)                  //juster tidspunkt noen sekunder tilbake så vi er sikker på å få med alt
+                    innsendingsTidspunkt.minusSeconds(3)//juster tidspunkt noen sekunder tilbake så vi er sikker på å få med alt
                 ), HttpStatus.OK
             )
         } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception, SecurityContextUtil.getPidFromContext())
+            throw ErrorHandler.exceptionToErrorResponse(exception)
         }
     }
 }

@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
@@ -21,8 +18,6 @@ class SetPidFilter(
     private val authorizationService: AuthorizationService,
     private val pidEncryptionClient: PidEncryptionClient
 ): OncePerRequestFilter() {
-
-    private val log: Logger = LoggerFactory.getLogger(SetPidFilter::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -53,11 +48,12 @@ class SetPidFilter(
         if (authHeader != null) {
             val authenticatedUserDetails: AuthenticatedUserDetails
             if (tokenService.determineTokenType() == TokenService.TokenType.TOKEN_X) {
-                log.info("Borger context")
+                //borger context
                 val navOnBehalfOfCookie = request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }
 
                 authenticatedUserDetails = authorizationService.checkBorgerTilgang(request.method, navOnBehalfOfCookie)
             } else {
+                //veilider on behalf of
                 val pidFromHeader = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
                 val pid = if (isEncryptedPid(pidFromHeader)) {
@@ -67,7 +63,6 @@ class SetPidFilter(
                     logger.info("Using unencrypted PID from request :-(")
                     pidFromHeader
                 }
-                log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
                 authorizationService.checkVeilederTilgangTilInnbygger(pid)
                 authenticatedUserDetails = AuthenticatedUserDetails(pid, false)
             }
