@@ -34,16 +34,7 @@ class ErrorHandler {
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(ErrorHandler::class.java)
 
-        fun exceptionToErrorResponse(exception: Throwable): ResponseStatusException {
-            return when (exception) {
-                is ForbiddenException -> handleResponseStatusException(exception)
-                else -> handleResponseStatusException(exception)
-            }
-        }
-
-        fun handleResponseStatusException(
-            e: Throwable,
-        ): ResponseStatusException {
+        fun exceptionToErrorResponse(e: Throwable): ResponseStatusException {
             var statusCode: HttpStatus
             if(e is ForbiddenException) {
                 statusCode = HttpStatus.FORBIDDEN
