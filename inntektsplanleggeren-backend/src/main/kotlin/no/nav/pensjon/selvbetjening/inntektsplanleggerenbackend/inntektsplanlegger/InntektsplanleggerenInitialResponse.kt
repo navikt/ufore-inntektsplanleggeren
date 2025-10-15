@@ -5,7 +5,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 data class InntektsplanleggerenInitialResponse(
     val messages: List<InntektsplanleggerMessage>,
     val data: InntektsplanleggerenInitialData?,
-    val pid: String
+    val pid: String,
 )
 
 
