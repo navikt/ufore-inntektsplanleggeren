@@ -62,7 +62,7 @@ const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
   return (
     <Table>
       <Table.Header>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.HeaderCell scope="col">Måned</Table.HeaderCell>
           <Table.HeaderCell scope="col">Beløp per måned</Table.HeaderCell>
           <Table.HeaderCell scope="col">
@@ -72,7 +72,7 @@ const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
       </Table.Header>
       <Table.Body>
         {props.data.map(({ maned, belop, inntektsgivere }, i) => (
-          <Table.Row key={i} className="table-row">
+          <Table.Row key={i} className="table-row" shadeOnHover={false}>
             <Table.DataCell scope="row">{Month[maned]}</Table.DataCell>
             <Table.DataCell>
               <FormatKroner value={belop} />
@@ -80,7 +80,7 @@ const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
             <Table.DataCell>{inntektsgivere.join(', ')}</Table.DataCell>
           </Table.Row>
         ))}
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.HeaderCell scope="row"><span style={{whiteSpace: 'nowrap'}}>Sum hittil i år</span></Table.HeaderCell>
           <Table.DataCell>
             <strong>
@@ -99,7 +99,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[]; type?: string }) => {
     <Table>
       <Table.Body>
         {props.data.map(({ maned, belop, inntektsgivere }, i) => (
-          <Table.Row key={i}>
+          <Table.Row key={i} shadeOnHover={false}>
             <Table.DataCell>
               <div>
                 <strong>{Month[maned]}</strong>
@@ -115,7 +115,7 @@ const InnholdMobile = (props: { data: InntektDetaljer[]; type?: string }) => {
             </Table.DataCell>
           </Table.Row>
         ))}
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <strong>
               Sum hittil i år: <FormatKroner value={belopSum(props.data)} />
