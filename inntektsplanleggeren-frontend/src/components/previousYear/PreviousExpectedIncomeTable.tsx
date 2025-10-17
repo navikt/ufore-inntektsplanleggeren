@@ -26,7 +26,7 @@ export const PreviousExpectedIncomeTable = (props: {
     <VStack gap="6">
       <Table>
         <Table.Header>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.HeaderCell scope="col">
               {props.eps ? 'Annen forelders' : 'Din'} forventede inntekt i {props.year}
             </Table.HeaderCell>
@@ -36,37 +36,37 @@ export const PreviousExpectedIncomeTable = (props: {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">Lønn og pensjonsgivende ytelser</Table.DataCell>
             <Table.DataCell align="right">
               <FormatKroner value={arbeidsinntekt || 0} />
             </Table.DataCell>
           </Table.Row>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">Næringsinntekt</Table.DataCell>
             <Table.DataCell align="right">
               <FormatKroner value={naeringsinntekt || 0} />
             </Table.DataCell>
           </Table.Row>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">Inntekt fra utlandet</Table.DataCell>
             <Table.DataCell align="right">
               <FormatKroner value={inntektUtland || 0} />
             </Table.DataCell>
           </Table.Row>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">Uførepensjon og pensjoner fra andre enn Nav</Table.DataCell>
             <Table.DataCell align="right">
               <FormatKroner value={andrePensjonsgivendeYtelser || 0} />
             </Table.DataCell>
           </Table.Row>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">Pensjoner fra utlandet</Table.DataCell>
             <Table.DataCell align="right">
               <FormatKroner value={pensjonUtland || 0} />
             </Table.DataCell>
           </Table.Row>
-          <Table.Row style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
+          <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
             <Table.DataCell scope="row">
               <strong>Sum {props.eps ? 'annen forelders' : 'din'} forventede inntekt</strong>
             </Table.DataCell>
@@ -95,7 +95,7 @@ export const PreviousExpectedIncomeTable = (props: {
         </BodyShort>
       </Table.Header>
       <Table.Body>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -107,7 +107,7 @@ export const PreviousExpectedIncomeTable = (props: {
             </VStack>
           </Table.DataCell>
         </Table.Row>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -119,7 +119,7 @@ export const PreviousExpectedIncomeTable = (props: {
             </VStack>
           </Table.DataCell>
         </Table.Row>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -131,7 +131,7 @@ export const PreviousExpectedIncomeTable = (props: {
             </VStack>
           </Table.DataCell>
         </Table.Row>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -143,7 +143,7 @@ export const PreviousExpectedIncomeTable = (props: {
             </VStack>
           </Table.DataCell>
         </Table.Row>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -155,7 +155,7 @@ export const PreviousExpectedIncomeTable = (props: {
             </VStack>
           </Table.DataCell>
         </Table.Row>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
             <VStack gap="1">
               <BodyShort>

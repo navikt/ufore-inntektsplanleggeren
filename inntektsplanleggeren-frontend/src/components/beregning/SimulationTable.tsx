@@ -23,7 +23,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
     <VStack gap="6">
       <Table>
         <Table.Header>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.HeaderCell scope="col"></Table.HeaderCell>
             {isBeforeValuesAvailable && (
               <Table.HeaderCell scope="col" align="right">
@@ -36,7 +36,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">
               {gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd'}
             </Table.DataCell>
@@ -50,7 +50,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
             </Table.DataCell>
           </Table.Row>
           {(barnetilleggSaerkullsbarn || barnetilleggFellesbarn) && (
-            <Table.Row>
+            <Table.Row shadeOnHover={false}>
               <Table.DataCell scope="row">Barnetillegg uføretrygd</Table.DataCell>
               {isBeforeValuesAvailable && (
                 <Table.DataCell align="right">
@@ -68,7 +68,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
               </Table.DataCell>
             </Table.Row>
           )}
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell scope="row">Din forventede inntekt</Table.DataCell>
             {isBeforeValuesAvailable && (
               <Table.DataCell align="right">
@@ -80,7 +80,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
             </Table.DataCell>
           </Table.Row>
         </Table.Body>
-        <Table.Row style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
+        <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
           <Table.HeaderCell scope="row">Sum årlig</Table.HeaderCell>
           {isBeforeValuesAvailable && (
             <Table.DataCell align="right">
@@ -100,7 +100,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
   ) : (
     <Table>
       <Table.Body>
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -120,7 +120,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
           </Table.DataCell>
         </Table.Row>
         {barnetilleggSaerkullsbarn || barnetilleggFellesbarn ? (
-          <Table.Row>
+          <Table.Row shadeOnHover={false}>
             <Table.DataCell>
               <VStack gap="1">
                 <BodyShort>
@@ -146,7 +146,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
             </Table.DataCell>
           </Table.Row>
         ) : null}
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell>
             <VStack gap="1">
               <BodyShort>
@@ -164,7 +164,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
           </Table.DataCell>
         </Table.Row>
 
-        <Table.Row>
+        <Table.Row shadeOnHover={false}>
           <Table.DataCell style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
             <VStack gap="1">
               <BodyShort>
