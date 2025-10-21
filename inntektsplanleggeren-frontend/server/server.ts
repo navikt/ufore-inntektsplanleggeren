@@ -121,32 +121,6 @@ const getOboToken = async (req: Request) => {
     return obo.token
 }
 
-const getUniqueUserId = async (req: Request) => {
-    try {
-        const token = await getOboToken(req)
-        const tokenParts = token.split('.')
-        if (tokenParts.length !== 3) {
-            throw new Error('Invalid JWT token format')
-        }
-
-        // Decode the payload (middle part) of JWT
-        const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString())
-
-        if (!payload.sub) {
-            throw new Error('No subject found in token')
-        }
-
-        // Create SHA-256 hash av fnr
-        const hash = crypto.createHash('sha256').update(payload.sub).digest('hex')
-        return hash
-    } catch (error) {
-        logger.error('Failed to extract and hash user ID from token', {
-            error: error instanceof Error ? error.message : 'Unknown error',
-        })
-        return null
-    }
-}
-
 app.get('/internal/health/liveness', (req, res) => {
     res.send({
         status: 'UP',
@@ -189,25 +163,7 @@ app.get('/*splat', async (req, res) => {
     if (AUTH_PROVIDER === 'azure') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
-        const uniqueUserId = await getUniqueUserId(req)
-        const shouldEnableNyInntektsplanlegger = () => {
-            if (uniqueUserId !== null) {
-                return unleash.isEnabled('ny-inntektsplanlegger', {
-                    userId: uniqueUserId,
-                })
-            } else {
-                return false
-            }
-        }
-
-        const isNyInntektsplanleggerEnabled = shouldEnableNyInntektsplanlegger()
-        if (isNyInntektsplanleggerEnabled) {
-            logger.info('Serving new inntektsplanleggeren')
-            res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
-        } else {
-            logger.info('Redirecting to legacy inntektsplanleggeren')
-            res.redirect(307, env.pselvUrl)
-        }
+        res.sendFile(path.resolve(__dirname, './dist', 'index-borger.html'))
     }
 })
 

@@ -12,6 +12,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Beha
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InnsendingResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -37,9 +38,10 @@ class InntektsplanleggerServiceTest {
     private val simuleringService = mock(SimuleringService::class.java)
     private val penClient = mock(PenClient::class.java)
     private val nowProvider = mock(NowProvider::class.java)
+    private val personService = mock(PersonService::class.java)
 
     private val inntektsplanleggerService =
-        InntektsplanleggerService(penClient, validator, inntektService, simuleringService, tokenService, nowProvider)
+        InntektsplanleggerService(penClient, validator, inntektService, simuleringService, tokenService, nowProvider, personService)
 
     @Captor
     private lateinit var pidCaptor: ArgumentCaptor<String>

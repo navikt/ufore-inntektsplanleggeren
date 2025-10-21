@@ -2,12 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import DataContextProvider from './context/DataContextProvider'
 import { AppRoutes } from '@/routes'
-import VeilederBanner from '@/components/common/Banner/VeilederBanner'
+import BorgerBanner from '@/components/common/Banner/BorgerBanner'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <DataContextProvider>
-            <VeilederBanner />
+            <BorgerBanner />
             <AppRoutes />
         </DataContextProvider>
     </React.StrictMode>
