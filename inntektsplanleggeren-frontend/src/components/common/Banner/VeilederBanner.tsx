@@ -19,7 +19,7 @@ export default function VeilederBanner() {
                 {loggetInnSom && <InternalHeader.User name={loggetInnSom} />}
             </InternalHeader>
             {borgerInfo && (
-                <Box borderWidth="0 0 1 0" borderColor="border-divider">
+                <Box.New borderWidth="0 0 1 0" borderColor="neutral-subtle">
                     <HStack align="center" gap="2" className="borger-informasjon">
                         <BodyShort size="small" weight="semibold">
                             {borgerInfo && borgerInfo.navn}
@@ -33,7 +33,7 @@ export default function VeilederBanner() {
                         </HStack>
                         <Spacer />
                     </HStack>
-                </Box>
+                </Box.New>
             )}
         </>
     )

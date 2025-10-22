@@ -43,7 +43,6 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
           fontSize: isDesktop ? 18 : 16,
           fontWeight: 600,
           fontFamily: 'var(--ax-font-family)',
-          color: 'var(--a-grayalpha-700)',
         },
       },
     },
@@ -59,7 +58,6 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         style: {
           fontSize: '16px',
           fontFamily: 'var(--ax-font-family)',
-          color: 'var(--a-grayalpha-700)',
         },
       },
       stackLabels: {
@@ -69,7 +67,6 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         },
         style: {
           fontSize: isDesktop ? 18 : 16,
-          color: 'var(--a-grayalpha-700)',
           textOutline: false,
           fontWeight: 600,
           fontFamily: 'var(--ax-font-family)',
@@ -81,7 +78,6 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         style: {
           fontSize: 16,
           fontFamily: 'var(--ax-font-family)',
-          color: 'var(--a-grayalpha-700)',
         },
       },
     },

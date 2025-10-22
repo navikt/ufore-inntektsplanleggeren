@@ -1,11 +1,5 @@
 @import '@navikt/ds-tokens';
 
-.description-card {
-    /* --ac-expansioncard-bg: var(--ax-brand-blue-100); */
-    --ac-expansioncard-border-open-color: var(--ax-border-brand-blue);
-    --ac-expansioncard-border-hover-color: var(--ax-border-brand-blue);
-}
-
 .innfylling-container {
     border: 2px solid black;
     padding: 16px;

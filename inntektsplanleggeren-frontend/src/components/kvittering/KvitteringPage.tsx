@@ -60,7 +60,7 @@ export const KvitteringPage = () => {
 
   if (isWaiting) {
     return (
-      <Box background="bg-subtle" padding="16" borderRadius="large">
+      <Box.New background="neutral-soft" padding="16" borderRadius="large">
         <VStack className="form-container" align="center" gap="20">
           <Heading level="2" size="large" align="center">
             Vent mens vi sender inn
@@ -68,7 +68,7 @@ export const KvitteringPage = () => {
           <Loader size="3xlarge" />
           <BodyShort align="center">Dette kan ta opptil ett minutt.</BodyShort>
         </VStack>
-      </Box>
+      </Box.New>
     )
   }
 
