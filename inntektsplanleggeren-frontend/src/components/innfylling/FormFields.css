@@ -1,6 +1,6 @@
 /* FormFields.css */
 .vstack-gap {
-  margin-bottom: var(--a-spacing-10); /* Adjust the value as needed */
+  margin-bottom: var(--ax-space-40); /* Adjust the value as needed */
 }
 
 .sum {
@@ -10,5 +10,5 @@
 }
 
 .form-fields-wrapper {
-  margin-top: var(--a-spacing-8);
+  margin-top: var(--ax-space-32);
 }

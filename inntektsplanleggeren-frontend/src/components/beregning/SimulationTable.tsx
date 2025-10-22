@@ -70,7 +70,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                             <FormatKroner value={forventetInntekt.yearly.after} />
                         </Table.DataCell>
                     </Table.Row>
-                    <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
+                    <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
                         <Table.HeaderCell scope="row">Sum årlig</Table.HeaderCell>
                         {isBeforeValuesAvailable && (
                             <Table.DataCell align="right">
@@ -148,7 +148,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                 </Table.Row>
 
                 <Table.Row shadeOnHover={false}>
-                    <Table.DataCell style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
+          <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
                         <VStack gap="1">
                             <BodyShort>
                                 <strong>Sum årlig</strong>

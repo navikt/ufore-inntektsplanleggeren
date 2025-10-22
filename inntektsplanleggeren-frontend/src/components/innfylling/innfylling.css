@@ -1,10 +1,9 @@
 @import '@navikt/ds-tokens';
 
 .description-card {
-    /* --ac-expansioncard-bg: var(--a-deepblue-50); */
-    --ac-expansioncard-border-open-color: var(--a-border-alt-3);
-    --ac-expansioncard-border-open-color: var(--a-border-alt-3);
-    --ac-expansioncard-border-hover-color: var(--a-border-alt-3);
+    /* --ac-expansioncard-bg: var(--ax-brand-blue-100); */
+    --ac-expansioncard-border-open-color: var(--ax-border-brand-blue);
+    --ac-expansioncard-border-hover-color: var(--ax-border-brand-blue);
 }
 
 .innfylling-container {
@@ -13,9 +12,9 @@
 }
 
 .form-container {
-    gap: var(--a-spacing-8);
+    gap: var(--ax-space-32);
 }
 
 .button-container {
-    margin-top: var(--a-spacing-8);
+    margin-top: var(--ax-space-32);
 }
