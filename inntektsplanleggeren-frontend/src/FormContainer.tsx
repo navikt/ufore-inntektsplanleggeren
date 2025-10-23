@@ -119,7 +119,7 @@ export const PAGE_LINKS = {
 }
 
 export const getFullPathForPage = (pageLink: PageLinks, href?: string) => {
-  return pageLink + (href ? `#${href}` : "")  + getPidQueryParamString()
+  return pageLink + getPidQueryParamString() + (href ? `#${href}` : "")
 }
 
 const getPage = (index: number): string => {
