@@ -1,21 +1,20 @@
-import { Alert, Bleed, BodyLong, Box, Button, ErrorSummary, Heading, HStack, List, Loader, VStack } from '@navikt/ds-react'
+import { Alert, Bleed, BodyLong, Box, ErrorSummary, Heading, List, Loader, VStack } from '@navikt/ds-react'
 import { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
 import './innfylling.css'
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
 import { FormFieldsUser } from './FormFieldsUser'
 import { simulate } from '@/api/apiFetching'
 import { numberFormatWithKr } from '@/common/Utils'
 import { DataContext } from '@/context/DataContextProvider'
 import { PersonInntekter, SimulationResponse } from '@/api/model/ApiRequests'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { FormFieldsEps } from '@/components/innfylling/FormFieldsEps'
-import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
 import { MessageCodes } from '@/api/model/MessageCodes'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 import LonnFordelerOgPengestotter from '../common/LonnFordelerOgPengestotter'
 import PensjonFraAndreEnnNav from '../common/PensjonFraAndreEnnNav'
+import Knapperad from '@/components/common/Knapperad'
 
 export const InnfyllingPage = () => {
     const navigate = useNavigate()
@@ -219,7 +218,12 @@ export const InnfyllingPage = () => {
                                         year={selectedYear}
                                         errors={brukerErrors}
                                         setErrors={setBrukerErrors}
-                                        setInntekt={(field, belop) => setBrukerinntekt((b) => ({ ...b, [field]: belop }))}
+                                        setInntekt={(field, belop) =>
+                                            setBrukerinntekt((b) => ({
+                                                ...b,
+                                                [field]: belop,
+                                            }))
+                                        }
                                         forventedeInntekter={brukerinntekt}
                                         inntektSum={getBrukerinntektSum()}
                                     />
@@ -257,7 +261,16 @@ export const InnfyllingPage = () => {
                                             year={selectedYear}
                                             errors={epsErrors}
                                             setErrors={setEpsErrors}
-                                            setInntekt={(field, belop) => setAnnenForelderInntekt((b) => (b ? { ...b, [field]: belop } : null))}
+                                            setInntekt={(field, belop) =>
+                                                setAnnenForelderInntekt((b) =>
+                                                    b
+                                                        ? {
+                                                              ...b,
+                                                              [field]: belop,
+                                                          }
+                                                        : null
+                                                )
+                                            }
                                             forventedeInntekter={annenForelderInntekt || ({} as PersonInntekter)}
                                             inntektSum={getAnnenForelderInntektSum() || 0}
                                         />
@@ -280,30 +293,13 @@ export const InnfyllingPage = () => {
                         </div>
                     ) : null}
 
-                    <VStack gap="3" className="button-container">
-                        <HStack gap="4">
-                            <Button
-                                as={RouterLink}
-                                to={previousYear != null ? getFullPathForPage(PageLinks.FORRIGE_INNTEKTER) : getFullPathForPage(PageLinks.INDEX)}
-                                iconPosition="left"
-                                icon={<ArrowLeftIcon aria-hidden />}
-                                variant="secondary"
-                            >
-                                Tilbake
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="primary"
-                                iconPosition="right"
-                                icon={<ArrowRightIcon aria-hidden />}
-                                onClick={handleSubmit}
-                                loading={isLoading}
-                            >
-                                Gå videre og se resultat
-                            </Button>
-                        </HStack>
-                        <CancelConfirmationModal />
-                    </VStack>
+                    <span className="button-container">
+                        <Knapperad
+                            handleSubmit={handleSubmit}
+                            tilbakePageLink={previousYear != null ? PageLinks.FORRIGE_INNTEKTER : PageLinks.INDEX}
+                            laster={isLoading}
+                        />
+                    </span>
                 </VStack>
             </form>
         </VStack>

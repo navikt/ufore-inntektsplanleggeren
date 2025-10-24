@@ -1,6 +1,6 @@
-import { Alert, BodyLong, Button, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
+import { Alert, BodyLong, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
 import { FormEvent, MouseEvent, useContext, useEffect } from 'react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
 import { SimulationTable } from '@/components/beregning/SimulationTable'
 import { DataContext } from '@/context/DataContextProvider'
@@ -8,12 +8,11 @@ import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { Graph } from '@/components/beregning/Graph'
 import { InputSummary } from '@/components/beregning/InputSummary'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
-import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
 import { BeregningWarnings } from '@/components/beregning/BeregningWarnings'
 import { ErrorView } from '@/components/common/Error'
 import './BeregningPage.css'
+import Knapperad from '@/components/common/Knapperad'
 
 export const BeregningPage = () => {
     const { selectedYear, setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext)
@@ -162,23 +161,7 @@ export const BeregningPage = () => {
                     </strong>
                 </BodyLong>
 
-                <VStack gap="3">
-                    <HStack gap="4">
-                        <Button
-                            as={RouterLink}
-                            to={getFullPathForPage(PageLinks.FORVENTET_INNTEKT)}
-                            iconPosition="left"
-                            icon={<ArrowLeftIcon aria-hidden />}
-                            variant="secondary"
-                        >
-                            Endre beløp i beregning
-                        </Button>
-                        <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit}>
-                            Gå til innsending
-                        </Button>
-                    </HStack>
-                    <CancelConfirmationModal />
-                </VStack>
+                <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.FORVENTET_INNTEKT} />
             </VStack>
         )
 }
