@@ -67,7 +67,7 @@
         "vite-plugin-eslint2": "^5.0.4",
         "vite-plugin-mock": "^3.0.2",
         "vite-plugin-stylelint": "^6.0.2",
-        "vitest": "^3.2.4"
+        "vitest": "^4.0.6"
     },
     "overrides": {
         "jose": "^6.0.12"
