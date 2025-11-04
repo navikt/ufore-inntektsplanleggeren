@@ -63,7 +63,7 @@
   ],
   "forventedeInntekter": {
     "bruker": {
-      "arbeidsinntekt": 1,
+      "arbeidsinntekt": 10000,
       "andrePensjonsgivendeYtelser": 2,
       "naeringsinntekt": 3,
       "inntektUtland": 4,
