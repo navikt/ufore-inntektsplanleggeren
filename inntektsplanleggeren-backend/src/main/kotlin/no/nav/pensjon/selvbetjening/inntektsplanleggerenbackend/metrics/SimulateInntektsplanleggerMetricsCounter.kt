@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.alderspensjonendringssoknadbackend.metrics
 
 import io.micrometer.core.instrument.Metrics
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageCode
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import org.slf4j.LoggerFactory
 
@@ -14,6 +15,9 @@ class SimulateInntektsplanleggerMetricsCounter {
             try {
                 if(simuleringResponse.messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
                     countEvent("SIMULATE_SUCCESS")
+                    if (simuleringResponse.messages.any { it.messageCode == InntektsplanleggerMessageCode.SIMULERING_CONTAINS_OPPHORTE_YTELSER } ) {
+                        countEvent("SIMULATE_WARNING.${InntektsplanleggerMessageCode.SIMULERING_CONTAINS_OPPHORTE_YTELSER}")
+                    }
                 } else {
                     for (message in simuleringResponse.messages) {
                         if (message.type == InntektsplanleggerMessageType.ERROR) {

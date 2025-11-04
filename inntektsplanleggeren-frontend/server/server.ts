@@ -10,6 +10,7 @@ import ensureEnv from './ensureEnv.js'
 import { initialize } from 'unleash-client'
 import crypto from 'crypto'
 import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
+import correlationIdMiddleware from './middleware/correlationId.js'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
@@ -19,9 +20,15 @@ const metricsMiddleware = promBundle({ includeMethod: true })
 const app = express()
 const __dirname = process.cwd()
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development-local'
 
 dotenv.config()
+
+if (process.env.NODE_ENV === 'development') {
+    dotenv.config({ path: ['.env.development', '.env.local'], override: true })
+} else if (process.env.NODE_ENV === 'development-local') {
+    dotenv.config({ path: ['.env.development', '.env.development-local', '.env.local'], override: true })
+}
 
 const logger = winston.createLogger({
     format: isDevelopment ? format.simple() : undefined,
@@ -114,32 +121,6 @@ const getOboToken = async (req: Request) => {
     return obo.token
 }
 
-const getUniqueUserId = async (req: Request) => {
-    try {
-        const token = await getOboToken(req)
-        const tokenParts = token.split('.')
-        if (tokenParts.length !== 3) {
-            throw new Error('Invalid JWT token format')
-        }
-
-        // Decode the payload (middle part) of JWT
-        const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString())
-
-        if (!payload.sub) {
-            throw new Error('No subject found in token')
-        }
-
-        // Create SHA-256 hash av fnr
-        const hash = crypto.createHash('sha256').update(payload.sub).digest('hex')
-        return hash
-    } catch (error) {
-        logger.error('Failed to extract and hash user ID from token', {
-            error: error instanceof Error ? error.message : 'Unknown error',
-        })
-        return null
-    }
-}
-
 app.get('/internal/health/liveness', (req, res) => {
     res.send({
         status: 'UP',
@@ -153,6 +134,7 @@ app.get('/internal/health/readiness', (req, res) => {
 })
 app.use(stengForReguleringMiddleware({ env: isDevelopment ? 'dev' : 'prod', unleashClient: unleash }))
 app.use(metricsMiddleware)
+app.use(correlationIdMiddleware)
 app.use(loggerMiddleware(logger))
 
 app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {
@@ -177,29 +159,11 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
         })
 })
 
-app.get('*', async (req, res) => {
+app.get('/*splat', async (req, res) => {
     if (AUTH_PROVIDER === 'azure') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
-        const uniqueUserId = await getUniqueUserId(req)
-        const shouldEnableNyInntektsplanlegger = () => {
-            if (uniqueUserId !== null) {
-                return unleash.isEnabled('ny-inntektsplanlegger', {
-                    userId: uniqueUserId,
-                })
-            } else {
-                return false
-            }
-        }
-
-        const isNyInntektsplanleggerEnabled = shouldEnableNyInntektsplanlegger()
-        if (isNyInntektsplanleggerEnabled) {
-            logger.info('Serving new inntektsplanleggeren')
-            res.sendFile(path.resolve(__dirname, './dist', 'index.html'))
-        } else {
-            logger.info('Redirecting to legacy inntektsplanleggeren')
-            res.redirect(307, env.pselvUrl)
-        }
+        res.sendFile(path.resolve(__dirname, './dist', 'index-borger.html'))
     }
 })
 

@@ -4,16 +4,18 @@ updates:
     directories:
       - /inntektsplanleggeren-backend/
     schedule:
-      interval: weekly
-      day: friday
+      interval: daily
+      time: "08:00"
+      timezone: "Europe/Oslo"
     open-pull-requests-limit: 50
 
   - package-ecosystem: npm
     directories:
       - /inntektsplanleggeren-frontend/
     schedule:
-      interval: weekly
-      day: friday
+      interval: daily
+      time: "08:00"
+      timezone: "Europe/Oslo"
     open-pull-requests-limit: 50
     groups:
       designsystemet:
@@ -28,6 +30,7 @@ updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: weekly
-      day: friday
+      interval: daily
+      time: "08:00"
+      timezone: "Europe/Oslo"
     open-pull-requests-limit: 10

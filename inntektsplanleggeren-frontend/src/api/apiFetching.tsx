@@ -1,17 +1,16 @@
 import {
-  PersonInntekter,
-  GetInntektsgrenseResponse,
-  InntekterResponse,
-  SubmitInntekterRequest,
-  SimulationResponse,
-  SendApplicationResponse,
-  StatusResponse,
+    PersonInntekter,
+    InntekterResponse,
+    SubmitInntekterRequest,
+    SimulationResponse,
+    SendApplicationResponse,
+    StatusResponse, InitiateResponse,
 } from '@/api/model/ApiRequests'
 import { ErrorResponse } from '@/components/common/Error'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 
-export async function getInitiate(): Promise<GetInntektsgrenseResponse | ErrorResponse> {
+export async function getInitiate(): Promise<InitiateResponse | ErrorResponse> {
   const searchParams = new URLSearchParams(document.location.search)
   const pid: string | null = searchParams.get('pid')
 

@@ -51,6 +51,11 @@ spec:
   prometheus:
     enabled: true
     path: actuator/prometheus
+  observability:
+    logging:
+      destinations:
+        - id: elastic
+        - id: loki
   accessPolicy:
     inbound:
       rules:
@@ -67,6 +72,9 @@ spec:
           namespace: nais
           cluster: dev-gcp
     outbound:
+      rules:
+        - application: pensjon-pid-encryption
+          namespace: pensjon-person
       external:
         - host: pdl-api.dev-fss-pub.nais.io
         - host: pensjon-pen-q2.dev-fss-pub.nais.io
@@ -120,3 +128,7 @@ spec:
       value: 9e122ddd-e542-4cc1-a7eb-92c99140fe0e
     - name: PENSJON_UFOERE_OKONOMI_GROUP_ID
       value: 05ae245b-7b47-428a-9074-4ff6b59eddbc
+    - name: PID_ENCRYPTION_URL
+      value: http://pensjon-pid-encryption.pensjon-person
+    - name: PID_ENCRYPTION_SCOPE
+      value: api://dev-gcp.pensjon-person.pensjon-pid-encryption/.default

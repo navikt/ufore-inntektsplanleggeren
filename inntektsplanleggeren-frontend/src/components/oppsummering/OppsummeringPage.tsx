@@ -6,7 +6,7 @@ import {CancelConfirmationModal} from '@/components/common/CancelConfirmationMod
 import {FormEvent, MouseEvent, useContext, useEffect, useState} from 'react'
 import {send} from '@/api/apiFetching'
 import {FormStateContext} from '@/context/FormData'
-import {DataContext} from '@/DataContextProvider'
+import {DataContext} from '@/context/DataContextProvider'
 import {ErrorCode, ErrorResponse} from '@/components/common/Error'
 import {InntektSummary} from "@/components/oppsummering/InntektSummary";
 

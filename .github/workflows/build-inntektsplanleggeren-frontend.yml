@@ -2,8 +2,6 @@ name: Build inntektsplanleggeren frontend
 on:
   workflow_dispatch:
   push:
-    paths:
-      - inntektsplanleggeren-frontend/**
     branches-ignore:
       - main  # Bygges allerede av deploy-workflow
 

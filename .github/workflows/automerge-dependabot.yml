@@ -1,0 +1,21 @@
+name: Automerge Dependabot PRer for Inntektsplanleggeren
+
+on:
+  schedule:
+    - cron: '0 9-14 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      statuses: read
+      contents: write
+    steps:
+      - name: Automerge Dependabot PRs
+        uses: navikt/automerge-dependabot@v1.2.2
+        with:
+          token: ${{ github.token }}
+          blackout-periods: 'Sat,Sun,Dec 24-Jan 2'
+          semver-filter: 'patch,minor'

@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.ParallelleSannheterService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.*
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.assertj.core.util.Lists
 import org.junit.jupiter.api.Test
 

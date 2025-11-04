@@ -3,7 +3,7 @@ import { Link as RouterLink, Outlet } from 'react-router-dom'
 import { Heading, FormProgress, VStack, Link } from '@navikt/ds-react'
 import { FormStateContext } from '@/context/FormData'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
-import { DataContext } from '@/DataContextProvider'
+import { DataContext } from '@/context/DataContextProvider'
 import { ErrorView } from '@/components/common/Error'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 
@@ -119,7 +119,7 @@ export const PAGE_LINKS = {
 }
 
 export const getFullPathForPage = (pageLink: PageLinks, href?: string) => {
-  return pageLink + (href ? `#${href}` : "")  + getPidQueryParamString()
+  return pageLink + getPidQueryParamString() + (href ? `#${href}` : "")
 }
 
 const getPage = (index: number): string => {

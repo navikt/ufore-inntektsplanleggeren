@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
@@ -18,10 +15,9 @@ import java.time.LocalDateTime
 @Component
 class SetPidFilter(
     private val tokenService: TokenService,
-    private val authorizationService: AuthorizationService
+    private val authorizationService: AuthorizationService,
+    private val pidEncryptionClient: PidEncryptionClient
 ): OncePerRequestFilter() {
-
-    private val log: Logger = LoggerFactory.getLogger(SetPidFilter::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -33,9 +29,10 @@ class SetPidFilter(
         } catch (e: Exception) {
             val path = request.requestURI
             when (e) {
-                is NoFullmaktPresentException -> forbiddenResponse(response, ErrorCode.NO_FULLMAKT_PRESENT, path)
-                is LoginLevelTooLowException -> forbiddenResponse(response, ErrorCode.LOGIN_LEVEL_TOO_LOW, path)
-                is VeilederUnauthorizedException -> forbiddenResponse(response, ErrorCode.VEILEDER_UNAUTHORIZED, path)
+                is NoFullmaktPresentException -> response.errorResponse(ErrorCode.NO_FULLMAKT_PRESENT, path, HttpStatus.FORBIDDEN)
+                is LoginLevelTooLowException -> response.errorResponse(ErrorCode.LOGIN_LEVEL_TOO_LOW, path, HttpStatus.FORBIDDEN)
+                is VeilederUnauthorizedException -> response.errorResponse(ErrorCode.VEILEDER_UNAUTHORIZED, path, HttpStatus.FORBIDDEN)
+                is ResponseStatusException -> response.errorResponse(ErrorCode.NO_PID_PRESENT, path, HttpStatus.BAD_REQUEST)
                 else -> throw e
             }
         }
@@ -51,14 +48,21 @@ class SetPidFilter(
         if (authHeader != null) {
             val authenticatedUserDetails: AuthenticatedUserDetails
             if (tokenService.determineTokenType() == TokenService.TokenType.TOKEN_X) {
-                log.info("Borger context")
+                //borger context
                 val navOnBehalfOfCookie = request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }
 
                 authenticatedUserDetails = authorizationService.checkBorgerTilgang(request.method, navOnBehalfOfCookie)
             } else {
-                val pid = request.getHeader("pid")
+                //veilider on behalf of
+                val pidFromHeader = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
-                log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
+                val pid = if (isEncryptedPid(pidFromHeader)) {
+                    logger.info("Pid is encrypted. Decrypting...")
+                    pidEncryptionClient.decrypt(pidFromHeader)!!
+                } else {
+                    logger.info("Using unencrypted PID from request :-(")
+                    pidFromHeader
+                }
                 authorizationService.checkVeilederTilgangTilInnbygger(pid)
                 authenticatedUserDetails = AuthenticatedUserDetails(pid, false)
             }
@@ -68,21 +72,24 @@ class SetPidFilter(
         filterChain.doFilter(request, response)
     }
 
-    private fun forbiddenResponse(response: HttpServletResponse, errorCode: ErrorCode, path: String
+    private fun isEncryptedPid(pid: String): Boolean = pid.contains('.')
+
+    private fun HttpServletResponse.errorResponse(
+        error: ErrorCode,
+        path: String,
+        status: HttpStatus,
     ) {
-        val forbiddenStatus = HttpStatus.FORBIDDEN.value()
-        val mapper = ObjectMapper()
         val errorResponse = SetPidFilterErrorResponse(
             timestamp = LocalDateTime.now().toString(),
-            status = forbiddenStatus,
-            error = HttpStatus.FORBIDDEN.name,
-            message = errorCode,
+            status = status.value(),
+            error = status.name,
+            message = error,
             path = path
         )
-        response.apply {
-            status = forbiddenStatus
-            setHeader("Content-Type", "application/json")
-            writer.write(mapper.writeValueAsString(errorResponse))
+        this.apply {
+            this.status = status.value()
+            this.setHeader("Content-Type", "application/json")
+            this.writer.write(ObjectMapper().writeValueAsString(errorResponse))
         }
     }
 

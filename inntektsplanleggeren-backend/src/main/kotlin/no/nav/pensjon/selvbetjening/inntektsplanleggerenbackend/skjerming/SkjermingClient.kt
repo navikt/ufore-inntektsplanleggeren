@@ -1,9 +1,8 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.CallIdUtil.Companion.NAV_CALL_ID_NAME
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCallIdFromMdc
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_HEADER
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -23,7 +22,7 @@ class SkjermingClient(
                 .post()
                 .uri("$url/skjermet")
                 .header("Authorization", "Bearer $accessToken")
-                .header(NAV_CALL_ID_NAME, CallIdUtil.getCallIdFromMdc())
+                .header(NAV_CALL_ID_HEADER, getCurrentCallId())
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(SkjermingRequest(pid))
                 .retrieve()

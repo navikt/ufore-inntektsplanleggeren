@@ -1,5 +1,8 @@
 {
   "messages": [],
+  "pid": "12345678901",
+  "navn": "Ola Nordmann",
+  "loggetInnSom": "Veileder Veiledersen",
   "data": {
     "forventetInntekt": {
       "2024": 120000,

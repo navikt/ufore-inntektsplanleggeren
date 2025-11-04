@@ -13,7 +13,7 @@ const buildConfig = {
     outDir: "./dist",
     rollupOptions: {
       input: {
-        appBorger: resolve(__dirname, "./index.html"),
+        appBorger: resolve(__dirname, "./index-borger.html"),
         appVeileder: resolve(__dirname, "./index-veileder.html"),
       },
     },
@@ -32,7 +32,7 @@ const devConfig = (env) => ({
     manifest: true,
     rollupOptions: {
       input: {
-        appBorger: resolve(__dirname, "./index.html"),
+        appBorger: resolve(__dirname, "./index-borger.html"),
         appVeileder: resolve(__dirname, "./index-veileder.html"),
       },
     },
