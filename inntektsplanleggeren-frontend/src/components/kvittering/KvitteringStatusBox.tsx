@@ -6,7 +6,7 @@ import { useContext } from 'react'
 import { FormStateContext } from '@/context/FormData'
 import { Link } from 'react-router-dom'
 import { FormatDateLong, FormatDateTime } from '@/components/utils/FormatDate'
-import {getUrlUforeInnboks} from "@/components/utils/UrlUtil";
+import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 
 interface Props {
   statusResponse: StatusResponse
@@ -92,9 +92,9 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
           <BodyLong>
-            Vi har behandlet saken din og du vil snart motta et vedtaksbrev i{' '}
-            <Link to={getUrlUforeInnboks()} target="_blank">
-              Din innboks (åpnes i ny fane)
+            Vi har behandlet saken din og du vil snart motta et vedtaksbrev på{' '}
+            <Link to={ import.meta.env.VITE_DIN_UFORETRYGD_URL + getPidQueryParamString()} target="_blank">
+              Din uføretrygd (åpnes i ny fane)
             </Link>
             .
           </BodyLong>
