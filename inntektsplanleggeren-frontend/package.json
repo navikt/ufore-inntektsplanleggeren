@@ -18,7 +18,6 @@
         "build:production:veileder": "tsc && vite build --mode production-veileder && npm run build:server",
         "build:server": "tsc -p tsconfig.server.json",
         "preview": "vite preview",
-        "test": "vitest",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "lint": "eslint ./src ./server",
@@ -66,8 +65,7 @@
         "vite": "^7.1.11",
         "vite-plugin-eslint2": "^5.0.4",
         "vite-plugin-mock": "^3.0.2",
-        "vite-plugin-stylelint": "^6.0.2",
-        "vitest": "^4.0.6"
+        "vite-plugin-stylelint": "^6.0.2"
     },
     "overrides": {
         "jose": "^6.0.12"
