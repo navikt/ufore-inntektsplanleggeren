@@ -25,7 +25,7 @@
         "lint:fix": "eslint --fix ./src ./server"
     },
     "dependencies": {
-        "@navikt/nav-dekoratoren-moduler": "^3.4.0",
+        "@navikt/nav-dekoratoren-moduler": "^3.5.0",
         "@navikt/oasis": "^3.7.0",
         "@navikt/steng-for-regulering": "^0.0.7",
         "cors": "^2.8.5",
