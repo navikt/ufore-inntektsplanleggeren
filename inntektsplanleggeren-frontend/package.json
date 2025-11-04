@@ -40,7 +40,7 @@
         "@navikt/aksel-icons": "^7.32.3",
         "@navikt/ds-css": "^7.32.3",
         "@navikt/ds-react": "^7.32.3",
-        "@types/express": "^5.0.1",
+        "@types/express": "^5.0.5",
         "@types/node": "^24.10.0",
         "@types/react": "^19.2.2",
         "@types/react-dom": "^19.2.2",
