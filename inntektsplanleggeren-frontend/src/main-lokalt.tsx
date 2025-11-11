@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client'
 import DataContextProvider from './context/DataContextProvider'
 import { AppRoutes } from '@/routes'
 import LokaltBanner from '@/components/common/Banner/LokaltBanner'
+import { Theme } from '@navikt/ds-react'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <DataContextProvider>
-            <LokaltBanner>
-                <AppRoutes />
-            </LokaltBanner>
+            <Theme>
+                <LokaltBanner>
+                    <AppRoutes />
+                </LokaltBanner>
+            </Theme>
         </DataContextProvider>
     </React.StrictMode>
 )

@@ -63,7 +63,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({
   }
 
   return (
-    <Box borderRadius="xlarge" padding="4" className="top-box">
+    <Box.New borderRadius="xlarge" padding="space-16" background="accent-soft">
       <VStack gap="7">
         {Array.from(expectedIncomeMap.keys()).map((year) => (
           <ExpectedIncome key={year} year={year} />
@@ -85,6 +85,6 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({
           </Button>
         </HStack>
       </VStack>
-    </Box>
+    </Box.New>
   )
 }

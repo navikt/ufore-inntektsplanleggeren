@@ -42,8 +42,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         style: {
           fontSize: isDesktop ? 18 : 16,
           fontWeight: 600,
-          fontFamily: 'var(--a-font-family)',
-          color: 'var(--a-grayalpha-700)',
+          fontFamily: 'var(--ax-font-family)',
         },
       },
     },
@@ -58,8 +57,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         y: -30,
         style: {
           fontSize: '16px',
-          fontFamily: 'var(--a-font-family)',
-          color: 'var(--a-grayalpha-700)',
+          fontFamily: 'var(--ax-font-family)',
         },
       },
       stackLabels: {
@@ -69,10 +67,9 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         },
         style: {
           fontSize: isDesktop ? 18 : 16,
-          color: 'var(--a-grayalpha-700)',
           textOutline: false,
           fontWeight: 600,
-          fontFamily: 'var(--a-font-family)',
+          fontFamily: 'var(--ax-font-family)',
           align: 'center',
         },
       },
@@ -80,8 +77,7 @@ const GRAPH_DATA = (isBeforeValuesAvailable: boolean, isDesktop: boolean, number
         formatter: ({ value }: { value: string | number }) => formatYAxisNumber(isDesktop, value),
         style: {
           fontSize: 16,
-          fontFamily: 'var(--a-font-family)',
-          color: 'var(--a-grayalpha-700)',
+          fontFamily: 'var(--ax-font-family)',
         },
       },
     },
@@ -169,7 +165,7 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
                 (props.simulationResult.uforetrygd.yearly.after ?? 0) +
                   (props.simulationResult.gjenlevendetillegg?.yearly.after ?? 0),
               ].filter(isNotFalse),
-              color: 'var(--a-deepblue-500)',
+              color: 'var(--ax-brand-blue-600)',
             },
             props.simulationResult.barnetilleggFellesbarn || props.simulationResult.barnetilleggSaerkullsbarn
               ? {
@@ -192,7 +188,7 @@ export const Graph = (props: { simulationResult: SimulationResult }) => {
                 isBeforeValuesAvailable && (props.simulationResult.forventetInntekt.yearly.before ?? 0),
                 props.simulationResult.forventetInntekt.yearly.after ?? 0,
               ].filter(isNotFalse),
-              color: 'var(--a-green-400)',
+              color: 'var(--ax-success-500)',
             },
           ].filter(isNotUndefined),
         }}

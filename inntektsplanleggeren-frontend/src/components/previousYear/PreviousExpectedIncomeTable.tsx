@@ -66,7 +66,7 @@ export const PreviousExpectedIncomeTable = (props: {
               <FormatKroner value={pensjonUtland || 0} />
             </Table.DataCell>
           </Table.Row>
-          <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
+          <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
             <Table.DataCell scope="row">
               <strong>Sum {props.eps ? 'annen forelders' : 'din'} forventede inntekt</strong>
             </Table.DataCell>
@@ -156,7 +156,7 @@ export const PreviousExpectedIncomeTable = (props: {
           </Table.DataCell>
         </Table.Row>
         <Table.Row shadeOnHover={false}>
-          <Table.DataCell style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
+          <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
             <VStack gap="1">
               <BodyShort>
                 <strong>Sum {props.eps ? 'annen forelders' : 'din'} forventede inntekt</strong>

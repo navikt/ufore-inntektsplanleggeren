@@ -201,7 +201,7 @@ export const InnfyllingPage = () => {
                 <VStack gap="4">
                     <VStack gap="4">
                         <Bleed marginInline={{ md: '0 20' }} asChild>
-                            <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }} id={'bruker-inntekt'}>
+                            <Box.New borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }} id={'bruker-inntekt'}>
                                 <VStack gap="6">
                                     <Heading size="medium" level="3" spacing>
                                         Din inntekt {selectedYear}
@@ -224,12 +224,12 @@ export const InnfyllingPage = () => {
                                         inntektSum={getBrukerinntektSum()}
                                     />
                                 </VStack>
-                            </Box>
+                            </Box.New>
                         </Bleed>
 
                         {inntekterResponse?.forventedeInntekter.eps ? (
                             <Bleed marginInline={{ md: '0 20' }}>
-                                <Box borderColor="border-default" borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }} id={'eps-inntekt'}>
+                                <Box.New borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }} id={'eps-inntekt'}>
                                     <VStack gap="6">
                                         <Heading level="3" size="medium" spacing>
                                             Annen forelders inntekt {selectedYear}
@@ -262,7 +262,7 @@ export const InnfyllingPage = () => {
                                             inntektSum={getAnnenForelderInntektSum() || 0}
                                         />
                                     </VStack>
-                                </Box>
+                                </Box.New>
                             </Bleed>
                         ) : null}
                     </VStack>

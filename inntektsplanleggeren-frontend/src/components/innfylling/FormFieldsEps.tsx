@@ -64,7 +64,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         pattern="[\d\s]+"
                         htmlSize={30}
                     />
-                    <div className="description-card">
+                    <div >
                         <ReadMore header="Inntekt du skal legge inn">
                             <p>Du skal legge inn annen forelders pensjonsgivende inntekter.</p>
                             <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
@@ -195,7 +195,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                 </VStack>
             )}
 
-            <Box padding="4" background="surface-subtle" borderRadius="large">
+            <Box.New padding="4" background="neutral-soft" borderRadius="large">
                 <VStack gap={{ xs: '2', sm: '1' }}>
                     <Heading level="4" size="small">
                         Annen forelder sin samlede inntekt i {year}:
@@ -204,7 +204,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         <FormatKroner value={inntektSum} /> før skatt
                     </BodyShort>
                 </VStack>
-            </Box>
+            </Box.New>
         </div>
     )
 }

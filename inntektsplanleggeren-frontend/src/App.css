@@ -15,7 +15,7 @@
 }
 
 .main-header {
-    margin-bottom: var(--a-spacing-12) !important;
+    margin-bottom: var(--ax-space-48) !important;
 }
 
 .hr-spacing {
@@ -51,11 +51,11 @@
 }
 
 .header {
-    margin-bottom: var(--a-spacing-3);
+    margin-bottom: var(--ax-space-12);
 }
 
 .representasjon-banner {
-    margin-bottom: var(--a-spacing-9);
+    margin-bottom: var(--ax-space-36);
 }
 
 .listCompact li {

@@ -1,21 +1,14 @@
 @import '@navikt/ds-tokens';
 
-.description-card {
-    /* --ac-expansioncard-bg: var(--a-deepblue-50); */
-    --ac-expansioncard-border-open-color: var(--a-border-alt-3);
-    --ac-expansioncard-border-open-color: var(--a-border-alt-3);
-    --ac-expansioncard-border-hover-color: var(--a-border-alt-3);
-}
-
 .innfylling-container {
     border: 2px solid black;
     padding: 16px;
 }
 
 .form-container {
-    gap: var(--a-spacing-8);
+    gap: var(--ax-space-32);
 }
 
 .button-container {
-    margin-top: var(--a-spacing-8);
+    margin-top: var(--ax-space-32);
 }

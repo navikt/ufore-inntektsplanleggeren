@@ -1,7 +1,7 @@
 {
   "messages":  [
     {
-      "messageCode": "EPS_INNTEKT_CHANGED",
+      "messageCode": "OPPGITT_INNTEKT_OVER_INNTEKTSTAK",
       "details": "Bruker har endret en av EPS sine inntekter sammenlignet med det som tidligere var benyttet som EPS sin inntekt.",
       "type": "WARNING",
       "metadata": {}
@@ -34,7 +34,7 @@
         "after": 500
       },
       "yearly": {
-        "before": 500000,
+        "before": 5000,
         "after": 6000
       }
     },
