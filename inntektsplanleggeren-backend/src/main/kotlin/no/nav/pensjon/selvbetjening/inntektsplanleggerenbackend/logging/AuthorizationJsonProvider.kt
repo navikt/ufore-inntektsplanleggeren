@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.logging
 
 import ch.qos.logback.access.common.spi.IAccessEvent
-import com.fasterxml.jackson.core.JsonGenerator
+import tools.jackson.core.JsonGenerator
 import com.nimbusds.jwt.JWTParser
 import net.logstash.logback.composite.AbstractJsonProvider
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.LOGGED_IN_PID
@@ -18,10 +18,10 @@ class AuthorizationJsonProvider : AbstractJsonProvider<IAccessEvent>() {
                 try {
                     val jwt = JWTParser.parse(token)
                     jwt.jwtClaimsSet.getStringClaim("NAVident")?.let { navIdent ->
-                        generator.writeStringField(NAV_IDENT, navIdent)
+                        generator.writeStringProperty(NAV_IDENT, navIdent)
                     }
                     jwt.jwtClaimsSet.getStringClaim("pid")?.let { pid ->
-                        generator.writeStringField(LOGGED_IN_PID, Masker.maskPid(pid))
+                        generator.writeStringProperty(LOGGED_IN_PID, Masker.maskPid(pid))
                     }
                 } catch (e: Exception) {
                     //Trenger ingen videre håndtering
@@ -29,7 +29,7 @@ class AuthorizationJsonProvider : AbstractJsonProvider<IAccessEvent>() {
             }
         }
         event.request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }?.let { cookie ->
-            generator.writeStringField(OBO_PID, Masker.maskPid(cookie.value))
+            generator.writeStringProperty(OBO_PID, Masker.maskPid(cookie.value))
         }
     }
 }
