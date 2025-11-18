@@ -16,7 +16,7 @@ export function App() {
 
     return (
         <FormStateComponent>
-            <main className="mainBody">
+            <main id="maincontent" role="main" tabIndex={-1} className="mainBody">
                 <div className="contentWrapper">
                     <Heading size="xlarge" level="1" className="main-header">
                         Inntektsplanleggeren
