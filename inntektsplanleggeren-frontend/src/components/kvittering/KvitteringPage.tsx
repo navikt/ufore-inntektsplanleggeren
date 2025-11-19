@@ -88,7 +88,7 @@ export const KvitteringPage = () => {
 
       {statusResponse?.status === StatusCodes.TIL_BEHANDLING && (
         <section>
-          <Heading level="3" size={'large'}>
+          <Heading level="2" size={'large'}>
             Hva skjer videre?
           </Heading>
           <List as="ul">
@@ -108,7 +108,7 @@ export const KvitteringPage = () => {
       )}
 
       <section>
-        <Heading className="header" level="3" size={'large'}>
+        <Heading className="header" level="2" size={'large'}>
           Etteroppgjør
         </Heading>
         <BodyLong>
@@ -122,7 +122,7 @@ export const KvitteringPage = () => {
       </section>
 
       <section>
-        <Heading className="header" level="3" size={'large'}>
+        <Heading className="header" level="2" size={'large'}>
           Hvis inntekten din endrer seg
         </Heading>
         <BodyLong>
@@ -133,7 +133,7 @@ export const KvitteringPage = () => {
       </section>
 
       <section>
-        <Heading className="header" level="3" size={'large'}>
+        <Heading className="header" level="2" size={'large'}>
           Husk å oppdatere skattekortet
         </Heading>
         <BodyLong>
@@ -145,7 +145,7 @@ export const KvitteringPage = () => {
       </section>
 
       <section>
-        <Heading className="header" level="3" size={'large'}>
+        <Heading className="header" level="2" size={'large'}>
           Må du melde fra til flere?
         </Heading>
         <BodyLong>
