@@ -1,11 +1,14 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.oauth2.core.OAuth2Error
 import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.stereotype.Component
 
-class AudienceValidator(val audience: String) : OAuth2TokenValidator<Jwt> {
+@Component
+class AudienceValidator(@Value("\${oauth2.tokenX.clientId}") val audience: String) : OAuth2TokenValidator<Jwt> {
 
     override fun validate(jwt: Jwt): OAuth2TokenValidatorResult =
         if (jwt.audience.contains(audience))
