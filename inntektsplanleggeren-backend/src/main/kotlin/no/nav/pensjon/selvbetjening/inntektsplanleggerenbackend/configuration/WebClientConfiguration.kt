@@ -2,7 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import net.logstash.logback.argument.StructuredArguments.kv
@@ -26,21 +26,6 @@ class WebClientConfiguration {
         .filter(putMdcOnContext())
         .filter(logRequest())
         .build()
-
-    @Bean
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
-            .registerModule(JavaTimeModule())
-            .registerModule(KotlinModule.Builder()
-                .withReflectionCacheSize(512)
-                .configure(KotlinFeature.NullToEmptyCollection, false)
-                .configure(KotlinFeature.NullToEmptyMap, false)
-                .configure(KotlinFeature.NullIsSameAsDefault, false)
-                .configure(KotlinFeature.SingletonSupport, false)
-                .configure(KotlinFeature.StrictNullChecks, false)
-                .build())
-    }
 
     private fun putMdcOnContext() = ExchangeFilterFunction { request, next ->
         val mdc = MDC.getCopyOfContextMap()

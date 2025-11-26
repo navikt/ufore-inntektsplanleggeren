@@ -56,7 +56,7 @@ class FullmaktClient(
         else
             VALID_LES_REPRESENTASJONSTYPER
 
-        return UriComponentsBuilder.fromHttpUrl(baseUrl)
+        return UriComponentsBuilder.fromUriString(baseUrl)
             .path(PATH_HASREPRESENTASJONSFORHOLD)
             .queryParam(VALID_REPRESENTASJONSTYPER_KEY, representasjonstyperBasertPaaHttpMethode)
             .queryParam(INCLUDE_NAVN_KEY, false)

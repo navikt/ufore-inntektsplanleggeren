@@ -5,16 +5,20 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_MDC
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
 import java.time.*
+import java.util.UUID
 import kotlin.test.assertEquals
 
 class PenClientTest : WebClientTest() {
@@ -27,6 +31,13 @@ class PenClientTest : WebClientTest() {
         penClient = PenClient(
             url = baseUrl, webClient = WebClient.create(), scope = "", audience = "", tokenService = tokenService
         )
+        MDC.put(NAV_CALL_ID_MDC, UUID.randomUUID().toString())
+    }
+
+    @AfterEach
+    override fun tearDown() {
+        super.tearDown()
+        MDC.remove(NAV_CALL_ID_MDC)
     }
 
     @Test
@@ -58,7 +69,7 @@ class PenClientTest : WebClientTest() {
             expectedInntektsgrunnlagEps
         )
         val expectedRequest =
-            "{\"pid\":\"00000000001\",\"simulertTotalbelopNetto\":4535,\"virkFom\":[2024,11,1],\"forventetInntektBruker\":[{\"inntektsgrunnlagId\":null," +
+            "{\"pid\":\"00000000001\",\"simulertTotalbelopNetto\":4535,\"virkFom\":\"2024-11-01\",\"forventetInntektBruker\":[{\"inntektsgrunnlagId\":null," +
                     "\"fomDato\":\"2024-11-01T00:00:00+0100\",\"tomDato\":null,\"endringstidspunkt\":null,\"belop\":1,\"bruk\":true,\"kopiertFraGammeltKrav\":false," +
                     "\"registerOpprettetAv\":\"\",\"grunnlagKilde\":\"BRUKER_OPP\",\"registerKilde\":\"SELVBETJ\",\"inntektType\":null,\"inntektHendelseType\":\"BENYTTET\"," +
                     "\"grunnIkkeReduksjonType\":null,\"persongrunnlagId\":1,\"version\":null},{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\",\"tomDato\":null," +
@@ -142,7 +153,7 @@ class PenClientTest : WebClientTest() {
         val request = takeRequest()
 
         val expectedRequest =
-            "{\"pid\":\"00000000001\",\"virk\":[2024,11,1],\"inntektsgrunnlagListe\":[{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\"," +
+            "{\"pid\":\"00000000001\",\"virk\":\"2024-11-01\",\"inntektsgrunnlagListe\":[{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\"," +
                     "\"tomDato\":null,\"endringstidspunkt\":null,\"belop\":1,\"bruk\":true,\"kopiertFraGammeltKrav\":false,\"registerOpprettetAv\":\"\",\"grunnlagKilde\":\"BRUKER_OPP\"," +
                     "\"registerKilde\":\"SELVBETJ\",\"inntektType\":null,\"inntektHendelseType\":\"BENYTTET\",\"grunnIkkeReduksjonType\":null,\"persongrunnlagId\":1,\"version\":null}," +
                     "{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\",\"tomDato\":null,\"endringstidspunkt\":null,\"belop\":2,\"bruk\":true,\"kopiertFraGammeltKrav\":false," +
@@ -440,7 +451,9 @@ class PenClientTest : WebClientTest() {
     "isFaktoromregnetEllerManueltOverstyrt": false,
     "hasOpenInntektsendringskrav": true,
     "firstVedtakFom": "2023-10-01",
-    "lastVedtakTom": null
+    "lastVedtakTom": null,
+    "forventedInntektBefore": null,
+    "harOpphorteYtelseskomponenter": false
 }
                 """.trimIndent()
             )
