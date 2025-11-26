@@ -49,7 +49,7 @@ export const BeregningPage = () => {
                         Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
                     </Alert>
                 ) : null}
-                <section>
+                <section aria-label={'Din inntekt og uføretrygd før skatt i ' + selectedYear}>
                     <Heading level="3" size="medium" style={{ marginBottom: '20px' }}>
                         Din inntekt og uføretrygd før skatt i {selectedYear}
                     </Heading>
@@ -88,7 +88,7 @@ export const BeregningPage = () => {
                                     </div>
                                 </section>
 
-                                <section>
+                                <section aria-label="Oversikt i tabell">
                                     <Heading level="4" size="medium">
                                         <HStack>
                                             Oversikt i tabell
@@ -103,7 +103,7 @@ export const BeregningPage = () => {
                                 </section>
                             </>
                         )}
-                        <section>
+                        <section aria-label="Månedlig utbetaling">
                             <BodyLong>
                                 <strong>
                                     Månedlig utbetaling av uføretrygd med dine endringer, før skatt:{' '}
