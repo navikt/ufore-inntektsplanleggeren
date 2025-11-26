@@ -24,7 +24,7 @@ class TokenXAuthenticationManager(
     }
 
     override fun authenticate(authentication: Authentication): Authentication =
-        authProvider.authenticate(authentication)
+        authProvider.authenticate(authentication)!!
 
     private fun createJwtConverter() = JwtGrantedAuthoritiesConverter().apply {
         this.setAuthoritiesClaimName(ClaimTypes.TOKENX.claimName)

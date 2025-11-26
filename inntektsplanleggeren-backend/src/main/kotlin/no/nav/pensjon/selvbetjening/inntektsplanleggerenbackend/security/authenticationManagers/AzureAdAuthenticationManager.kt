@@ -36,7 +36,7 @@ class AzureAdAuthenticationManager (
     }
 
     override fun authenticate(authentication: Authentication): Authentication =
-        authProvider.authenticate(authentication)
+        authProvider.authenticate(authentication)!!
 
     private fun createJwtDecoder() = JwtDecoders.fromIssuerLocation<NimbusJwtDecoder>(azureAdIssuer)
         .apply {
