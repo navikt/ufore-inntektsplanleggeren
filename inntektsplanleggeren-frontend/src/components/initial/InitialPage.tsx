@@ -74,6 +74,12 @@ export function InitialPage() {
 
     return (
         <VStack className="form-container">
+            <Alert variant="info">
+                <Heading spacing size="small" level="3">
+                    Inntektsplanleggeren blir midlertidig stengt
+                </Heading>
+                Inntektsplanleggeren er ikke tilgjengelig fra tirsdag 2. desember kl. 15:30 til onsdag 3. desember kl. 09:00 på grunn av vedlikehold. Vi beklager for ulempen.
+            </Alert>
             <GuidePanel poster>
                 <Heading size="medium" level="2" spacing>
                     Greit å vite
