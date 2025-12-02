@@ -24,7 +24,8 @@ class SecurityConfiguration(
     @Value("\${oauth2.azureAd.issuer}") private val azureAdIssuer: String,
     @Value("\${oauth2.azureAd.jsonWebKeyUri}") private val azureAdJsonWebKeyUri: String,
     @Value("\${oauth2.tokenX.issuer}") private val tokenXIssuer: String,
-    @Value("\${oauth2.tokenX.jsonWebKeyUri}") private val tokenXJsonWebKeyUri: String
+    @Value("\${oauth2.tokenX.jsonWebKeyUri}") private val tokenXJsonWebKeyUri: String,
+    private val audienceValidator: AudienceValidator
 ) {
 
     @Bean
@@ -87,6 +88,7 @@ class SecurityConfiguration(
             DelegatingOAuth2TokenValidator(
                 JwtTimestampValidator(Duration.ofSeconds(60)),
                 JwtIssuerValidator(tokenXIssuer),
+                audienceValidator
             )
         )
         return jwtDecoder
