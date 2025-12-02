@@ -1,0 +1,24 @@
+.nedetid-main {
+    display: flex;
+    flex-direction: column;
+    margin: 4rem 0 0;
+}
+
+.nedetid-header {
+    margin: 0 auto var(--ax-space-48)  auto;
+    width: 576px;
+}
+
+.nedetid-container {
+    min-height: 600px;
+    background-color: #ECEDEF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nedetid-container > * {
+    display: flex;
+    align-items: center;
+    max-width: 576px;
+}
