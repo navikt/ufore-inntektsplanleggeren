@@ -1,5 +1,5 @@
 import { Button, HStack, VStack } from '@navikt/ds-react'
-import { Link as RouterLink } from 'react-router'
+import { Link as RouterLink } from 'react-router-dom'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
