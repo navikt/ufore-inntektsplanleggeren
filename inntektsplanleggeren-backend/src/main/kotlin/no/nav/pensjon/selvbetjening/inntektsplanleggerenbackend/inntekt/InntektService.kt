@@ -153,73 +153,53 @@ class InntektService(
     ): ForventedeInntekter {
         return ForventedeInntekter(
             bruker = PersonInntekter(
-                arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
-                    getMostRecentInntektOfTypeAsPersoninntekt(
-                        it,
-                        Inntektstype.ARBEIDSINNTEKT_BRUKER.code
-                    )
-                },
-                naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
-                    getMostRecentInntektOfTypeAsPersoninntekt(
-                        it,
-                        Inntektstype.NAERINGSINNTEKT_BRUKER.code
-                    )
-                },
-                inntektUtland = allForventedeInntekterRelatedToPid?.let {
-                    getMostRecentInntektOfTypeAsPersoninntekt(
-                        it,
-                        Inntektstype.UTENLANDSINNTEKT_BRUKER.code
-                    )
-                },
+                arbeidsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                    allForventedeInntekterRelatedToPid,
+                    Inntektstype.ARBEIDSINNTEKT_BRUKER.code
+                ),
+                naeringsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                    allForventedeInntekterRelatedToPid,
+                    Inntektstype.NAERINGSINNTEKT_BRUKER.code
+                ),
+                inntektUtland = getMostRecentInntektOfTypeAsPersoninntekt(
+                    allForventedeInntekterRelatedToPid,
+                    Inntektstype.UTENLANDSINNTEKT_BRUKER.code
+                ),
                 andrePensjonsgivendeYtelser = if (pensjonsdata.hasBarnetillegg()) {
-                    allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.ANDRE_YTELSER_BRUKER.code
-                        )
-                    }
+                    getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.ANDRE_YTELSER_BRUKER.code
+                    )
                 } else null,
                 pensjonUtland = if (pensjonsdata.hasBarnetillegg()) {
-                    allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.PENSJON_UTLAND_BRUKER.code
-                        )
-                    }
+                    getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.PENSJON_UTLAND_BRUKER.code
+                    )
                 } else null,
             ),
             eps = if (pensjonsdata.hasEpsWithFellesbarn()) {
                 PersonInntekter(
-                    arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.ARBEIDSINNTEKT_EPS.code
-                        )
-                    },
-                    naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.NAERINGSINNTEKT_EPS.code
-                        )
-                    },
-                    inntektUtland = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.UTENLANDSINNTEKT_EPS.code
-                        )
-                    },
-                    andrePensjonsgivendeYtelser = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.ANDRE_YTELSER_EPS.code
-                        )
-                    },
-                    pensjonUtland = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.PENSJON_UTLAND_EPS.code
-                        )
-                    }
+                    arbeidsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.ARBEIDSINNTEKT_EPS.code
+                    ),
+                    naeringsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.NAERINGSINNTEKT_EPS.code
+                    ),
+                    inntektUtland = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.UTENLANDSINNTEKT_EPS.code
+                    ),
+                    andrePensjonsgivendeYtelser = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.ANDRE_YTELSER_EPS.code
+                    ),
+                    pensjonUtland = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.PENSJON_UTLAND_EPS.code
+                    ),
                 )
             } else null
         )
@@ -263,9 +243,13 @@ class InntektService(
     }
 
     private fun getMostRecentInntektOfTypeAsPersoninntekt(
-        allInntekter: List<ForventetInntekt>,
+        allInntekter: List<ForventetInntekt>?,
         inntektstype: String
-    ): Personinntekt? {
+    ): Personinntekt {
+        if (allInntekter == null) {
+            return Personinntekt(0, Inntektshendelse.IKKE_REGISTRERT)
+        }
+
         val mostRecentInntektOfType = allInntekter
             .sortedByDescending { it.endringstidspunkt }
             .firstOrNull { it.type == inntektstype }
