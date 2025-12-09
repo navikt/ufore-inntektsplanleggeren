@@ -5,6 +5,7 @@ import { useContext, useState } from 'react'
 import { YearView } from '@/components/initial/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
+import { getInntekter } from '@/api/apiFetching'
 import { getInntekterForSimulering } from '@/api/apiFetching'
 import { ExpectedIncomeBox } from '@/components/initial/ExpectedIncomeBox'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
@@ -23,7 +24,7 @@ export function InitialPage() {
         setSelectedYear(year)
         if (previousYear !== null) {
             try {
-                const data = await getInntekterForSimulering(previousYear)
+                const data = await getInntekter(previousYear)
                 if (data instanceof ErrorResponse) {
                     setErrorMessage(data.message)
                 } else {

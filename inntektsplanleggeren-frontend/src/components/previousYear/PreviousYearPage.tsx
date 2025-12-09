@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 import './PreviousYearPage.css'
 import { useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
-import { getInntekter } from '@/api/apiFetching'
+import { getInntekterForSimulering } from '@/api/apiFetching'
 import { DataContext } from '@/context/DataContextProvider'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
@@ -20,7 +20,7 @@ export const PreviousYearPage = () => {
 
     const onClickButton = async () => {
         try {
-            const data = await getInntekter(selectedYear)
+            const data = await getInntekterForSimulering(selectedYear)
             if (data instanceof ErrorResponse) {
                 setErrorMessage(data.message)
             } else {
