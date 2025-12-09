@@ -6,8 +6,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -48,7 +46,7 @@ class InntektsplanleggerController(
     fun getInntekter(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
         @RequestParam("fetchForventedeInntekter", required = false) fetchForventedeInntekter: Boolean?,
-        @RequestHeader("pid", required=false) pidFromHeader:String?,
+        @RequestHeader("pid", required=false) pidFromHeader: String?,
         @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntekterResponse> {
         return try {
@@ -57,6 +55,22 @@ class InntektsplanleggerController(
                     SecurityContextUtil.getPidFromContext(),
                     simuleringsaar,
                     fetchForventedeInntekter?:true
+                ), HttpStatus.OK
+            )
+        } catch (exception: Exception) {
+            throw ErrorHandler.exceptionToErrorResponse(exception)
+        }
+    }
+
+    @GetMapping("inntekter-for-aar")
+    fun getInntekter(
+        @RequestParam("aar", required = true) aar: Int,
+    ): ResponseEntity<InntekterResponse> {
+        return try {
+            ResponseEntity(
+                inntektsPlanleggerService.hentInntekter(
+                    SecurityContextUtil.getPidFromContext(),
+                    aar,
                 ), HttpStatus.OK
             )
         } catch (exception: Exception) {
