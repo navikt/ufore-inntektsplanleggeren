@@ -121,9 +121,18 @@ class InntektsplanleggerService(
         return response
     }
 
+    fun hentInntekter(pid: String, aar: Int): InntekterResponse? {
+        return constructInntekterResponse(pid, aar, LocalDate.of(aar, Month.JANUARY, 1), true)
+    }
+
     fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
+        return constructInntekterResponse(pid, simuleringsaar, getSimuleringFomDato(simuleringsaar), fetchForventedeInntekter)
+    }
+
+    fun constructInntekterResponse(pid: String, simuleringsaar: Int, simuleringsdato: LocalDate, fetchForventedeInntekter: Boolean = true
+    ): InntekterResponse? {
         val pensjonsdata =
-            penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar)) ?: return null
+            penClient.fetchInntektsplanleggerData(pid, simuleringsdato) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
             pensjonsdata,

@@ -42,37 +42,70 @@ export async function getInitiate(): Promise<InitiateResponse | ErrorResponse> {
   })
 }
 
-export async function getInntekter(year: number): Promise<InntekterResponse | ErrorResponse> {
-  const searchParams = new URLSearchParams(document.location.search)
-  const pid: string | null = searchParams.get('pid')
+export async function getInntekterForSimulering(year: number): Promise<InntekterResponse | ErrorResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
 
-  let headers
+    let headers
 
-  if (pid) {
-    headers = {
-      'Content-Type': 'application/json',
-      pid: pid,
-    }
-  } else {
-    headers = {
-      'Content-Type': 'application/json',
-    }
-  }
-
-  return await fetch(`${BASE_PATH}/api/inntekter?simuleringsaar=${year}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: headers,
-  }).then(async (response) => {
-    if (response.status === 403) {
-      return await response.json().then((it) => new ErrorResponse(it))
-    }
-    if (response.status >= 300) {
-      throw Error()
+    if (pid) {
+        headers = {
+            'Content-Type': 'application/json',
+            pid: pid,
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json',
+        }
     }
 
-    return response.json()
-  })
+    return await fetch(`${BASE_PATH}/api/inntekter?simuleringsaar=${year}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: headers,
+    }).then(async (response) => {
+        if (response.status === 403) {
+            return await response.json().then((it) => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
+
+        return response.json()
+    })
+}
+
+export async function getInntekter(aar: number): Promise<InntekterResponse | ErrorResponse> {
+    const searchParams = new URLSearchParams(document.location.search)
+    const pid: string | null = searchParams.get('pid')
+
+    let headers
+
+    if (pid) {
+        headers = {
+            'Content-Type': 'application/json',
+            pid: pid,
+        }
+    } else {
+        headers = {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    return await fetch(`${BASE_PATH}/api/inntekter-for-aar?aar=${aar}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: headers,
+    }).then(async (response) => {
+        if (response.status === 403) {
+            return await response.json().then((it) => new ErrorResponse(it))
+        }
+        if (response.status >= 300) {
+            throw Error()
+        }
+
+        return response.json()
+    })
 }
 
 export async function simulate(
