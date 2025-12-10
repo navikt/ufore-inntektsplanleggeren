@@ -6,7 +6,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Fo
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.InntekterHittilIAar
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Maanedsinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
@@ -15,7 +15,7 @@ class InntektValidator(val inntektService: InntektService) {
     fun validateInntekter(
         pid: String,
         oppgitteForventedeInntekter: ForventedeInntekter,
-        pensjonsdata: Pensjonsdata,
+        uforetrygd: Uforetrygd,
         registrerteForventedeInntekter: ForventedeInntekterSummary?,
         simuleringsaar: Int
     ): List<InntektsplanleggerMessage> {
@@ -24,15 +24,15 @@ class InntektValidator(val inntektService: InntektService) {
         messages.addAll(validateInntektValidity(oppgitteForventedeInntekter))
         messages.addAll(
             validateInntektAndBarnetillegg(
-                pensjonsdata.barnetilleggFellesbarn,
-                pensjonsdata.barnetilleggSaerkullsbarn,
+                uforetrygd.barnetilleggFellesbarn,
+                uforetrygd.barnetilleggSaerkullsbarn,
                 oppgitteForventedeInntekter
             )
         )
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
-            pensjonsdata,
+            uforetrygd,
             simuleringsaar
         )
 
@@ -41,7 +41,7 @@ class InntektValidator(val inntektService: InntektService) {
         val forventedeInntekter = registrerteForventedeInntekter?.mostRecentForventedeInntekterRegistrertAndBenyttet
             ?: inntektService.getForventedeInntekter(
                 pid,
-                pensjonsdata,
+                uforetrygd,
                 simuleringsaar
             ).mostRecentForventedeInntekterRegistrertAndBenyttet
 

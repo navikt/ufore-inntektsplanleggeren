@@ -2,7 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto
 
 import java.time.LocalDate
 
-data class Pensjonsdata(
+data class Uforetrygd(
     val inntektsgrense: Int,
     val kompensasjonsgrad: Double,
     val grenseStoppAvUfoeretrygd: Int,
