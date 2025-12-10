@@ -5,7 +5,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.InntekterHittilIAar
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -42,7 +42,7 @@ class InntektServiceTest {
 
     @Test
     fun `should return empty inntekterHittilIAar when simuleringsaar not this year`() {
-        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), LocalDate.now().year + 1)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, createUforetrygd(), LocalDate.now().year + 1)
         assertEquals(InntekterHittilIAar(emptyList(), emptyList(), emptyList(), emptyList()), inntekterHittilIAar)
     }
 
@@ -91,7 +91,7 @@ class InntektServiceTest {
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 15))
 
-        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, createUforetrygd(), year)
 
         verify(inntektskomponentClient, times(1)).hentAbonnerteInntekterBolk(
             capture(abonnerteInntekterCaptor),
@@ -179,7 +179,7 @@ class InntektServiceTest {
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             PID,
-            pensjonsdata(epsPid = PID_EPS, barnetilleggFellesbarn = true),
+            createUforetrygd(epsPid = PID_EPS, barnetilleggFellesbarn = true),
             year
         )
 
@@ -257,7 +257,7 @@ class InntektServiceTest {
 
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             PID,
-            pensjonsdata(epsPid = PID_EPS, barnetilleggSaerkullsbarn = true),
+            createUforetrygd(epsPid = PID_EPS, barnetilleggSaerkullsbarn = true),
             year
         )
 
@@ -317,7 +317,7 @@ class InntektServiceTest {
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 12))
 
-        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, createUforetrygd(), year)
 
         assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
 
@@ -370,7 +370,7 @@ class InntektServiceTest {
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 4))
 
-        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, createUforetrygd(), year)
 
         assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
 
@@ -424,7 +424,7 @@ class InntektServiceTest {
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.MARCH, 6))
 
-        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, createUforetrygd(), year)
 
         assertEquals(2, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
 
@@ -479,7 +479,7 @@ class InntektServiceTest {
         `when`(eregService.getOrganisasjonsnavn("org")).thenReturn(expectedUtbetaltFra)
         `when`(nowProvider.now()).thenReturn(LocalDate.of(year, Month.DECEMBER, 15))
 
-        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, pensjonsdata(), year)
+        val inntekterHittilIAar = inntektService.getInntekterHittilIAar(PID, createUforetrygd(), year)
 
         assertEquals(1, inntekterHittilIAar.arbeidsinntektOgPensjonsgivendeYtelser.size)
 
@@ -509,7 +509,7 @@ class InntektServiceTest {
         val expectedPensjonUtlandEps = 23675
         val expectedAndreYtelserEps = 0
 
-        val pensjonsdata = pensjonsdata(
+        val uforetrygd = createUforetrygd(
             barnetilleggFellesbarn = true,
             inntekterFromOpenKravBruker = listOf(
                 inntektsgrunnlag(
@@ -554,7 +554,7 @@ class InntektServiceTest {
             )
         )
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata, year)
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, uforetrygd, year)
 
         assertEquals(
             expectedArbeidsinntektBruker,
@@ -649,11 +649,11 @@ class InntektServiceTest {
             )
         )
 
-        val pensjonsdata = pensjonsdata(
+        val uforetrygd = createUforetrygd(
             barnetilleggFellesbarn = true,
             inntekterFromOpenKravBruker = emptyList())
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata, year)
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, uforetrygd, year)
 
         assertEquals(0, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.belop)
         assertEquals(Inntektshendelse.IKKE_REGISTRERT, forventedeInntekter.mostRecentForventedeInntekterRegistrertAndBenyttet.bruker.arbeidsinntekt?.status)
@@ -696,7 +696,7 @@ class InntektServiceTest {
         val expectedPensjonUtlandBruker = 1286
         val expectedAndreYtelserBruker = 7634
 
-        val pensjonsdata = pensjonsdata(
+        val uforetrygd = createUforetrygd(
             barnetilleggSaerkullsbarn = true,
             barnetilleggFellesbarn = false,
             inntekterFromOpenKravBruker = listOf(
@@ -730,7 +730,7 @@ class InntektServiceTest {
             )
         )
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata, year)
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, uforetrygd, year)
 
         assertEquals(
             expectedArbeidsinntektBruker,
@@ -789,7 +789,7 @@ class InntektServiceTest {
         val expectedNaeringsinntektBruker = 1500
         val expectedInntektUtlandBruker = 70
 
-        val pensjonsdata = pensjonsdata(
+        val uforetrygd = createUforetrygd(
             barnetilleggSaerkullsbarn = false,
             barnetilleggFellesbarn = false,
             inntekterFromOpenKravBruker = listOf(
@@ -817,7 +817,7 @@ class InntektServiceTest {
             )
         )
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata, year)
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, uforetrygd, year)
 
         assertEquals(
             expectedArbeidsinntektBruker,
@@ -923,7 +923,7 @@ class InntektServiceTest {
             )
         )
         val forventedeInntekter =
-            inntektService.getForventedeInntekter(PID, pensjonsdata(barnetilleggFellesbarn = true), year)
+            inntektService.getForventedeInntekter(PID, createUforetrygd(barnetilleggFellesbarn = true), year)
 
         assertEquals(
             expectedArbeidsinntektBruker,
@@ -1052,7 +1052,7 @@ class InntektServiceTest {
         )
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(barnetilleggFellesbarn = false, barnetilleggSaerkullsbarn = true),
+            createUforetrygd(barnetilleggFellesbarn = false, barnetilleggSaerkullsbarn = true),
             year
         )
 
@@ -1137,7 +1137,7 @@ class InntektServiceTest {
         )
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(barnetilleggFellesbarn = false, barnetilleggSaerkullsbarn = false),
+            createUforetrygd(barnetilleggFellesbarn = false, barnetilleggSaerkullsbarn = false),
             year
         )
 
@@ -1182,7 +1182,7 @@ class InntektServiceTest {
         )
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(barnetilleggFellesbarn = true, barnetilleggSaerkullsbarn = false),
+            createUforetrygd(barnetilleggFellesbarn = true, barnetilleggSaerkullsbarn = false),
             year
         )
 
@@ -1250,7 +1250,7 @@ class InntektServiceTest {
         )
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(barnetilleggFellesbarn = false, barnetilleggSaerkullsbarn = false),
+            createUforetrygd(barnetilleggFellesbarn = false, barnetilleggSaerkullsbarn = false),
             year
         )
 
@@ -1311,7 +1311,7 @@ class InntektServiceTest {
 
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(barnetilleggFellesbarn = true),
+            createUforetrygd(barnetilleggFellesbarn = true),
             year
         )
 
@@ -1360,7 +1360,7 @@ class InntektServiceTest {
 
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(),
+            createUforetrygd(),
             year
         )
 
@@ -1426,7 +1426,7 @@ class InntektServiceTest {
 
         val forventedeInntekter = inntektService.getForventedeInntekter(
             PID,
-            pensjonsdata(barnetilleggFellesbarn = true),
+            createUforetrygd(barnetilleggFellesbarn = true),
             year
         )
 
@@ -1459,7 +1459,7 @@ class InntektServiceTest {
             )
         )
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata(barnetilleggFellesbarn = false), year)
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, createUforetrygd(barnetilleggFellesbarn = false), year)
 
         assertNull(forventedeInntekter.sumBenyttedeInntekterEps)
     }
@@ -1487,12 +1487,12 @@ class InntektServiceTest {
             )
         )
 
-        val forventedeInntekter = inntektService.getForventedeInntekter(PID, pensjonsdata(barnetilleggFellesbarn = true, epsPid = null), year)
+        val forventedeInntekter = inntektService.getForventedeInntekter(PID, createUforetrygd(barnetilleggFellesbarn = true, epsPid = null), year)
 
         assertNull(forventedeInntekter.sumBenyttedeInntekterEps)
     }
 
-    private fun pensjonsdata(
+    private fun createUforetrygd(
         inntektsgrense: Int = 300000,
         kompensasjonsgrad: Double = 65.5,
         grenseStoppAvUfoeretrygd: Int = 500000,
@@ -1510,8 +1510,8 @@ class InntektServiceTest {
         epsPid: String? = PID_EPS,
         inntekterFromOpenKravBruker: List<Inntektsgrunnlag>? = null,
         inntekterFromOpenKravEps: List<Inntektsgrunnlag>? = null
-    ): Pensjonsdata =
-        Pensjonsdata(
+    ): Uforetrygd =
+        Uforetrygd(
             inntektsgrense = inntektsgrense,
             kompensasjonsgrad = kompensasjonsgrad,
             grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,

@@ -2,7 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.ForventedeInntekterSummary
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
 import java.time.Month
@@ -13,14 +13,14 @@ class Validator(
     private val nowProvider: NowProvider
 ) {
     fun validateUserInitialData(
-        pensjonsdata: Pensjonsdata?,
+        uforetrygd: Uforetrygd?,
         aktuelleAar: List<Int>
     ): List<InntektsplanleggerMessage> {
-        if (pensjonsdata == null) {
+        if (uforetrygd == null) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
         }
 
-        if (!pensjonsdata.hasLopendeUforeVedtakNextYear && !pensjonsdata.hasLopendeUforeVedtakThisYear) {
+        if (!uforetrygd.hasLopendeUforeVedtakNextYear && !uforetrygd.hasLopendeUforeVedtakThisYear) {
             return listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET))
         }
 
@@ -28,7 +28,7 @@ class Validator(
     }
 
     fun validateUserAndInputBeforeSimulering(
-        pensjonsdata: Pensjonsdata?,
+        uforetrygd: Uforetrygd?,
         oppgitteForventedeInntekter: ForventedeInntekter,
         registrerteForventedeInntekter: ForventedeInntekterSummary?,
         pid: String,
@@ -40,18 +40,18 @@ class Validator(
             return listOf(monthValidation)
         }
         val validationMessages = mutableListOf<InntektsplanleggerMessage>()
-        validationMessages.addAll(validateUserInitialData(pensjonsdata, aktuelleAar))
+        validationMessages.addAll(validateUserInitialData(uforetrygd, aktuelleAar))
 
         if (!aktuelleAar.contains(simuleringsaar)) {
             validationMessages.add(InntektsplanleggerMessage(InntektsplanleggerMessageCode.ILLEGAL_SIMULERINGSAAR))
         }
 
-        if (pensjonsdata != null) {
+        if (uforetrygd != null) {
             validationMessages.addAll(
                 inntektValidator.validateInntekter(
                     pid,
                     oppgitteForventedeInntekter,
-                    pensjonsdata,
+                    uforetrygd,
                     registrerteForventedeInntekter,
                     simuleringsaar
                 )

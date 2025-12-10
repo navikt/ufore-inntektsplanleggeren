@@ -13,7 +13,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.Validator
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
@@ -85,16 +85,16 @@ class InntektsplanleggerService(
         simuleringsAar: Int,
         oppgitteInntekter: ForventedeInntekter
     ): SimuleringResponse {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsAar))
+        val uforetrygd = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsAar))
         val gjeldendeForventedeInntekter =
-            pensjonsdata?.let { inntektService.getForventedeInntekter(pid, it, simuleringsAar) }
+            uforetrygd?.let { inntektService.getForventedeInntekter(pid, it, simuleringsAar) }
         val validationResult = validator.validateUserAndInputBeforeSimulering(
-            pensjonsdata,
+            uforetrygd,
             oppgitteInntekter,
             gjeldendeForventedeInntekter,
             pid,
             simuleringsAar,
-            getAktuelleAar(pensjonsdata?.hasLopendeUforeVedtakThisYear, pensjonsdata?.hasLopendeUforeVedtakNextYear)
+            getAktuelleAar(uforetrygd?.hasLopendeUforeVedtakThisYear, uforetrygd?.hasLopendeUforeVedtakNextYear)
         )
 
         val response: SimuleringResponse
@@ -131,11 +131,11 @@ class InntektsplanleggerService(
 
     private fun hentInntekter(pid: String, simuleringsaar: Int, simuleringsdato: LocalDate, fetchForventedeInntekter: Boolean
     ): InntekterResponse? {
-        val pensjonsdata =
+        val uforetrygd =
             penClient.fetchInntektsplanleggerData(pid, simuleringsdato) ?: return null
         val inntekterHittilIAar = inntektService.getInntekterHittilIAar(
             pid,
-            pensjonsdata,
+            uforetrygd,
             simuleringsaar
         )
 
@@ -145,12 +145,12 @@ class InntektsplanleggerService(
             forventedeInntekter = if (fetchForventedeInntekter) {
                 inntektService.getForventedeInntekter(
                     pid,
-                    pensjonsdata,
+                    uforetrygd,
                     simuleringsaar
                 ).mostRecentForventedeInntekterRegistrertAndBenyttet.toDto()
             } else null,
-            uforeHeleAaret = pensjonsdata.uforeHeleAaret,
-            epsPid = pensjonsdata.epsPid?.let { pensjonsdata.epsPid.substring(0, 6) + "*****" }
+            uforeHeleAaret = uforetrygd.uforeHeleAaret,
+            epsPid = uforetrygd.epsPid?.let { uforetrygd.epsPid.substring(0, 6) + "*****" }
         )
 
         InntekterInntektsplanleggerMetricsCounter.count()
@@ -162,20 +162,20 @@ class InntektsplanleggerService(
         pid: String,
         simuleringsaar: Int
     ): InntektsplanleggerenInitialResponse {
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
-        val aktuelleAar = pensjonsdata.let {
+        val uforetrygd = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
+        val aktuelleAar = uforetrygd.let {
             getAktuelleAar(
                 it?.hasLopendeUforeVedtakThisYear,
                 it?.hasLopendeUforeVedtakNextYear
             )
         }
-        val messages = validator.validateUserInitialData(pensjonsdata, aktuelleAar)
+        val messages = validator.validateUserInitialData(uforetrygd, aktuelleAar)
         val navn = personService.getNavn(pid)
         val loggetInnSom = tokenService.determineLoggedInUser()
 
         val response = InntektsplanleggerenInitialResponse(
             messages,
-            mapInntektsplanleggerenInitialData(pid, pensjonsdata, aktuelleAar, messages),
+            mapInntektsplanleggerenInitialData(pid, uforetrygd, aktuelleAar, messages),
             pid,
             navn,
             loggetInnSom
@@ -221,23 +221,23 @@ class InntektsplanleggerService(
 
     private fun mapInntektsplanleggerenInitialData(
         pid: String,
-        pensjonsdata: Pensjonsdata?,
+        uforetrygd: Uforetrygd?,
         aktuelleAar: List<Int>,
         messages: List<InntektsplanleggerMessage>
     ): InntektsplanleggerenInitialData? {
-        if (pensjonsdata != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
-            val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, pensjonsdata, it) }
+        if (uforetrygd != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
+            val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, uforetrygd, it) }
 
             return InntektsplanleggerenInitialData(
                 forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
                 forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
-                inntektsgrense = pensjonsdata.inntektsgrense,
-                kompensasjonsgrad = pensjonsdata.kompensasjonsgrad,
-                grenseStoppAvUfoeretrygd = pensjonsdata.grenseStoppAvUfoeretrygd,
-                hasGjenlevendeTillegg = pensjonsdata.hasGjenlevendeTillegg,
-                hasBarneTilleggFellesbarn = pensjonsdata.barnetilleggFellesbarn,
-                hasBarnetilleggSaerkullsbarn = pensjonsdata.barnetilleggSaerkullsbarn,
-                hasVarigTilrettelagtArbeid = pensjonsdata.hasVarigTilrettelagtArbeid,
+                inntektsgrense = uforetrygd.inntektsgrense,
+                kompensasjonsgrad = uforetrygd.kompensasjonsgrad,
+                grenseStoppAvUfoeretrygd = uforetrygd.grenseStoppAvUfoeretrygd,
+                hasGjenlevendeTillegg = uforetrygd.hasGjenlevendeTillegg,
+                hasBarneTilleggFellesbarn = uforetrygd.barnetilleggFellesbarn,
+                hasBarnetilleggSaerkullsbarn = uforetrygd.barnetilleggSaerkullsbarn,
+                hasVarigTilrettelagtArbeid = uforetrygd.hasVarigTilrettelagtArbeid,
                 aktuelleAar = aktuelleAar,
                 annetRelevantAar = getAnnetRelevantAar()
             )

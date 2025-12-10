@@ -8,7 +8,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Ma
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.Personinntekt
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.PersonInntekter
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -71,10 +71,10 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata(false, false)
+        val uforetrygd = uforetrygd(false, false)
 
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(InntektsplanleggerMessageCode.INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG, result[0].messageCode)
         assertEquals(InntektsplanleggerMessageType.ERROR, result[0].type)
 
@@ -91,9 +91,9 @@ class InntektValidatorTest {
                 pensjonUtland = 40032
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata(false, false)
+        val uforetrygd = uforetrygd(false, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(InntektsplanleggerMessageCode.INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG, result[0].messageCode)
         assertEquals(InntektsplanleggerMessageType.ERROR, result[0].type)
     }
@@ -109,9 +109,9 @@ class InntektValidatorTest {
                 pensjonUtland = 1000
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata(false, true)
+        val uforetrygd = uforetrygd(false, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG == it.messageCode })
     }
 
@@ -126,9 +126,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata(false, true)
+        val uforetrygd = uforetrygd(false, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(InntektsplanleggerMessageCode.MISSING_RELEVANT_INNTEKTER_WHEN_BARNETILLEGG, result[0].messageCode)
         assertEquals(InntektsplanleggerMessageType.ERROR, result[0].type)
     }
@@ -144,9 +144,9 @@ class InntektValidatorTest {
                 pensjonUtland = 3000
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata(false, true)
+        val uforetrygd = uforetrygd(false, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(InntektsplanleggerMessageCode.MISSING_RELEVANT_INNTEKTER_WHEN_BARNETILLEGG, result[0].messageCode)
         assertEquals(InntektsplanleggerMessageType.ERROR, result[0].type)
 
@@ -163,9 +163,9 @@ class InntektValidatorTest {
                 pensjonUtland = 12
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata(false, true)
+        val uforetrygd = uforetrygd(false, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.MISSING_RELEVANT_INNTEKTER_WHEN_BARNETILLEGG == it.messageCode })
     }
 
@@ -186,9 +186,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(false, true)
+        val uforetrygd = uforetrygd(false, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.EPS_INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG_FELLESBARN,
             result[0].messageCode
@@ -213,9 +213,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(true, true)
+        val uforetrygd = uforetrygd(true, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.EPS_INNTEKT_ONLY_RELEVANT_WHEN_BARNETILLEGG_FELLESBARN == it.messageCode })
     }
 
@@ -236,9 +236,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(true, true)
+        val uforetrygd = uforetrygd(true, true)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN,
             result[0].messageCode
@@ -263,9 +263,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN,
             result[0].messageCode
@@ -290,9 +290,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN,
             result[0].messageCode
@@ -317,9 +317,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN,
             result[0].messageCode
@@ -344,9 +344,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN,
             result[0].messageCode
@@ -371,9 +371,9 @@ class InntektValidatorTest {
                 pensjonUtland = 2333
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { it.messageCode == InntektsplanleggerMessageCode.MISSING_RELEVANT_EPS_INNTEKT_WHEN_BARNETILLEGG_FELLESBARN })
     }
 
@@ -388,9 +388,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL,
             result[0].messageCode
@@ -413,9 +413,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL == it.messageCode })
     }
 
@@ -430,9 +430,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL,
             result[0].messageCode
@@ -455,9 +455,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL == it.messageCode })
     }
 
@@ -472,9 +472,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL,
             result[0].messageCode
@@ -497,9 +497,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL == it.messageCode })
     }
 
@@ -520,9 +520,9 @@ class InntektValidatorTest {
                 pensjonUtland = -1
             )
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
 
         assertEquals(
             10,
@@ -556,9 +556,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
 
         assertTrue(result.none { it.messageCode == InntektsplanleggerMessageCode.ILLEGAL_INNTEKT_FIELD_VALUE })
     }
@@ -574,9 +574,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
             result[0].messageCode
@@ -604,9 +604,9 @@ class InntektValidatorTest {
                 pensjonUtland = null
             ), eps = null
         )
-        val pensjonsdata = pensjonsdata()
+        val uforetrygd = uforetrygd()
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.isEmpty())
     }
 
@@ -627,9 +627,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR,
             result[0].messageCode
@@ -659,9 +659,9 @@ class InntektValidatorTest {
                 pensjonUtland = 100000
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.ARBEIDSINNTEKT_GIVEN_SMALLER_THAN_HITTIL_I_AAR == it.messageCode })
     }
 
@@ -682,9 +682,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
             result[0].messageCode
@@ -719,9 +719,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR == it.messageCode })
     }
 
@@ -742,9 +742,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR,
             result[0].messageCode
@@ -774,9 +774,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.ANDRE_YTELSER_SMALLER_THAN_HITTIL_I_AAR == it.messageCode })
     }
 
@@ -811,9 +811,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertEquals(
             InntektsplanleggerMessageCode.ONE_OR_MORE_INNTEKT_HAS_STATUS_REGISTRERT,
             result[0].messageCode
@@ -839,9 +839,9 @@ class InntektValidatorTest {
                 pensjonUtland = 0
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.ONE_OR_MORE_INNTEKT_HAS_STATUS_REGISTRERT == it.messageCode })
 
     }
@@ -883,9 +883,9 @@ class InntektValidatorTest {
                 pensjonUtland = 1
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.any { InntektsplanleggerMessageCode.EPS_INNTEKT_CHANGED == it.messageCode && InntektsplanleggerMessageType.WARNING == it.type })
     }
 
@@ -926,14 +926,14 @@ class InntektValidatorTest {
                 pensjonUtland = 1
             )
         )
-        val pensjonsdata = pensjonsdata(true, false)
+        val uforetrygd = uforetrygd(true, false)
         val result =
-            inntektValidator.validateInntekter(PID, oppgitteInntekter, pensjonsdata, null, LocalDate.now().year)
+            inntektValidator.validateInntekter(PID, oppgitteInntekter, uforetrygd, null, LocalDate.now().year)
         assertTrue(result.none { InntektsplanleggerMessageCode.EPS_INNTEKT_CHANGED == it.messageCode })
     }
 
-    private fun pensjonsdata(): Pensjonsdata =
-        Pensjonsdata(
+    private fun uforetrygd(): Uforetrygd =
+        Uforetrygd(
             inntektsgrense = 300000,
             kompensasjonsgrad = 65.5,
             grenseStoppAvUfoeretrygd = 500000,
@@ -949,11 +949,11 @@ class InntektValidatorTest {
             inntekterFromOpenKravEps = null,
             uforeFomDato = null
         )
-    private fun pensjonsdata(
+    private fun uforetrygd(
         hasBarnetilleggFellesbarn: Boolean,
         hasBarnetilleggSaerkullsbarn: Boolean
-    ): Pensjonsdata =
-        Pensjonsdata(
+    ): Uforetrygd =
+        Uforetrygd(
             inntektsgrense = 300000,
             kompensasjonsgrad = 65.5,
             grenseStoppAvUfoeretrygd = 500000,

@@ -2,7 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanleg
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.PersonInntekter
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -21,7 +21,7 @@ class ValidatorTest {
     private val thisYear = LocalDate.now().year
 
     @Test
-    fun `should return USER_HAS_NO_UFORE when pensjonsdata is null`() {
+    fun `should return USER_HAS_NO_UFORE when uforetrygd is null`() {
         assertEquals(
             InntektsplanleggerMessageCode.USER_HAS_NO_UFORE,
             validator.validateUserInitialData(null, listOf(thisYear))[0].messageCode
@@ -31,7 +31,7 @@ class ValidatorTest {
     @Test
     fun `should return USER_HAS_NO_LOPENDE_VEDTAK_YET no lopende uforevedtak this year and next year`() {
         val result = validator.validateUserInitialData(
-            pensjonsdata(false, false),
+            uforetrygd(false, false),
             listOf(thisYear)
         )
         assertEquals(InntektsplanleggerMessageCode.USER_HAS_NO_LOPENDE_VEDTAK_YET, result[0].messageCode)
@@ -41,7 +41,7 @@ class ValidatorTest {
     fun `should return ILLEGAL_MONTH_DECEMBER_THIS_YEAR when trying to simulate current year in December`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
         val result = validator.validateUserAndInputBeforeSimulering(
-            pensjonsdata(true, true), ForventedeInntekter(
+            uforetrygd(true, true), ForventedeInntekter(
                 PersonInntekter(0, 0, 0, 0, 0), null
             ), null, "", thisYear, listOf(thisYear)
         )
@@ -52,7 +52,7 @@ class ValidatorTest {
     fun `should not return ILLEGAL_MONTH_DECEMBER_THIS_YEAR when trying to simulate current year in another month than December`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.NOVEMBER.value))
         val result = validator.validateUserAndInputBeforeSimulering(
-            pensjonsdata(true, true), ForventedeInntekter(
+            uforetrygd(true, true), ForventedeInntekter(
                 PersonInntekter(0, 0, 0, 0, 0), null
             ), null, "", thisYear, listOf(thisYear)
         )
@@ -70,7 +70,7 @@ class ValidatorTest {
             )
         )
         val result = validator.validateUserAndInputBeforeSimulering(
-            pensjonsdata(false, false), ForventedeInntekter(
+            uforetrygd(false, false), ForventedeInntekter(
                 PersonInntekter(0, 0, 0, 0, 0), null
             ), null, "", thisYear, listOf(thisYear)
         )
@@ -82,7 +82,7 @@ class ValidatorTest {
     fun `should return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO only when this year and next year in aktuelleAar`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
 
-        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear, thisYear + 1))
+        val messages = validator.validateUserInitialData(uforetrygd(true, true), listOf(thisYear, thisYear + 1))
 
         assertEquals(1, messages.size)
         assertEquals(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO, messages[0].messageCode)
@@ -93,7 +93,7 @@ class ValidatorTest {
     fun `should return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO and CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR when only next year in aktuelleAar`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
 
-        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear + 1))
+        val messages = validator.validateUserInitialData(uforetrygd(true, true), listOf(thisYear + 1))
 
         assertEquals(2, messages.size)
         assertEquals(InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO, messages[0].messageCode)
@@ -106,7 +106,7 @@ class ValidatorTest {
     fun `should not return FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO or CAN_NOT_REPORT_INNTEKT_FOR_THIS_YEAR when aktuelleAar is null`() {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
 
-        val messages = validator.validateUserInitialData(pensjonsdata(true, true), listOf(thisYear))
+        val messages = validator.validateUserInitialData(uforetrygd(true, true), listOf(thisYear))
 
         assertTrue(messages.isEmpty())
     }
@@ -116,7 +116,7 @@ class ValidatorTest {
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withYear(2021).withDayOfYear(1))
 
         val messages = validator.validateUserAndInputBeforeSimulering(
-            pensjonsdata(true, false),
+            uforetrygd(true, false),
             ForventedeInntekter(PersonInntekter(null, null, null, null, null), null),
             null,
             "",
@@ -132,7 +132,7 @@ class ValidatorTest {
     fun `should not return ILLEGAL_SIMULERINGSAAR when simuleringsaar in aktuelleAar`(){
         `when`(nowProvider.now()).thenReturn(LocalDate.now().withYear(2021).withDayOfYear(1))
         val messages = validator.validateUserAndInputBeforeSimulering(
-            pensjonsdata(true, false),
+            uforetrygd(true, false),
             ForventedeInntekter(PersonInntekter(null, null, null, null, null), null),
             null,
             "",
@@ -141,8 +141,8 @@ class ValidatorTest {
         assertTrue(messages.isEmpty())
     }
 
-    private fun pensjonsdata(hasLopendeVedtakThisYear: Boolean, hasLopvedtakNextYear: Boolean) =
-        Pensjonsdata(
+    private fun uforetrygd(hasLopendeVedtakThisYear: Boolean, hasLopvedtakNextYear: Boolean) =
+        Uforetrygd(
             0,
             0.0,
             0,

@@ -301,13 +301,13 @@ class PenClientTest : WebClientTest() {
     }
 
     @Test
-    fun `should return Pensjonsdata when 200 from fetchInntektsplanleggerData`() {
-        prepare(pensjonsdata200Response())
+    fun `should return uforetrygd when 200 from fetchInntektsplanleggerData`() {
+        prepare(uforetrygd200Response())
         val expectedEndringstidspunkt = OffsetDateTime.parse("2024-09-11T22:00Z")
 
         `when`(tokenService.determineLoggedInUser()).thenReturn("Brukeren")
 
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(
+        val uforetrygd = penClient.fetchInntektsplanleggerData(
             PID,
             LocalDate.of(2024, 11, 1)
         )
@@ -316,25 +316,25 @@ class PenClientTest : WebClientTest() {
 
         assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data?simuleringFom=2024-11-01", request.path)
 
-        assertEquals("19447917729", pensjonsdata?.epsPid)
-        assertEquals(49611, pensjonsdata?.inntektsgrense)
-        assertEquals(460060, pensjonsdata?.grenseStoppAvUfoeretrygd)
-        assertTrue(pensjonsdata!!.hasLopendeUforeVedtakThisYear)
-        assertFalse(pensjonsdata.hasLopendeUforeVedtakNextYear)
-        assertFalse(pensjonsdata.hasVarigTilrettelagtArbeid)
-        assertFalse(pensjonsdata.hasGjenlevendeTillegg)
-        assertTrue(pensjonsdata.uforeHeleAaret)
-        assertFalse(pensjonsdata.barnetilleggSaerkullsbarn)
-        assertTrue(pensjonsdata.barnetilleggFellesbarn)
-        assertEquals(2, pensjonsdata.inntekterFromOpenKravBruker!!.size)
-        assertEquals(75000, pensjonsdata.inntekterFromOpenKravBruker[0].belop)
-        assertEquals("FORINTARB", pensjonsdata.inntekterFromOpenKravBruker[0].inntektType)
-        assertTrue(pensjonsdata.inntekterFromOpenKravBruker[0].bruk)
-        assertEquals(expectedEndringstidspunkt, pensjonsdata.inntekterFromOpenKravBruker[0].endringstidspunkt)
-        assertEquals(2, pensjonsdata.inntekterFromOpenKravEps!!.size)
-        assertEquals(0, pensjonsdata.inntekterFromOpenKravEps[0].belop)
-        assertEquals("FORINTARB", pensjonsdata.inntekterFromOpenKravBruker[0].inntektType)
-        assertTrue(pensjonsdata.inntekterFromOpenKravBruker[0].bruk)
+        assertEquals("19447917729", uforetrygd?.epsPid)
+        assertEquals(49611, uforetrygd?.inntektsgrense)
+        assertEquals(460060, uforetrygd?.grenseStoppAvUfoeretrygd)
+        assertTrue(uforetrygd!!.hasLopendeUforeVedtakThisYear)
+        assertFalse(uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertFalse(uforetrygd.hasVarigTilrettelagtArbeid)
+        assertFalse(uforetrygd.hasGjenlevendeTillegg)
+        assertTrue(uforetrygd.uforeHeleAaret)
+        assertFalse(uforetrygd.barnetilleggSaerkullsbarn)
+        assertTrue(uforetrygd.barnetilleggFellesbarn)
+        assertEquals(2, uforetrygd.inntekterFromOpenKravBruker!!.size)
+        assertEquals(75000, uforetrygd.inntekterFromOpenKravBruker[0].belop)
+        assertEquals("FORINTARB", uforetrygd.inntekterFromOpenKravBruker[0].inntektType)
+        assertTrue(uforetrygd.inntekterFromOpenKravBruker[0].bruk)
+        assertEquals(expectedEndringstidspunkt, uforetrygd.inntekterFromOpenKravBruker[0].endringstidspunkt)
+        assertEquals(2, uforetrygd.inntekterFromOpenKravEps!!.size)
+        assertEquals(0, uforetrygd.inntekterFromOpenKravEps[0].belop)
+        assertEquals("FORINTARB", uforetrygd.inntekterFromOpenKravBruker[0].inntektType)
+        assertTrue(uforetrygd.inntekterFromOpenKravBruker[0].bruk)
     }
 
     @Test
@@ -459,7 +459,7 @@ class PenClientTest : WebClientTest() {
             )
     }
 
-    private fun pensjonsdata200Response(): MockResponse {
+    private fun uforetrygd200Response(): MockResponse {
         return jsonResponse(HttpStatus.OK)!!
             .setBody(
                 """
