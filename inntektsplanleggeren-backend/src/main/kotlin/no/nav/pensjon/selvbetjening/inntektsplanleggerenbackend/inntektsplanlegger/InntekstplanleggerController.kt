@@ -21,10 +21,7 @@ class InntektsplanleggerController(
     private val tokenService: TokenService
 ) {
     @GetMapping("initiate")
-    fun getInntektsplanleggerenInitialData(
-        @RequestHeader("pid", required=false) pidFromHeader:String?,
-        @CookieValue("nav-obo", required=false) navObocookie: String?
-    ): ResponseEntity<InntektsplanleggerenInitialResponse> {
+    fun getInntektsplanleggerenInitialData(): ResponseEntity<InntektsplanleggerenInitialResponse> {
         try {
             return ResponseEntity(
                 inntektsPlanleggerService.hentInitielleData(
@@ -53,9 +50,7 @@ class InntektsplanleggerController(
     @GetMapping("inntekter")
     fun getInntekter(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestParam("fetchForventedeInntekter", required = false) fetchForventedeInntekter: Boolean?,
-        @RequestHeader("pid", required=false) pidFromHeader: String?,
-        @CookieValue("nav-obo", required=false) navObocookie: String?
+        @RequestParam("fetchForventedeInntekter", required = false) fetchForventedeInntekter: Boolean?
     ): ResponseEntity<InntekterResponse> {
         return try {
             ResponseEntity(
@@ -89,9 +84,7 @@ class InntektsplanleggerController(
     @PostMapping("simuler")
     fun simuler(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestHeader("pid", required=false) pidFromHeader:String?,
-        @RequestBody forventedeInntekter: ForventedeInntekter,
-        @CookieValue("nav-obo", required=false) navObocookie: String?
+        @RequestBody forventedeInntekter: ForventedeInntekter
     ): ResponseEntity<SimuleringResponse> {
         return try {
             ResponseEntity(
@@ -109,9 +102,7 @@ class InntektsplanleggerController(
     @PostMapping("send")
     fun send(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
-        @RequestHeader("pid", required=false) pidFromHeader:String?,
-        @RequestBody forventedeInntekter: ForventedeInntekter,
-        @CookieValue("nav-obo", required=false) navObocookie: String?
+        @RequestBody forventedeInntekter: ForventedeInntekter
     ): ResponseEntity<InntektsplanleggerenSendResponse> {
         try {
             return ResponseEntity(
