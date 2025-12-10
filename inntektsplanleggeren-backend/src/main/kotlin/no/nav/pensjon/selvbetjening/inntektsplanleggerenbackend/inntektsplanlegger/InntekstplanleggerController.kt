@@ -28,7 +28,7 @@ class InntektsplanleggerController(
         val response:ResponseEntity<InntektsplanleggerenInitialResponse>
         try {
             response =  ResponseEntity(
-                inntektsPlanleggerService.constructInitialInntektsplanleggerResponse(SecurityContextUtil.getPidFromContext(), LocalDate.now().year),
+                inntektsPlanleggerService.hentInitielleData(SecurityContextUtil.getPidFromContext(), LocalDate.now().year),
                 HttpStatus.OK
             )
             if (tokenService.isUserLoggedInAsSaksbehandler()) {
@@ -51,7 +51,7 @@ class InntektsplanleggerController(
     ): ResponseEntity<InntekterResponse> {
         return try {
             ResponseEntity(
-                inntektsPlanleggerService.constructInntekterResponse(
+                inntektsPlanleggerService.hentInntekter(
                     SecurityContextUtil.getPidFromContext(),
                     simuleringsaar,
                     fetchForventedeInntekter?:true
@@ -134,7 +134,7 @@ class InntektsplanleggerController(
     ): ResponseEntity<InntektsplanleggerenStatusResponse> {
         return try {
             ResponseEntity(
-                inntektsPlanleggerService.constructStatusResponse(
+                inntektsPlanleggerService.hentStatus(
                     SecurityContextUtil.getPidFromContext(),
                     valgtAr,
                     innsendingsTidspunkt.minusSeconds(3)//juster tidspunkt noen sekunder tilbake så vi er sikker på å få med alt

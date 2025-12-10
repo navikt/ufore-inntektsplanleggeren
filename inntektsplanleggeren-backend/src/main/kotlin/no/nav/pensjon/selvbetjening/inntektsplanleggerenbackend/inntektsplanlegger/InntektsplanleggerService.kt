@@ -122,14 +122,14 @@ class InntektsplanleggerService(
     }
 
     fun hentInntekter(pid: String, aar: Int): InntekterResponse? {
-        return constructInntekterResponse(pid, aar, LocalDate.of(aar, Month.JANUARY, 1), true)
+        return hentInntekter(pid, aar, LocalDate.of(aar, Month.JANUARY, 1), true)
     }
 
-    fun constructInntekterResponse(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean = true): InntekterResponse? {
-        return constructInntekterResponse(pid, simuleringsaar, getSimuleringFomDato(simuleringsaar), fetchForventedeInntekter)
+    fun hentInntekter(pid: String, simuleringsaar: Int, fetchForventedeInntekter: Boolean): InntekterResponse? {
+        return hentInntekter(pid, simuleringsaar, getSimuleringFomDato(simuleringsaar), fetchForventedeInntekter)
     }
 
-    fun constructInntekterResponse(pid: String, simuleringsaar: Int, simuleringsdato: LocalDate, fetchForventedeInntekter: Boolean = true
+    private fun hentInntekter(pid: String, simuleringsaar: Int, simuleringsdato: LocalDate, fetchForventedeInntekter: Boolean
     ): InntekterResponse? {
         val pensjonsdata =
             penClient.fetchInntektsplanleggerData(pid, simuleringsdato) ?: return null
@@ -158,7 +158,7 @@ class InntektsplanleggerService(
         return response
     }
 
-    fun constructInitialInntektsplanleggerResponse(
+    fun hentInitielleData(
         pid: String,
         simuleringsaar: Int
     ): InntektsplanleggerenInitialResponse {
@@ -186,7 +186,7 @@ class InntektsplanleggerService(
         return response
     }
 
-    fun constructStatusResponse(
+    fun hentStatus(
         fnr: String,
         simuleringsAar: Int,
         innsendingsTidspunkt: LocalDateTime
@@ -194,7 +194,7 @@ class InntektsplanleggerService(
 
         val penResponse: StatusInnsendingResponse? =
             penClient.fetchInntektsplanleggerStatus(fnr, getSimuleringFomDato(simuleringsAar), innsendingsTidspunkt)
-        val forventetInntekt = constructInntekterResponse(fnr, simuleringsAar)
+        val forventetInntekt = hentInntekter(fnr, simuleringsAar, true)
         var response: InntektsplanleggerenStatusResponse? = null
 
         if (penResponse != null) {
