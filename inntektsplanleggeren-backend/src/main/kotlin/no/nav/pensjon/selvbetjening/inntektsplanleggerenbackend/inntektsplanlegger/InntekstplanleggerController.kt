@@ -25,18 +25,26 @@ class InntektsplanleggerController(
         @RequestHeader("pid", required=false) pidFromHeader:String?,
         @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntektsplanleggerenInitialResponse> {
-        val response:ResponseEntity<InntektsplanleggerenInitialResponse>
         try {
-            response =  ResponseEntity(
-                inntektsPlanleggerService.hentInitielleData(SecurityContextUtil.getPidFromContext(), LocalDate.now().year),
+            return ResponseEntity(
+                inntektsPlanleggerService.hentInitielleData(
+                    SecurityContextUtil.getPidFromContext(),
+                    LocalDate.now().year),
                 HttpStatus.OK
             )
-            if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                auditor.auditInternalUserRead(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
-            } else if (SecurityContextUtil.isFullmakt()) {
-                auditor.auditFullmaktRead(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
-            }
-            return response
+                .also {
+                    if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                        auditor.auditInternalUserRead(
+                            tokenService.determineLoggedInUserId(),
+                            SecurityContextUtil.getPidFromContext()
+                        )
+                    } else if (SecurityContextUtil.isFullmakt()) {
+                        auditor.auditFullmaktRead(
+                            tokenService.determineLoggedInUserId(),
+                            SecurityContextUtil.getPidFromContext()
+                        )
+                    }
+                }
         } catch (exception: Exception) {
             throw ErrorHandler.exceptionToErrorResponse(exception)
         }
@@ -105,21 +113,27 @@ class InntektsplanleggerController(
         @RequestBody forventedeInntekter: ForventedeInntekter,
         @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntektsplanleggerenSendResponse> {
-        val response :ResponseEntity<InntektsplanleggerenSendResponse>
         try {
-            response = ResponseEntity(
+            return ResponseEntity(
                 inntektsPlanleggerService.sendInntektsendring(
                     SecurityContextUtil.getPidFromContext(),
                     simuleringsaar,
                     forventedeInntekter
                 ), HttpStatus.OK
             )
-            if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                auditor.auditInternalUserCreate(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
-            } else if (SecurityContextUtil.isFullmakt()) {
-                auditor.auditFullmaktCreate(tokenService.determineLoggedInUserId(), SecurityContextUtil.getPidFromContext())
-            }
-            return response
+                .also {
+                    if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                        auditor.auditInternalUserCreate(
+                            tokenService.determineLoggedInUserId(),
+                            SecurityContextUtil.getPidFromContext()
+                        )
+                    } else if (SecurityContextUtil.isFullmakt()) {
+                        auditor.auditFullmaktCreate(
+                            tokenService.determineLoggedInUserId(),
+                            SecurityContextUtil.getPidFromContext()
+                        )
+                    }
+                }
         } catch (exception: Exception) {
             throw ErrorHandler.exceptionToErrorResponse(exception)
         }
@@ -129,8 +143,6 @@ class InntektsplanleggerController(
     fun getStatus(
         @RequestParam("valgtaar", required = true) valgtAr: Int,
         @RequestParam("innsendingstidspunkt", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") innsendingsTidspunkt: LocalDateTime,
-        @RequestHeader("pid", required=false) pidFromHeader:String?,
-        @CookieValue("nav-obo", required=false) navObocookie: String?
     ): ResponseEntity<InntektsplanleggerenStatusResponse> {
         return try {
             ResponseEntity(
