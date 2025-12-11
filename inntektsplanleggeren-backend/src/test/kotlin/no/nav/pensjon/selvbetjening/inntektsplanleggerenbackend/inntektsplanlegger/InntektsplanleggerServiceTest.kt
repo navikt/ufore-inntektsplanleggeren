@@ -357,7 +357,7 @@ class InntektsplanleggerServiceTest {
     }
 
     @Test
-    fun `should return InntekterResponse from inntektskomponent data when hentInntekter`() {
+    fun `should return InntekterResponse from inntektskomponent data when hentAarligeInntekter`() {
         val year = LocalDate.now().year
         val uforetrygd = uforetrygd(uforeHeleAaret = true)
 
