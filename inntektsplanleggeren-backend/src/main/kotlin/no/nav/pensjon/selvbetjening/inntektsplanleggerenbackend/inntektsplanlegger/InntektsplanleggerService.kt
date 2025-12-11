@@ -121,7 +121,7 @@ class InntektsplanleggerService(
         return response
     }
 
-    fun hentInntekter(pid: String, aar: Int): InntekterResponse? {
+    fun hentAarligeInntekter(pid: String, aar: Int): InntekterResponse? {
         return hentInntekter(pid, aar, LocalDate.of(aar, Month.JANUARY, 1), true)
     }
 

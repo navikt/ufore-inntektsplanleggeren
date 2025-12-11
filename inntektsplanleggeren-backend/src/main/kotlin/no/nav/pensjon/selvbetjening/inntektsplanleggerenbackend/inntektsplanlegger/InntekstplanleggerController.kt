@@ -71,7 +71,7 @@ class InntektsplanleggerController(
     ): ResponseEntity<InntekterResponse> {
         return try {
             ResponseEntity(
-                inntektsPlanleggerService.hentInntekter(
+                inntektsPlanleggerService.hentAarligeInntekter(
                     SecurityContextUtil.getPidFromContext(),
                     aar,
                 ), HttpStatus.OK
