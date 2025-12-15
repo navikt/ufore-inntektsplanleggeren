@@ -31,6 +31,10 @@ const LonnFordelerOgPengestotter: React.FC<IProps> = (props) => {
                     i perioden du har hatt uføretrygd.
                 </BodyLong>
             )}
+            <BodyLong>
+                Arbeidsgiver har frist for å sende inn opplysninger om din inntekt til Skatteetaten (A-ordningen) innen den 5. måneden etter pengene er
+                utbetalt. Helligdager kan forsinke rapporteringen. Derfor kommer inntekten din først med i oversikten måneden etter at du har fått den utbetalt.
+            </BodyLong>
         </DinInntektTable>
     )
 }

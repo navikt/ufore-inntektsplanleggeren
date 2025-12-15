@@ -42,6 +42,15 @@ app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/inntekter', (req, re
     res.status(200).send(mockInntekterResponse)
 })
 
+app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/inntekter-for-aar', (req, res) => {
+    console.log("GET - /api/inntekter")
+    //403 response
+    //res.status(403).send(mockForbiddenResponse)
+
+    //200 response
+    res.status(200).send(mockInntekterResponse)
+})
+
 app.post('/uforetrygd/selvbetjening/inntektsplanleggeren/api/simuler', (req, res) => {
     console.log("POST - /api/simuler")
     //403 response
