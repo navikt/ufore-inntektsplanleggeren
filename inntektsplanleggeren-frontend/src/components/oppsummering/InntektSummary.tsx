@@ -12,7 +12,7 @@ export const InntektSummary = (props: { inntekt: PersonInntekter, inntektSum: nu
     const href = props.type === "bruker" ? "bruker-inntekt" : "eps-inntekt"
 
   return (
-      <FormSummary>
+      <FormSummary >
         <FormSummary.Header>
           <FormSummary.Heading level="3">{props.type === "bruker" ? `Din inntekt ${selectedYear}` : `Annen forelders forventede inntekt ${selectedYear}`}</FormSummary.Heading>
           <FormSummary.EditLink as={RouterLink} to={getFullPathForPage(PageLinks.FORVENTET_INNTEKT, href)}/>

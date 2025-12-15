@@ -42,8 +42,14 @@ export const OppsummeringPage = () => {
 
     return (
         <VStack gap="12">
-            <InntektSummary inntekt={brukerinntekt} inntektSum={getBrukerinntektSum()} type="bruker" />
-            {annenForelderInntekt && <InntektSummary inntekt={annenForelderInntekt} inntektSum={getAnnenForelderInntektSum()!} type="eps" />}
+            <section aria-label={'Din inntekt'}>
+                <InntektSummary inntekt={brukerinntekt} inntektSum={getBrukerinntektSum()} type="bruker" />
+            </section>
+            {annenForelderInntekt && (
+                <section aria-label={'Annen forelders forventede inntekt'}>
+                    <InntektSummary inntekt={annenForelderInntekt} inntektSum={getAnnenForelderInntektSum()!} type="eps" />
+                </section>
+            )}
 
             {simulationResponse?.messages.some((message) => message.messageCode === 'EPS_INNTEKT_CHANGED') && (
                 <Alert variant="info">

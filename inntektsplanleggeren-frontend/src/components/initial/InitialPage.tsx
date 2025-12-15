@@ -1,4 +1,4 @@
-import { Accordion, Alert, BodyLong, BodyShort, GuidePanel, Heading, Link as NavLink, List, VStack } from '@navikt/ds-react'
+import { Accordion, Alert, BodyLong, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
 import { InntektsgrenseCard } from '@/components/initial/DinInntektsgrenseCard'
 import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
@@ -75,21 +75,25 @@ export function InitialPage() {
 
     return (
         <VStack className="form-container">
-            <GuidePanel poster>
-                <Heading size="medium" level="2" spacing>
-                    Greit å vite
-                </Heading>
-                <BodyShort spacing>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</BodyShort>
-                <BodyShort spacing>
-                    For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å tjene samtidig som du får uføretrygd.
-                </BodyShort>
-                <BodyShort>
-                    Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang pause. Vi beklager for dette.
-                </BodyShort>
-            </GuidePanel>
+            <section aria-label={'Greit å vite'}>
+                <GuidePanel poster>
+                    <Heading size="medium" level="2" spacing>
+                        Greit å vite
+                    </Heading>
+                    <BodyShort spacing>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</BodyShort>
+                    <BodyShort spacing>
+                        For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å tjene samtidig som du får uføretrygd.
+                    </BodyShort>
+                    <BodyShort>
+                        Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang pause. Vi beklager for dette.
+                    </BodyShort>
+                </GuidePanel>
+            </section>
 
-            <section>
-                <Heading level="2" size="small">I inntektsplanleggeren kan du</Heading>
+            <section aria-label={'I inntektsplanleggeren kan du'}>
+                <Heading level="2" size="small">
+                    I inntektsplanleggeren kan du
+                </Heading>
                 <List size="medium">
                     <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
                     <List.Item>melde inn forventet inntekt til oss</List.Item>
@@ -97,21 +101,27 @@ export function InitialPage() {
             </section>
 
             {initiateResponse.data !== null && (
-                <ExpectedIncomeBox
-                    forventetInntekt={initiateResponse.data.forventetInntekt}
-                    forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}
-                    hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}
-                />
+                <section aria-label={'Registrert forventet inntekt'}>
+                    <ExpectedIncomeBox
+                        forventetInntekt={initiateResponse.data.forventetInntekt}
+                        forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}
+                        hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}
+                    />
+                </section>
             )}
 
-            <section>
+            <section aria-label={'Meld fra'}>
                 <BodyLong>
                     Det er viktig at du melder fra hvis inntekten din blir annerledes enn det du har meldt inn tidligere. Det gir mindre risiko for stor
                     tilbakebetaling i etteroppgjøret.
                 </BodyLong>
             </section>
 
-            {initiateResponse.data !== null && <InntektsgrenseCard displayData={initiateResponse.data} />}
+            {initiateResponse.data !== null && (
+                <section aria-label="Inntektsgrense og trekkprosent">
+                    <InntektsgrenseCard displayData={initiateResponse.data} />
+                </section>
+            )}
 
             <Accordion>
                 <Accordion.Item>

@@ -161,147 +161,176 @@ export const InnfyllingPage = () => {
     }
 
     return (
-        <VStack className="form-container">
-            {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) && (
-                <VStack>
-                    <Heading level="3" size="medium" spacing>
-                        {inntekterResponse.uforeHeleAaret ? `Din inntekt hittil i ${selectedYear}` : `Din inntekt samtidig med uføretrygd i ${selectedYear}`}
-                    </Heading>
-                    <BodyLong>
-                        {' '}
-                        Under kan du se hvilken inntekt som er registrert hos Skatteetaten. Det er likevel viktig at du sender inn forventet inntekt for
-                        {inntekterResponse.uforeHeleAaret ? ' hele året til oss. ' : ' den delen av året du har hatt uføretrygd. '}
-                        Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.
-                    </BodyLong>
-                </VStack>
-            )}
+        <>
+            <section aria-label={'Registrert inntekt i ' + selectedYear}>
+                <VStack className="form-container">
+                    {(inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 || inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0) && (
+                        <VStack>
+                            <Heading level="3" size="medium" spacing>
+                                {inntekterResponse.uforeHeleAaret
+                                    ? `Din inntekt hittil i ${selectedYear}`
+                                    : `Din inntekt samtidig med uføretrygd i ${selectedYear}`}
+                            </Heading>
+                            <BodyLong>
+                                Under kan du se hvilken inntekt som er registrert hos Skatteetaten. Det er likevel viktig at du sender inn forventet inntekt for
+                                {inntekterResponse.uforeHeleAaret ? ' hele året til oss. ' : ' den delen av året du har hatt uføretrygd. '}
+                                Når vi får registrert riktig inntekt, kan vi gjøre en riktig beregning av din utbetaling.
+                            </BodyLong>
+                        </VStack>
+                    )}
 
-            {inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0 && (
-                <LonnFordelerOgPengestotter uforeHeleAaret={inntekterResponse.uforeHeleAaret} inntekter={inntekterResponse.arbeidsinntektOgYtelserHittilIAar} />
-            )}
-            {inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
-                <PensjonFraAndreEnnNav pensjonFraAndre={inntekterResponse.pensjonFraAndreHittilIAar} uforeHeleAaret={inntekterResponse.uforeHeleAaret} />
-            )}
-
-            <div>
-                <Heading level="3" size="medium">
-                    Slik skal du oppgi inntekten
-                </Heading>
-                <List>
-                    {inntekterResponse.uforeHeleAaret && <List.Item>årlig beløp</List.Item>}
-                    {!inntekterResponse.uforeHeleAaret && <List.Item>kun inntekt for den perioden du har uføretrygd</List.Item>}
-                    <List.Item>forventet inntekt</List.Item>
-                    <List.Item>før skatt</List.Item>
-                    <List.Item>norske kroner</List.Item>
-                </List>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-                <VStack gap="4">
-                    <VStack gap="4">
-                        <Bleed marginInline={{ md: '0 20' }} asChild>
-                            <Box.New borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }} id={'bruker-inntekt'}>
-                                <VStack gap="6">
-                                    <Heading size="medium" level="3" spacing>
-                                        Din inntekt {selectedYear}
-                                    </Heading>
-                                    <BodyLong>
-                                        Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil utbetaling
-                                        av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året.{' '}
-                                    </BodyLong>
-                                    {!inntekterResponse.uforeHeleAaret ? (
-                                        <Alert inline variant="info">
-                                            Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.
-                                        </Alert>
-                                    ) : null}
-                                    <FormFieldsUser
-                                        year={selectedYear}
-                                        errors={brukerErrors}
-                                        setErrors={setBrukerErrors}
-                                        setInntekt={(field, belop) =>
-                                            setBrukerinntekt((b) => ({
-                                                ...b,
-                                                [field]: belop,
-                                            }))
-                                        }
-                                        forventedeInntekter={brukerinntekt}
-                                        inntektSum={getBrukerinntektSum()}
-                                    />
-                                </VStack>
-                            </Box.New>
-                        </Bleed>
-
-                        {inntekterResponse?.forventedeInntekter.eps ? (
-                            <Bleed marginInline={{ md: '0 20' }}>
-                                <Box.New borderWidth="1" borderRadius="large" padding={{ xs: '6', md: '10' }} id={'eps-inntekt'}>
-                                    <VStack gap="6">
-                                        <Heading level="3" size="medium" spacing>
-                                            Annen forelders inntekt {selectedYear}
-                                        </Heading>
-                                        <BodyLong>
-                                            Fordi du mottar barnetillegg til uføretrygden, må du også registrere den forventede inntekten til forelderen som du
-                                            bor sammen med.
-                                        </BodyLong>
-                                        <BodyLong>
-                                            <strong>Du skal oppgi inntekten til forelder med fødselsnummer {inntekterResponse.epsPid}</strong>
-                                        </BodyLong>
-                                        <BodyLong>
-                                            Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Inntekten til den andre forelderen har bare
-                                            betydning for størrelsen på barnetillegget ditt. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av
-                                            året.{' '}
-                                        </BodyLong>
-
-                                        {!inntekterResponse.uforeHeleAaret ? (
-                                            <Alert inline variant="info">
-                                                Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden du har
-                                                uføretrygd.
-                                            </Alert>
-                                        ) : null}
-                                        <FormFieldsEps
-                                            year={selectedYear}
-                                            errors={epsErrors}
-                                            setErrors={setEpsErrors}
-                                            setInntekt={(field, belop) =>
-                                                setAnnenForelderInntekt((b) =>
-                                                    b
-                                                        ? {
-                                                              ...b,
-                                                              [field]: belop,
-                                                          }
-                                                        : null
-                                                )
-                                            }
-                                            forventedeInntekter={annenForelderInntekt || ({} as PersonInntekter)}
-                                            inntektSum={getAnnenForelderInntektSum() || 0}
-                                        />
-                                    </VStack>
-                                </Box.New>
-                            </Bleed>
-                        ) : null}
-                    </VStack>
-                    {checkForFieldErrors() && formDiry ? (
-                        <div ref={(errorSummaryDiv) => errorSummaryDiv?.scrollIntoView()}>
-                            <ErrorSummary
-                                id="error-summary"
-                                headingTag="h3"
-                                heading="Du må rette disse feilene før du kan fortsette:"
-                                className="button-container"
-                            >
-                                {errorSummary(brukerErrors, 'bruker')}
-                                {errorSummary(epsErrors, 'eps')}
-                            </ErrorSummary>
-                        </div>
-                    ) : null}
-
-                    <span className="button-container">
-                        <Knapperad
-                            handleSubmit={handleSubmit}
-                            tilbakePageLink={previousYear != null ? PageLinks.FORRIGE_INNTEKTER : PageLinks.INDEX}
-                            laster={isLoading}
+                    {inntekterResponse.arbeidsinntektOgYtelserHittilIAar?.length > 0 && (
+                        <LonnFordelerOgPengestotter
+                            uforeHeleAaret={inntekterResponse.uforeHeleAaret}
+                            inntekter={inntekterResponse.arbeidsinntektOgYtelserHittilIAar}
                         />
-                    </span>
+                    )}
+                    {inntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
+                        <PensjonFraAndreEnnNav
+                            pensjonFraAndre={inntekterResponse.pensjonFraAndreHittilIAar}
+                            uforeHeleAaret={inntekterResponse.uforeHeleAaret}
+                        />
+                    )}
                 </VStack>
-            </form>
-        </VStack>
+            </section>
+            <section aria-label="Slik skal du oppgi inntekten">
+                <VStack>
+                    <Heading level="3" size="medium">
+                        Slik skal du oppgi inntekten
+                    </Heading>
+                    <List>
+                        {inntekterResponse.uforeHeleAaret && <List.Item>årlig beløp</List.Item>}
+                        {!inntekterResponse.uforeHeleAaret && <List.Item>kun inntekt for den perioden du har uføretrygd</List.Item>}
+                        <List.Item>forventet inntekt</List.Item>
+                        <List.Item>før skatt</List.Item>
+                        <List.Item>norske kroner</List.Item>
+                    </List>
+                </VStack>
+            </section>
+            <VStack className="form-container">
+                <form onSubmit={handleSubmit}>
+                    <VStack gap="4">
+                        <VStack gap="4">
+                            <section aria-label={'Registrer din inntekt'}>
+                                <Bleed marginInline={{ md: '0 20' }} asChild>
+                                    <Box.New
+                                        borderWidth="1"
+                                        borderRadius="large"
+                                        padding={{ xs: '6', md: '10' }}
+                                        id={'bruker-inntekt'}
+                                        aria-label="Din inntekt"
+                                    >
+                                        <VStack gap="6">
+                                            <Heading size="medium" level="3" spacing>
+                                                Registrer din inntekt for {selectedYear}
+                                            </Heading>
+                                            <BodyLong>
+                                                Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Opplysninger som er feil kan gi deg feil
+                                                utbetaling av uføretrygd. Du kan sende inn ny inntekt så mange ganger du trenger i løpet av året.{' '}
+                                            </BodyLong>
+                                            {!inntekterResponse.uforeHeleAaret ? (
+                                                <Alert inline variant="info">
+                                                    Du har ikke uføretrygd hele året. Du skal kun legge inn inntekt for den perioden du har uføretrygd.
+                                                </Alert>
+                                            ) : null}
+                                            <FormFieldsUser
+                                                year={selectedYear}
+                                                errors={brukerErrors}
+                                                setErrors={setBrukerErrors}
+                                                setInntekt={(field, belop) =>
+                                                    setBrukerinntekt((b) => ({
+                                                        ...b,
+                                                        [field]: belop,
+                                                    }))
+                                                }
+                                                forventedeInntekter={brukerinntekt}
+                                                inntektSum={getBrukerinntektSum()}
+                                            />
+                                        </VStack>
+                                    </Box.New>
+                                </Bleed>
+                            </section>
+
+                            {inntekterResponse?.forventedeInntekter.eps ? (
+                                <section aria-label={'Registrer annen forelders inntekt'}>
+                                    <Bleed marginInline={{ md: '0 20' }}>
+                                        <Box.New
+                                            borderWidth="1"
+                                            borderRadius="large"
+                                            padding={{ xs: '6', md: '10' }}
+                                            id={'eps-inntekt'}
+                                            aria-label="Registrer annen forelders inntekt"
+                                        >
+                                            <VStack gap="6">
+                                                <Heading level="3" size="medium" spacing>
+                                                    Annen forelders inntekt {selectedYear}
+                                                </Heading>
+                                                <BodyLong>
+                                                    Fordi du mottar barnetillegg til uføretrygden, må du også registrere den forventede inntekten til forelderen
+                                                    som du bor sammen med.
+                                                </BodyLong>
+                                                <BodyLong>
+                                                    <strong>Du skal oppgi inntekten til forelder med fødselsnummer {inntekterResponse.epsPid}</strong>
+                                                </BodyLong>
+                                                <BodyLong>
+                                                    Du må endre inntektsopplysningene nedenfor hvis de ikke er riktige. Inntekten til den andre forelderen har
+                                                    bare betydning for størrelsen på barnetillegget ditt. Du kan sende inn ny inntekt så mange ganger du trenger
+                                                    i løpet av året.{' '}
+                                                </BodyLong>
+
+                                                {!inntekterResponse.uforeHeleAaret ? (
+                                                    <Alert inline variant="info">
+                                                        Du har ikke uføretrygd hele året. Du skal kun legge inn den andre forelderens inntekt for den perioden
+                                                        du har uføretrygd.
+                                                    </Alert>
+                                                ) : null}
+                                                <FormFieldsEps
+                                                    year={selectedYear}
+                                                    errors={epsErrors}
+                                                    setErrors={setEpsErrors}
+                                                    setInntekt={(field, belop) =>
+                                                        setAnnenForelderInntekt((b) =>
+                                                            b
+                                                                ? {
+                                                                      ...b,
+                                                                      [field]: belop,
+                                                                  }
+                                                                : null
+                                                        )
+                                                    }
+                                                    forventedeInntekter={annenForelderInntekt || ({} as PersonInntekter)}
+                                                    inntektSum={getAnnenForelderInntektSum() || 0}
+                                                />
+                                            </VStack>
+                                        </Box.New>
+                                    </Bleed>
+                                </section>
+                            ) : null}
+                        </VStack>
+                        {checkForFieldErrors() && formDiry ? (
+                            <div ref={(errorSummaryDiv) => errorSummaryDiv?.scrollIntoView()}>
+                                <ErrorSummary
+                                    id="error-summary"
+                                    headingTag="h3"
+                                    heading="Du må rette disse feilene før du kan fortsette:"
+                                    className="button-container"
+                                >
+                                    {errorSummary(brukerErrors, 'bruker')}
+                                    {errorSummary(epsErrors, 'eps')}
+                                </ErrorSummary>
+                            </div>
+                        ) : null}
+
+                        <span className="button-container">
+                            <Knapperad
+                                handleSubmit={handleSubmit}
+                                tilbakePageLink={previousYear != null ? PageLinks.FORRIGE_INNTEKTER : PageLinks.INDEX}
+                                laster={isLoading}
+                            />
+                        </span>
+                    </VStack>
+                </form>
+            </VStack>
+        </>
     )
 }
