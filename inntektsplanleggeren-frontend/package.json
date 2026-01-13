@@ -36,9 +36,9 @@
         "winston": "^3.19.0"
     },
     "devDependencies": {
-        "@navikt/aksel-icons": "^7.36.0",
-        "@navikt/ds-css": "^7.36.0",
-        "@navikt/ds-react": "^7.36.0",
+        "@navikt/aksel-icons": "^7.37.0",
+        "@navikt/ds-css": "^7.37.0",
+        "@navikt/ds-react": "^7.37.0",
         "@types/express": "^5.0.6",
         "@types/node": "^24.10.2",
         "@types/react": "^19.2.7",
