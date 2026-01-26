@@ -23,14 +23,14 @@ export default function VeilederBanner() {
                 <Box.New borderWidth="0 0 1 0" borderColor="neutral-subtle">
                     <HStack align="center" gap="2" className="borger-informasjon">
                         <BodyShort size="small" weight="semibold">
-                            {borgerInfo && borgerInfo.navn}
+                            {borgerInfo.navn || ""}
                         </BodyShort>
                         <span aria-hidden="true">/</span>
                         <HStack align="center" gap="1">
                             <BodyShort data-testid="borger-fnr" size="small" weight="semibold">
-                                {borgerInfo?.pid && formatFnr(borgerInfo.pid)}
+                                {formatFnr(borgerInfo.pid)}
                             </BodyShort>
-                            <CopyButton size="small" copyText={borgerInfo?.pid || ''} />
+                            <CopyButton size="small" copyText={borgerInfo.pid || ''} />
                         </HStack>
                         <Spacer />
                     </HStack>

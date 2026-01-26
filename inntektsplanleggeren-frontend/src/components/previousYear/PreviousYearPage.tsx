@@ -43,8 +43,7 @@ export const PreviousYearPage = () => {
         <VStack className="page">
             <VStack className="page">
                 <VStack gap="4">
-                    {(previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 ||
-                        previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0) && (
+                    {previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
                         <VStack>
                             <Heading level="2" size="medium">
                                 {previousYearInntekterResponse.uforeHeleAaret
