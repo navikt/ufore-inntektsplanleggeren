@@ -1,6 +1,6 @@
 import './App.css'
 import '@navikt/ds-tokens'
-import '@navikt/ds-css/darkside'
+import '@navikt/ds-css'
 import { Heading } from '@navikt/ds-react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { FormStateComponent } from '@/context/FormData'
