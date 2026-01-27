@@ -8,7 +8,6 @@ import loggerMiddleware from './middleware/logger.js'
 import dotenv from 'dotenv'
 import ensureEnv from './ensureEnv.js'
 import { initialize } from 'unleash-client'
-import crypto from 'crypto'
 import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
 import correlationIdMiddleware from './middleware/correlationId.js'
 
