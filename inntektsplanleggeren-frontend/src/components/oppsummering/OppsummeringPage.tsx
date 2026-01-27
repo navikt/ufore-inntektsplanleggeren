@@ -41,7 +41,7 @@ export const OppsummeringPage = () => {
     }
 
     return (
-        <VStack gap="12">
+        <VStack gap="space-48">
             <section aria-label={'Din inntekt'}>
                 <InntektSummary inntekt={brukerinntekt} inntektSum={getBrukerinntektSum()} type="bruker" />
             </section>
@@ -50,15 +50,13 @@ export const OppsummeringPage = () => {
                     <InntektSummary inntekt={annenForelderInntekt} inntektSum={getAnnenForelderInntektSum()!} type="eps" />
                 </section>
             )}
-
             {simulationResponse?.messages.some((message) => message.messageCode === 'EPS_INNTEKT_CHANGED') && (
                 <Alert variant="info">
                     Husk at inntektene du melder inn for annen forelder bare brukes for å beregne barnetillegget til uføretrygden din. Hvis den andre forelderen
                     har utbetalinger fra oss, må hen selv også melde fra om ny inntekt til oss.
                 </Alert>
             )}
-
             <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.BEREGNING} gåVidereTekst="Send inn" laster={isLoading} />
         </VStack>
-    )
+    );
 }

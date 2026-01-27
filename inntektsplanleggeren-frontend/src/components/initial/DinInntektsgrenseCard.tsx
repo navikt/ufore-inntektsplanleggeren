@@ -20,18 +20,18 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
 
     return (
         <Box.New borderRadius="xlarge" padding="space-16" background="accent-soft" ref={inntektsgrenseCardRef}>
-            <VStack gap="2">
-                <VStack gap="2" style={{ marginBottom: '20px' }}>
+            <VStack gap="space-8">
+                <VStack gap="space-8" style={{ marginBottom: '20px' }}>
                     <Heading level="2" size="small">
                         Inntektsgrenser og trekkprosent
                     </Heading>
-                    <VStack gap="5">
+                    <VStack gap="space-20">
                         <BodyLong style={{ whiteSpace: 'pre-wrap' }}>
                             Dine inntektsgrenser sier hvor mye inntekt du kan ha før vi trekker en prosent (kompensasjonsgrad) av utbetalingen din.
                         </BodyLong>
 
                         {isOpen ? (
-                            <VStack gap="5">
+                            <VStack gap="space-20">
                                 <VStack>
                                     <Heading size="xsmall" level="3">
                                         Din inntektsgrense: <FormatKroner value={props.displayData.inntektsgrense} />
@@ -125,5 +125,5 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
                 </HStack>
             </VStack>
         </Box.New>
-    )
+    );
 }

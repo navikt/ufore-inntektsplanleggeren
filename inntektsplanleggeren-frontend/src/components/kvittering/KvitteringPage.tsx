@@ -57,8 +57,8 @@ export const KvitteringPage = () => {
 
     if (isWaiting) {
         return (
-            <Box.New background="neutral-soft" padding="16" borderRadius="large">
-                <VStack className="form-container" align="center" gap="20">
+            <Box.New background="neutral-soft" padding="space-64" borderRadius="large">
+                <VStack className="form-container" align="center" gap="space-80">
                     <Heading level="2" size="large" align="center">
                         Vent mens vi sender inn
                     </Heading>
@@ -66,7 +66,7 @@ export const KvitteringPage = () => {
                     <BodyShort align="center">Dette kan ta opptil ett minutt.</BodyShort>
                 </VStack>
             </Box.New>
-        )
+        );
     }
 
     return (
@@ -101,7 +101,6 @@ export const KvitteringPage = () => {
                     </List>
                 </section>
             )}
-
             <section aria-label={'Etteroppgjør'}>
                 <Heading className="header" level="2" size={'large'}>
                     Etteroppgjør
@@ -115,7 +114,6 @@ export const KvitteringPage = () => {
                     </Link>
                 </BodyLong>
             </section>
-
             <section aria-label={'Hvis inntekten din endrer seg'}>
                 <Heading className="header" level="2" size={'large'}>
                     Hvis inntekten din endrer seg
@@ -125,7 +123,6 @@ export const KvitteringPage = () => {
                     stor tilbakebetaling i etteroppgjøret. Du kan melde ny endring i inntektsplanleggeren så mange ganger du trenger i løpet av året.
                 </BodyLong>
             </section>
-
             <section aria-label={'Husk å oppdatere skattekortet'}>
                 <Heading className="header" level="2" size={'large'}>
                     Husk å oppdatere skattekortet
@@ -137,7 +134,6 @@ export const KvitteringPage = () => {
                     </Link>
                 </BodyLong>
             </section>
-
             <section aria-label={'Må du melde fra til flere?'}>
                 <Heading className="header" level="2" size={'large'}>
                     Må du melde fra til flere?
@@ -152,11 +148,11 @@ export const KvitteringPage = () => {
                     </List>
                 </BodyLong>
             </section>
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <Button as={Link} to={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="primary" className="button-container">
                     Din uføretrygd
                 </Button>
             </HStack>
         </VStack>
-    )
+    );
 }

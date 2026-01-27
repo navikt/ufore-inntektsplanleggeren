@@ -4,7 +4,7 @@ import { MessageCodes } from '@/api/model/MessageCodes'
 
 export function BeregningWarnings(props: { messages: Message[] }) {
   return (
-    <VStack gap="3">
+    <VStack gap="space-12">
       {props.messages.some((message) => message.messageCode === MessageCodes.OPPGITT_INNTEKT_OVER_INNTEKTSTAK) && (
         <Alert variant="warning">
           Inntekten du har lagt inn er høyere enn 80 prosent av inntekten du hadde før du ble ufør. Derfor får du ikke
@@ -12,7 +12,6 @@ export function BeregningWarnings(props: { messages: Message[] }) {
           etteroppgjør hvor du må betale tilbake.
         </Alert>
       )}
-
       {props.messages.some(
         (message) => message.messageCode === MessageCodes.OPPGITT_INNTEKT_GIVES_LOWER_UFORETRYGD_THAN_ALREADY_UTBETALT
       ) && (
@@ -23,7 +22,6 @@ export function BeregningWarnings(props: { messages: Message[] }) {
           hvor du må betale tilbake.
         </Alert>
       )}
-
       {props.messages.some(
         (message) => message.messageCode === MessageCodes.OPPGITT_INNTEKT_GIVES_MORE_UFORETRYGD_THAN_ALREADY_UTBETALT
       ) && (
@@ -33,7 +31,6 @@ export function BeregningWarnings(props: { messages: Message[] }) {
           Har du fått utbetalt for lite uføretrygd ved slutten av året, kan du få tilbake penger i etteroppgjøret.
         </Alert>
       )}
-
       {props.messages.some(
         (message) =>
           message.messageCode === MessageCodes.ONE_OR_MORE_INNTEKT_HAS_STATUS_REGISTRERT ||
@@ -45,5 +42,5 @@ export function BeregningWarnings(props: { messages: Message[] }) {
         </Alert>
       )}
     </VStack>
-  )
+  );
 }

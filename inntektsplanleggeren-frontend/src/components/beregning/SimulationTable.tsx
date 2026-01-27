@@ -19,7 +19,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
     const isBeforeValuesAvailable = sum.yearly.before !== null
 
     return isDesktop ? (
-        <VStack gap="6">
+        <VStack gap="space-24">
             <Table>
                 <Table.Header>
                     <Table.Row shadeOnHover={false}>
@@ -93,7 +93,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
             <Table.Body>
                 <Table.Row shadeOnHover={false}>
                     <Table.DataCell>
-                        <VStack gap="1">
+                        <VStack gap="space-4">
                             <BodyShort>
                                 <strong>{gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd'}</strong>
                             </BodyShort>
@@ -111,7 +111,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                 {barnetilleggSaerkullsbarn || barnetilleggFellesbarn ? (
                     <Table.Row shadeOnHover={false}>
                         <Table.DataCell>
-                            <VStack gap="1">
+                            <VStack gap="space-4">
                                 <BodyShort>
                                     <strong>Barnetillegg uføretrygd</strong>
                                 </BodyShort>
@@ -131,7 +131,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                 ) : null}
                 <Table.Row shadeOnHover={false}>
                     <Table.DataCell>
-                        <VStack gap="1">
+                        <VStack gap="space-4">
                             <BodyShort>
                                 <strong>Din forventede inntekt</strong>
                             </BodyShort>
@@ -149,7 +149,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
 
                 <Table.Row shadeOnHover={false}>
           <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
-                        <VStack gap="1">
+                        <VStack gap="space-4">
                             <BodyShort>
                                 <strong>Sum årlig</strong>
                             </BodyShort>
@@ -166,5 +166,5 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                 </Table.Row>
             </Table.Body>
         </Table>
-    )
+    );
 }

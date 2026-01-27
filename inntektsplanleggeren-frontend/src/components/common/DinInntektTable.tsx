@@ -37,7 +37,7 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
 
     return (
         <Box.New borderRadius="xlarge" padding="space-16" background="accent-soft">
-            <VStack gap="6">
+            <VStack gap="space-24">
                 {children}
 
                 {isOpen ? isDesktop ? <Innhold data={data} type={type} /> : <InnholdMobile data={data} type={type} /> : null}
@@ -54,7 +54,7 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
                 </HStack>
             </VStack>
         </Box.New>
-    )
+    );
 }
 
 const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {

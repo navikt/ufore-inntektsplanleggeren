@@ -23,7 +23,7 @@ export const PreviousExpectedIncomeTable = (props: {
   const isDesktop = width > DESKTOP_WIDTH
 
   return isDesktop ? (
-    <VStack gap="6">
+    <VStack gap="space-24">
       <Table>
         <Table.Header>
           <Table.Row shadeOnHover={false}>
@@ -97,7 +97,7 @@ export const PreviousExpectedIncomeTable = (props: {
       <Table.Body>
         <Table.Row shadeOnHover={false}>
           <Table.DataCell>
-            <VStack gap="1">
+            <VStack gap="space-4">
               <BodyShort>
                 <strong>{'Lønn og pensjonsgivende ytelser'}</strong>
               </BodyShort>
@@ -109,7 +109,7 @@ export const PreviousExpectedIncomeTable = (props: {
         </Table.Row>
         <Table.Row shadeOnHover={false}>
           <Table.DataCell>
-            <VStack gap="1">
+            <VStack gap="space-4">
               <BodyShort>
                 <strong>{'Næringsinntekt'}</strong>
               </BodyShort>
@@ -121,7 +121,7 @@ export const PreviousExpectedIncomeTable = (props: {
         </Table.Row>
         <Table.Row shadeOnHover={false}>
           <Table.DataCell>
-            <VStack gap="1">
+            <VStack gap="space-4">
               <BodyShort>
                 <strong>{'Inntekt fra utlandet'}</strong>
               </BodyShort>
@@ -133,7 +133,7 @@ export const PreviousExpectedIncomeTable = (props: {
         </Table.Row>
         <Table.Row shadeOnHover={false}>
           <Table.DataCell>
-            <VStack gap="1">
+            <VStack gap="space-4">
               <BodyShort>
                 <strong>{'Uførepensjon og pensjoner fra andre enn Nav'}</strong>
               </BodyShort>
@@ -145,7 +145,7 @@ export const PreviousExpectedIncomeTable = (props: {
         </Table.Row>
         <Table.Row shadeOnHover={false}>
           <Table.DataCell>
-            <VStack gap="1">
+            <VStack gap="space-4">
               <BodyShort>
                 <strong>{'Pensjoner fra utlandet'}</strong>
               </BodyShort>
@@ -157,7 +157,7 @@ export const PreviousExpectedIncomeTable = (props: {
         </Table.Row>
         <Table.Row shadeOnHover={false}>
           <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
-            <VStack gap="1">
+            <VStack gap="space-4">
               <BodyShort>
                 <strong>Sum {props.eps ? 'annen forelders' : 'din'} forventede inntekt</strong>
               </BodyShort>
@@ -178,5 +178,5 @@ export const PreviousExpectedIncomeTable = (props: {
         </Table.Row>
       </Table.Body>
     </Table>
-  )
+  );
 }

@@ -100,7 +100,6 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </div>
                 </VStack>
             )}
-
             {forventedeInntekter.naeringsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -119,7 +118,6 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
             {forventedeInntekter.inntektUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -138,7 +136,6 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
             {forventedeInntekter.andrePensjonsgivendeYtelser !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -153,7 +150,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         htmlSize={30}
                     />
                     <ReadMore header="Pensjoner du skal legge inn">
-                        <VStack gap="4">
+                        <VStack gap="space-16">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss, før skatt.</BodyLong>
 
                             <div>
@@ -175,7 +172,6 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
             {forventedeInntekter.pensjonUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -194,9 +190,8 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
-            <Box.New padding="4" background="neutral-soft" borderRadius="large">
-                <VStack gap={{ xs: '2', sm: '1' }}>
+            <Box.New padding="space-16" background="neutral-soft" borderRadius="large">
+                <VStack gap={{ xs: "space-8", sm: "space-4" }}>
                     <Heading level="4" size="small">
                         {' '}
                         Din samlede forventede inntekt i {year}:{' '}
@@ -207,5 +202,5 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                 </VStack>
             </Box.New>
         </div>
-    )
+    );
 }
