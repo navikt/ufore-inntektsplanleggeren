@@ -157,5 +157,5 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
                 </VStack>
             </form>
         </section>
-    );
+    )
 }

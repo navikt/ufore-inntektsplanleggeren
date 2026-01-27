@@ -125,5 +125,5 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }

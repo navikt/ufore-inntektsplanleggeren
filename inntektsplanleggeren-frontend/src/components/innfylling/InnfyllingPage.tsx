@@ -198,7 +198,7 @@ export const InnfyllingPage = () => {
                     <Heading level="3" size="medium">
                         Slik skal du oppgi inntekten
                     </Heading>
-                    <List>
+                    <List style={{ margin: '1rem 0' }}>
                         {inntekterResponse.uforeHeleAaret && <List.Item>årlig beløp</List.Item>}
                         {!inntekterResponse.uforeHeleAaret && <List.Item>kun inntekt for den perioden du har uføretrygd</List.Item>}
                         <List.Item>forventet inntekt</List.Item>
@@ -212,11 +212,11 @@ export const InnfyllingPage = () => {
                     <VStack gap="space-16">
                         <VStack gap="space-16">
                             <section aria-label={'Registrer din inntekt'}>
-                                <Bleed marginInline={{ md: "space-0 space-80" }} asChild>
+                                <Bleed marginInline={{ md: 'space-0 space-80' }} asChild>
                                     <Box
                                         borderWidth="1"
                                         borderRadius="8"
-                                        padding={{ xs: "space-24", md: "space-40" }}
+                                        padding={{ xs: 'space-24', md: 'space-40' }}
                                         id={'bruker-inntekt'}
                                         aria-label="Din inntekt"
                                     >
@@ -253,11 +253,11 @@ export const InnfyllingPage = () => {
 
                             {inntekterResponse?.forventedeInntekter.eps ? (
                                 <section aria-label={'Registrer annen forelders inntekt'}>
-                                    <Bleed marginInline={{ md: "space-0 space-80" }}>
+                                    <Bleed marginInline={{ md: 'space-0 space-80' }}>
                                         <Box
                                             borderWidth="1"
                                             borderRadius="8"
-                                            padding={{ xs: "space-24", md: "space-40" }}
+                                            padding={{ xs: 'space-24', md: 'space-40' }}
                                             id={'eps-inntekt'}
                                             aria-label="Registrer annen forelders inntekt"
                                         >
@@ -332,5 +332,5 @@ export const InnfyllingPage = () => {
                 </form>
             </VStack>
         </>
-    );
+    )
 }

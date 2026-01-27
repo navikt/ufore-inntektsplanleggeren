@@ -66,7 +66,7 @@ export const KvitteringPage = () => {
                     <BodyShort align="center">Dette kan ta opptil ett minutt.</BodyShort>
                 </VStack>
             </Box>
-        );
+        )
     }
 
     return (
@@ -89,7 +89,7 @@ export const KvitteringPage = () => {
                     <Heading level="2" size={'large'}>
                         Hva skjer videre?
                     </Heading>
-                    <List as="ul">
+                    <List as="ul" style={{ margin: '1rem 0' }}>
                         <List.Item>Endringen er sendt til behandling. I de fleste tilfeller vil saken være ferdig behandlet i løpet av 14 dager. </List.Item>
                         <List.Item>Din nye inntekt vil ikke vises i inntektsplanleggeren før vi har behandlet saken.</List.Item>
                         <List.Item>
@@ -141,7 +141,7 @@ export const KvitteringPage = () => {
                 <BodyLong>
                     Får du andre utbetalinger fra Nav eller pengestøtter fra andre, kan det hende at du må melde om endring i inntekt til disse også. Det kan
                     for eksempel gjelde
-                    <List>
+                    <List style={{ margin: '1rem 0' }}>
                         <List.Item>økonomisk sosialhjelp</List.Item>
                         <List.Item>uførepensjon fra en pensjonskasse eller forsikringsordning</List.Item>
                         <List.Item>bostøtte fra Husbanken</List.Item>
@@ -154,5 +154,5 @@ export const KvitteringPage = () => {
                 </Button>
             </HStack>
         </VStack>
-    );
+    )
 }
