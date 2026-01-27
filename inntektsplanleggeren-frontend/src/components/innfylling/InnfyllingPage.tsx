@@ -213,9 +213,9 @@ export const InnfyllingPage = () => {
                         <VStack gap="space-16">
                             <section aria-label={'Registrer din inntekt'}>
                                 <Bleed marginInline={{ md: "space-0 space-80" }} asChild>
-                                    <Box.New
+                                    <Box
                                         borderWidth="1"
-                                        borderRadius="large"
+                                        borderRadius="8"
                                         padding={{ xs: "space-24", md: "space-40" }}
                                         id={'bruker-inntekt'}
                                         aria-label="Din inntekt"
@@ -247,16 +247,16 @@ export const InnfyllingPage = () => {
                                                 inntektSum={getBrukerinntektSum()}
                                             />
                                         </VStack>
-                                    </Box.New>
+                                    </Box>
                                 </Bleed>
                             </section>
 
                             {inntekterResponse?.forventedeInntekter.eps ? (
                                 <section aria-label={'Registrer annen forelders inntekt'}>
                                     <Bleed marginInline={{ md: "space-0 space-80" }}>
-                                        <Box.New
+                                        <Box
                                             borderWidth="1"
-                                            borderRadius="large"
+                                            borderRadius="8"
                                             padding={{ xs: "space-24", md: "space-40" }}
                                             id={'eps-inntekt'}
                                             aria-label="Registrer annen forelders inntekt"
@@ -302,7 +302,7 @@ export const InnfyllingPage = () => {
                                                     inntektSum={getAnnenForelderInntektSum() || 0}
                                                 />
                                             </VStack>
-                                        </Box.New>
+                                        </Box>
                                     </Bleed>
                                 </section>
                             ) : null}

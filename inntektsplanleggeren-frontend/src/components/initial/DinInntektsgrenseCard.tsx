@@ -19,7 +19,7 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
     }
 
     return (
-        <Box.New borderRadius="xlarge" padding="space-16" background="accent-soft" ref={inntektsgrenseCardRef}>
+        <Box borderRadius="12" padding="space-16" background="accent-soft" ref={inntektsgrenseCardRef}>
             <VStack gap="space-8">
                 <VStack gap="space-8" style={{ marginBottom: '20px' }}>
                     <Heading level="2" size="small">
@@ -124,6 +124,6 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
                     </Button>
                 </HStack>
             </VStack>
-        </Box.New>
+        </Box>
     );
 }

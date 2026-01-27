@@ -190,7 +190,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                     <ReadMore header="Pensjoner du skal legge inn">Legg inn den andre forelderens pensjoner fra utlandet før skatt.</ReadMore>
                 </VStack>
             )}
-            <Box.New padding="space-16" background="neutral-soft" borderRadius="large">
+            <Box padding="space-16" background="neutral-soft" borderRadius="8">
                 <VStack gap={{ xs: "space-8", sm: "space-4" }}>
                     <Heading level="4" size="small">
                         Annen forelder sin samlede inntekt i {year}:
@@ -199,7 +199,7 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         <FormatKroner value={inntektSum} /> før skatt
                     </BodyShort>
                 </VStack>
-            </Box.New>
+            </Box>
         </div>
     );
 }

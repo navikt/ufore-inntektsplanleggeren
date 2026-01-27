@@ -190,7 +190,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-            <Box.New padding="space-16" background="neutral-soft" borderRadius="large">
+            <Box padding="space-16" background="neutral-soft" borderRadius="8">
                 <VStack gap={{ xs: "space-8", sm: "space-4" }}>
                     <Heading level="4" size="small">
                         {' '}
@@ -200,7 +200,7 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         <FormatKroner value={inntektSum} /> før skatt
                     </BodyShort>
                 </VStack>
-            </Box.New>
+            </Box>
         </div>
     );
 }

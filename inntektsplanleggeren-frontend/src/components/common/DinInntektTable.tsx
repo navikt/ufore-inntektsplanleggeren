@@ -36,7 +36,7 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
     const isDesktop = width > DESKTOP_WIDTH
 
     return (
-        <Box.New borderRadius="xlarge" padding="space-16" background="accent-soft">
+        <Box borderRadius="12" padding="space-16" background="accent-soft">
             <VStack gap="space-24">
                 {children}
 
@@ -53,7 +53,7 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
                     </Button>
                 </HStack>
             </VStack>
-        </Box.New>
+        </Box>
     );
 }
 
