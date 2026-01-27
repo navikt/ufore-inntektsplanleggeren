@@ -44,11 +44,11 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
 
                 <HStack justify="center">
                     <Button
+                        data-color="neutral"
                         onClick={handleButton}
-                        variant="secondary-neutral"
+                        variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
-                    >
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
                         {buttonText}
                     </Button>
                 </HStack>

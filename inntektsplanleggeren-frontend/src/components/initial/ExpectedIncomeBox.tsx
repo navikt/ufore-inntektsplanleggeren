@@ -70,11 +70,11 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                 )}
                 <HStack justify="center">
                     <Button
+                        data-color="neutral"
                         onClick={handleButton}
-                        variant="secondary-neutral"
+                        variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
-                    >
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
                         {buttonText}
                     </Button>
                 </HStack>
