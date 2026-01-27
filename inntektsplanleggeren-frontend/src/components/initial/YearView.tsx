@@ -63,7 +63,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
                         </Heading>
                     )}
 
-                    <VStack gap="7">
+                    <VStack gap="space-28">
                         <ReadMore header="Tidspunkt for å registrere inntekt">
                             <List>
                                 <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekt for dette året.</List.Item>

@@ -20,13 +20,13 @@ export default function VeilederBanner() {
                 {loggetInnSom && <InternalHeader.User name={loggetInnSom} />}
             </InternalHeader>
             {borgerInfo && (
-                <Box.New borderWidth="0 0 1 0" borderColor="neutral-subtle">
-                    <HStack align="center" gap="2" className="borger-informasjon">
+                <Box borderWidth="0 0 1 0" borderColor="neutral-subtle">
+                    <HStack align="center" gap="space-8" className="borger-informasjon">
                         <BodyShort size="small" weight="semibold">
                             {borgerInfo.navn || ""}
                         </BodyShort>
                         <span aria-hidden="true">/</span>
-                        <HStack align="center" gap="1">
+                        <HStack align="center" gap="space-4">
                             <BodyShort data-testid="borger-fnr" size="small" weight="semibold">
                                 {formatFnr(borgerInfo.pid)}
                             </BodyShort>
@@ -34,8 +34,8 @@ export default function VeilederBanner() {
                         </HStack>
                         <Spacer />
                     </HStack>
-                </Box.New>
+                </Box>
             )}
         </>
-    )
+    );
 }

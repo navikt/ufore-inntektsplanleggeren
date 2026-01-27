@@ -57,8 +57,8 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
     }
 
     return (
-        <Box.New borderRadius="xlarge" padding="space-16" background="accent-soft">
-            <VStack gap="7">
+        <Box borderRadius="12" padding="space-16" background="accent-soft">
+            <VStack gap="space-28">
                 {Array.from(expectedIncomeMap.keys()).map((year) => (
                     <ExpectedIncome key={year} year={year} />
                 ))}
@@ -70,15 +70,15 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                 )}
                 <HStack justify="center">
                     <Button
+                        data-color="neutral"
                         onClick={handleButton}
-                        variant="secondary-neutral"
+                        variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
-                    >
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
-        </Box.New>
-    )
+        </Box>
+    );
 }

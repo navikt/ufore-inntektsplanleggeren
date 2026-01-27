@@ -57,15 +57,15 @@ export const KvitteringPage = () => {
 
     if (isWaiting) {
         return (
-            <Box.New background="neutral-soft" padding="16" borderRadius="large">
-                <VStack className="form-container" align="center" gap="20">
+            <Box background="neutral-soft" padding="space-64" borderRadius="8">
+                <VStack className="form-container" align="center" gap="space-80">
                     <Heading level="2" size="large" align="center">
                         Vent mens vi sender inn
                     </Heading>
                     <Loader size="3xlarge" />
                     <BodyShort align="center">Dette kan ta opptil ett minutt.</BodyShort>
                 </VStack>
-            </Box.New>
+            </Box>
         )
     }
 
@@ -89,7 +89,7 @@ export const KvitteringPage = () => {
                     <Heading level="2" size={'large'}>
                         Hva skjer videre?
                     </Heading>
-                    <List as="ul">
+                    <List as="ul" style={{ margin: '1rem 0' }}>
                         <List.Item>Endringen er sendt til behandling. I de fleste tilfeller vil saken være ferdig behandlet i løpet av 14 dager. </List.Item>
                         <List.Item>Din nye inntekt vil ikke vises i inntektsplanleggeren før vi har behandlet saken.</List.Item>
                         <List.Item>
@@ -101,7 +101,6 @@ export const KvitteringPage = () => {
                     </List>
                 </section>
             )}
-
             <section aria-label={'Etteroppgjør'}>
                 <Heading className="header" level="2" size={'large'}>
                     Etteroppgjør
@@ -115,7 +114,6 @@ export const KvitteringPage = () => {
                     </Link>
                 </BodyLong>
             </section>
-
             <section aria-label={'Hvis inntekten din endrer seg'}>
                 <Heading className="header" level="2" size={'large'}>
                     Hvis inntekten din endrer seg
@@ -125,7 +123,6 @@ export const KvitteringPage = () => {
                     stor tilbakebetaling i etteroppgjøret. Du kan melde ny endring i inntektsplanleggeren så mange ganger du trenger i løpet av året.
                 </BodyLong>
             </section>
-
             <section aria-label={'Husk å oppdatere skattekortet'}>
                 <Heading className="header" level="2" size={'large'}>
                     Husk å oppdatere skattekortet
@@ -137,7 +134,6 @@ export const KvitteringPage = () => {
                     </Link>
                 </BodyLong>
             </section>
-
             <section aria-label={'Må du melde fra til flere?'}>
                 <Heading className="header" level="2" size={'large'}>
                     Må du melde fra til flere?
@@ -145,14 +141,14 @@ export const KvitteringPage = () => {
                 <BodyLong>
                     Får du andre utbetalinger fra Nav eller pengestøtter fra andre, kan det hende at du må melde om endring i inntekt til disse også. Det kan
                     for eksempel gjelde
-                    <List>
+                    <List style={{ margin: '1rem 0' }}>
                         <List.Item>økonomisk sosialhjelp</List.Item>
                         <List.Item>uførepensjon fra en pensjonskasse eller forsikringsordning</List.Item>
                         <List.Item>bostøtte fra Husbanken</List.Item>
                     </List>
                 </BodyLong>
             </section>
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <Button as={Link} to={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="primary" className="button-container">
                     Din uføretrygd
                 </Button>

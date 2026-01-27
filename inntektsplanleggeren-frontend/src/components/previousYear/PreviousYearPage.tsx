@@ -42,7 +42,7 @@ export const PreviousYearPage = () => {
     return (
         <VStack className="page">
             <VStack className="page">
-                <VStack gap="4">
+                <VStack gap="space-16">
                     {previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
                         <VStack>
                             <Heading level="2" size="medium">
@@ -71,11 +71,11 @@ export const PreviousYearPage = () => {
                     )}
                 </VStack>
 
-                <VStack gap="4">
+                <VStack gap="space-16">
                     <Heading level="2" size="medium">
                         Registrert forventet inntekt for {previousYear}
                     </Heading>
-                    <VStack gap={'10'}>
+                    <VStack gap={"space-40"}>
                         {previousYearInntekterResponse.forventedeInntekter.bruker !== null && previousYear !== null && (
                             <PreviousExpectedIncomeTable
                                 personInntekter={previousYearInntekterResponse.forventedeInntekter.bruker}
@@ -93,7 +93,6 @@ export const PreviousYearPage = () => {
                     </VStack>
                 </VStack>
             </VStack>
-
             <Knapperad
                 handleSubmit={onClickButton}
                 tilbakePageLink={PageLinks.INDEX}
@@ -102,5 +101,5 @@ export const PreviousYearPage = () => {
                 laster={isLoading}
             />
         </VStack>
-    )
+    );
 }

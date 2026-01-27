@@ -5,8 +5,7 @@ import { useContext, useState } from 'react'
 import { YearView } from '@/components/initial/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
-import { getInntekter } from '@/api/apiFetching'
-import { getInntekterForSimulering } from '@/api/apiFetching'
+import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { ExpectedIncomeBox } from '@/components/initial/ExpectedIncomeBox'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
@@ -89,17 +88,15 @@ export function InitialPage() {
                     </BodyShort>
                 </GuidePanel>
             </section>
-
             <section aria-label={'I inntektsplanleggeren kan du'}>
                 <Heading level="2" size="small">
                     I inntektsplanleggeren kan du
                 </Heading>
-                <List size="medium">
+                <List style={{ margin: '1rem 0' }} size="medium">
                     <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
                     <List.Item>melde inn forventet inntekt til oss</List.Item>
                 </List>
             </section>
-
             {initiateResponse.data !== null && (
                 <section aria-label={'Registrert forventet inntekt'}>
                     <ExpectedIncomeBox
@@ -109,20 +106,17 @@ export function InitialPage() {
                     />
                 </section>
             )}
-
             <section aria-label={'Meld fra'}>
                 <BodyLong>
                     Det er viktig at du melder fra hvis inntekten din blir annerledes enn det du har meldt inn tidligere. Det gir mindre risiko for stor
                     tilbakebetaling i etteroppgjøret.
                 </BodyLong>
             </section>
-
             {initiateResponse.data !== null && (
                 <section aria-label="Inntektsgrense og trekkprosent">
                     <InntektsgrenseCard displayData={initiateResponse.data} />
                 </section>
             )}
-
             <Accordion>
                 <Accordion.Item>
                     <Accordion.Header>Slik fungerer inntektsplanleggeren</Accordion.Header>
@@ -152,7 +146,7 @@ export function InitialPage() {
                 <Accordion.Item>
                     <Accordion.Header>Usikker på hva du kommer til å tjene?</Accordion.Header>
                     <Accordion.Content>
-                        <VStack gap="8">
+                        <VStack gap="space-32">
                             <BodyShort>
                                 Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss
                                 så godt du kan.
@@ -173,7 +167,6 @@ export function InitialPage() {
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
-
             {initiateResponse?.data?.aktuelleAar?.length > 0 && (
                 <YearView
                     availableYears={initiateResponse.data.aktuelleAar}

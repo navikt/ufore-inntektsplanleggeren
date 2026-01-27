@@ -10,7 +10,7 @@ export const parseInntekt = (s: string) => {
   if (s.includes('.')) {
     return NaN
   }
-  return Number(s.replace(/\s+/g, ''))
+  return Number(s.replace(/\s+/g, ''));
 }
 
 const FORMATTER = Intl.NumberFormat('nb-NO', {

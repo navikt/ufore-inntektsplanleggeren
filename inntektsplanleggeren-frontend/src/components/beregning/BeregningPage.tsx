@@ -43,7 +43,7 @@ export const BeregningPage = () => {
 
     if (simulationResponse?.result)
         return (
-            <VStack gap="8">
+            <VStack gap="space-32">
                 {simulationResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ? (
                     <Alert variant="warning">
                         Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
@@ -54,7 +54,7 @@ export const BeregningPage = () => {
                         Din inntekt og uføretrygd før skatt i {selectedYear}
                     </Heading>
                     <ReadMore header="Inntekt du har lagt inn">
-                        <VStack gap="7">
+                        <VStack gap="space-28">
                             <VStack>
                                 <Heading level="4" size="small">
                                     Din forventede inntekt i {selectedYear}
@@ -72,9 +72,7 @@ export const BeregningPage = () => {
                         </VStack>
                     </ReadMore>
                 </section>
-
                 <BeregningWarnings messages={simulationResponse.messages} />
-
                 {showSimulering ? (
                     <>
                         {!simulationResponse?.messages.some((message) => message.messageCode === MessageCodes.SIMULERING_CONTAINS_OPPHORTE_YTELSER) && (
@@ -151,7 +149,6 @@ export const BeregningPage = () => {
                         inntektsendring.
                     </Alert>
                 )}
-
                 <BodyLong>
                     <strong>
                         Har du spørsmål?{' '}
@@ -160,8 +157,7 @@ export const BeregningPage = () => {
                         </Link>
                     </strong>
                 </BodyLong>
-
                 <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.FORVENTET_INNTEKT} />
             </VStack>
-        )
+        );
 }

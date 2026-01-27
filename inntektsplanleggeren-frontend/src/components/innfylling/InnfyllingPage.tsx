@@ -198,7 +198,7 @@ export const InnfyllingPage = () => {
                     <Heading level="3" size="medium">
                         Slik skal du oppgi inntekten
                     </Heading>
-                    <List>
+                    <List style={{ margin: '1rem 0' }}>
                         {inntekterResponse.uforeHeleAaret && <List.Item>årlig beløp</List.Item>}
                         {!inntekterResponse.uforeHeleAaret && <List.Item>kun inntekt for den perioden du har uføretrygd</List.Item>}
                         <List.Item>forventet inntekt</List.Item>
@@ -209,18 +209,18 @@ export const InnfyllingPage = () => {
             </section>
             <VStack className="form-container">
                 <form onSubmit={handleSubmit}>
-                    <VStack gap="4">
-                        <VStack gap="4">
+                    <VStack gap="space-16">
+                        <VStack gap="space-16">
                             <section aria-label={'Registrer din inntekt'}>
-                                <Bleed marginInline={{ md: '0 20' }} asChild>
-                                    <Box.New
+                                <Bleed marginInline={{ md: 'space-0 space-80' }} asChild>
+                                    <Box
                                         borderWidth="1"
-                                        borderRadius="large"
-                                        padding={{ xs: '6', md: '10' }}
+                                        borderRadius="8"
+                                        padding={{ xs: 'space-24', md: 'space-40' }}
                                         id={'bruker-inntekt'}
                                         aria-label="Din inntekt"
                                     >
-                                        <VStack gap="6">
+                                        <VStack gap="space-24">
                                             <Heading size="medium" level="3" spacing>
                                                 Registrer din inntekt for {selectedYear}
                                             </Heading>
@@ -247,21 +247,21 @@ export const InnfyllingPage = () => {
                                                 inntektSum={getBrukerinntektSum()}
                                             />
                                         </VStack>
-                                    </Box.New>
+                                    </Box>
                                 </Bleed>
                             </section>
 
                             {inntekterResponse?.forventedeInntekter.eps ? (
                                 <section aria-label={'Registrer annen forelders inntekt'}>
-                                    <Bleed marginInline={{ md: '0 20' }}>
-                                        <Box.New
+                                    <Bleed marginInline={{ md: 'space-0 space-80' }}>
+                                        <Box
                                             borderWidth="1"
-                                            borderRadius="large"
-                                            padding={{ xs: '6', md: '10' }}
+                                            borderRadius="8"
+                                            padding={{ xs: 'space-24', md: 'space-40' }}
                                             id={'eps-inntekt'}
                                             aria-label="Registrer annen forelders inntekt"
                                         >
-                                            <VStack gap="6">
+                                            <VStack gap="space-24">
                                                 <Heading level="3" size="medium" spacing>
                                                     Annen forelders inntekt {selectedYear}
                                                 </Heading>
@@ -302,7 +302,7 @@ export const InnfyllingPage = () => {
                                                     inntektSum={getAnnenForelderInntektSum() || 0}
                                                 />
                                             </VStack>
-                                        </Box.New>
+                                        </Box>
                                     </Bleed>
                                 </section>
                             ) : null}

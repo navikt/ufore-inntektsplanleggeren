@@ -25,9 +25,9 @@ export const FormContainer = () => {
     }
 
     return (
-        <VStack gap="8">
+        <VStack gap="space-32">
             {formStep !== null && (
-                <VStack gap="6">
+                <VStack gap="space-24">
                     <div>
                         <div
                             ref={topRef}
@@ -73,7 +73,7 @@ export const FormContainer = () => {
             )}
             <Outlet />
         </VStack>
-    )
+    );
 }
 
 export enum PageNames {

@@ -15,12 +15,11 @@ export function CancelConfirmationModal() {
 
     return (
         <>
-            <HStack gap="6">
+            <HStack gap="space-24">
                 <Button type="button" onClick={() => setOpen(true)} variant="tertiary">
                     Avbryt
                 </Button>
             </HStack>
-
             <Modal open={open} onClose={() => setOpen(false)} header={{ heading: 'Er du sikker?' }} closeOnBackdropClick width="medium">
                 <Modal.Body>
                     <BodyLong>Hvis du avbryter nå lagres ikke dine opplysninger, og inntektsendringen sendes ikke inn til oss. Ønsker du å avbryte?</BodyLong>
@@ -41,5 +40,5 @@ export function CancelConfirmationModal() {
                 </Modal.Footer>
             </Modal>
         </>
-    )
+    );
 }

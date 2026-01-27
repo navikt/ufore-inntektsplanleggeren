@@ -1,5 +1,5 @@
 import '@navikt/ds-tokens'
-import '@navikt/ds-css/darkside'
+import '@navikt/ds-css'
 import { BodyShort, Heading, VStack } from '@navikt/ds-react'
 import './nedetidpage.css'
 import { InformationSquareIcon } from '@navikt/aksel-icons'

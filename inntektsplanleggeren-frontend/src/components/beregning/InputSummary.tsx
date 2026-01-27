@@ -9,7 +9,7 @@ interface IProps {
 
 export const InputSummary: React.FC<IProps> = (props) => {
   return (
-    <VStack gap="1">
+    <VStack gap="space-4">
       <BodyShort>
         Lønn og pensjonsgivende ytelser: <FormatKroner value={props.inntekter.arbeidsinntekt ?? 0} />
       </BodyShort>
@@ -41,5 +41,5 @@ export const InputSummary: React.FC<IProps> = (props) => {
         </strong>
       </BodyShort>
     </VStack>
-  )
+  );
 }
