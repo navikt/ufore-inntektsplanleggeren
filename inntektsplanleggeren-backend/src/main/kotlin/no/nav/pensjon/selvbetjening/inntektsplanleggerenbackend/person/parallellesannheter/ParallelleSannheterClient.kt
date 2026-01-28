@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.AdressebeskyttelseParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.FoedselsdatoParallelleSannheterContainer
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.dto.NavnParallelleSannheterContainer
@@ -30,6 +31,7 @@ class ParallelleSannheterClient(private val webClient: WebClient,
                 .bodyValue(foedselsdatoSannheter)
                 .retrieve()
                 .bodyToMono(FoedselsdatoParallelleSannheterContainer::class.java)
+                .withMdcContext()
                 .block()
                 ?.lockDecision()?: FoedselsdatoParallelleSannheterContainer(null)
         } catch (e: WebClientResponseException) {
@@ -51,6 +53,7 @@ class ParallelleSannheterClient(private val webClient: WebClient,
                 .bodyValue(navnSannheter)
                 .retrieve()
                 .bodyToMono(NavnParallelleSannheterContainer::class.java)
+                .withMdcContext()
                 .block()
                 ?.lockDecision()?: NavnParallelleSannheterContainer(null)
         } catch (e: WebClientResponseException) {
@@ -72,6 +75,7 @@ class ParallelleSannheterClient(private val webClient: WebClient,
                 .bodyValue(adressebeskyttelseSannheter)
                 .retrieve()
                 .bodyToMono(AdressebeskyttelseParallelleSannheterContainer::class.java)
+                .withMdcContext()
                 .block()
                 ?.lockDecision()?: AdressebeskyttelseParallelleSannheterContainer(null)
         } catch (e: WebClientResponseException) {

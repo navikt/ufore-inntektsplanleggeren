@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister.dto.Organisasjon
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
@@ -36,6 +37,7 @@ class EregClient(
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(Organisasjon::class.java)
+                        .withMdcContext()
                         .block())?.navn?.sammensattnavn ?: organisasjonsnummer
 
         } catch (e: WebClientResponseException) {
