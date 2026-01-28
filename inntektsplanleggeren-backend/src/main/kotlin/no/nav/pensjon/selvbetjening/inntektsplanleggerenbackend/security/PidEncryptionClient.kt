@@ -1,5 +1,6 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import org.springframework.beans.factory.annotation.Value
@@ -25,6 +26,7 @@ class PidEncryptionClient(
                 .bodyValue(encryptedPid)
                 .retrieve()
                 .bodyToMono(String::class.java)
+                .withMdcContext()
                 .block()
         }
 }

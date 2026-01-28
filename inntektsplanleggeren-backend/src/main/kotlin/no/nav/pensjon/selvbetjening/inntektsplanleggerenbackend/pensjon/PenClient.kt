@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
@@ -58,6 +59,7 @@ class PenClient(
                         )
                         .retrieve()
                         .bodyToMono(InnsendingResponse::class.java)
+                        .withMdcContext()
                         .block()
                 } ?: throw IllegalStateException("Feilet under sending av inntektsendring til PEN")
         } catch (e: WebClientResponseException) {
@@ -96,6 +98,7 @@ class PenClient(
                         )
                         .retrieve()
                         .bodyToMono(SimulerEndringUforetrygdResponse::class.java)
+                        .withMdcContext()
                         .block()
                 } ?: throw IllegalStateException("Feilet under simulering mot PEN")
         } catch (e: WebClientResponseException) {
@@ -122,6 +125,7 @@ class PenClient(
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(Uforetrygd::class.java)
+                        .withMdcContext()
                         .block()
                 }
         } catch (e: WebClientResponseException) {
@@ -152,6 +156,7 @@ class PenClient(
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(StatusInnsendingResponse::class.java)
+                        .withMdcContext()
                         .block()
                 } ?: throw IllegalStateException("Unable to fetch status from PEN")
         } catch (e: WebClientResponseException) {

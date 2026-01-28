@@ -1,10 +1,5 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import net.logstash.logback.argument.StructuredArguments.kv
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -23,15 +18,8 @@ class WebClientConfiguration {
     fun webClient(): WebClient = WebClient.builder()
         .clientConnector(ReactorClientHttpConnector(HttpClient.create()))
         .exchangeStrategies(ExchangeStrategies.builder().codecs { it.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }.build())
-        .filter(putMdcOnContext())
         .filter(logRequest())
         .build()
-
-    private fun putMdcOnContext() = ExchangeFilterFunction { request, next ->
-        val mdc = MDC.getCopyOfContextMap()
-        next.exchange(request)
-            .contextWrite { ctx -> ctx.put("mdc", mdc) }
-    }
 
     private fun logRequest() = ExchangeFilterFunction.ofResponseProcessor { response ->
         Mono.deferContextual { ctx ->
@@ -41,5 +29,9 @@ class WebClientConfiguration {
             Mono.just(response)
         }
     }
+}
 
+fun <T : Any> Mono<T>.withMdcContext(): Mono<T> {
+    val mdc = MDC.getCopyOfContextMap()
+    return this.contextWrite { ctx -> ctx.put("mdc", mdc) }
 }
