@@ -27,19 +27,23 @@ class MdcFilter(val tokenService: TokenService) : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        MDC.put(NAV_CALL_ID_MDC, request.getHeader(NAV_CALL_ID_HEADER) ?: UUID.randomUUID().toString())
-        if(SecurityContextHolder.getContext().authentication is JwtAuthenticationToken) {
-            if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                MDC.put(NAV_IDENT, tokenService.determineLoggedInUserId())
+        try {
+            MDC.put(NAV_CALL_ID_MDC, request.getHeader(NAV_CALL_ID_HEADER) ?: UUID.randomUUID().toString())
+            if(SecurityContextHolder.getContext().authentication is JwtAuthenticationToken) {
+                if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                    MDC.put(NAV_IDENT, tokenService.determineLoggedInUserId())
+                }
+                if (tokenService.isUserLoggedInAsPerson()) {
+                    MDC.put(LOGGED_IN_PID, Masker.maskPid(tokenService.determineLoggedInUserId()))
+                }
             }
-            if (tokenService.isUserLoggedInAsPerson()) {
-                MDC.put(LOGGED_IN_PID, Masker.maskPid(tokenService.determineLoggedInUserId()))
+            request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }?.let { cookie ->
+                MDC.put(OBO_PID, Masker.maskPid(cookie.value))
             }
-        }
-        request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }?.let { cookie ->
-            MDC.put(OBO_PID, Masker.maskPid(cookie.value))
-        }
 
-        filterChain.doFilter(request, response)
+            filterChain.doFilter(request, response)
+        } finally {
+            MDC.clear()
+        }
     }
 }
