@@ -37,7 +37,7 @@ class PenClient(
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         inntektsgrunnlagListeEps: List<Inntektsgrunnlag>?
     ): InnsendingResponse {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/behandle"
+        val path = "/api/selvbetjening/inntektsplanleggeren/behandle"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -78,7 +78,7 @@ class PenClient(
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         inntektsgrunnlagListeEps: List<Inntektsgrunnlag>
     ): SimulerEndringUforetrygdResponse {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/simuler"
+        val path = "/api/selvbetjening/inntektsplanleggeren/simuler"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -112,7 +112,7 @@ class PenClient(
     }
 
     fun fetchInntektsplanleggerData(pid: String, simuleringFom: LocalDate): Uforetrygd? {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/data"
+        val path = "/api/selvbetjening/inntektsplanleggeren/data"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -142,7 +142,7 @@ class PenClient(
     }
 
     fun fetchInntektsplanleggerStatus(pid: String, simuleringFom: LocalDate, innsendingsTidspunkt: LocalDateTime): StatusInnsendingResponse? {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/status"
+        val path = "/api/selvbetjening/inntektsplanleggeren/status"
         val tidspkt = innsendingsTidspunkt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
