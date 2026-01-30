@@ -84,7 +84,7 @@ class PenClientTest : WebClientTest() {
         val request = takeRequest()
 
         assertEquals(expectedRequest, request.body.readUtf8())
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/behandle", request.path)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/behandle", request.path)
         assertEquals("AUTOMATISK_BEHANDLING", innsendingResponse.status)
 
     }
@@ -103,7 +103,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
     }
 
     @Test
@@ -120,7 +120,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
     }
 
     @Test
@@ -166,7 +166,7 @@ class PenClientTest : WebClientTest() {
                     "\"persongrunnlagId\":1,\"version\":null}]}"
 
         assertEquals(expectedRequest, request.body.readUtf8())
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/simuler", request.path)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", request.path)
 
         assertEquals(
             197199,
@@ -281,7 +281,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
     }
 
     @Test
@@ -297,7 +297,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
     }
 
     @Test
@@ -314,7 +314,7 @@ class PenClientTest : WebClientTest() {
 
         val request = takeRequest()
 
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data?simuleringFom=2024-11-01", request.path)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/data?simuleringFom=2024-11-01", request.path)
 
         assertEquals("19447917729", uforetrygd?.epsPid)
         assertEquals(49611, uforetrygd?.inntektsgrense)
@@ -355,7 +355,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/data", exception.service)
     }
 
     @Test
@@ -369,7 +369,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/data", exception.service)
     }
 
     private fun innsending200Response(): MockResponse {
