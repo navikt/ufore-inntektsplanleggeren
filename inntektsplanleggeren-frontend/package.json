@@ -27,7 +27,7 @@
         "@navikt/nav-dekoratoren-moduler": "^3.6.1",
         "@navikt/oasis": "^4.1.1",
         "@navikt/steng-for-regulering": "^0.0.7",
-        "cors": "^2.8.5",
+        "cors": "^2.8.6",
         "dotenv": "17.2.3",
         "express": "^5.2.1",
         "express-prom-bundle": "^8.0.0",
