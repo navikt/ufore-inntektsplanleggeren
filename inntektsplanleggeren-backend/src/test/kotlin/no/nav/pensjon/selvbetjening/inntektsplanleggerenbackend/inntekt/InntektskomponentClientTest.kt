@@ -29,14 +29,13 @@ import kotlin.test.assertEquals
 
 class InntektskomponentClientTest: WebClientTest()  {
     val tokenService = Mockito.mock(TokenService::class.java)
-    val azureAdService = Mockito.mock(AzureAdService::class.java)
     lateinit var inntektskomponentClient: InntektskomponentClient
 
     @BeforeEach
     override fun setup() {
         super.setup()
         inntektskomponentClient = InntektskomponentClient(
-            url = baseUrl, webClient = WebClient.create(), scope = "", tokenService = tokenService, azureAdService = azureAdService
+            url = baseUrl, webClient = WebClient.create(), scope = "", tokenService = tokenService
         )
         MDC.put(NAV_CALL_ID_MDC, UUID.randomUUID().toString())
     }
@@ -53,7 +52,7 @@ class InntektskomponentClientTest: WebClientTest()  {
     fun `should return inntekter when fetching AbonnerteInntekterBolk`() {
         prepare(hentAbonnerteInntekterBolkResponse200HarInntekter())
         val abonnerteInntekterIdentOgPeriode = AbonnerteInntekterIdentOgPeriode(Aktoer("12345678901", "NATURLIG_IDENT"), "fom", "tom")
-        val abbonerteInntekterBolk = inntektskomponentClient.hentAbonnerteInntekterBolk(listOf(abonnerteInntekterIdentOgPeriode),"dummFilter","dummyFormaaal")
+        val abbonerteInntekterBolk = inntektskomponentClient.hentAbonnerteInntekterBolk(listOf(abonnerteInntekterIdentOgPeriode),"dummFilter","dummyFormaaal", "dummypid")
         abbonerteInntekterBolk.abonnerteInntekterPerIdentListe?.get(0)?.ident?.let {
             assertEquals("12345678901", it.identifikator) }
         abbonerteInntekterBolk.abonnerteInntekterPerIdentListe?.get(0)?.abonnerteInntekterMaanedListe?.get(0)?.sumOpplysningspliktigListe?.get(1)?.let {
@@ -64,7 +63,7 @@ class InntektskomponentClientTest: WebClientTest()  {
     fun `should return empty list of inntekter when fetching AbonnerteInntekterBolk`() {
         prepare(hentAbonnerteInntekterBolkResponse200HarIngenInntekter())
         val abonnerteInntekterIdentOgPeriode = AbonnerteInntekterIdentOgPeriode(Aktoer("12345678901", "NATURLIG_IDENT"), "fom", "tom")
-        val abbonerteInntekterBolk = inntektskomponentClient.hentAbonnerteInntekterBolk(listOf(abonnerteInntekterIdentOgPeriode),"dummFilter","dummyFormaaal")
+        val abbonerteInntekterBolk = inntektskomponentClient.hentAbonnerteInntekterBolk(listOf(abonnerteInntekterIdentOgPeriode),"dummFilter","dummyFormaaal", "dummypid")
         assertEquals(emptyList(),abbonerteInntekterBolk.abonnerteInntekterPerIdentListe?.get(0)?.abonnerteInntekterMaanedListe)
     }
 
@@ -72,7 +71,7 @@ class InntektskomponentClientTest: WebClientTest()  {
     fun `should throw ForbiddenException when 403 from inntektskomponenten when fetching AbonnerteInntekterBolk`(){
         prepare(jsonResponse(HttpStatus.FORBIDDEN) ?: MockResponse())
         val exception = assertThrows<ForbiddenException> {
-            inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal")
+            inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal", "dummypid")
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
         assertEquals("/rs/api/v1/hentabonnerteinntekterbolk", exception.service)
@@ -82,7 +81,7 @@ class InntektskomponentClientTest: WebClientTest()  {
     fun `should throw ClientException when 401 from inntektskomponenten when fetching AbonnerteInntekterBolk`(){
         prepare(jsonResponse(HttpStatus.UNAUTHORIZED) ?: MockResponse())
         val exception = assertThrows<ClientException> {
-            inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal")
+            inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal", "dummypid")
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
         assertEquals("/rs/api/v1/hentabonnerteinntekterbolk", exception.service)
@@ -97,7 +96,7 @@ class InntektskomponentClientTest: WebClientTest()  {
         prepare(hentAbonnerteInntekterBolkResponse400())
 
         val exception = assertThrows<ClientException> {
-            inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal")
+            inntektskomponentClient.hentAbonnerteInntekterBolk(emptyList(),"dummyFilter","dummyFormaaal", "dummypid")
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)
         assertEquals("/rs/api/v1/hentabonnerteinntekterbolk", exception.service)
