@@ -5,16 +5,20 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_MDC
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
 import java.time.*
+import java.util.UUID
 import kotlin.test.assertEquals
 
 class PenClientTest : WebClientTest() {
@@ -27,6 +31,13 @@ class PenClientTest : WebClientTest() {
         penClient = PenClient(
             url = baseUrl, webClient = WebClient.create(), scope = "", audience = "", tokenService = tokenService
         )
+        MDC.put(NAV_CALL_ID_MDC, UUID.randomUUID().toString())
+    }
+
+    @AfterEach
+    override fun tearDown() {
+        super.tearDown()
+        MDC.remove(NAV_CALL_ID_MDC)
     }
 
     @Test
@@ -58,7 +69,7 @@ class PenClientTest : WebClientTest() {
             expectedInntektsgrunnlagEps
         )
         val expectedRequest =
-            "{\"pid\":\"00000000001\",\"simulertTotalbelopNetto\":4535,\"virkFom\":[2024,11,1],\"forventetInntektBruker\":[{\"inntektsgrunnlagId\":null," +
+            "{\"pid\":\"00000000001\",\"simulertTotalbelopNetto\":4535,\"virkFom\":\"2024-11-01\",\"forventetInntektBruker\":[{\"inntektsgrunnlagId\":null," +
                     "\"fomDato\":\"2024-11-01T00:00:00+0100\",\"tomDato\":null,\"endringstidspunkt\":null,\"belop\":1,\"bruk\":true,\"kopiertFraGammeltKrav\":false," +
                     "\"registerOpprettetAv\":\"\",\"grunnlagKilde\":\"BRUKER_OPP\",\"registerKilde\":\"SELVBETJ\",\"inntektType\":null,\"inntektHendelseType\":\"BENYTTET\"," +
                     "\"grunnIkkeReduksjonType\":null,\"persongrunnlagId\":1,\"version\":null},{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\",\"tomDato\":null," +
@@ -73,7 +84,7 @@ class PenClientTest : WebClientTest() {
         val request = takeRequest()
 
         assertEquals(expectedRequest, request.body.readUtf8())
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/behandle", request.path)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/behandle", request.path)
         assertEquals("AUTOMATISK_BEHANDLING", innsendingResponse.status)
 
     }
@@ -92,7 +103,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
     }
 
     @Test
@@ -109,7 +120,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/behandle", exception.service)
     }
 
     @Test
@@ -142,7 +153,7 @@ class PenClientTest : WebClientTest() {
         val request = takeRequest()
 
         val expectedRequest =
-            "{\"pid\":\"00000000001\",\"virk\":[2024,11,1],\"inntektsgrunnlagListe\":[{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\"," +
+            "{\"pid\":\"00000000001\",\"virk\":\"2024-11-01\",\"inntektsgrunnlagListe\":[{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\"," +
                     "\"tomDato\":null,\"endringstidspunkt\":null,\"belop\":1,\"bruk\":true,\"kopiertFraGammeltKrav\":false,\"registerOpprettetAv\":\"\",\"grunnlagKilde\":\"BRUKER_OPP\"," +
                     "\"registerKilde\":\"SELVBETJ\",\"inntektType\":null,\"inntektHendelseType\":\"BENYTTET\",\"grunnIkkeReduksjonType\":null,\"persongrunnlagId\":1,\"version\":null}," +
                     "{\"inntektsgrunnlagId\":null,\"fomDato\":\"2024-11-01T00:00:00+0100\",\"tomDato\":null,\"endringstidspunkt\":null,\"belop\":2,\"bruk\":true,\"kopiertFraGammeltKrav\":false," +
@@ -155,7 +166,7 @@ class PenClientTest : WebClientTest() {
                     "\"persongrunnlagId\":1,\"version\":null}]}"
 
         assertEquals(expectedRequest, request.body.readUtf8())
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/simuler", request.path)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", request.path)
 
         assertEquals(
             197199,
@@ -270,7 +281,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
     }
 
     @Test
@@ -286,44 +297,44 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
     }
 
     @Test
-    fun `should return Pensjonsdata when 200 from fetchInntektsplanleggerData`() {
-        prepare(pensjonsdata200Response())
+    fun `should return uforetrygd when 200 from fetchInntektsplanleggerData`() {
+        prepare(uforetrygd200Response())
         val expectedEndringstidspunkt = OffsetDateTime.parse("2024-09-11T22:00Z")
 
         `when`(tokenService.determineLoggedInUser()).thenReturn("Brukeren")
 
-        val pensjonsdata = penClient.fetchInntektsplanleggerData(
+        val uforetrygd = penClient.fetchInntektsplanleggerData(
             PID,
             LocalDate.of(2024, 11, 1)
         )
 
         val request = takeRequest()
 
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data?simuleringFom=2024-11-01", request.path)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/data?simuleringFom=2024-11-01", request.path)
 
-        assertEquals("19447917729", pensjonsdata?.epsPid)
-        assertEquals(49611, pensjonsdata?.inntektsgrense)
-        assertEquals(460060, pensjonsdata?.grenseStoppAvUfoeretrygd)
-        assertTrue(pensjonsdata!!.hasLopendeUforeVedtakThisYear)
-        assertFalse(pensjonsdata.hasLopendeUforeVedtakNextYear)
-        assertFalse(pensjonsdata.hasVarigTilrettelagtArbeid)
-        assertFalse(pensjonsdata.hasGjenlevendeTillegg)
-        assertTrue(pensjonsdata.uforeHeleAaret)
-        assertFalse(pensjonsdata.barnetilleggSaerkullsbarn)
-        assertTrue(pensjonsdata.barnetilleggFellesbarn)
-        assertEquals(2, pensjonsdata.inntekterFromOpenKravBruker!!.size)
-        assertEquals(75000, pensjonsdata.inntekterFromOpenKravBruker[0].belop)
-        assertEquals("FORINTARB", pensjonsdata.inntekterFromOpenKravBruker[0].inntektType)
-        assertTrue(pensjonsdata.inntekterFromOpenKravBruker[0].bruk)
-        assertEquals(expectedEndringstidspunkt, pensjonsdata.inntekterFromOpenKravBruker[0].endringstidspunkt)
-        assertEquals(2, pensjonsdata.inntekterFromOpenKravEps!!.size)
-        assertEquals(0, pensjonsdata.inntekterFromOpenKravEps[0].belop)
-        assertEquals("FORINTARB", pensjonsdata.inntekterFromOpenKravBruker[0].inntektType)
-        assertTrue(pensjonsdata.inntekterFromOpenKravBruker[0].bruk)
+        assertEquals("19447917729", uforetrygd?.epsPid)
+        assertEquals(49611, uforetrygd?.inntektsgrense)
+        assertEquals(460060, uforetrygd?.grenseStoppAvUfoeretrygd)
+        assertTrue(uforetrygd!!.hasLopendeUforeVedtakThisYear)
+        assertFalse(uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertFalse(uforetrygd.hasVarigTilrettelagtArbeid)
+        assertFalse(uforetrygd.hasGjenlevendeTillegg)
+        assertTrue(uforetrygd.uforeHeleAaret)
+        assertFalse(uforetrygd.barnetilleggSaerkullsbarn)
+        assertTrue(uforetrygd.barnetilleggFellesbarn)
+        assertEquals(2, uforetrygd.inntekterFromOpenKravBruker!!.size)
+        assertEquals(75000, uforetrygd.inntekterFromOpenKravBruker[0].belop)
+        assertEquals("FORINTARB", uforetrygd.inntekterFromOpenKravBruker[0].inntektType)
+        assertTrue(uforetrygd.inntekterFromOpenKravBruker[0].bruk)
+        assertEquals(expectedEndringstidspunkt, uforetrygd.inntekterFromOpenKravBruker[0].endringstidspunkt)
+        assertEquals(2, uforetrygd.inntekterFromOpenKravEps!!.size)
+        assertEquals(0, uforetrygd.inntekterFromOpenKravEps[0].belop)
+        assertEquals("FORINTARB", uforetrygd.inntekterFromOpenKravBruker[0].inntektType)
+        assertTrue(uforetrygd.inntekterFromOpenKravBruker[0].bruk)
     }
 
     @Test
@@ -344,7 +355,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/data", exception.service)
     }
 
     @Test
@@ -358,7 +369,7 @@ class PenClientTest : WebClientTest() {
             )
         }
         assertEquals("PEN", exception.system)
-        assertEquals("/pen/api/selvbetjening/inntektsplanleggeren/data", exception.service)
+        assertEquals("/api/selvbetjening/inntektsplanleggeren/data", exception.service)
     }
 
     private fun innsending200Response(): MockResponse {
@@ -440,13 +451,15 @@ class PenClientTest : WebClientTest() {
     "isFaktoromregnetEllerManueltOverstyrt": false,
     "hasOpenInntektsendringskrav": true,
     "firstVedtakFom": "2023-10-01",
-    "lastVedtakTom": null
+    "lastVedtakTom": null,
+    "forventedInntektBefore": null,
+    "harOpphorteYtelseskomponenter": false
 }
                 """.trimIndent()
             )
     }
 
-    private fun pensjonsdata200Response(): MockResponse {
+    private fun uforetrygd200Response(): MockResponse {
         return jsonResponse(HttpStatus.OK)!!
             .setBody(
                 """

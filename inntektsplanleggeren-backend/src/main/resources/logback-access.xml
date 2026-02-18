@@ -5,9 +5,15 @@
         <encoder class="net.logstash.logback.encoder.AccessEventCompositeJsonEncoder">
             <providers>
                 <timestamp/>
+                <pattern>
+                    <pattern>
+                        {
+                        "message": "Innkommende: %statusCode %requestURL %elapsedTime ms"
+                        }
+                    </pattern>
+                </pattern>
                 <statusCode/>
                 <requestedUrl/>
-                <elapsedTime/>
                 <contentLength/>
                 <remoteHost/>
                 <protocol/>
@@ -15,10 +21,11 @@
                 <pattern>
                     <pattern>
                         {
-                        "nav-call-id": "%header{nav-call-id}"
+                        "nav_call_id": "%header{nav-call-id}"
                         }
                     </pattern>
                 </pattern>
+                <provider class="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.logging.AuthorizationJsonProvider"/>
             </providers>
         </encoder>
 

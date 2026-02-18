@@ -2,23 +2,25 @@ name: Automerge Dependabot PRer for Inntektsplanleggeren
 
 on:
   schedule:
-    - cron: '0 9-14 * * 1-5'
+    - cron: '0 8-16 * * 1-5'
   workflow_dispatch:
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
     permissions:
+      pull-requests: read
+      statuses: read
       contents: write
-    outputs:
-      merged-pr-count: ${{ steps.automerge.outputs.merged-pr-count }}
     steps:
-      - name: Automerge Dependabot PRs
-        uses: navikt/automerge-dependabot@main
+      - uses: actions/create-github-app-token@v2
+        id: app-token
         with:
-          token: ${{ github.token }}
+          app-id: ${{ vars.TEAM_UFORE_APP_ID }}
+          private-key: ${{ secrets.TEAM_UFORE_PRIVATE_KEY }}
+      - name: Automerge Dependabot PRs
+        uses: navikt/automerge-dependabot@v1.3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
           blackout-periods: 'Sat,Sun,Dec 24-Jan 2'
           semver-filter: 'patch,minor'
-      - name: Skriv resultater
-        run: |
-          echo "Antall merga PR-er: ${{ steps.automerge.outputs.merged-pr-count }}"

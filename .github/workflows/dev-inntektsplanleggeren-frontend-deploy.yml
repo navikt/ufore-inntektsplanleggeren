@@ -2,6 +2,8 @@ name: "Dev: inntektsplanleggeren-frontend deploy"
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * MON'
 
 jobs:
   build-frontend-and-publish-docker-borger:

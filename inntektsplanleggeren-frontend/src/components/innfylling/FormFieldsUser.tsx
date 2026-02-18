@@ -1,4 +1,4 @@
-import { VStack, TextField, ReadMore, Box, Heading, BodyShort, BodyLong, List } from '@navikt/ds-react'
+import { BodyLong, BodyShort, Box, Heading, List, ReadMore, TextField, VStack } from '@navikt/ds-react'
 import React, { useState } from 'react'
 import './FormFields.css'
 import { PersonInntekter } from '@/api/model/ApiRequests'
@@ -64,43 +64,48 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         pattern="[\d\s]+"
                         htmlSize={30}
                     />
-                    <div className="description-card">
+                    <div>
                         <ReadMore header="Inntekt du skal legge inn">
                             <p>Du skal legge inn pensjonsgivende inntekter.</p>
                             <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
-                            <List className="listCompact">
-                                <List.Item>lønn fra arbeidsgiver</List.Item>
-                                <List.Item>bonus, ekstratimer, overtidsbetaling og feriepenger</List.Item>
-                                <List.Item>skattepliktige fordeler fra arbeidsgiver (for eksempel kost og losji, lån fra arbeidsgiver, telefon)</List.Item>
-                                <List.Item>honorar og godtgjørelser</List.Item>
-                                <List.Item>andre pensjonsgivende inntekter</List.Item>
-                            </List>
+                            <div className="listCompact">
+                                <List>
+                                    <List.Item>lønn fra arbeidsgiver</List.Item>
+                                    <List.Item>bonus, ekstratimer, overtidsbetaling og feriepenger</List.Item>
+                                    <List.Item>skattepliktige fordeler fra arbeidsgiver (for eksempel kost og losji, lån fra arbeidsgiver, telefon)</List.Item>
+                                    <List.Item>honorar og godtgjørelser</List.Item>
+                                    <List.Item>andre pensjonsgivende inntekter</List.Item>
+                                </List>
+                            </div>
                             Pengestøtter fra Nav du skal legge inn
-                            <List className="listCompact">
-                                <List.Item>sykepenger</List.Item>
-                                <List.Item>arbeidsavklaringspenger (AAP)</List.Item>
-                                <List.Item>dagpenger</List.Item>
-                                <List.Item>omstillingsstønad</List.Item>
-                                <List.Item>foreldrepenger</List.Item>
-                                <List.Item>overgangsstønad</List.Item>
-                                <List.Item>svangerskapspenger</List.Item>
-                                <List.Item>omsorgs-, pleie- eller opplæringspenger</List.Item>
-                                <List.Item>andre pengestøtter fra Nav som er pensjonsgivende</List.Item>
-                            </List>
+                            <div className="listCompact">
+                                <List>
+                                    <List.Item>sykepenger</List.Item>
+                                    <List.Item>arbeidsavklaringspenger (AAP)</List.Item>
+                                    <List.Item>dagpenger</List.Item>
+                                    <List.Item>omstillingsstønad</List.Item>
+                                    <List.Item>foreldrepenger</List.Item>
+                                    <List.Item>overgangsstønad</List.Item>
+                                    <List.Item>svangerskapspenger</List.Item>
+                                    <List.Item>omsorgs-, pleie- eller opplæringspenger</List.Item>
+                                    <List.Item>andre pengestøtter fra Nav som er pensjonsgivende</List.Item>
+                                </List>
+                            </div>
                             Du skal ikke legge inn
-                            <List className="listCompact">
-                                <List.Item>uføretrygd</List.Item>
-                                <List.Item>barnetrygd</List.Item>
-                                <List.Item>alderspensjon</List.Item>
-                                <List.Item>uførepensjon fra andre enn Nav skal oppgis i et annet felt dersom du har barnetillegg</List.Item>
-                                <List.Item>kapitalinntekt</List.Item>
-                            </List>
+                            <div className="listCompact">
+                                <List>
+                                    <List.Item>uføretrygd</List.Item>
+                                    <List.Item>barnetrygd</List.Item>
+                                    <List.Item>alderspensjon</List.Item>
+                                    <List.Item>uførepensjon fra andre enn Nav skal oppgis i et annet felt dersom du har barnetillegg</List.Item>
+                                    <List.Item>kapitalinntekt</List.Item>
+                                </List>
+                            </div>
                             Er du usikker på om en inntekt eller pengestøtte er pensjonsgivende kan du kontakte Skatteetaten.
                         </ReadMore>
                     </div>
                 </VStack>
             )}
-
             {forventedeInntekter.naeringsinntekt !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -119,7 +124,6 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
             {forventedeInntekter.inntektUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -138,7 +142,6 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
             {forventedeInntekter.andrePensjonsgivendeYtelser !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -153,29 +156,32 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         htmlSize={30}
                     />
                     <ReadMore header="Pensjoner du skal legge inn">
-                        <VStack gap="4">
+                        <VStack gap="space-16">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss, før skatt.</BodyLong>
 
                             <div>
                                 <BodyShort>Du skal ikke legge inn</BodyShort>
-                                <List className="listCompact">
-                                    <List.Item>alderspensjon fra oss</List.Item>
-                                    <List.Item>uføretrygd fra oss</List.Item>
-                                </List>
+                                <div className="listCompact">
+                                    <List>
+                                        <List.Item>alderspensjon fra oss</List.Item>
+                                        <List.Item>uføretrygd fra oss</List.Item>
+                                    </List>
+                                </div>
                             </div>
                             <div>
                                 <BodyShort>Du skal for eksempel legge inn</BodyShort>
-                                <List className="listCompact">
-                                    <List.Item>uførepensjon fra andre enn oss</List.Item>
-                                    <List.Item>tjenestepensjon</List.Item>
-                                </List>
+                                <div className="listCompact">
+                                    <List>
+                                        <List.Item>uførepensjon fra andre enn oss</List.Item>
+                                        <List.Item>tjenestepensjon</List.Item>
+                                    </List>
+                                </div>
                             </div>
                             <BodyLong>Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.</BodyLong>
                         </VStack>
                     </ReadMore>
                 </VStack>
             )}
-
             {forventedeInntekter.pensjonUtland !== null && (
                 <VStack className="vstack-gap">
                     <TextField
@@ -194,9 +200,8 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                     </ReadMore>
                 </VStack>
             )}
-
-            <Box padding="4" background="surface-subtle" borderRadius="large">
-                <VStack gap={{ xs: '2', sm: '1' }}>
+            <Box padding="space-16" background="neutral-soft" borderRadius="8">
+                <VStack gap={{ xs: 'space-8', sm: 'space-4' }}>
                     <Heading level="4" size="small">
                         {' '}
                         Din samlede forventede inntekt i {year}:{' '}

@@ -21,7 +21,7 @@ abstract class WebClientTest {
     }
 
     @AfterEach
-    fun tearDown() {
+    open fun tearDown() {
         server.shutdown()
     }
 

@@ -1,13 +1,15 @@
 {
-  "messages": [],
+  "messages": [
+  ],
+  "pid": "12345678901",
+  "navn": "Ola Nordmann",
+  "loggetInnSom": "Veileder Veiledersen",
   "data": {
     "forventetInntekt": {
-      "2024": 120000,
       "2025": 89343
     },
     "forventetInntektAnnenForelder": {
-      "2024": 3424,
-      "2025": null
+      "2025": 12341
     },
     "inntektsgrense": 49611,
     "kompensasjonsgrad": 49.7,

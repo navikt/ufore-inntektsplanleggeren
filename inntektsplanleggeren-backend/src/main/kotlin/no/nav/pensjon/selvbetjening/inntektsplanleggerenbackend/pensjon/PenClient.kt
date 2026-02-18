@@ -1,7 +1,8 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.getCurrentCallId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
@@ -36,7 +37,7 @@ class PenClient(
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         inntektsgrunnlagListeEps: List<Inntektsgrunnlag>?
     ): InnsendingResponse {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/behandle"
+        val path = "/api/selvbetjening/inntektsplanleggeren/behandle"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -58,8 +59,9 @@ class PenClient(
                         )
                         .retrieve()
                         .bodyToMono(InnsendingResponse::class.java)
+                        .withMdcContext()
                         .block()
-                } ?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
+                } ?: throw IllegalStateException("Feilet under sending av inntektsendring til PEN")
         } catch (e: WebClientResponseException) {
             if (HttpStatus.FORBIDDEN == e.statusCode) {
                 throw ForbiddenException(AppId.PEN.name, path, e.message, e)
@@ -76,7 +78,7 @@ class PenClient(
         inntektsgrunnlagListe: List<Inntektsgrunnlag>,
         inntektsgrunnlagListeEps: List<Inntektsgrunnlag>
     ): SimulerEndringUforetrygdResponse {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/simuler"
+        val path = "/api/selvbetjening/inntektsplanleggeren/simuler"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -96,8 +98,9 @@ class PenClient(
                         )
                         .retrieve()
                         .bodyToMono(SimulerEndringUforetrygdResponse::class.java)
+                        .withMdcContext()
                         .block()
-                } ?: throw IllegalStateException("Unable to fetch initial pensjonsdata from PEN")
+                } ?: throw IllegalStateException("Feilet under simulering mot PEN")
         } catch (e: WebClientResponseException) {
             if (HttpStatus.FORBIDDEN == e.statusCode) {
                 throw ForbiddenException(AppId.PEN.name, path, e.message, e)
@@ -108,8 +111,8 @@ class PenClient(
         }
     }
 
-    fun fetchInntektsplanleggerData(pid: String, simuleringFom: LocalDate): Pensjonsdata? {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/data"
+    fun fetchInntektsplanleggerData(pid: String, simuleringFom: LocalDate): Uforetrygd? {
+        val path = "/api/selvbetjening/inntektsplanleggeren/data"
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
                 .let { accessToken ->
@@ -121,7 +124,8 @@ class PenClient(
                         .header(NAV_CALL_ID, getCurrentCallId())
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
-                        .bodyToMono(Pensjonsdata::class.java)
+                        .bodyToMono(Uforetrygd::class.java)
+                        .withMdcContext()
                         .block()
                 }
         } catch (e: WebClientResponseException) {
@@ -138,7 +142,7 @@ class PenClient(
     }
 
     fun fetchInntektsplanleggerStatus(pid: String, simuleringFom: LocalDate, innsendingsTidspunkt: LocalDateTime): StatusInnsendingResponse? {
-        val path = "/pen/api/selvbetjening/inntektsplanleggeren/status"
+        val path = "/api/selvbetjening/inntektsplanleggeren/status"
         val tidspkt = innsendingsTidspunkt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         try {
             return tokenService.getEgressToken(scope = scope, audience = audience, pid = pid, appId = AppId.PEN)
@@ -152,6 +156,7 @@ class PenClient(
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(StatusInnsendingResponse::class.java)
+                        .withMdcContext()
                         .block()
                 } ?: throw IllegalStateException("Unable to fetch status from PEN")
         } catch (e: WebClientResponseException) {

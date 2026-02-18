@@ -1,16 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import DataContextProvider from './DataContextProvider'
+import DataContextProvider from './context/DataContextProvider'
 import { AppRoutes } from '@/routes'
-import { InternalHeader } from '@navikt/ds-react'
+import VeilederBanner from '@/components/common/Banner/VeilederBanner'
+import { Theme } from '@navikt/ds-react'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <DataContextProvider>
-      <InternalHeader>
-        <InternalHeader.Title as="h1">Inntektsplanleggeren</InternalHeader.Title>
-      </InternalHeader>
-      <AppRoutes />
-    </DataContextProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <DataContextProvider>
+            <Theme>
+                <VeilederBanner />
+                <AppRoutes />
+            </Theme>
+        </DataContextProvider>
+    </React.StrictMode>
 )

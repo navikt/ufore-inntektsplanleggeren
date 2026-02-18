@@ -10,6 +10,10 @@ class PdlQueryBuilder {
             return getPdlQuery(pid, "/pdl/adressebeskyttelse.graphql", false)
         }
 
+        fun getPersonQuery(pid: String): PdlPersonQuery {
+            return getPdlQuery(pid, "/pdl/person.graphql", false)
+        }
+
         private fun getPdlQuery(
             pid: String,
             queryFilePath: String,

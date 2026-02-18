@@ -15,21 +15,35 @@ const LonnFordelerOgPengestotter: React.FC<IProps> = (props) => {
             <Heading size={'xsmall'}>Lønn, fordeler og noen pengestøtter fra Nav</Heading>
 
             {props.uforeHeleAaret ? (
-                <BodyLong>
-                    Vi har registrert at du har fått{' '}
-                    <strong>
-                        <FormatKroner value={belopSum(props.inntekter)} />
-                    </strong>{' '}
-                    i inntekt hittil i år.
-                </BodyLong>
+                <>
+                    <BodyLong>
+                        Vi har registrert at du har fått{' '}
+                        <strong>
+                            <FormatKroner value={belopSum(props.inntekter)} />
+                        </strong>{' '}
+                        i inntekt hittil i år.
+                    </BodyLong>
+                    <BodyLong>
+                        Arbeidsgiver har frist for å sende inn opplysninger om din inntekt til Skatteetaten (A-ordningen) innen den 5. måneden etter pengene er
+                        utbetalt. Helligdager kan forsinke rapporteringen. Derfor kommer inntekten din først med i oversikten måneden etter at du har fått den
+                        utbetalt.
+                    </BodyLong>
+                </>
             ) : (
-                <BodyLong>
-                    Vi har registrert at du har fått inntekt på{' '}
-                    <strong>
-                        <FormatKroner value={belopSum(props.inntekter)} />
-                    </strong>{' '}
-                    i perioden du har hatt uføretrygd.
-                </BodyLong>
+                <>
+                    <BodyLong>
+                        Vi har registrert at du har fått inntekt på{' '}
+                        <strong>
+                            <FormatKroner value={belopSum(props.inntekter)} />
+                        </strong>{' '}
+                        i perioden du har hatt uføretrygd.
+                    </BodyLong>
+                    <BodyLong>
+                        Arbeidsgiver har frist for å sende inn opplysninger om din inntekt til Skatteetaten (A-ordningen) innen den 5. måneden etter pengene er
+                        utbetalt. Helligdager kan forsinke rapporteringen. Derfor kommer inntekten din først med i oversikten måneden etter at du har fått den
+                        utbetalt.
+                    </BodyLong>
+                </>
             )}
         </DinInntektTable>
     )

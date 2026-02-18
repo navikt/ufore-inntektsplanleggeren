@@ -6,7 +6,7 @@ import { useContext } from 'react'
 import { FormStateContext } from '@/context/FormData'
 import { Link } from 'react-router-dom'
 import { FormatDateLong, FormatDateTime } from '@/components/utils/FormatDate'
-import {getUrlUforeInnboks} from "@/components/utils/UrlUtil";
+import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 
 interface Props {
   statusResponse: StatusResponse
@@ -21,10 +21,10 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
     <VStack>
       {!statusResponse ||
         (statusResponse.status === StatusCodes.TIL_BEHANDLING && (
-          <VStack gap="5">
-            <Bleed marginInline={{ md: '0 20' }}>
+          <VStack gap="space-20">
+            <Bleed marginInline={{ md: "space-0 space-80" }}>
               <Alert variant="info">
-                <VStack gap="3">
+                <VStack gap="space-12">
                   <Heading level="3" size="small">
                     Nav har mottatt opplysninger om inntekten din
                   </Heading>
@@ -51,12 +51,11 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
         ))}
-
       {statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_ENDRING && (
-        <VStack gap="5">
-          <Bleed marginInline={{ md: '0 20' }}>
+        <VStack gap="space-20">
+          <Bleed marginInline={{ md: "space-0 space-80" }}>
             <Alert variant="success">
-              <VStack gap="3">
+              <VStack gap="space-12">
                 <Heading level="3" size="small">
                   Ny inntekt er mottatt av oss og saken er behandlet
                 </Heading>
@@ -92,20 +91,19 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
             <BodyShort>Referansenummer: {statusResponse.sakId}</BodyShort>
           </VStack>
           <BodyLong>
-            Vi har behandlet saken din og du vil snart motta et vedtaksbrev i{' '}
-            <Link to={getUrlUforeInnboks()} target="_blank">
-              Din innboks (åpnes i ny fane)
+            Vi har behandlet saken din og du vil snart motta et vedtaksbrev på{' '}
+            <Link to={ import.meta.env.VITE_DIN_UFORETRYGD_URL + getPidQueryParamString()} target="_blank">
+              Din uføretrygd (åpnes i ny fane)
             </Link>
             .
           </BodyLong>
         </VStack>
       )}
-
       {statusResponse.status === StatusCodes.BEHANDLET_MEDFOERER_INGEN_ENDRING && (
-        <VStack gap="5">
-          <Bleed marginInline={{ md: '0 20' }}>
+        <VStack gap="space-20">
+          <Bleed marginInline={{ md: "space-0 space-80" }}>
             <Alert variant="success">
-              <VStack gap="3">
+              <VStack gap="space-12">
                 <Heading level="3" size="small">
                   Ny inntekt er registrert, og den påvirker ikke utbetalingen din
                 </Heading>
@@ -147,5 +145,5 @@ export const KvitteringStatusBox = ({ statusResponse, registeredInntekt, epsRegi
         </VStack>
       )}
     </VStack>
-  )
+  );
 }

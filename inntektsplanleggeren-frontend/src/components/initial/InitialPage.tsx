@@ -1,12 +1,11 @@
-import { Accordion, Alert, BodyLong, BodyShort, GuidePanel, Heading, Link as NavLink, List, VStack } from '@navikt/ds-react'
+import { Accordion, Alert, BodyLong, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
 import { InntektsgrenseCard } from '@/components/initial/DinInntektsgrenseCard'
 import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { YearView } from '@/components/initial/YearView'
-import './InitialView.css'
-import { DataContext } from '@/DataContextProvider'
+import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
-import { getInntekter } from '@/api/apiFetching'
+import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { ExpectedIncomeBox } from '@/components/initial/ExpectedIncomeBox'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
@@ -36,7 +35,7 @@ export function InitialPage() {
             navigate(getFullPathForPage(PageLinks.FORRIGE_INNTEKTER))
         } else {
             try {
-                const data = await getInntekter(year)
+                const data = await getInntekterForSimulering(year)
                 if (data instanceof ErrorResponse) {
                     setErrorMessage(data.message)
                 } else {
@@ -75,43 +74,49 @@ export function InitialPage() {
 
     return (
         <VStack className="form-container">
-            <GuidePanel poster>
-                <Heading size="medium" level="2" spacing>
-                    Greit å vite
+            <section aria-label={'Greit å vite'}>
+                <GuidePanel poster>
+                    <Heading size="medium" level="2" spacing>
+                        Greit å vite
+                    </Heading>
+                    <BodyShort spacing>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</BodyShort>
+                    <BodyShort spacing>
+                        For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å tjene samtidig som du får uføretrygd.
+                    </BodyShort>
+                    <BodyShort>
+                        Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang pause. Vi beklager for dette.
+                    </BodyShort>
+                </GuidePanel>
+            </section>
+            <section aria-label={'I inntektsplanleggeren kan du'}>
+                <Heading level="2" size="small">
+                    I inntektsplanleggeren kan du
                 </Heading>
-                <BodyShort spacing>Uføretrygd skal sikre deg inntekt når du ikke kan forsørge deg selv på grunn av sykdom eller skade.</BodyShort>
-                <BodyShort spacing>
-                    For at vi skal beregne riktig utbetaling av uføretrygden din, må du oppgi hvor mye du forventer å tjene samtidig som du får uføretrygd.
-                </BodyShort>
-                <BodyShort>
-                    Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang pause. Vi beklager for dette.
-                </BodyShort>
-            </GuidePanel>
-
-            <section>
-                <List headingTag="h2" title="I inntektsplanleggeren kan du" size="medium">
+                <List style={{ margin: '1rem 0' }} size="medium">
                     <List.Item>se hvor mye du vil få i uføretrygd ved siden av inntekt</List.Item>
                     <List.Item>melde inn forventet inntekt til oss</List.Item>
                 </List>
             </section>
-
             {initiateResponse.data !== null && (
-                <ExpectedIncomeBox
-                    forventetInntekt={initiateResponse.data.forventetInntekt}
-                    forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}
-                    hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}
-                />
+                <section aria-label={'Registrert forventet inntekt'}>
+                    <ExpectedIncomeBox
+                        forventetInntekt={initiateResponse.data.forventetInntekt}
+                        forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}
+                        hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}
+                    />
+                </section>
             )}
-
-            <section>
+            <section aria-label={'Meld fra'}>
                 <BodyLong>
                     Det er viktig at du melder fra hvis inntekten din blir annerledes enn det du har meldt inn tidligere. Det gir mindre risiko for stor
                     tilbakebetaling i etteroppgjøret.
                 </BodyLong>
             </section>
-
-            {initiateResponse.data !== null && <InntektsgrenseCard displayData={initiateResponse.data} />}
-
+            {initiateResponse.data !== null && (
+                <section aria-label="Inntektsgrense og trekkprosent">
+                    <InntektsgrenseCard displayData={initiateResponse.data} />
+                </section>
+            )}
             <Accordion>
                 <Accordion.Item>
                     <Accordion.Header>Slik fungerer inntektsplanleggeren</Accordion.Header>
@@ -141,7 +146,7 @@ export function InitialPage() {
                 <Accordion.Item>
                     <Accordion.Header>Usikker på hva du kommer til å tjene?</Accordion.Header>
                     <Accordion.Content>
-                        <VStack gap="8">
+                        <VStack gap="space-32">
                             <BodyShort>
                                 Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss
                                 så godt du kan.
@@ -162,7 +167,6 @@ export function InitialPage() {
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
-
             {initiateResponse?.data?.aktuelleAar?.length > 0 && (
                 <YearView
                     availableYears={initiateResponse.data.aktuelleAar}

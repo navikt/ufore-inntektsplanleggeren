@@ -3,23 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="%VITE_DECORATOR_URL%/css/client.css" rel="stylesheet" />
-    <title>Inntektsplanleggeren</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <title>Inntektsplanleggeren - nav.no</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <section class="navno-dekorator" id="decorator-header"></section>
-
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-
-    <section class="navno-dekorator" id="decorator-footer"></section>
-    <div
-      id="decorator-env"
-      data-src='%VITE_DECORATOR_URL%/env?urlLookupTable=false&chatbot=false&breadcrumbs=[{"url":"https://www.nav.no/uforetrygd/selvbetjening","title":"Din uføretrygd"},{"url":"https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren","title":"Inntektsplanleggeren"}]'
-    ></div>
-    <script type="text/javascript" src="%VITE_DECORATOR_URL%/client.js"></script>
-    <script type="module" src="%VITE_REPRESENTASJON_BANNER%/banner.js" async></script>
+    <script type="module" src="/src/main-lokalt.tsx"></script>
   </body>
 </html>
-<!-- todo: fix breadcrumbs-->

@@ -12,14 +12,18 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.AzureAdService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_MDC
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
+import java.util.UUID
 import kotlin.test.assertEquals
 
 
@@ -33,6 +37,13 @@ class InntektskomponentClientTest: WebClientTest()  {
         inntektskomponentClient = InntektskomponentClient(
             url = baseUrl, webClient = WebClient.create(), scope = "", tokenService = tokenService
         )
+        MDC.put(NAV_CALL_ID_MDC, UUID.randomUUID().toString())
+    }
+
+    @AfterEach
+    override fun tearDown() {
+        super.tearDown()
+        MDC.remove(NAV_CALL_ID_MDC)
     }
 
     // --- hentAbonnerteInntekterBolk //

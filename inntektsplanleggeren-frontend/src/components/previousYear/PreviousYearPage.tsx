@@ -1,19 +1,16 @@
-import { BodyLong, Button, Heading, HStack, Loader, VStack } from '@navikt/ds-react'
+import { BodyLong, Heading, Loader, VStack } from '@navikt/ds-react'
 import { useContext, useState } from 'react'
 import './PreviousYearPage.css'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
-import { getInntekter } from '@/api/apiFetching'
-import { DinInntektTable } from '@/components/common/DinInntektTable'
-import { belopSum } from '@/common/Utils'
-import { DataContext } from '@/DataContextProvider'
-import { FormatKroner } from '@/components/utils/FormatKroner'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
+import { getInntekterForSimulering } from '@/api/apiFetching'
+import { DataContext } from '@/context/DataContextProvider'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 import { PreviousExpectedIncomeTable } from '@/components/previousYear/PreviousExpectedIncomeTable'
 import LonnFordelerOgPengestotter from '../common/LonnFordelerOgPengestotter'
 import PensjonFraAndreEnnNav from '../common/PensjonFraAndreEnnNav'
+import Knapperad from '@/components/common/Knapperad'
 
 export const PreviousYearPage = () => {
     const navigate = useNavigate()
@@ -23,7 +20,7 @@ export const PreviousYearPage = () => {
 
     const onClickButton = async () => {
         try {
-            const data = await getInntekter(selectedYear)
+            const data = await getInntekterForSimulering(selectedYear)
             if (data instanceof ErrorResponse) {
                 setErrorMessage(data.message)
             } else {
@@ -45,9 +42,8 @@ export const PreviousYearPage = () => {
     return (
         <VStack className="page">
             <VStack className="page">
-                <VStack gap="4">
-                    {(previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 ||
-                        previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0) && (
+                <VStack gap="space-16">
+                    {previousYearInntekterResponse.pensjonFraAndreHittilIAar?.length > 0 && (
                         <VStack>
                             <Heading level="2" size="medium">
                                 {previousYearInntekterResponse.uforeHeleAaret
@@ -75,11 +71,11 @@ export const PreviousYearPage = () => {
                     )}
                 </VStack>
 
-                <VStack gap="4">
+                <VStack gap="space-16">
                     <Heading level="2" size="medium">
                         Registrert forventet inntekt for {previousYear}
                     </Heading>
-                    <VStack gap={'10'}>
+                    <VStack gap={"space-40"}>
                         {previousYearInntekterResponse.forventedeInntekter.bruker !== null && previousYear !== null && (
                             <PreviousExpectedIncomeTable
                                 personInntekter={previousYearInntekterResponse.forventedeInntekter.bruker}
@@ -97,15 +93,13 @@ export const PreviousYearPage = () => {
                     </VStack>
                 </VStack>
             </VStack>
-
-            <HStack gap="4">
-                <Button as={RouterLink} to={getFullPathForPage(PageLinks.INDEX)} iconPosition="left" icon={<ArrowLeftIcon aria-hidden />} variant="secondary">
-                    Tilbake
-                </Button>
-                <Button type="button" variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={onClickButton} loading={isLoading}>
-                    Registrer inntekt for {selectedYear}
-                </Button>
-            </HStack>
+            <Knapperad
+                handleSubmit={onClickButton}
+                tilbakePageLink={PageLinks.INDEX}
+                gåVidereTekst={'Registrer inntekt for ' + selectedYear}
+                visAvbryt={false}
+                laster={isLoading}
+            />
         </VStack>
-    )
+    );
 }

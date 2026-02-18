@@ -113,7 +113,7 @@ class TokenService(
     fun isLoginLevelHigh(): Boolean = getInnloggingstype() == Innloggingstype.LEVEL4
 
     fun determineRequestingPid(): String {
-        SecurityContextHolder.getContext().authentication.let {
+        SecurityContextHolder.getContext().authentication!!.let {
             if (determineTokenType() == TokenType.TOKEN_X) {
                 return it.name
             }

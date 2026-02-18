@@ -5,7 +5,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.model.*
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Inntektsgrunnlag
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.InntektsgrunnlagType
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Pensjonsdata
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -22,28 +22,28 @@ class InntektService(
 ) {
     fun getInntekterHittilIAar(
         pid: String,
-        pensjonsdata: Pensjonsdata,
+        uforetrygd: Uforetrygd,
         simuleringsaar: Int
     ): InntekterHittilIAar {
         if (LocalDate.now().year != simuleringsaar) {
             return InntekterHittilIAar(emptyList(), emptyList(), emptyList(), emptyList())
         }
         val arbeidsinntekterOgPensjonsgivendeYtelser =
-            fetchArbeidsinntektOgPensjonsgivendeYtelser(pid, pensjonsdata)
+            fetchArbeidsinntektOgPensjonsgivendeYtelser(pid, uforetrygd)
         val pensjonFraAndreEnnFolketrygden =
-            fetchPensjonFraAndreEnnFolketrygden(pid, pensjonsdata)
+            fetchPensjonFraAndreEnnFolketrygden(pid, uforetrygd)
 
         return InntekterHittilIAar(
             arbeidsinntektOgPensjonsgivendeYtelser = arbeidsinntekterOgPensjonsgivendeYtelser[pid] ?: emptyList(),
             pensjonerFraAndreEnnFolketrygden = pensjonFraAndreEnnFolketrygden[pid],
-            arbeidsinntektOgPensjonsgivendeYtelserEps = arbeidsinntekterOgPensjonsgivendeYtelser[pensjonsdata.epsPid],
-            pensjonerFraAndreEnnFolketrygdenEps = pensjonFraAndreEnnFolketrygden[pensjonsdata.epsPid]
+            arbeidsinntektOgPensjonsgivendeYtelserEps = arbeidsinntekterOgPensjonsgivendeYtelser[uforetrygd.epsPid],
+            pensjonerFraAndreEnnFolketrygdenEps = pensjonFraAndreEnnFolketrygden[uforetrygd.epsPid]
         )
     }
 
     fun getForventedeInntekter(
         pid: String,
-        pensjonsdata: Pensjonsdata,
+        uforetrygd: Uforetrygd,
         simuleringsaar: Int
     ): ForventedeInntekterSummary {
         val allForventedeInntekterRelatedToPid =
@@ -53,31 +53,31 @@ class InntektService(
             ).forventetInntektListe
                 ?.filter { it.hendelse != Inntektshendelse.VARSLET.code }
 
-        val forventedeInntekter = if (pensjonsdata.hasOpenKravWithInntekter()) {
-            getForventedeInntekterFromAapentKrav(pensjonsdata)
+        val forventedeInntekter = if (uforetrygd.hasOpenKravWithInntekter()) {
+            getForventedeInntekterFromAapentKrav(uforetrygd)
         } else {
             getForventedeInntekterFromInntektskomponent(
                 allForventedeInntekterRelatedToPid,
-                pensjonsdata
+                uforetrygd
             )
         }
 
         return ForventedeInntekterSummary(
             forventedeInntekter,
             allForventedeInntekterRelatedToPid?.let {
-                calculateSumBenyttedeInntekterBruker(it, pensjonsdata.hasBarnetillegg())
+                calculateSumBenyttedeInntekterBruker(it, uforetrygd.hasBarnetillegg())
             } ?: 0,
-            if (pensjonsdata.hasEpsWithFellesbarn()) {
+            if (uforetrygd.hasEpsWithFellesbarn()) {
                 allForventedeInntekterRelatedToPid?.let { calculateSumBenyttedeInntekterEps(it) } ?: 0
             } else null
         )
     }
 
     private fun getForventedeInntekterFromAapentKrav(
-        pensjonsdata: Pensjonsdata
+        uforetrygd: Uforetrygd
     ): ForventedeInntekter {
-        val inntektsgrunnlagFromKravBruker = pensjonsdata.inntekterFromOpenKravBruker
-        val inntektsgrunnlagFromKravEps = pensjonsdata.inntekterFromOpenKravEps
+        val inntektsgrunnlagFromKravBruker = uforetrygd.inntekterFromOpenKravBruker
+        val inntektsgrunnlagFromKravEps = uforetrygd.inntekterFromOpenKravEps
         return ForventedeInntekter(
             bruker = PersonInntekter(
                 arbeidsinntekt = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
@@ -92,20 +92,20 @@ class InntektService(
                     inntektsgrunnlagFromKravBruker,
                     InntektsgrunnlagType.INNTEKT_UTLAND
                 ),
-                pensjonUtland = if (pensjonsdata.hasBarnetillegg()) {
+                pensjonUtland = if (uforetrygd.hasBarnetillegg()) {
                     getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
                         inntektsgrunnlagFromKravBruker,
                         InntektsgrunnlagType.PENSJON_UTLAND
                     )
                 } else null,
-                andrePensjonsgivendeYtelser = if (pensjonsdata.hasBarnetillegg()) {
+                andrePensjonsgivendeYtelser = if (uforetrygd.hasBarnetillegg()) {
                     getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
                         inntektsgrunnlagFromKravBruker,
                         InntektsgrunnlagType.ANDRE_YTELSER
                     )
                 } else null
             ),
-            eps = if (pensjonsdata.hasEpsWithFellesbarn()) {
+            eps = if (uforetrygd.hasEpsWithFellesbarn()) {
                 PersonInntekter(
                     arbeidsinntekt = getMostRecentInntektsgrunnlagOfTypeAsPersoninntekt(
                         inntektsgrunnlagFromKravEps!!,
@@ -149,77 +149,57 @@ class InntektService(
 
     private fun getForventedeInntekterFromInntektskomponent(
         allForventedeInntekterRelatedToPid: List<ForventetInntekt>?,
-        pensjonsdata: Pensjonsdata
+        uforetrygd: Uforetrygd
     ): ForventedeInntekter {
         return ForventedeInntekter(
             bruker = PersonInntekter(
-                arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
+                arbeidsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                    allForventedeInntekterRelatedToPid,
+                    Inntektstype.ARBEIDSINNTEKT_BRUKER.code
+                ),
+                naeringsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                    allForventedeInntekterRelatedToPid,
+                    Inntektstype.NAERINGSINNTEKT_BRUKER.code
+                ),
+                inntektUtland = getMostRecentInntektOfTypeAsPersoninntekt(
+                    allForventedeInntekterRelatedToPid,
+                    Inntektstype.UTENLANDSINNTEKT_BRUKER.code
+                ),
+                andrePensjonsgivendeYtelser = if (uforetrygd.hasBarnetillegg()) {
                     getMostRecentInntektOfTypeAsPersoninntekt(
-                        it,
-                        Inntektstype.ARBEIDSINNTEKT_BRUKER.code
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.ANDRE_YTELSER_BRUKER.code
                     )
-                },
-                naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
-                    getMostRecentInntektOfTypeAsPersoninntekt(
-                        it,
-                        Inntektstype.NAERINGSINNTEKT_BRUKER.code
-                    )
-                },
-                inntektUtland = allForventedeInntekterRelatedToPid?.let {
-                    getMostRecentInntektOfTypeAsPersoninntekt(
-                        it,
-                        Inntektstype.UTENLANDSINNTEKT_BRUKER.code
-                    )
-                },
-                andrePensjonsgivendeYtelser = if (pensjonsdata.hasBarnetillegg()) {
-                    allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.ANDRE_YTELSER_BRUKER.code
-                        )
-                    }
                 } else null,
-                pensjonUtland = if (pensjonsdata.hasBarnetillegg()) {
-                    allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.PENSJON_UTLAND_BRUKER.code
-                        )
-                    }
+                pensjonUtland = if (uforetrygd.hasBarnetillegg()) {
+                    getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.PENSJON_UTLAND_BRUKER.code
+                    )
                 } else null,
             ),
-            eps = if (pensjonsdata.hasEpsWithFellesbarn()) {
+            eps = if (uforetrygd.hasEpsWithFellesbarn()) {
                 PersonInntekter(
-                    arbeidsinntekt = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.ARBEIDSINNTEKT_EPS.code
-                        )
-                    },
-                    naeringsinntekt = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.NAERINGSINNTEKT_EPS.code
-                        )
-                    },
-                    inntektUtland = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.UTENLANDSINNTEKT_EPS.code
-                        )
-                    },
-                    andrePensjonsgivendeYtelser = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.ANDRE_YTELSER_EPS.code
-                        )
-                    },
-                    pensjonUtland = allForventedeInntekterRelatedToPid?.let {
-                        getMostRecentInntektOfTypeAsPersoninntekt(
-                            it,
-                            Inntektstype.PENSJON_UTLAND_EPS.code
-                        )
-                    }
+                    arbeidsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.ARBEIDSINNTEKT_EPS.code
+                    ),
+                    naeringsinntekt = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.NAERINGSINNTEKT_EPS.code
+                    ),
+                    inntektUtland = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.UTENLANDSINNTEKT_EPS.code
+                    ),
+                    andrePensjonsgivendeYtelser = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.ANDRE_YTELSER_EPS.code
+                    ),
+                    pensjonUtland = getMostRecentInntektOfTypeAsPersoninntekt(
+                        allForventedeInntekterRelatedToPid,
+                        Inntektstype.PENSJON_UTLAND_EPS.code
+                    ),
                 )
             } else null
         )
@@ -263,9 +243,13 @@ class InntektService(
     }
 
     private fun getMostRecentInntektOfTypeAsPersoninntekt(
-        allInntekter: List<ForventetInntekt>,
+        allInntekter: List<ForventetInntekt>?,
         inntektstype: String
-    ): Personinntekt? {
+    ): Personinntekt {
+        if (allInntekter == null) {
+            return Personinntekt(0, Inntektshendelse.IKKE_REGISTRERT)
+        }
+
         val mostRecentInntektOfType = allInntekter
             .sortedByDescending { it.endringstidspunkt }
             .firstOrNull { it.type == inntektstype }
@@ -280,32 +264,32 @@ class InntektService(
 
     private fun fetchArbeidsinntektOgPensjonsgivendeYtelser(
         pid: String,
-        pensjonsdata: Pensjonsdata,
+        uforetrygd: Uforetrygd,
     ): Map<String, List<Maanedsinntekt>> =
-        fetchInntekter(pid, pensjonsdata, "UfoereA-Inntekt")
+        fetchInntekter(pid, uforetrygd, "UfoereA-Inntekt")
 
     private fun fetchPensjonFraAndreEnnFolketrygden(
         pid: String,
-        pensjonsdata: Pensjonsdata,
+        uforetrygd: Uforetrygd,
     ): Map<String, List<Maanedsinntekt>> =
-        if (pensjonsdata.hasBarnetillegg()) {
+        if (uforetrygd.hasBarnetillegg()) {
             fetchInntekter(
                 pid,
-                pensjonsdata,
+                uforetrygd,
                 "UfoereBarnetilleggA-inntekt"
             )
         } else emptyMap()
 
     private fun fetchInntekter(
         pid: String,
-        pensjonsdata: Pensjonsdata,
+        uforetrygd: Uforetrygd,
         inntektFilterCode: String
     ): Map<String, List<Maanedsinntekt>> {
         val inntektOgYtelsePerIdentList = inntektskomponentClient
             .hentAbonnerteInntekterBolk(
-                constructAbonnerteInntekterIdentOgPerioder(pid, pensjonsdata),
+                constructAbonnerteInntekterIdentOgPerioder(pid, uforetrygd),
                 inntektFilterCode,
-                decideFormal(pensjonsdata.hasBarnetillegg()),
+                decideFormal(uforetrygd.hasBarnetillegg()),
                 pid
             )
             .abonnerteInntekterPerIdentListe
@@ -373,15 +357,15 @@ class InntektService(
 
     private fun constructAbonnerteInntekterIdentOgPerioder(
         pid: String,
-        pensjonsdata: Pensjonsdata
+        uforetrygd: Uforetrygd
     ): List<AbonnerteInntekterIdentOgPeriode> =
-        if (pensjonsdata.hasEpsWithFellesbarn()) {
+        if (uforetrygd.hasEpsWithFellesbarn()) {
             listOf(
-                createAbonnerteInntekterIdentOgPeriode(pid, pensjonsdata.uforeFomDato),
-                createAbonnerteInntekterIdentOgPeriode(pensjonsdata.epsPid!!, pensjonsdata.uforeFomDato)
+                createAbonnerteInntekterIdentOgPeriode(pid, uforetrygd.uforeFomDato),
+                createAbonnerteInntekterIdentOgPeriode(uforetrygd.epsPid!!, uforetrygd.uforeFomDato)
             )
         } else {
-            listOf(createAbonnerteInntekterIdentOgPeriode(pid, pensjonsdata.uforeFomDato))
+            listOf(createAbonnerteInntekterIdentOgPeriode(pid, uforetrygd.uforeFomDato))
         }
 
     private fun createAbonnerteInntekterIdentOgPeriode(pid: String, uforeFom: LocalDate?): AbonnerteInntekterIdentOgPeriode {

@@ -1,19 +1,18 @@
-import { Alert, BodyLong, Button, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
+import { Alert, BodyLong, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
 import { FormEvent, MouseEvent, useContext, useEffect } from 'react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { FormStateContext } from '@/context/FormData'
 import { SimulationTable } from '@/components/beregning/SimulationTable'
-import { DataContext } from '@/DataContextProvider'
+import { DataContext } from '@/context/DataContextProvider'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { Graph } from '@/components/beregning/Graph'
 import { InputSummary } from '@/components/beregning/InputSummary'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
-import { CancelConfirmationModal } from '@/components/common/CancelConfirmationModal'
 import { BeregningWarnings } from '@/components/beregning/BeregningWarnings'
 import { ErrorView } from '@/components/common/Error'
 import './BeregningPage.css'
+import Knapperad from '@/components/common/Knapperad'
 
 export const BeregningPage = () => {
     const { selectedYear, setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext)
@@ -44,18 +43,18 @@ export const BeregningPage = () => {
 
     if (simulationResponse?.result)
         return (
-            <VStack gap="8">
+            <VStack gap="space-32">
                 {simulationResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ? (
                     <Alert variant="warning">
                         Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
                     </Alert>
                 ) : null}
-                <section>
+                <section aria-label={'Din inntekt og uføretrygd før skatt i ' + selectedYear}>
                     <Heading level="3" size="medium" style={{ marginBottom: '20px' }}>
                         Din inntekt og uføretrygd før skatt i {selectedYear}
                     </Heading>
                     <ReadMore header="Inntekt du har lagt inn">
-                        <VStack gap="7">
+                        <VStack gap="space-28">
                             <VStack>
                                 <Heading level="4" size="small">
                                     Din forventede inntekt i {selectedYear}
@@ -73,9 +72,7 @@ export const BeregningPage = () => {
                         </VStack>
                     </ReadMore>
                 </section>
-
                 <BeregningWarnings messages={simulationResponse.messages} />
-
                 {showSimulering ? (
                     <>
                         {!simulationResponse?.messages.some((message) => message.messageCode === MessageCodes.SIMULERING_CONTAINS_OPPHORTE_YTELSER) && (
@@ -89,7 +86,7 @@ export const BeregningPage = () => {
                                     </div>
                                 </section>
 
-                                <section>
+                                <section aria-label="Oversikt i tabell">
                                     <Heading level="4" size="medium">
                                         <HStack>
                                             Oversikt i tabell
@@ -104,7 +101,7 @@ export const BeregningPage = () => {
                                 </section>
                             </>
                         )}
-                        <section>
+                        <section aria-label="Månedlig utbetaling">
                             <BodyLong>
                                 <strong>
                                     Månedlig utbetaling av uføretrygd med dine endringer, før skatt:{' '}
@@ -152,7 +149,6 @@ export const BeregningPage = () => {
                         inntektsendring.
                     </Alert>
                 )}
-
                 <BodyLong>
                     <strong>
                         Har du spørsmål?{' '}
@@ -161,24 +157,7 @@ export const BeregningPage = () => {
                         </Link>
                     </strong>
                 </BodyLong>
-
-                <VStack gap="3">
-                    <HStack gap="4">
-                        <Button
-                            as={RouterLink}
-                            to={getFullPathForPage(PageLinks.FORVENTET_INNTEKT)}
-                            iconPosition="left"
-                            icon={<ArrowLeftIcon aria-hidden />}
-                            variant="secondary"
-                        >
-                            Endre beløp i beregning
-                        </Button>
-                        <Button variant="primary" iconPosition="right" icon={<ArrowRightIcon aria-hidden />} onClick={handleSubmit}>
-                            Gå til innsending
-                        </Button>
-                    </HStack>
-                    <CancelConfirmationModal />
-                </VStack>
+                <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.FORVENTET_INNTEKT} />
             </VStack>
-        )
+        );
 }

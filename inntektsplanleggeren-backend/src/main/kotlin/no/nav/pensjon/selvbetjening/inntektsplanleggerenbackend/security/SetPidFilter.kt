@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.Masker
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
@@ -16,12 +14,12 @@ import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 
 @Component
+@Order(2)
 class SetPidFilter(
     private val tokenService: TokenService,
-    private val authorizationService: AuthorizationService
+    private val authorizationService: AuthorizationService,
+    private val pidEncryptionClient: PidEncryptionClient
 ): OncePerRequestFilter() {
-
-    private val log: Logger = LoggerFactory.getLogger(SetPidFilter::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -52,14 +50,21 @@ class SetPidFilter(
         if (authHeader != null) {
             val authenticatedUserDetails: AuthenticatedUserDetails
             if (tokenService.determineTokenType() == TokenService.TokenType.TOKEN_X) {
-                log.info("Borger context")
+                //borger context
                 val navOnBehalfOfCookie = request.cookies?.firstOrNull { cookie -> cookie.name.equals("nav-obo") }
 
                 authenticatedUserDetails = authorizationService.checkBorgerTilgang(request.method, navOnBehalfOfCookie)
             } else {
-                val pid = request.getHeader("pid")
+                //veilider on behalf of
+                val pidFromHeader = request.getHeader("pid")
                     ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Pid not specified!")
-                log.info("Veileder on behalf of ${Masker.maskPid(pid)}")
+                val pid = if (isEncryptedPid(pidFromHeader)) {
+                    logger.info("Pid is encrypted. Decrypting...")
+                    pidEncryptionClient.decrypt(pidFromHeader)!!
+                } else {
+                    logger.info("Using unencrypted PID from request :-(")
+                    pidFromHeader
+                }
                 authorizationService.checkVeilederTilgangTilInnbygger(pid)
                 authenticatedUserDetails = AuthenticatedUserDetails(pid, false)
             }
@@ -68,6 +73,8 @@ class SetPidFilter(
         }
         filterChain.doFilter(request, response)
     }
+
+    private fun isEncryptedPid(pid: String): Boolean = pid.contains('.')
 
     private fun HttpServletResponse.errorResponse(
         error: ErrorCode,

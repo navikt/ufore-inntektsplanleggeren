@@ -4,12 +4,16 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.WebClientTest
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_MDC
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
+import java.util.UUID
 import kotlin.test.assertEquals
 
 class EregClientTest: WebClientTest()  {
@@ -21,6 +25,13 @@ class EregClientTest: WebClientTest()  {
         eregClient = EregClient(
             url = baseUrl, webClient = WebClient.create()
         )
+        MDC.put(NAV_CALL_ID_MDC, UUID.randomUUID().toString())
+    }
+
+    @AfterEach
+    override fun tearDown() {
+        super.tearDown()
+        MDC.remove(NAV_CALL_ID_MDC)
     }
 
     // --- hentOrganisasjonsnavn ---//
@@ -76,7 +87,7 @@ class EregClientTest: WebClientTest()  {
                         "sammensattnavn":"Min organisasjon",
                         "navnelinje1": "Min navnelinje 1",
                         "bruksperiode": {"fom": "2018-01-01"},
-                        "gyldighetsperiode: {fom": "2018-01-01"}                        
+                        "gyldighetsperiode": {"fom": "2018-01-01"}                        
                     },
                     "enhetstype": "BEDR",
                     "adresse": {
@@ -86,7 +97,7 @@ class EregClientTest: WebClientTest()  {
                         "landkode": "NOR",
                         "kommunenummer": "5403",
                         "bruksperiode": {"fom": "2018-01-01"},
-                        "gyldighetsperiode: {fom": "2018-01-01"}
+                        "gyldighetsperiode": {"fom": "2018-01-01"}
                     }
                  }                  
             """.trimIndent()

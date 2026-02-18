@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.matcher.DispatcherTypeRequestMatcher
-import org.springframework.web.reactive.function.client.WebClient
 import java.time.Duration
 
 @Configuration
@@ -25,7 +24,8 @@ class SecurityConfiguration(
     @Value("\${oauth2.azureAd.issuer}") private val azureAdIssuer: String,
     @Value("\${oauth2.azureAd.jsonWebKeyUri}") private val azureAdJsonWebKeyUri: String,
     @Value("\${oauth2.tokenX.issuer}") private val tokenXIssuer: String,
-    @Value("\${oauth2.tokenX.jsonWebKeyUri}") private val tokenXJsonWebKeyUri: String
+    @Value("\${oauth2.tokenX.jsonWebKeyUri}") private val tokenXJsonWebKeyUri: String,
+    private val audienceValidator: AudienceValidator
 ) {
 
     @Bean
@@ -64,7 +64,7 @@ class SecurityConfiguration(
 
     @Primary
     @Bean("jwtDecoderAzureAd")
-    fun jwtDecoderAzureAd(@Qualifier("webClientProxy") webClient: WebClient): NimbusJwtDecoder {
+    fun jwtDecoderAzureAd(): NimbusJwtDecoder {
         val jwtDecoder = NimbusJwtDecoder
             .withJwkSetUri(azureAdJsonWebKeyUri)
             .build()
@@ -88,6 +88,7 @@ class SecurityConfiguration(
             DelegatingOAuth2TokenValidator(
                 JwtTimestampValidator(Duration.ofSeconds(60)),
                 JwtIssuerValidator(tokenXIssuer),
+                audienceValidator
             )
         )
         return jwtDecoder

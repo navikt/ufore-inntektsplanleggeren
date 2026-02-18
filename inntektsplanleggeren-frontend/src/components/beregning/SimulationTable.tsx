@@ -5,183 +5,166 @@ import { useEffect, useState } from 'react'
 import { DESKTOP_WIDTH } from '@/FormContainer'
 
 export const SimulationTable = (props: { simulationResult: SimulationResult }) => {
-  const { uforetrygd, forventetInntekt, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, gjenlevendetillegg, sum } =
-    props.simulationResult
-  const [width, setWidth] = useState<number>(window.innerWidth)
+    const { uforetrygd, forventetInntekt, barnetilleggFellesbarn, barnetilleggSaerkullsbarn, gjenlevendetillegg, sum } = props.simulationResult
+    const [width, setWidth] = useState<number>(window.innerWidth)
 
-  const handleWindowSize = () => setWidth(window.innerWidth)
+    const handleWindowSize = () => setWidth(window.innerWidth)
 
-  useEffect(() => {
-    window.addEventListener('resize', handleWindowSize)
-    return () => window.removeEventListener('resize', handleWindowSize)
-  })
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSize)
+        return () => window.removeEventListener('resize', handleWindowSize)
+    })
 
-  const isDesktop = width > DESKTOP_WIDTH
-  const isBeforeValuesAvailable = sum.yearly.before !== null
+    const isDesktop = width > DESKTOP_WIDTH
+    const isBeforeValuesAvailable = sum.yearly.before !== null
 
-  return isDesktop ? (
-    <VStack gap="6">
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell scope="col"></Table.HeaderCell>
-            {isBeforeValuesAvailable && (
-              <Table.HeaderCell scope="col" align="right">
-                I dag
-              </Table.HeaderCell>
-            )}
-            <Table.HeaderCell scope="col" align="right">
-              Med dine endringer
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.DataCell scope="row">
-              {gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd'}
-            </Table.DataCell>
-            {isBeforeValuesAvailable && (
-              <Table.DataCell align="right">
-                <FormatKroner value={(uforetrygd.yearly.before ?? 0) + (gjenlevendetillegg?.yearly.before ?? 0)} />
-              </Table.DataCell>
-            )}
-            <Table.DataCell align="right">
-              <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)} />
-            </Table.DataCell>
-          </Table.Row>
-          {(barnetilleggSaerkullsbarn || barnetilleggFellesbarn) && (
-            <Table.Row>
-              <Table.DataCell scope="row">Barnetillegg uføretrygd</Table.DataCell>
-              {isBeforeValuesAvailable && (
-                <Table.DataCell align="right">
-                  <FormatKroner
-                    value={
-                      (barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)
-                    }
-                  />
-                </Table.DataCell>
-              )}
-              <Table.DataCell align="right">
-                <FormatKroner
-                  value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}
-                />
-              </Table.DataCell>
-            </Table.Row>
-          )}
-          <Table.Row>
-            <Table.DataCell scope="row">Din forventede inntekt</Table.DataCell>
-            {isBeforeValuesAvailable && (
-              <Table.DataCell align="right">
-                <FormatKroner value={forventetInntekt.yearly.before ?? 0} />
-              </Table.DataCell>
-            )}
-            <Table.DataCell align="right">
-              <FormatKroner value={forventetInntekt.yearly.after} />
-            </Table.DataCell>
-          </Table.Row>
-        </Table.Body>
-        <Table.Row style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
-          <Table.HeaderCell scope="row">Sum årlig</Table.HeaderCell>
-          {isBeforeValuesAvailable && (
-            <Table.DataCell align="right">
-              <strong>
-                <FormatKroner value={sum.yearly.before ?? 0} />
-              </strong>
-            </Table.DataCell>
-          )}
-          <Table.DataCell align="right">
-            <strong>
-              <FormatKroner value={sum.yearly.after} />
-            </strong>
-          </Table.DataCell>
-        </Table.Row>
-      </Table>
-    </VStack>
-  ) : (
-    <Table>
-      <Table.Body>
-        <Table.Row>
-          <Table.DataCell>
-            <VStack gap="1">
-              <BodyShort>
-                <strong>{gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd'}</strong>
-              </BodyShort>
-              {isBeforeValuesAvailable && (
-                <BodyShort>
-                  I dag:{' '}
-                  <FormatKroner value={(uforetrygd.yearly.before ?? 0) + (gjenlevendetillegg?.yearly.before ?? 0)} />
-                </BodyShort>
-              )}
-              <BodyShort>
-                Med dine endringer:{' '}
-                <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)} />
-              </BodyShort>
-            </VStack>
-          </Table.DataCell>
-        </Table.Row>
-        {barnetilleggSaerkullsbarn || barnetilleggFellesbarn ? (
-          <Table.Row>
-            <Table.DataCell>
-              <VStack gap="1">
-                <BodyShort>
-                  <strong>Barnetillegg uføretrygd</strong>
-                </BodyShort>
-                {isBeforeValuesAvailable && (
-                  <BodyShort>
-                    I dag:{' '}
-                    <FormatKroner
-                      value={
-                        (barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)
-                      }
-                    />
-                  </BodyShort>
-                )}
-                <BodyShort>
-                  Med dine endringer:{' '}
-                  <FormatKroner
-                    value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)}
-                  />
-                </BodyShort>
-              </VStack>
-            </Table.DataCell>
-          </Table.Row>
-        ) : null}
-        <Table.Row>
-          <Table.DataCell>
-            <VStack gap="1">
-              <BodyShort>
-                <strong>Din forventede inntekt</strong>
-              </BodyShort>
-              {isBeforeValuesAvailable && (
-                <BodyShort>
-                  I dag: <FormatKroner value={forventetInntekt.yearly.before ?? 0} />
-                </BodyShort>
-              )}
-              <BodyShort>
-                Med dine endringer: <FormatKroner value={forventetInntekt.yearly.after} />
-              </BodyShort>
-            </VStack>
-          </Table.DataCell>
-        </Table.Row>
+    return isDesktop ? (
+        <VStack gap="space-24">
+            <Table>
+                <Table.Header>
+                    <Table.Row shadeOnHover={false}>
+                        <Table.HeaderCell scope="col"></Table.HeaderCell>
+                        {isBeforeValuesAvailable && (
+                            <Table.HeaderCell scope="col" align="right">
+                                I dag
+                            </Table.HeaderCell>
+                        )}
+                        <Table.HeaderCell scope="col" align="right">
+                            Med dine endringer
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    <Table.Row shadeOnHover={false}>
+                        <Table.DataCell scope="row">{gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd'}</Table.DataCell>
+                        {isBeforeValuesAvailable && (
+                            <Table.DataCell align="right">
+                                <FormatKroner value={(uforetrygd.yearly.before ?? 0) + (gjenlevendetillegg?.yearly.before ?? 0)} />
+                            </Table.DataCell>
+                        )}
+                        <Table.DataCell align="right">
+                            <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)} />
+                        </Table.DataCell>
+                    </Table.Row>
+                    {(barnetilleggSaerkullsbarn || barnetilleggFellesbarn) && (
+                        <Table.Row shadeOnHover={false}>
+                            <Table.DataCell scope="row">Barnetillegg uføretrygd</Table.DataCell>
+                            {isBeforeValuesAvailable && (
+                                <Table.DataCell align="right">
+                                    <FormatKroner value={(barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)} />
+                                </Table.DataCell>
+                            )}
+                            <Table.DataCell align="right">
+                                <FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)} />
+                            </Table.DataCell>
+                        </Table.Row>
+                    )}
+                    <Table.Row shadeOnHover={false}>
+                        <Table.DataCell scope="row">Din forventede inntekt</Table.DataCell>
+                        {isBeforeValuesAvailable && (
+                            <Table.DataCell align="right">
+                                <FormatKroner value={forventetInntekt.yearly.before ?? 0} />
+                            </Table.DataCell>
+                        )}
+                        <Table.DataCell align="right">
+                            <FormatKroner value={forventetInntekt.yearly.after} />
+                        </Table.DataCell>
+                    </Table.Row>
+                    <Table.Row shadeOnHover={false} style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
+                        <Table.HeaderCell scope="row">Sum årlig</Table.HeaderCell>
+                        {isBeforeValuesAvailable && (
+                            <Table.DataCell align="right">
+                                <strong>
+                                    <FormatKroner value={sum.yearly.before ?? 0} />
+                                </strong>
+                            </Table.DataCell>
+                        )}
+                        <Table.DataCell align="right">
+                            <strong>
+                                <FormatKroner value={sum.yearly.after} />
+                            </strong>
+                        </Table.DataCell>
+                    </Table.Row>
+                </Table.Body>
+            </Table>
+        </VStack>
+    ) : (
+        <Table>
+            <Table.Body>
+                <Table.Row shadeOnHover={false}>
+                    <Table.DataCell>
+                        <VStack gap="space-4">
+                            <BodyShort>
+                                <strong>{gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg' : 'Uføretrygd'}</strong>
+                            </BodyShort>
+                            {isBeforeValuesAvailable && (
+                                <BodyShort>
+                                    I dag: <FormatKroner value={(uforetrygd.yearly.before ?? 0) + (gjenlevendetillegg?.yearly.before ?? 0)} />
+                                </BodyShort>
+                            )}
+                            <BodyShort>
+                                Med dine endringer: <FormatKroner value={uforetrygd.yearly.after + (gjenlevendetillegg?.yearly.after ?? 0)} />
+                            </BodyShort>
+                        </VStack>
+                    </Table.DataCell>
+                </Table.Row>
+                {barnetilleggSaerkullsbarn || barnetilleggFellesbarn ? (
+                    <Table.Row shadeOnHover={false}>
+                        <Table.DataCell>
+                            <VStack gap="space-4">
+                                <BodyShort>
+                                    <strong>Barnetillegg uføretrygd</strong>
+                                </BodyShort>
+                                {isBeforeValuesAvailable && (
+                                    <BodyShort>
+                                        I dag:{' '}
+                                        <FormatKroner value={(barnetilleggFellesbarn?.yearly.before ?? 0) + (barnetilleggSaerkullsbarn?.yearly.before ?? 0)} />
+                                    </BodyShort>
+                                )}
+                                <BodyShort>
+                                    Med dine endringer:{' '}
+                                    <FormatKroner value={(barnetilleggFellesbarn?.yearly.after ?? 0) + (barnetilleggSaerkullsbarn?.yearly.after ?? 0)} />
+                                </BodyShort>
+                            </VStack>
+                        </Table.DataCell>
+                    </Table.Row>
+                ) : null}
+                <Table.Row shadeOnHover={false}>
+                    <Table.DataCell>
+                        <VStack gap="space-4">
+                            <BodyShort>
+                                <strong>Din forventede inntekt</strong>
+                            </BodyShort>
+                            {isBeforeValuesAvailable && (
+                                <BodyShort>
+                                    I dag: <FormatKroner value={forventetInntekt.yearly.before ?? 0} />
+                                </BodyShort>
+                            )}
+                            <BodyShort>
+                                Med dine endringer: <FormatKroner value={forventetInntekt.yearly.after} />
+                            </BodyShort>
+                        </VStack>
+                    </Table.DataCell>
+                </Table.Row>
 
-        <Table.Row>
-          <Table.DataCell style={{ backgroundColor: 'var(--a-surface-subtle)' }}>
-            <VStack gap="1">
-              <BodyShort>
-                <strong>Sum årlig</strong>
-              </BodyShort>
-              {isBeforeValuesAvailable && (
-                <BodyShort>
-                  I dag: <FormatKroner value={sum.yearly.before ?? 0} />
-                </BodyShort>
-              )}
-              <BodyShort>
-                Med dine endringer: <FormatKroner value={sum.yearly.after} />
-              </BodyShort>
-            </VStack>
-          </Table.DataCell>
-        </Table.Row>
-      </Table.Body>
-    </Table>
-  )
+                <Table.Row shadeOnHover={false}>
+          <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
+                        <VStack gap="space-4">
+                            <BodyShort>
+                                <strong>Sum årlig</strong>
+                            </BodyShort>
+                            {isBeforeValuesAvailable && (
+                                <BodyShort>
+                                    I dag: <FormatKroner value={sum.yearly.before ?? 0} />
+                                </BodyShort>
+                            )}
+                            <BodyShort>
+                                Med dine endringer: <FormatKroner value={sum.yearly.after} />
+                            </BodyShort>
+                        </VStack>
+                    </Table.DataCell>
+                </Table.Row>
+            </Table.Body>
+        </Table>
+    );
 }

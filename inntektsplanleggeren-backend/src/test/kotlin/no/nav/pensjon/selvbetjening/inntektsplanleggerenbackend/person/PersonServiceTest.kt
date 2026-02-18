@@ -3,11 +3,10 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.parallellesannheter.ParallelleSannheterService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.*
 import org.assertj.core.util.Lists
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 import java.time.LocalDate
 
 class PersonServiceTest {
@@ -34,16 +33,9 @@ class PersonServiceTest {
 
     @Test
     fun getAgeAtYear_throws_exception() {
-        val resultAge =
         org.junit.jupiter.api.assertThrows<IllegalStateException> {
-            personService.getAgeAtYear(LocalDate.of(2016, 1, 1), 2015) }
-    }
-
-    fun getPdlPerson(bekyttelse: PdlAdressebeskyttelsesgradering): PdlPerson {
-        val pdlFoedselsdato = PdlFoedselsdato(LocalDate.of(2000, 1, 1), null, null)
-        val pdlNavn = PdlNavn("Name", "MiddleName", "LastName", null, null)
-        val pdlAdressebskyttelse = PdlAdressebskyttelse(bekyttelse, null, null)
-        return PdlPerson(Lists.list(pdlFoedselsdato), Lists.list(pdlNavn), Lists.list(pdlAdressebskyttelse))
+            personService.getAgeAtYear(LocalDate.of(2016, 1, 1), 2015)
+        }
     }
 
     private fun <T> any(): T = Mockito.any()
