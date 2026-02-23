@@ -2,6 +2,7 @@ import { Alert, Button, ErrorSummary, Heading, HStack, List, Radio, RadioGroup, 
 import { ArrowRightIcon } from '@navikt/aksel-icons'
 import { useContext, useRef, useState } from 'react'
 import { FormStateContext } from '@/context/FormData'
+import { umami } from '@/common/umami'
 
 interface Props {
     availableYears: number[]
@@ -64,7 +65,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
                     )}
 
                     <VStack gap="space-28">
-                        <ReadMore header="Tidspunkt for å registrere inntekt">
+                        <ReadMore header="Tidspunkt for å registrere inntekt" onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Tidspunkt for å registrere inntekt' })}>
                             <List>
                                 <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekt for dette året.</List.Item>
                                 <List.Item>Fra 1. oktober - 30. november kan du både legge inn inntekt for dette året og neste år.</List.Item>

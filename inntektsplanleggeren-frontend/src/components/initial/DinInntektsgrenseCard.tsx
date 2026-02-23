@@ -4,6 +4,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 import { InitiateData } from '@/api/model/ApiRequests'
 import { FormatDecimalNumber } from '@/components/utils/FormatDecimalNumber'
+import { umami } from '@/common/umami'
 
 export function InntektsgrenseCard(props: { displayData: InitiateData }) {
     const [isOpen, setIsOpen] = React.useState(false)
@@ -16,6 +17,7 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
             inntektsgrenseCardRef!.current!.scrollIntoView()
         }
         setButtonText(isOpen ? 'Vis grenser og trekkprosent' : 'Skjul grenser og trekkprosent')
+        umami(isOpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Grenser og trekkprosent' })
     }
 
     return (
@@ -119,11 +121,12 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
                         onClick={handleButton}
                         variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+                    >
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }

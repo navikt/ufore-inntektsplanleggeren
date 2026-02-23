@@ -4,6 +4,7 @@ import './FormFields.css'
 import { PersonInntekter } from '@/api/model/ApiRequests'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 import { formatInntekt, parseInntekt } from '@/components/utils/FormatNumbersUtil'
+import { umami } from '@/common/umami'
 
 export interface FormFieldsProps {
     year?: number
@@ -65,7 +66,10 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         htmlSize={30}
                     />
                     <div>
-                        <ReadMore header="Inntekt du skal legge inn">
+                        <ReadMore
+                            header="Inntekt du skal legge inn"
+                            onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Eps - Inntekt du skal legge inn' })}
+                        >
                             <p>Du skal legge inn annen forelders pensjonsgivende inntekter.</p>
                             <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
                             <div className="listCompact">
@@ -117,7 +121,10 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange('naeringsinntekt')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Næringsinntekt du skal legge inn">
+                    <ReadMore
+                        header="Næringsinntekt du skal legge inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Eps - Næringsinntekt du skal legge inn' })}
+                    >
                         Legg inn det den andre forelderen forventer å tjene fra næringsvirksomhet i Norge før skatt. Er du usikker på hva som regnes som
                         pensjonsgivende næringsinntekt kan du kontakte Skatteetaten.
                     </ReadMore>
@@ -136,7 +143,10 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange('inntektUtland')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekt du skal legge inn">
+                    <ReadMore
+                        header="Inntekt du skal legge inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Eps - Inntekt fra utlandet du skal legge inn' })}
+                    >
                         Legg inn det den andre forelderen forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet før skatt.
                     </ReadMore>
                 </VStack>
@@ -154,7 +164,11 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange('andrePensjonsgivendeYtelser')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn" className="readmoreCompact">
+                    <ReadMore
+                        header="Pensjoner du skal legge inn"
+                        className="readmoreCompact"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Eps - Pensjoner du skal legge inn' })}
+                    >
                         <VStack gap="space-16">
                             <BodyLong>Legg inn annen forelders pensjoner før skatt. Legg inn pensjoner fra både private og offentlige ordninger.</BodyLong>
                             <div>
@@ -197,7 +211,14 @@ export const FormFieldsEps = ({ year, errors, setErrors, setInntekt, inntektSum,
                         onBlur={handleInputChange('pensjonUtland')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn">Legg inn den andre forelderens pensjoner fra utlandet før skatt.</ReadMore>
+                    <ReadMore
+                        header="Pensjoner du skal legge inn"
+                        onOpenChange={(åpen) =>
+                            umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Eps - Pensjoner fra utlandet du skal legge inn' })
+                        }
+                    >
+                        Legg inn den andre forelderens pensjoner fra utlandet før skatt.
+                    </ReadMore>
                 </VStack>
             )}
             <Box padding="space-16" background="neutral-soft" borderRadius="8">

@@ -13,6 +13,7 @@ import { BeregningWarnings } from '@/components/beregning/BeregningWarnings'
 import { ErrorView } from '@/components/common/Error'
 import './BeregningPage.css'
 import Knapperad from '@/components/common/Knapperad'
+import { umami } from '@/common/umami'
 
 export const BeregningPage = () => {
     const { selectedYear, setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext)
@@ -53,7 +54,10 @@ export const BeregningPage = () => {
                     <Heading level="3" size="medium" style={{ marginBottom: '20px' }}>
                         Din inntekt og uføretrygd før skatt i {selectedYear}
                     </Heading>
-                    <ReadMore header="Inntekt du har lagt inn">
+                    <ReadMore
+                        header="Inntekt du har lagt inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Inntekt du har lagt inn' })}
+                    >
                         <VStack gap="space-28">
                             <VStack>
                                 <Heading level="4" size="small">
@@ -90,7 +94,7 @@ export const BeregningPage = () => {
                                     <Heading level="4" size="medium">
                                         <HStack>
                                             Oversikt i tabell
-                                            <HelpText id="helpbox">
+                                            <HelpText id="helpbox" onClick={() => umami('hjelpetekst åpnet', { tekst: 'Oversikt i tabell' })}>
                                                 <BodyLong>"I dag" viser årlig beløp hentet fra vedtaket som gjelder nå.</BodyLong>
                                                 <BodyLong>"Med dine endringer" viser årlig beløp med endringene du nå har lagt inn.</BodyLong>
                                             </HelpText>
@@ -108,7 +112,10 @@ export const BeregningPage = () => {
                                     <FormatKroner value={simulationResponse?.result.sum.monthly.after ?? 0} />
                                 </strong>
                             </BodyLong>
-                            <ReadMore header="Månedsbeløp spesifisert">
+                            <ReadMore
+                                header="Månedsbeløp spesifisert"
+                                onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Månedsbeløp spesifisert' })}
+                            >
                                 <BodyLong>
                                     {simulationResponse?.result?.gjenlevendetillegg ? 'Uføretrygd inkludert gjenlevendetillegg: ' : 'Uføretrygd: '}
                                     <FormatKroner
@@ -159,5 +166,5 @@ export const BeregningPage = () => {
                 </BodyLong>
                 <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.FORVENTET_INNTEKT} />
             </VStack>
-        );
+        )
 }

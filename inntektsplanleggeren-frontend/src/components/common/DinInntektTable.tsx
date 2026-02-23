@@ -5,7 +5,8 @@ import { belopSum } from '@/common/Utils'
 import React, { useEffect, useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
-import { DESKTOP_WIDTH } from '@/FormContainer' // Import the CSS file
+import { DESKTOP_WIDTH } from '@/FormContainer'
+import { umami } from '@/common/umami' // Import the CSS file
 
 interface DinInntektTableProps {
     type?: 'arbeidsgiver' | 'pensjonsordning'
@@ -31,6 +32,9 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
     const handleButton = () => {
         setIsOpen(!isOpen)
         setButtonText(isOpen ? openText : closedText)
+        umami(isOpen ? 'accordion åpnet' : 'accordion lukket', {
+            tekst: type == 'arbeidsgiver' ? 'Månedsoversikt lønn' : 'Månedsoversikt pensjoner andre enn Nav',
+        })
     }
 
     const isDesktop = width > DESKTOP_WIDTH
@@ -48,13 +52,14 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
                         onClick={handleButton}
                         variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+                    >
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }
 
 const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {

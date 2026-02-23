@@ -4,6 +4,7 @@ import './FormFields.css'
 import { PersonInntekter } from '@/api/model/ApiRequests'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 import { formatInntekt, parseInntekt } from '@/components/utils/FormatNumbersUtil'
+import { umami } from '@/common/umami'
 
 export interface FormFieldsProps {
     year?: number
@@ -65,7 +66,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         htmlSize={30}
                     />
                     <div>
-                        <ReadMore header="Inntekt du skal legge inn">
+                        <ReadMore
+                            header="Inntekt du skal legge inn"
+                            onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Inntekt du skal legge inn' })}
+                        >
                             <p>Du skal legge inn pensjonsgivende inntekter.</p>
                             <BodyShort>Lønn og fordeler du skal legge inn</BodyShort>
                             <div className="listCompact">
@@ -118,7 +122,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange('naeringsinntekt')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Næringsinntekt du skal legge inn">
+                    <ReadMore
+                        header="Næringsinntekt du skal legge inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Næringsinntekt du skal legge inn' })}
+                    >
                         Legg inn det du forventer å tjene fra næringsvirksomhet i Norge før skatt. Er du usikker på hva som regnes som pensjonsgivende
                         næringsinntekt kan du kontakte Skatteetaten.
                     </ReadMore>
@@ -137,7 +144,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange('inntektUtland')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Inntekt du skal legge inn">
+                    <ReadMore
+                        header="Inntekt du skal legge inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Inntekt fra utlandet du skal legge inn' })}
+                    >
                         Legg inn det du forventer å tjene i arbeidsinntekt og næringsinntekt fra utlandet før skatt.
                     </ReadMore>
                 </VStack>
@@ -155,7 +165,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange('andrePensjonsgivendeYtelser')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn">
+                    <ReadMore
+                        header="Pensjoner du skal legge inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Pensjoner du skal legge inn' })}
+                    >
                         <VStack gap="space-16">
                             <BodyLong>Legg inn pensjoner og uførepensjon fra andre enn oss, før skatt.</BodyLong>
 
@@ -195,7 +208,10 @@ export const FormFieldsUser = ({ year, errors, setErrors, setInntekt, inntektSum
                         onBlur={handleInputChange('pensjonUtland')}
                         htmlSize={30}
                     />
-                    <ReadMore header="Pensjoner du skal legge inn">
+                    <ReadMore
+                        header="Pensjoner du skal legge inn"
+                        onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Pensjoner fra utlandet du skal legge inn' })}
+                    >
                         Legg inn pensjoner fra utlandet før skatt. Inntekten du oppgir her har bare betydning for størrelsen på barnetillegget ditt.
                     </ReadMore>
                 </VStack>

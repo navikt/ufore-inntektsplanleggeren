@@ -2,6 +2,7 @@ import React from 'react'
 import { BodyLong, Box, Button, Heading, HStack, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
+import { umami } from '@/common/umami'
 
 interface ExpectedIncomeBoxProps {
     forventetInntekt: Record<number, number>
@@ -18,6 +19,7 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
     const handleButton = () => {
         setIsOpen(!isOpen)
         setButtonText(isOpen ? 'Vis forklaring' : 'Skjul forklaring')
+        umami(isOpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Registrert forventet inntekt' })
     }
 
     const ExpectedIncome = ({ year }: { year: string }) => {
@@ -74,11 +76,12 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                         onClick={handleButton}
                         variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+                    >
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }

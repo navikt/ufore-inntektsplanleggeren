@@ -11,6 +11,7 @@ import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { LoadingBox } from '@/components/initial/LoadingBox'
 import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import { umami } from '@/common/umami'
 
 export function InitialPage() {
     const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
@@ -118,7 +119,7 @@ export function InitialPage() {
                 </section>
             )}
             <Accordion>
-                <Accordion.Item>
+                <Accordion.Item onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Slik fungerer inntektsplanleggeren' })}>
                     <Accordion.Header>Slik fungerer inntektsplanleggeren</Accordion.Header>
                     <Accordion.Content>
                         <List>
@@ -143,7 +144,7 @@ export function InitialPage() {
                         </List>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item>
+                <Accordion.Item onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Usikker på hva du kommer til å tjene' })}>
                     <Accordion.Header>Usikker på hva du kommer til å tjene?</Accordion.Header>
                     <Accordion.Content>
                         <VStack gap="space-32">
@@ -157,7 +158,7 @@ export function InitialPage() {
                         </VStack>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item>
+                <Accordion.Item onOpenChange={(åpen) => umami(åpen ? 'accordion åpnet' : 'accordion lukket', { tekst: 'Andre pengestøtter fra Nav' })}>
                     <Accordion.Header>Har du andre pengestøtter i tillegg til uføretrygd fra Nav?</Accordion.Header>
                     <Accordion.Content>
                         Inntektsplanleggeren viser bare hvordan inntekt påvirker uføretrygden. Innsending via inntektsplanleggeren påvirker kun din uføretrygd,
