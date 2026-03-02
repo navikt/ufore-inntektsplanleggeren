@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.retryOnTimeout
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -38,6 +39,7 @@ class AzureAdService(
             })
             .retrieve()
             .bodyToMono(OnBehalfOfTokenResponse::class.java)
+            .retryWhen(retryOnTimeout)
             .withMdcContext()
             .block()
             ?.accessToken
@@ -54,6 +56,7 @@ class AzureAdService(
         })
         .retrieve()
         .bodyToMono(ClientCredentialsTokenResponse::class.java)
+        .retryWhen(retryOnTimeout)
         .withMdcContext()
         .block()
         ?.accessToken

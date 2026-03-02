@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.retryOnTimeout
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
@@ -49,6 +50,7 @@ class InntektskomponentClient(
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
                         .bodyToMono(HentForventetInntektResponse::class.java)
+                        .retryWhen(retryOnTimeout)
                         .withMdcContext()
                         .block()!!
                 }
@@ -92,6 +94,7 @@ class InntektskomponentClient(
                         .bodyValue(request)
                         .retrieve()
                         .bodyToMono(HentAbonnerteInntekterBolkResponse::class.java)
+                        .retryWhen(retryOnTimeout)
                         .withMdcContext()
                         .block()!!
                 }
