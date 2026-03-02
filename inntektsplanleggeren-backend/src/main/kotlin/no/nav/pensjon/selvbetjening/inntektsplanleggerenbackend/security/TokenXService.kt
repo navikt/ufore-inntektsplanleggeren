@@ -10,6 +10,7 @@ import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.retryOnTimeout
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -63,6 +64,7 @@ class TokenXService(
             })
             .retrieve()
             .bodyToMono(TokenXResponse::class.java)
+            .retryWhen(retryOnTimeout)
             .withMdcContext()
             .block()
             ?.accessToken

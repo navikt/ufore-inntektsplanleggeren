@@ -2,6 +2,7 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt
 
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.retryOnTimeout
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.slf4j.Logger
@@ -39,6 +40,7 @@ class FullmaktClient(
                     }
                     .retrieve()
                     .bodyToMono(RepresentasjonsforholdValidity::class.java)
+                    .retryWhen(retryOnTimeout)
                     .withMdcContext()
                     .block()
             }

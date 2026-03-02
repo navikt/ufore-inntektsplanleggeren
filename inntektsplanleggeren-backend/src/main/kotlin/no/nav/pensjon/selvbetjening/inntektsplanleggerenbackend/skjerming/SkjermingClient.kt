@@ -1,6 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming
 
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.AppId
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.retryOnTimeout
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_HEADER
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
@@ -28,6 +29,7 @@ class SkjermingClient(
                 .bodyValue(SkjermingRequest(pid))
                 .retrieve()
                 .bodyToMono(Boolean::class.java)
+                .retryWhen(retryOnTimeout)
                 .withMdcContext()
                 .block() ?: false
         }
