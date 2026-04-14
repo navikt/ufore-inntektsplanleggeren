@@ -18,7 +18,7 @@ URL: http://localhost:8080/api/..
 ### Tokens for test
 
 #### TokenX (Innbygger)
-https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2
+https://tokenx-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:ufore:inntektsplanleggeren-backend-q2
 
 #### Azure AD (Veileder)
-https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2
+https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp:ufore:inntektsplanleggeren-backend-q2

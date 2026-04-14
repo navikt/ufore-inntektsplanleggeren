@@ -14,7 +14,7 @@ jobs:
       id-token: write
     with:
       path: /inntektsplanleggeren-backend
-      team: pensjonselvbetjening
+      team: ufore
       app: inntektsplanleggeren-backend
       java-version: 21
     secrets: inherit
@@ -29,5 +29,5 @@ jobs:
     with:
       cluster: dev-gcp
       image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
-      team: pensjonselvbetjening
+      team: ufore
       nais-template: inntektsplanleggeren-backend/.nais/dev.yaml

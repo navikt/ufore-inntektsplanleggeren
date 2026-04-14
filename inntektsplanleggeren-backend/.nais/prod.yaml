@@ -2,9 +2,9 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: inntektsplanleggeren-backend
-  namespace: pensjonselvbetjening
+  namespace: ufore
   labels:
-    team: pensjonselvbetjening
+    team: ufore
 spec:
   image: "{{ image }}"
   port: 8080
@@ -58,10 +58,10 @@ spec:
     inbound:
       rules:
         - application: inntektsplanleggeren-frontend-veileder
-          namespace: pensjonselvbetjening
+          namespace: ufore
           cluster: prod-gcp
         - application: inntektsplanleggeren-frontend-borger
-          namespace: pensjonselvbetjening
+          namespace: ufore
           cluster: prod-gcp
     outbound:
     outbound:
