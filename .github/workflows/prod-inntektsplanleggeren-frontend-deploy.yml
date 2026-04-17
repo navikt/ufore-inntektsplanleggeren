@@ -17,7 +17,7 @@ jobs:
       id-token: write
     with:
       path: inntektsplanleggeren-frontend
-      team: pensjonselvbetjening
+      team: ufore
       app: inntektsplanleggeren-frontend
       prune_dev_dependencies: true
       build_script_command: build:production
@@ -32,7 +32,7 @@ jobs:
       id-token: "write"
     with:
       path: inntektsplanleggeren-frontend/
-      team: pensjonselvbetjening
+      team: ufore
       app: inntektsplanleggeren-frontend-veileder
       build_script_command: build:production:veileder
       node_version: 22
@@ -49,7 +49,7 @@ jobs:
     uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/trivy-docker.yml@main
     with:
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
-      team: pensjonselvbetjening
+      team: ufore
     secrets: inherit
 
   deploy-frontend-borger-to-prod:
@@ -62,7 +62,7 @@ jobs:
     with:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker.outputs.image }}
-      team: pensjonselvbetjening
+      team: ufore
       nais-template: inntektsplanleggeren-frontend/.nais/prod-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yml
 
   deploy-frontend-veileder-to-prod:
@@ -75,5 +75,5 @@ jobs:
     with:
       cluster: prod-gcp
       image: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
-      team: pensjonselvbetjening
+      team: ufore
       nais-template: inntektsplanleggeren-frontend/.nais/prod-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-production.yml

@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: inntektsplanleggeren-frontend-veileder
-  namespace: pensjonselvbetjening
+  namespace: ufore
   labels:
-    team: pensjonselvbetjening
+    team: ufore
 spec:
   groups:
     - name: inntektsplanleggeren-frontend-veileder-alerts
@@ -16,7 +16,7 @@ spec:
             consequence: Inntektsplanleggeren veileder application is unavailable
             action: "https://grafana.nav.cloud.nais.io/goto/aPop-E_Hg?orgId=1"
           labels:
-            namespace: pensjonselvbetjening # required
+            namespace: ufore # required
             severity: critical
         - alert: Failing deployment
           expr: kube_deployment_status_replicas_unavailable{deployment="inntektsplanleggeren-frontend-veileder"} > 1
@@ -25,5 +25,5 @@ spec:
             consequence: Inntektsplanleggeren veileder failing deployment
             action: "https://grafana.nav.cloud.nais.io/goto/aPop-E_Hg?orgId=1"
           labels:
-            namespace: pensjonselvbetjening # required
+            namespace: ufore # required
             severity: critical

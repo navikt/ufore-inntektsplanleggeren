@@ -16,7 +16,7 @@ jobs:
       id-token: write
     with:
       path: /inntektsplanleggeren-backend
-      team: pensjonselvbetjening
+      team: ufore
       app: inntektsplanleggeren-backend
       java-version: 21
     secrets: inherit
@@ -31,7 +31,7 @@ jobs:
     uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/trivy-docker.yml@main
     with:
       image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
-      team: pensjonselvbetjening
+      team: ufore
     secrets: inherit
 
   deploy-to-prod:
@@ -44,5 +44,5 @@ jobs:
     with:
       cluster: prod-gcp
       image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
-      team: pensjonselvbetjening
+      team: ufore
       nais-template: inntektsplanleggeren-backend/.nais/prod.yaml

@@ -2,9 +2,9 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: inntektsplanleggeren-frontend-borger-q2
-  namespace: pensjonselvbetjening
+  namespace: ufore
   labels:
-    team: pensjonselvbetjening
+    team: ufore
   annotations:
     nais.io/run-as-user: "101" # nginx
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
@@ -19,9 +19,9 @@ spec:
       enabled: true
       runtime: nodejs
   ingresses:
-    - https://borger.intern.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
-    - https://borger.ansatt.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
-    - https://borger.ekstern.dev.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
+    - https://borger.intern.dev.nav.no/uforetrygd/selvbetjening/ny-inntektsplanleggeren
+    - https://borger.ansatt.dev.nav.no/uforetrygd/selvbetjening/ny-inntektsplanleggeren
+    - https://borger.ekstern.dev.nav.no/uforetrygd/selvbetjening/ny-inntektsplanleggeren
   port: 8080
   replicas:
     min: 1
@@ -54,16 +54,16 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: pensjonselvbetjening-unleash-api.nav.cloud.nais.io
+        - host: ufore-unleash-api.nav.cloud.nais.io
       rules:
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp
-          namespace: pensjonselvbetjening
+          namespace: ufore
   env:
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend-q2"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
-      value: "dev-gcp:pensjonselvbetjening:inntektsplanleggeren-backend-q2"
+      value: "dev-gcp:ufore:inntektsplanleggeren-backend-q2"
     - name: "URL_PSELV_INNTEKTSPLANLEGGER"
       value: "https://pensjon-pselv-q2-gcp.ansatt.dev.nav.no/pselv/inntektsplanlegger/innledning.jsf?context=ut&simpleMode=true"
   envFrom:

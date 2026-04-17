@@ -11,7 +11,7 @@ import { initialize } from 'unleash-client'
 import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
 import correlationIdMiddleware from './middleware/correlationId.js'
 
-const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
+const BASE_PATH = '/uforetrygd/selvbetjening/ny-inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
 
 const metricsMiddleware = promBundle({ includeMethod: true })

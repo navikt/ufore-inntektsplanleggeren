@@ -24,7 +24,7 @@ const chosenNamespace =
       (namespace) => namespace.metadata?.name,
     ) as string[];
     return autocomplete({
-      default: "pensjonselvbetjening",
+      default: "ufore",
       pageSize: 20,
       message: "Choose namespace",
       source: async (input = "") => {
