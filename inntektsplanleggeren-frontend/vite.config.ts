@@ -8,7 +8,7 @@ import { loadEnv } from "vite";
 
 // https://vitejs.dev/config/
 const buildConfig = {
-  base: "/uforetrygd/selvbetjening/ny-inntektsplanleggeren",
+  base: "/uforetrygd/selvbetjening/inntektsplanleggeren",
   build: {
     outDir: "./dist",
     rollupOptions: {
@@ -27,7 +27,7 @@ const buildConfig = {
 };
 
 const devConfig = (env) => ({
-  base: "/uforetrygd/selvbetjening/ny-inntektsplanleggeren",
+  base: "/uforetrygd/selvbetjening/inntektsplanleggeren",
   build: {
     manifest: true,
     rollupOptions: {
@@ -52,7 +52,7 @@ const devConfig = (env) => ({
   },
   server: {
     proxy: {
-      "/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api": `${env.VITE_PROXY_BACKEND}`,
+      "/uforetrygd/selvbetjening/inntektsplanleggeren/api": `${env.VITE_PROXY_BACKEND}`,
     },
   },
 });

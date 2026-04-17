@@ -21,7 +21,7 @@ app.use(cors({
     }
 }));
 
-app.get('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/initiate', (req, res) => {
+app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/initiate', (req, res) => {
     console.log("GET - /api/initiate")
     //403 response
     //res.status(403).send(mockForbiddenResponse)
@@ -33,7 +33,7 @@ app.get('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/initiate', (req, 
     // res.status(200).send(mockInitiateResponseError)
 })
 
-app.get('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/inntekter', (req, res) => {
+app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/inntekter', (req, res) => {
     console.log("GET - /api/inntekter")
     //403 response
     //res.status(403).send(mockForbiddenResponse)
@@ -42,7 +42,7 @@ app.get('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/inntekter', (req,
     res.status(200).send(mockInntekterResponse)
 })
 
-app.post('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/simuler', (req, res) => {
+app.post('/uforetrygd/selvbetjening/inntektsplanleggeren/api/simuler', (req, res) => {
     console.log("POST - /api/simuler")
     //403 response
     //res.status(403).send(mockForbiddenResponse)
@@ -57,7 +57,7 @@ app.post('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/simuler', (req, 
     // res.status(200).send(mockSimulationResponseError)
 })
 
-app.post('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/send', (req, res) => {
+app.post('/uforetrygd/selvbetjening/inntektsplanleggeren/api/send', (req, res) => {
     console.log("POST - /api/send")
     //403 response
     //res.status(403).send(mockForbiddenResponse)
@@ -66,7 +66,7 @@ app.post('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/send', (req, res
     res.status(200).send(mockSendResponse)
 })
 
-app.get('/uforetrygd/selvbetjening/ny-inntektsplanleggeren/api/status', (req, res) => {
+app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/status', (req, res) => {
     console.log("GET - /api/status")
     //403 response
     //res.status(403).send(mockForbiddenResponse)

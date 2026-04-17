@@ -12,7 +12,7 @@ import { BeregningPage } from '@/components/beregning/BeregningPage'
 import { OppsummeringPage } from '@/components/oppsummering/OppsummeringPage'
 import { KvitteringPage } from '@/components/kvittering/KvitteringPage'
 
-export const BASE_PATH = '/uforetrygd/selvbetjening/ny-inntektsplanleggeren'
+export const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 
 export const AppRoutes = () => {
     // TODO: få på plass feature toggling

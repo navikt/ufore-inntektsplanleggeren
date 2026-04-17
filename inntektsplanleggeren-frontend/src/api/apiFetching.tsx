@@ -8,7 +8,7 @@ import {
 } from '@/api/model/ApiRequests'
 import { ErrorResponse } from '@/components/common/Error'
 
-const BASE_PATH = '/uforetrygd/selvbetjening/ny-inntektsplanleggeren'
+const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 
 export async function getInitiate(): Promise<InitiateResponse | ErrorResponse> {
   const searchParams = new URLSearchParams(document.location.search)

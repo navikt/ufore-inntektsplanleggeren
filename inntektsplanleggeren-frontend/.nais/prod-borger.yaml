@@ -19,7 +19,7 @@ spec:
       enabled: true
       runtime: nodejs
   ingresses:
-    - https://www.nav.no/uforetrygd/selvbetjening/ny-inntektsplanleggeren
+    - https://www.nav.no/uforetrygd/selvbetjening/inntektsplanleggeren
   port: 8080
   replicas:
     min: 2
