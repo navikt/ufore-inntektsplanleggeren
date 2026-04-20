@@ -36,6 +36,9 @@ spec:
     periodSeconds: 20
     failureThreshold: 5
     timeout: 1
+  frontend:
+    generatedConfig:
+      mountPath: /app/src/nais.js
   idporten:
     enabled: true
     sidecar:
@@ -50,6 +53,7 @@ spec:
     outbound:
       external:
         - host: ufore-unleash-api.nav.cloud.nais.io
+        - host: telemetry.nav.no
       rules:
         - application: inntektsplanleggeren-backend
           cluster: prod-gcp

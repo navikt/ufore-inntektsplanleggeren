@@ -37,6 +37,9 @@ spec:
     periodSeconds: 20
     failureThreshold: 5
     timeout: 1
+  frontend:
+    generatedConfig:
+      mountPath:  /app/src/nais.js
   azure:
     sidecar:
       autoLogin: true
@@ -63,6 +66,7 @@ spec:
     outbound:
       external:
         - host: ufore-unleash-api.nav.cloud.nais.io
+        - host: telemetry.ekstern.dev.nav.no
       rules:
         - application: inntektsplanleggeren-backend-q2
           cluster: dev-gcp

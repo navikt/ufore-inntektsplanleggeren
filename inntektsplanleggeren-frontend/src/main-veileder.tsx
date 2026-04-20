@@ -5,6 +5,10 @@ import { AppRoutes } from '@/routes'
 import VeilederBanner from '@/components/common/Banner/VeilederBanner'
 import { Theme } from '@navikt/ds-react'
 
+import { initFaro } from '@/faro'
+
+initFaro()
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <DataContextProvider>

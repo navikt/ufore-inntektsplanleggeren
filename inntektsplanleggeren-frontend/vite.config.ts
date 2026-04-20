@@ -1,68 +1,70 @@
-import react from "@vitejs/plugin-react";
-import eslint from "vite-plugin-eslint2";
-import stylelint from "vite-plugin-stylelint";
-import { fileURLToPath } from "url";
-import { viteMockServe } from "vite-plugin-mock";
-import { resolve } from "path";
-import { loadEnv } from "vite";
+import react from '@vitejs/plugin-react'
+import eslint from 'vite-plugin-eslint2'
+import stylelint from 'vite-plugin-stylelint'
+import { fileURLToPath } from 'url'
+import { viteMockServe } from 'vite-plugin-mock'
+import { resolve } from 'path'
+import { loadEnv } from 'vite'
 
 // https://vitejs.dev/config/
 const buildConfig = {
-  base: "/uforetrygd/selvbetjening/inntektsplanleggeren",
-  build: {
-    outDir: "./dist",
-    rollupOptions: {
-      input: {
-        appBorger: resolve(__dirname, "./index-borger.html"),
-        appVeileder: resolve(__dirname, "./index-veileder.html"),
-      },
+    base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
+    build: {
+        outDir: './dist',
+        rollupOptions: {
+            input: {
+                appBorger: resolve(__dirname, './index-borger.html'),
+                appVeileder: resolve(__dirname, './index-veileder.html'),
+            },
+            external: ['./nais.js'],
+        },
     },
-  },
-  plugins: [react(), eslint(), stylelint({ fix: true })],
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    plugins: [react(), eslint(), stylelint({ fix: true })],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
     },
-  },
-};
+}
 
 const devConfig = (env) => ({
-  base: "/uforetrygd/selvbetjening/inntektsplanleggeren",
-  build: {
-    manifest: true,
-    rollupOptions: {
-      input: {
-        appBorger: resolve(__dirname, "./index-borger.html"),
-        appVeileder: resolve(__dirname, "./index-veileder.html"),
-      },
+    base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
+    build: {
+        manifest: true,
+        rollupOptions: {
+            input: {
+                appBorger: resolve(__dirname, './index-borger.html'),
+                appVeileder: resolve(__dirname, './index-veileder.html'),
+            },
+            external: ['./nais.js'],
+        },
     },
-  },
-  plugins: [
-    react(),
-    viteMockServe({
-      // default
-      mockPath: "mock",
-      enable: true,
-    }),
-  ],
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    plugins: [
+        react(),
+        viteMockServe({
+            // default
+            mockPath: 'mock',
+            enable: true,
+        }),
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
     },
-  },
-  server: {
-    proxy: {
-      "/uforetrygd/selvbetjening/inntektsplanleggeren/api": `${env.VITE_PROXY_BACKEND}`,
+    server: {
+        proxy: {
+            '/uforetrygd/selvbetjening/inntektsplanleggeren/api': `${env.VITE_PROXY_BACKEND}`,
+        },
     },
-  },
-});
+})
 
 // https://vitejs.dev/config/
 export default ({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd());
-  if (command == "serve") {
-    return devConfig(env);
-  } else {
-    return buildConfig;
-  }
-};
+    const env = loadEnv(mode, process.cwd())
+    if (command == 'serve') {
+        return devConfig(env)
+    } else {
+        return buildConfig
+    }
+}
