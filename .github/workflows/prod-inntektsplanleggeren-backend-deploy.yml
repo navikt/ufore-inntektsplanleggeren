@@ -7,42 +7,109 @@ on:
     paths:
       - inntektsplanleggeren-backend/**
 
+concurrency:
+  group: prod-inntektsplanleggeren-backend-deploy
+  cancel-in-progress: true
+
 jobs:
   build-backend-and-publish-docker:
-    name: Build backend application
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-backend-and-publish-docker.yml@main
+    name: Bygg backend application
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
-    with:
-      path: /inntektsplanleggeren-backend
-      team: ufore
-      app: inntektsplanleggeren-backend
-      java-version: 21
-    secrets: inherit
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build
+        run: cd ./inntektsplanleggeren-backend && mvn -B package --file pom.xml
+
+      - name: docker-build-push
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: ufore
+          dockerfile: ./inntektsplanleggeren-backend/Dockerfile
+          image_suffix: inntektsplanleggeren-backend
+
+      - name: "Send slack-notifikasjon om bygget feiler"
+        if: ${{ failure() }}
+        run: |
+          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc: *Bygg av inntektsplanleggeren-backend for deploy til prod feilet* :bomb::broken_heart:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
+          chmod +x "${GITHUB_WORKSPACE}/.github/notify-slack.sh"
+          "${GITHUB_WORKSPACE}/.github/notify-slack.sh" "${SSH_KEY}" "${AUTHOR}" "${PAYLOAD}" "${WEBHOOK_URL}"
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY_NOTIFY_TO_SLACK }}
+          AUTHOR: ${{ github.actor }}
+          WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
 
   trivy-docker:
     needs: build-backend-and-publish-docker
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
       id-token: write
       security-events: write
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/trivy-docker.yml@main
-    with:
-      image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
-      team: ufore
-    secrets: inherit
+    steps:
+      - uses: nais/login@v0
+        with:
+          team: ufore
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        with:
+          image-ref: ${{ needs.build-backend-and-publish-docker.outputs.image }}
+          format: 'sarif'
+          output: 'trivy.sarif'
+          severity: 'HIGH,CRITICAL'
+          limit-severities-for-sarif: true
+      - name: Upload results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy.sarif'
 
   deploy-to-prod:
     if: github.ref == 'refs/heads/main'
     needs: build-backend-and-publish-docker
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    runs-on: ubuntu-latest
     permissions:
+      actions: read
       contents: read
       id-token: write
-    with:
-      cluster: prod-gcp
-      image: ${{ needs.build-backend-and-publish-docker.outputs.image }}
-      team: ufore
-      nais-template: inntektsplanleggeren-backend/.nais/prod.yaml
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: inntektsplanleggeren-backend/.nais/prod.yml
+          IMAGE: ${{ needs.build-backend-and-publish-docker.outputs.image }}
+          TEAM: ufore
+      - name: "Send slack-notifikasjon om deploy feiler"
+        if: ${{ failure() }}
+        run: |
+          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:* Deploy av inntektsplanleggeren-backend til prod feilet* :bomb::this-is-fine-fire: \nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
+          chmod +x "${GITHUB_WORKSPACE}/.github/notify-slack.sh"
+          "${GITHUB_WORKSPACE}/.github/notify-slack.sh" "${SSH_KEY}" "${AUTHOR}" "${PAYLOAD}" "${WEBHOOK_URL}"
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY_NOTIFY_TO_SLACK }}
+          AUTHOR: ${{ github.actor }}
+          WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
