@@ -1,21 +1,6 @@
-name: Build inntektsplanleggeren frontend
-on:
-  workflow_dispatch:
-  push:
-    branches-ignore:
-      - main  # Bygges allerede av deploy-workflow
-
+name: Playwright Tests
+on: [push, pull_request]
 jobs:
-  build-frontend:
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend.yml@main
-    name: Build inntektsplanleggeren frontend
-    permissions:
-      actions: read
-      contents: read
-    secrets: inherit
-    with:
-      path: inntektsplanleggeren-frontend
-      node_version: 20
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -36,3 +21,4 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+        
