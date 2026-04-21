@@ -1,18 +1,55 @@
-name: Build inntektsplanleggeren frontend
+name: Bygg inntektsplanleggeren-frontend
 on:
   workflow_dispatch:
   push:
+    paths:
+      - inntektsplanleggeren-frontend/**
     branches-ignore:
       - main  # Bygges allerede av deploy-workflow
 
 jobs:
   build-frontend:
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend.yml@main
-    name: Build inntektsplanleggeren frontend
+    name: Bygg med node
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./inntektsplanleggeren-frontend
     permissions:
       actions: read
       contents: read
-    secrets: inherit
-    with:
-      path: inntektsplanleggeren-frontend
-      node_version: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Setup node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        with:
+          node-version: 22
+          registry-url: 'https://npm.pkg.github.com'
+          cache: npm
+          cache-dependency-path: inntektsplanleggeren-frontend/package-lock.json
+
+      - name: Cache node modules
+        id: cache-node
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: |
+            inntektsplanleggeren-frontend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Installer avhengigheter
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Bygg med node
+        run: npm ci && npm run build
+        env:
+          FARO_TELEMETRY_URL: 'https://telemetry.ekstern.dev.nav.no/collect'
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
