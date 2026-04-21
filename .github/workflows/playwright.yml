@@ -27,6 +27,6 @@ jobs:
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
-        path: playwright-report/
+        path: ./inntektsplanleggeren-frontend/playwright-report/
         retention-days: 30
         
