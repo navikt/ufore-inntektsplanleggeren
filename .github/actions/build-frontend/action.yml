@@ -1,0 +1,54 @@
+name: Bygg og publiser frontend Docker image
+description: Bygger frontend applikasjonene og publiserer Docker image. Tar inn build-kommando som input for å kunne gjenbruke for både borger og veileder.
+
+inputs:
+  build_command:
+    description: npm script som skal brukes til bygg (e.g. build, build:development:veileder)
+    required: true
+  reader_token:
+    description: GitHub token med package read access
+    required: true
+
+outputs:
+  image:
+    description: Docker image reference
+    value: ${{ steps.docker-build-push.outputs.image }}
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+    - name: Bruk node
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+      with:
+        node-version: 22
+        registry-url: 'https://npm.pkg.github.com'
+        cache: npm
+        cache-dependency-path: inntektsplanleggeren-frontend/package-lock.json
+
+    - name: Installer avhengigheter
+      shell: bash
+      working-directory: ./inntektsplanleggeren-frontend
+      run: npm ci
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.reader_token }}
+
+    - name: Bygg med node
+      shell: bash
+      working-directory: ./inntektsplanleggeren-frontend
+      run: npm run ${{ inputs.build_command }}
+
+    - name: Prune dev-avhengigheter
+      shell: bash
+      working-directory: ./inntektsplanleggeren-frontend
+      run: npm prune --production
+
+    - name: docker-build-push
+      uses: nais/docker-build-push@cd5ec5663feb0e05c3fa374d1fb442605b046c6b # v0
+      id: docker-build-push
+      with:
+        team: ufore
+        dockerfile: ./inntektsplanleggeren-frontend/.docker/Dockerfile
+        image_suffix: inntektsplanleggeren-frontend

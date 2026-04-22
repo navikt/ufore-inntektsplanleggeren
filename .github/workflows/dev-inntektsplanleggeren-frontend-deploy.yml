@@ -2,60 +2,84 @@ name: "Dev: inntektsplanleggeren-frontend deploy"
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 4 * * MON'
+  push:
+    branches:
+      - main
+    paths:
+      - inntektsplanleggeren-frontend/**
+
+concurrency:
+  group: dev-inntektsplanleggeren-frontend-deploy
+  cancel-in-progress: true
 
 jobs:
   build-frontend-and-publish-docker-borger:
-    name: Build frontend borger application
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+    name: Bygg inntektsplanleggeren-frontend-borger
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./inntektsplanleggeren-frontend/
     permissions:
-      contents: "read"
-      id-token: "write"
-    with:
-      path: inntektsplanleggeren-frontend/
-      team: ufore
-      app: inntektsplanleggeren-frontend
-      build_script_command: build
-      node_version: 22
-      prune_dev_dependencies: true
-    secrets: inherit
+      contents: read
+      id-token: write
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - name: Bygg og publiser Docker-image
+        uses: ./.github/actions/build-frontend
+        id: build
+        with:
+          build_command: build
+          reader_token: ${{ secrets.READER_TOKEN }}
 
   build-frontend-and-publish-docker-veileder:
-    name: Build frontend veileder application
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/build-frontend-and-publish-docker.yml@main
+    name: Bygg inntektsplanleggeren-frontend-veileder
+    runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
-    with:
-      path: inntektsplanleggeren-frontend/
-      team: ufore
-      app: inntektsplanleggeren-frontend-veileder
-      build_script_command: build:development:veileder
-      node_version: 22
-      prune_dev_dependencies: true
-    secrets: inherit
+      contents: read
+      id-token: write
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - name: Bygg og publiser Docker-image
+        uses: ./.github/actions/build-frontend
+        id: build
+        with:
+          build_command: build:development:veileder
+          reader_token: ${{ secrets.READER_TOKEN }}
 
-  deploy-frontend-borger-to-q2:
+  deploy-frontend-borger-dev:
     needs: build-frontend-and-publish-docker-borger
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
-    with:
-      cluster: dev-gcp
-      image: ${{ needs.build-frontend-and-publish-docker-borger.outputs.image }}
-      team: ufore
-      nais-template: inntektsplanleggeren-frontend/.nais/dev-borger.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-development.yml
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-  deploy-frontend-veileder-to-q2:
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: inntektsplanleggeren-frontend/.nais/dev-borger.yml,inntektsplanleggeren-frontend/.nais/unleash-dev.yml
+          IMAGE: ${{ needs.build-frontend-and-publish-docker-borger.outputs.image }}
+          TEAM: ufore
+
+  deploy-frontend-veileder-dev:
     needs: build-frontend-and-publish-docker-veileder
-    uses: navikt/pensjonsbruker-github-actions-workflows/.github/workflows/deploy.yml@main
+    runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
-    with:
-      cluster: dev-gcp
-      image: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
-      team: ufore
-      nais-template: inntektsplanleggeren-frontend/.nais/dev-veileder.yaml,inntektsplanleggeren-frontend/.nais/unleash-api-token-development.yml
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: inntektsplanleggeren-frontend/.nais/dev-veileder.yml,inntektsplanleggeren-frontend/.nais/unleash-dev.yml
+          IMAGE: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
+          TEAM: ufore
