@@ -49,7 +49,7 @@ jobs:
         run: npm run lint
 
       - name: Bygg med node
-        run: npm ci && npm run build
+        run: npm run build
         env:
           FARO_TELEMETRY_URL: 'https://telemetry.ekstern.dev.nav.no/collect'
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}

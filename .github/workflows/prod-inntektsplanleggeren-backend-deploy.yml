@@ -86,7 +86,6 @@ jobs:
           sarif_file: 'trivy.sarif'
 
   deploy-to-prod:
-    if: github.ref == 'refs/heads/main'
     needs: build-backend-and-publish-docker
     runs-on: ubuntu-latest
     permissions:
