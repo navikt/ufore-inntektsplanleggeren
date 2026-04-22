@@ -140,7 +140,7 @@ jobs:
           IMAGE: ${{ needs.build-frontend-and-publish-docker-veileder.outputs.image }}
           TEAM: ufore
 
-      - name: "Send slack-notifikasjon om deploy til borger feiler"
+      - name: "Send slack-notifikasjon om deploy til veileder feiler"
         if: ${{ failure() }}
         run: |
           PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Deploy av inntektsplanleggeren-frontend (veileder) til prod feilet* :bomb::fire:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"

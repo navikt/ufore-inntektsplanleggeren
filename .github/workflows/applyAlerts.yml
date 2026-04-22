@@ -1,0 +1,22 @@
+name: Apply alerts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+        - '.github/workflows/applyAlerts.yml'
+        - 'alerts/**'
+
+jobs:
+  apply-alerts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: alerts/alerts.yaml
