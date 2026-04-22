@@ -141,6 +141,12 @@ app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction)
     return express.static(assetFolder)(req, res, next)
 })
 
+// Server nais.js som /src for Faro telemetry konfig
+app.use(`${BASE_PATH}/src`, (req: Request, res: Response, next: NextFunction) => {
+    const srcFolder = path.join(__dirname, 'src')
+    return express.static(srcFolder)(req, res, next)
+})
+
 app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) => {
     getOboToken(req)
         .then((oboToken) => {
