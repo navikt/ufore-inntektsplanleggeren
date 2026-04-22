@@ -55,7 +55,7 @@
         "highcharts-react-official": "^3.2.3",
         "nodemon": "^3.1.14",
         "openapi-typescript": "^7.13.0",
-        "prettier": "^3.8.2",
+        "prettier": "^3.8.3",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
         "react-router-dom": "^7.14.1",
