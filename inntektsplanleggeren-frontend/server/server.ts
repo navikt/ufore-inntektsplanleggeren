@@ -131,7 +131,7 @@ app.get('/internal/health/readiness', (req, res) => {
         status: 'UP',
     })
 })
-app.use(stengForReguleringMiddleware())
+app.use(stengForReguleringMiddleware({ unleashClient: unleash }))
 app.use(metricsMiddleware)
 app.use(correlationIdMiddleware)
 app.use(loggerMiddleware(logger))
