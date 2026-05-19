@@ -20,6 +20,7 @@ const app = express()
 const __dirname = process.cwd()
 
 const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development-local'
+const isDevCluster = process.env.NAIS_CLUSTER_NAME?.startsWith('dev')
 
 dotenv.config()
 
@@ -131,7 +132,7 @@ app.get('/internal/health/readiness', (req, res) => {
         status: 'UP',
     })
 })
-app.use(stengForReguleringMiddleware({ env: isDevelopment ? 'dev' : 'prod', unleashClient: unleash }))
+app.use(stengForReguleringMiddleware({ env: isDevelopment || isDevCluster ? 'dev' : 'prod', unleashClient: unleash }))
 app.use(metricsMiddleware)
 app.use(correlationIdMiddleware)
 app.use(loggerMiddleware(logger))
