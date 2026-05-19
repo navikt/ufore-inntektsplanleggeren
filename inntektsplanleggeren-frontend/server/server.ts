@@ -20,7 +20,7 @@ const app = express()
 const __dirname = process.cwd()
 
 const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'development-local'
-const isDevCluster = process.env.NAIS_CLUSTER_NAME?.startsWith('dev')
+const isDevCluster = process.env.NAIS_CLUSTER_NAME?.startsWith('dev') ?? false
 const stengForReguleringEnv = isDevelopment || isDevCluster ? 'dev' : 'prod'
 
 dotenv.config()
