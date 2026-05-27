@@ -41,7 +41,10 @@ runs:
     - name: Bygg med node
       shell: bash
       working-directory: ./inntektsplanleggeren-frontend
-      run: npm run ${{ inputs.build_command }}
+      run: |
+        echo "VITE_DIN_UFORETRYGD_URL=$VITE_DIN_UFORETRYGD_URL"
+        echo "VITE_MODE=$VITE_MODE"
+        npm run ${{ inputs.build_command }}
       env:
         VITE_DIN_UFORETRYGD_URL: ${{ inputs.din_uforetrygd_url }}
         VITE_MODE: ${{ inputs.vite_mode }}
