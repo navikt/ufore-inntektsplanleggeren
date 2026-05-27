@@ -29,7 +29,7 @@ jobs:
         uses: ./.github/actions/build-frontend
         id: build
         with:
-          build_command: build
+          build_command: build:production
           reader_token: ${{ secrets.READER_TOKEN }}
 
       - name: "Send slack-notifikasjon om bygget feiler"
@@ -60,7 +60,7 @@ jobs:
         uses: ./.github/actions/build-frontend
         id: build
         with:
-          build_command: build:development:veileder
+          build_command: build:production:veileder
           reader_token: ${{ secrets.READER_TOKEN }}
 
       - name: "Send slack-notifikasjon om bygget feiler"
