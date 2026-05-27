@@ -8,6 +8,12 @@ inputs:
   reader_token:
     description: GitHub token med package read access
     required: true
+  din_uforetrygd_url:
+    description: URL til Din uføretrygd (VITE_DIN_UFORETRYGD_URL)
+    required: true
+  vite_mode:
+    description: Applikasjonsmodus - 'borger' eller 'veileder' (VITE_MODE)
+    required: true
 
 outputs:
   image:
@@ -36,6 +42,9 @@ runs:
       shell: bash
       working-directory: ./inntektsplanleggeren-frontend
       run: npm run ${{ inputs.build_command }}
+      env:
+        VITE_DIN_UFORETRYGD_URL: ${{ inputs.din_uforetrygd_url }}
+        VITE_MODE: ${{ inputs.vite_mode }}
 
     - name: Prune dev-avhengigheter
       shell: bash

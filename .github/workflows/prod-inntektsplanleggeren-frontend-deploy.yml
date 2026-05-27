@@ -31,6 +31,8 @@ jobs:
         with:
           build_command: build:production
           reader_token: ${{ secrets.READER_TOKEN }}
+          din_uforetrygd_url: 'https://www.nav.no/uforetrygd/selvbetjening'
+          vite_mode: 'borger'
 
       - name: "Send slack-notifikasjon om bygget feiler"
         if: ${{ failure() }}
@@ -62,6 +64,8 @@ jobs:
         with:
           build_command: build:production:veileder
           reader_token: ${{ secrets.READER_TOKEN }}
+          din_uforetrygd_url: 'https://uforetrygd-selvbetjening-frontend-veileder.intern.nav.no/uforetrygd/selvbetjening'
+          vite_mode: 'veileder'
 
       - name: "Send slack-notifikasjon om bygget feiler"
         if: ${{ failure() }}
