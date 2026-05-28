@@ -31,6 +31,7 @@ jobs:
         with:
           build_command: build:production
           reader_token: ${{ secrets.READER_TOKEN }}
+          mode: borger
 
       - name: "Send slack-notifikasjon om bygget feiler"
         if: ${{ failure() }}
@@ -62,6 +63,7 @@ jobs:
         with:
           build_command: build:production:veileder
           reader_token: ${{ secrets.READER_TOKEN }}
+          mode: veileder
 
       - name: "Send slack-notifikasjon om bygget feiler"
         if: ${{ failure() }}

@@ -8,6 +8,9 @@ inputs:
   reader_token:
     description: GitHub token med package read access
     required: true
+  mode:
+    description: Modus for appen. borger eller veileder
+    required: true
 
 outputs:
   image:
@@ -48,4 +51,4 @@ runs:
       with:
         team: ufore
         dockerfile: ./inntektsplanleggeren-frontend/.docker/Dockerfile
-        image_suffix: inntektsplanleggeren-frontend
+        image_suffix: inntektsplanleggeren-frontend-${{ inputs.mode }}

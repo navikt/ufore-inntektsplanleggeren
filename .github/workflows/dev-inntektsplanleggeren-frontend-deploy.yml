@@ -34,6 +34,7 @@ jobs:
         with:
           build_command: build
           reader_token: ${{ secrets.READER_TOKEN }}
+          mode: borger
 
   build-frontend-and-publish-docker-veileder:
     name: Bygg inntektsplanleggeren-frontend-veileder
@@ -53,6 +54,7 @@ jobs:
         with:
           build_command: build:development:veileder
           reader_token: ${{ secrets.READER_TOKEN }}
+          mode: veileder
 
   deploy-frontend-borger-dev:
     needs: build-frontend-and-publish-docker-borger
