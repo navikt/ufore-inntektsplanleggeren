@@ -7,7 +7,7 @@ import { resolve } from 'path'
 import { loadEnv } from 'vite'
 
 // https://vitejs.dev/config/
-const buildConfig = {
+const buildConfig = (env: Record<string, string>) => ({
     base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
     build: {
         outDir: './dist',
@@ -19,13 +19,21 @@ const buildConfig = {
             external: ['./nais.js'],
         },
     },
+    define: {
+        'import.meta.env.VITE_DIN_UFORETRYGD_URL': JSON.stringify(
+            process.env.VITE_DIN_UFORETRYGD_URL ?? env.VITE_DIN_UFORETRYGD_URL
+        ),
+        'import.meta.env.VITE_MODE': JSON.stringify(
+            process.env.VITE_MODE ?? env.VITE_MODE
+        ),
+    },
     plugins: [react(), eslint(), stylelint({ fix: true })],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
-}
+})
 
 const devConfig = (env) => ({
     base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
@@ -65,6 +73,6 @@ export default ({ command, mode }) => {
     if (command == 'serve') {
         return devConfig(env)
     } else {
-        return buildConfig
+        return buildConfig(env)
     }
 }
