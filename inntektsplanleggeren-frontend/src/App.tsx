@@ -7,6 +7,9 @@ import { FormStateComponent } from '@/context/FormData'
 import { useEffect } from 'react'
 
 export function App() {
+    const mode = import.meta.env.VITE_MODE
+
+    console.log("Mode: ", mode)
     const location = useLocation()
     useEffect(() => {
         if (!location.hash) {
