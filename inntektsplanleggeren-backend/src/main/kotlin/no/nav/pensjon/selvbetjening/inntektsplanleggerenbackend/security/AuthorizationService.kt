@@ -1,8 +1,8 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
 import jakarta.servlet.http.Cookie
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebeskyttelsesgradering
@@ -24,7 +24,7 @@ class AuthorizationService(
     private val tokenService: TokenService,
     private val skjermingClient: SkjermingClient,
     private val personService: PersonService,
-    private val fullmaktClient: FullmaktClient
+    private val representasjonClient: RepresentasjonClient
 ) {
 
     private val log: Logger = LoggerFactory.getLogger(AuthorizationService::class.java)
@@ -105,9 +105,9 @@ class AuthorizationService(
         }
     }
 
-    private fun haandterFullmakt(httpMethod: String, fullmaktsgiverPid: String, requestingPid: String): RepresentasjonsforholdValidity {
+    private fun haandterFullmakt(httpMethod: String, representertPid: String, requestingPid: String): RepresentasjonsforholdValidity {
         try {
-            val harGyldigFullmakt = fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, fullmaktsgiverPid, requestingPid)
+            val harGyldigFullmakt = representasjonClient.hasValidRepresentasjonsforhold(httpMethod, representertPid, requestingPid)
             if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
                 log.info("Fullmaktsforhold er ikke funnet. Nekter adgang")
                 throw NoFullmaktPresentException()

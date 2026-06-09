@@ -5,9 +5,9 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.re
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.enhetsregister.dto.Organisasjon
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ClientException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_HEADER
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -33,7 +33,7 @@ class EregClient(
                     webClient
                         .get()
                         .uri("$url$path")
-                        .header(NAV_CALL_ID, getCurrentCallId())
+                        .header(NAV_CALL_ID_HEADER, getCurrentCallId())
                         .header("Nav-Consumer_id", "ufoere")
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()

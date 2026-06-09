@@ -4,7 +4,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.Ap
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.retryOnTimeout
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.configuration.withMdcContext
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.getCurrentCallId
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient.Companion.NAV_CALL_ID
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.AbonnerteInntekterIdentOgPeriode
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.HentAbonnerteInntekterBolkRequest
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntekt.dto.HentAbonnerteInntekterBolkResponse
@@ -13,6 +12,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.ForbiddenException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.PersonNotFoundException
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NAV_CALL_ID_HEADER
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -45,7 +45,7 @@ class InntektskomponentClient(
                         .header("Authorization", "Bearer $accessToken")
                         .header("norskident", pid)
                         .header("aar-list",inntektsAar.joinToString(","))
-                        .header(NAV_CALL_ID, getCurrentCallId())
+                        .header(NAV_CALL_ID_HEADER, getCurrentCallId())
                         .header("Nav-Consumer_id", "ufoere")            //avtalt med team inntekt
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
@@ -88,7 +88,7 @@ class InntektskomponentClient(
                         .post()
                         .uri("$url$path")
                         .header("Authorization", "Bearer $accessToken")
-                        .header(NAV_CALL_ID, getCurrentCallId())
+                        .header(NAV_CALL_ID_HEADER, getCurrentCallId())
                         .header("Nav-Consumer_id", "ufoere")        //avtalt med team inntekt
                         .accept(MediaType.APPLICATION_JSON)
                         .bodyValue(request)
