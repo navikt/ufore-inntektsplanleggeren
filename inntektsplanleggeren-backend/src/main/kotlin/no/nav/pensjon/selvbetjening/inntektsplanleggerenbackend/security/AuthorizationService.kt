@@ -39,10 +39,10 @@ class AuthorizationService(
         val requestingPid = tokenService.determineRequestingPid()
         if (navOnBehalfOfCookie != null) {
             log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
-            val fullmaktsgiverPidKryptert = navOnBehalfOfCookie.value
-            val fullmaktsforhold = haandterFullmakt(httpMethod, fullmaktsgiverPidKryptert, requestingPid)
-            if (fullmaktsforhold.fullmaktsgiverFnr != requestingPid) {
-                return AuthenticatedUserDetails(fullmaktsforhold.fullmaktsgiverFnr, true)
+            val representertPidKryptert = navOnBehalfOfCookie.value
+            val representasjonsforhold = haandterFullmakt(httpMethod, representertPidKryptert, requestingPid)
+            if (representasjonsforhold.representertPid != requestingPid) {
+                return AuthenticatedUserDetails(representasjonsforhold.representertPid, true)
             }
         }
 
@@ -113,7 +113,7 @@ class AuthorizationService(
                 throw NoFullmaktPresentException()
             }
 
-            if(personService.hasAdressebeskyttelse(harGyldigFullmakt.fullmaktsgiverFnr)) {
+            if(personService.hasAdressebeskyttelse(harGyldigFullmakt.representertPid)) {
                 log.info("Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang")
                 throw NoFullmaktPresentException()
             }

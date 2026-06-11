@@ -27,7 +27,7 @@ class RepresentasjonClient(
 
     fun hasValidRepresentasjonsforhold(httpMethod: String, representertPid: String, representantPid: String): RepresentasjonsforholdValidity? {
         return try {
-            tokenService.getEgressToken(scope, audience, representantPid, AppId.PENSJON_FULLMAKT).let {
+            tokenService.getEgressToken(scope, audience, representantPid, AppId.PENSJON_REPRESENTASJON).let {
                 webClient
                     .post()
                     .uri(urlValidRepresentasjonsforhold())
