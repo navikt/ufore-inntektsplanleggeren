@@ -102,26 +102,17 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [borgerInfo, setBorgerInfo] = useState(DataContextDefaultValue.borgerInfo)
     const [loggetInnSom, setLoggetInnSom] = useState(DataContextDefaultValue.loggetInnSom)
 
-    useCallback(
-        (res: boolean) => {
-            setRefetch(res)
-        },
-        [setRefetch]
-    )
+    useCallback((res: boolean) => {
+        setRefetch(res)
+    }, [])
 
-    useCallback(
-        (res: boolean) => {
-            setError(res)
-        },
-        [setError]
-    )
+    useCallback((res: boolean) => {
+        setError(res)
+    }, [])
 
-    useCallback(
-        (res: boolean) => {
-            setLoadingError(res)
-        },
-        [setLoadingError]
-    )
+    useCallback((res: boolean) => {
+        setLoadingError(res)
+    }, [])
 
     useEffect(() => {
         ;(async () => {

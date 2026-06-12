@@ -60,7 +60,7 @@ const devConfig = (env) => ({
 // https://vitejs.dev/config/
 export default ({ command, mode }) => {
     const env = loadEnv(mode, process.cwd())
-    if (command == 'serve') {
+    if (command === 'serve') {
         return devConfig(env)
     } else {
         return buildConfig

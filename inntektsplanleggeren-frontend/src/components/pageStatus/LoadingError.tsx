@@ -1,6 +1,7 @@
 import { Alert } from '@navikt/ds-react'
 import './Error.css'
 
+// TODO: Brukes disse? Gjelder også i DataContextProvider
 export function LoadingError() {
     return (
         <>

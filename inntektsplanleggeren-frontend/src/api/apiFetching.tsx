@@ -15,7 +15,7 @@ export async function getInitiate(): Promise<InitiateResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers
+    let headers: HeadersInit
 
     if (pid) {
         headers = {
@@ -47,7 +47,7 @@ export async function getInntekterForSimulering(year: number): Promise<Inntekter
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers
+    let headers: HeadersInit
 
     if (pid) {
         headers = {
@@ -80,7 +80,7 @@ export async function getInntekter(aar: number): Promise<InntekterResponse | Err
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers
+    let headers: HeadersInit
 
     if (pid) {
         headers = {
@@ -117,7 +117,7 @@ export async function simulate(
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers
+    let headers: HeadersInit
 
     if (pid) {
         headers = {
@@ -160,7 +160,7 @@ export async function send(
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers
+    let headers: HeadersInit
 
     if (pid) {
         headers = {
@@ -199,7 +199,7 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers
+    let headers: HeadersInit
 
     if (pid) {
         headers = {

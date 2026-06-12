@@ -19,6 +19,7 @@ export const KvitteringPage = () => {
         setFormStep(null)
     }, [setFormStep])
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: TODO
     useEffect(() => {
         let attempts = 0
         setIsWaiting(true)
