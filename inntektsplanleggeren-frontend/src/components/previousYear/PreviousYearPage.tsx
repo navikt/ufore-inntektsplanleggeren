@@ -2,15 +2,15 @@ import { BodyLong, Heading, Loader, VStack } from '@navikt/ds-react'
 import { useContext, useState } from 'react'
 import './PreviousYearPage.css'
 import { useNavigate } from 'react-router-dom'
-import { FormStateContext } from '@/context/FormData'
 import { getInntekterForSimulering } from '@/api/apiFetching'
-import { DataContext } from '@/context/DataContextProvider'
-import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
+import Knapperad from '@/components/common/Knapperad'
 import { PreviousExpectedIncomeTable } from '@/components/previousYear/PreviousExpectedIncomeTable'
+import { DataContext } from '@/context/DataContextProvider'
+import { FormStateContext } from '@/context/FormData'
+import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import LonnFordelerOgPengestotter from '../common/LonnFordelerOgPengestotter'
 import PensjonFraAndreEnnNav from '../common/PensjonFraAndreEnnNav'
-import Knapperad from '@/components/common/Knapperad'
 
 export const PreviousYearPage = () => {
     const navigate = useNavigate()
@@ -75,7 +75,7 @@ export const PreviousYearPage = () => {
                     <Heading level="2" size="medium">
                         Registrert forventet inntekt for {previousYear}
                     </Heading>
-                    <VStack gap={"space-40"}>
+                    <VStack gap={'space-40'}>
                         {previousYearInntekterResponse.forventedeInntekter.bruker !== null && previousYear !== null && (
                             <PreviousExpectedIncomeTable
                                 personInntekter={previousYearInntekterResponse.forventedeInntekter.bruker}
@@ -101,5 +101,5 @@ export const PreviousYearPage = () => {
                 laster={isLoading}
             />
         </VStack>
-    );
+    )
 }

@@ -1,5 +1,5 @@
-import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
-import { StatusCodes } from '@/api/model/StatusCodes'
+import type { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
+import type { StatusCodes } from '@/api/model/StatusCodes'
 
 export type Message = {
     messageCode: MessageCodes

@@ -1,18 +1,19 @@
-import React, { createContext } from 'react'
+import type React from 'react'
+import { createContext } from 'react'
 
 interface SelectedYear {
-  selectedYear: number
+    selectedYear: number
 }
 
 export const SelectedYearContext = createContext<SelectedYear>({
-  selectedYear: 0,
+    selectedYear: 0,
 })
 
 interface Props {
-  selectedYear: number
-  children: React.ReactNode
+    selectedYear: number
+    children: React.ReactNode
 }
 
 export const SelectedYearProvider = ({ children, selectedYear }: Props) => (
-  <SelectedYearContext.Provider value={{ selectedYear }}>{children}</SelectedYearContext.Provider>
+    <SelectedYearContext.Provider value={{ selectedYear }}>{children}</SelectedYearContext.Provider>
 )

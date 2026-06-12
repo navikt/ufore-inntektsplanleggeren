@@ -1,7 +1,7 @@
-import { SimulationResult } from '@/api/model/ApiRequests'
 import { BodyShort, Table, VStack } from '@navikt/ds-react'
-import { FormatKroner } from '@/components/utils/FormatKroner'
 import { useEffect, useState } from 'react'
+import type { SimulationResult } from '@/api/model/ApiRequests'
+import { FormatKroner } from '@/components/utils/FormatKroner'
 import { DESKTOP_WIDTH } from '@/FormContainer'
 
 export const SimulationTable = (props: { simulationResult: SimulationResult }) => {
@@ -148,7 +148,7 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                 </Table.Row>
 
                 <Table.Row shadeOnHover={false}>
-          <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
+                    <Table.DataCell style={{ backgroundColor: 'var(--ax-bg-neutral-soft)' }}>
                         <VStack gap="space-4">
                             <BodyShort>
                                 <strong>Sum årlig</strong>
@@ -166,5 +166,5 @@ export const SimulationTable = (props: { simulationResult: SimulationResult }) =
                 </Table.Row>
             </Table.Body>
         </Table>
-    );
+    )
 }

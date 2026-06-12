@@ -1,13 +1,13 @@
 import 'react'
 
 declare module 'react' {
-  namespace JSX {
-    interface IntrinsicElements {
-      'representasjon-banner': CustomElement<{
-        representasjonstyper?: string
-        redirectTo: string
-        style: React.CSSProperties
-      }>
+    namespace JSX {
+        interface IntrinsicElements {
+            'representasjon-banner': CustomElement<{
+                representasjonstyper?: string
+                redirectTo: string
+                style: React.CSSProperties
+            }>
+        }
     }
-  }
 }

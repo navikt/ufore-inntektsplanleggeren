@@ -1,13 +1,13 @@
 import { BodyLong, BodyShort, Box, Button, Heading, HStack, List, Loader, VStack } from '@navikt/ds-react'
 import { useContext, useEffect, useState } from 'react'
-import { FormStateContext } from '@/context/FormData'
-import { DataContext } from '@/context/DataContextProvider'
 import { Link } from 'react-router-dom'
-import { KvitteringStatusBox } from '@/components/kvittering/KvitteringStatusBox'
 import { getStatus } from '@/api/apiFetching'
 import { StatusCodes } from '@/api/model/StatusCodes'
 import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import { KvitteringStatusBox } from '@/components/kvittering/KvitteringStatusBox'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
+import { DataContext } from '@/context/DataContextProvider'
+import { FormStateContext } from '@/context/FormData'
 
 export const KvitteringPage = () => {
     const [isWaiting, setIsWaiting] = useState(true)

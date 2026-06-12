@@ -1,9 +1,9 @@
+import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { Box, Button, HStack, Table, VStack } from '@navikt/ds-react'
-import { InntektDetaljer } from '@/api/model/ApiRequests'
+import React, { useEffect, useState } from 'react'
+import type { InntektDetaljer } from '@/api/model/ApiRequests'
 import { Month } from '@/common/MonthEnum'
 import { belopSum } from '@/common/Utils'
-import React, { useEffect, useState } from 'react'
-import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 import { DESKTOP_WIDTH } from '@/FormContainer' // Import the CSS file
 
@@ -48,13 +48,14 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
                         onClick={handleButton}
                         variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+                    >
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }
 
 const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {

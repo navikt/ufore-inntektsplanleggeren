@@ -1,5 +1,5 @@
-import { Alert, Button, ErrorSummary, Heading, HStack, List, Radio, RadioGroup, ReadMore, VStack } from '@navikt/ds-react'
 import { ArrowRightIcon } from '@navikt/aksel-icons'
+import { Alert, Button, ErrorSummary, Heading, HStack, List, Radio, RadioGroup, ReadMore, VStack } from '@navikt/ds-react'
 import { useContext, useRef, useState } from 'react'
 import { FormStateContext } from '@/context/FormData'
 

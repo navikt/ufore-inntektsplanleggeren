@@ -1,7 +1,6 @@
-
-export default function BorgerBanner  ()  {
+export default function BorgerBanner() {
     return (
-        <div >
+        <div>
             <representasjon-banner
                 representasjonstyper="PENSJON_FULLSTENDIG,PENSJON_BEGRENSET,UFORETRYGD_LES"
                 redirectTo={`${window.location.origin}/uforetrygd/selvbetjening`}
@@ -9,4 +8,3 @@ export default function BorgerBanner  ()  {
         </div>
     )
 }
-
