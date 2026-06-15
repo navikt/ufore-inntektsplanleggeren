@@ -5,13 +5,13 @@
 }
 
 .nedetid-header {
-    margin: 0 auto var(--ax-space-48)  auto;
+    margin: 0 auto var(--ax-space-48) auto;
     width: 576px;
 }
 
 .nedetid-container {
     min-height: 600px;
-    background-color: #ECEDEF;
+    background-color: #ecedef;
     display: flex;
     justify-content: center;
     align-items: center;

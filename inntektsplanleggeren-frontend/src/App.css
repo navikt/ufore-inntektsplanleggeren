@@ -1,4 +1,4 @@
-@import '@navikt/ds-tokens';
+@import "@navikt/ds-tokens";
 
 .contentWrapper {
     display: flex;
@@ -57,7 +57,6 @@
 .representasjon-banner {
     margin-bottom: var(--ax-space-36);
 }
-
 
 .listCompact li {
     margin-bottom: 0;

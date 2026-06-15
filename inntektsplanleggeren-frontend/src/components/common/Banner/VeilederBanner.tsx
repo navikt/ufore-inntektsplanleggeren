@@ -1,9 +1,9 @@
 import './veilederbanner.css'
 import { BodyShort, Box, CopyButton, HStack, InternalHeader, Spacer } from '@navikt/ds-react'
 import { useContext } from 'react'
+import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 import { DataContext } from '@/context/DataContextProvider'
 import { BASE_PATH } from '@/routes'
-import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 
 export default function VeilederBanner() {
     const { borgerInfo, loggetInnSom } = useContext(DataContext)
@@ -23,7 +23,7 @@ export default function VeilederBanner() {
                 <Box borderWidth="0 0 1 0" borderColor="neutral-subtle">
                     <HStack align="center" gap="space-8" className="borger-informasjon">
                         <BodyShort size="small" weight="semibold">
-                            {borgerInfo.navn || ""}
+                            {borgerInfo.navn || ''}
                         </BodyShort>
                         <span aria-hidden="true">/</span>
                         <HStack align="center" gap="space-4">
@@ -37,5 +37,5 @@ export default function VeilederBanner() {
                 </Box>
             )}
         </>
-    );
+    )
 }

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
 import { getInitiate } from '@/api/apiFetching'
-import { InitiateResponse, InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
+import type { InitiateResponse, InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 
 interface BorgerInfo {
@@ -102,26 +102,17 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [borgerInfo, setBorgerInfo] = useState(DataContextDefaultValue.borgerInfo)
     const [loggetInnSom, setLoggetInnSom] = useState(DataContextDefaultValue.loggetInnSom)
 
-    useCallback(
-        function (res: boolean) {
-            setRefetch(res)
-        },
-        [setRefetch]
-    )
+    useCallback((res: boolean) => {
+        setRefetch(res)
+    }, [])
 
-    useCallback(
-        function (res: boolean) {
-            setError(res)
-        },
-        [setError]
-    )
+    useCallback((res: boolean) => {
+        setError(res)
+    }, [])
 
-    useCallback(
-        function (res: boolean) {
-            setLoadingError(res)
-        },
-        [setLoadingError]
-    )
+    useCallback((res: boolean) => {
+        setLoadingError(res)
+    }, [])
 
     useEffect(() => {
         ;(async () => {

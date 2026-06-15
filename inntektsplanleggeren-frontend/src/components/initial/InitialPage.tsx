@@ -1,16 +1,16 @@
 import { Accordion, Alert, BodyLong, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
-import { InntektsgrenseCard } from '@/components/initial/DinInntektsgrenseCard'
-import { useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
+import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
+import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import { InntektsgrenseCard } from '@/components/initial/DinInntektsgrenseCard'
+import { ExpectedIncomeBox } from '@/components/initial/ExpectedIncomeBox'
+import { LoadingBox } from '@/components/initial/LoadingBox'
 import { YearView } from '@/components/initial/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
-import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
-import { ExpectedIncomeBox } from '@/components/initial/ExpectedIncomeBox'
-import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import { LoadingBox } from '@/components/initial/LoadingBox'
-import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
 
 export function InitialPage() {
     const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)

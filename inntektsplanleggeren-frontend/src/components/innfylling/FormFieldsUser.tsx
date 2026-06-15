@@ -1,7 +1,8 @@
 import { BodyLong, BodyShort, Box, Heading, List, ReadMore, TextField, VStack } from '@navikt/ds-react'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import './FormFields.css'
-import { PersonInntekter } from '@/api/model/ApiRequests'
+import type { PersonInntekter } from '@/api/model/ApiRequests'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 import { formatInntekt, parseInntekt } from '@/components/utils/FormatNumbersUtil'
 

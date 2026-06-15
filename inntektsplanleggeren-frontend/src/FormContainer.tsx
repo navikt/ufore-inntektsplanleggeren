@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef } from 'react'
-import { Link as RouterLink, Outlet } from 'react-router-dom'
-import { FormProgress, Heading, Link, VStack } from '@navikt/ds-react'
-import { FormStateContext } from '@/context/FormData'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
-import { DataContext } from '@/context/DataContextProvider'
+import { FormProgress, Heading, Link, VStack } from '@navikt/ds-react'
+import { useContext, useEffect, useRef } from 'react'
+import { Outlet, Link as RouterLink } from 'react-router-dom'
 import { ErrorView } from '@/components/common/Error'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
+import { DataContext } from '@/context/DataContextProvider'
+import { FormStateContext } from '@/context/FormData'
 
 export const DESKTOP_WIDTH = 768
 
@@ -29,12 +29,8 @@ export const FormContainer = () => {
             {formStep !== null && (
                 <VStack gap="space-24">
                     <div>
-                        <div
-                            ref={topRef}
-                            tabIndex={-1}
-                            aria-hidden
-                        />
-                        <Link as={RouterLink} to={previousYear === null && formStep === 1 ? getPreviousPage(0) : getPreviousPage(formStep)} >
+                        <div ref={topRef} tabIndex={-1} aria-hidden />
+                        <Link as={RouterLink} to={previousYear === null && formStep === 1 ? getPreviousPage(0) : getPreviousPage(formStep)}>
                             <ArrowLeftIcon aria-hidden /> Tilbake
                         </Link>
                     </div>
@@ -73,7 +69,7 @@ export const FormContainer = () => {
             )}
             <Outlet />
         </VStack>
-    );
+    )
 }
 
 export enum PageNames {
@@ -128,7 +124,7 @@ export const PAGE_LINKS = {
 }
 
 export const getFullPathForPage = (pageLink: PageLinks, href?: string) => {
-  return pageLink + getPidQueryParamString(href)
+    return pageLink + getPidQueryParamString(href)
 }
 
 const getPage = (index: number): string => {

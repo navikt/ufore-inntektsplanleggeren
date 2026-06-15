@@ -1,13 +1,13 @@
 import { Alert, VStack } from '@navikt/ds-react'
+import { type FormEvent, type MouseEvent, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import { FormEvent, MouseEvent, useContext, useEffect, useState } from 'react'
 import { send } from '@/api/apiFetching'
-import { FormStateContext } from '@/context/FormData'
-import { DataContext } from '@/context/DataContextProvider'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
-import { InntektSummary } from '@/components/oppsummering/InntektSummary'
 import Knapperad from '@/components/common/Knapperad'
+import { InntektSummary } from '@/components/oppsummering/InntektSummary'
+import { DataContext } from '@/context/DataContextProvider'
+import { FormStateContext } from '@/context/FormData'
+import { getFullPathForPage, PageLinks } from '@/FormContainer'
 
 export const OppsummeringPage = () => {
     const navigate = useNavigate()
@@ -58,5 +58,5 @@ export const OppsummeringPage = () => {
             )}
             <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.BEREGNING} gåVidereTekst="Send inn" laster={isLoading} />
         </VStack>
-    );
+    )
 }

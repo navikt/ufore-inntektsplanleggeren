@@ -2,14 +2,14 @@ import './App.css'
 import '@navikt/ds-tokens'
 import '@navikt/ds-css'
 import { Heading } from '@navikt/ds-react'
+import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { FormStateComponent } from '@/context/FormData'
-import { useEffect } from 'react'
 
 export function App() {
     const mode = import.meta.env.VITE_MODE
 
-    console.log("Mode: ", mode)
+    console.log('Mode: ', mode)
     const location = useLocation()
     useEffect(() => {
         if (!location.hash) {
@@ -19,7 +19,7 @@ export function App() {
 
     return (
         <FormStateComponent>
-            <main id="maincontent" role="main" tabIndex={-1} className="mainBody">
+            <main id="maincontent" tabIndex={-1} className="mainBody">
                 <div className="contentWrapper">
                     <Heading size="xlarge" level="1" className="main-header">
                         Inntektsplanleggeren

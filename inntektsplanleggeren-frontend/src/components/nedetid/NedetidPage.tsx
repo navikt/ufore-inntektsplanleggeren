@@ -16,8 +16,8 @@ export const NedetidPage = () => {
                     Inntektsplanleggeren er midlertidig stengt
                 </Heading>
                 <BodyShort align="center">
-                    Inntektsplanleggeren er ikke tilgjengelig fra tirsdag 2. desember kl. 15:30 til onsdag 3. desember kl. 9:00 på grunn av vedlikehold.
-                    Vi beklager for ulempen.
+                    Inntektsplanleggeren er ikke tilgjengelig fra tirsdag 2. desember kl. 15:30 til onsdag 3. desember kl. 9:00 på grunn av vedlikehold. Vi
+                    beklager for ulempen.
                 </BodyShort>
             </VStack>
         </main>

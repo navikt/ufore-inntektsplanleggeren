@@ -1,9 +1,9 @@
+import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { Box, Button, HStack, Table, VStack } from '@navikt/ds-react'
-import { InntektDetaljer } from '@/api/model/ApiRequests'
+import React, { useEffect, useState } from 'react'
+import type { InntektDetaljer } from '@/api/model/ApiRequests'
 import { Month } from '@/common/MonthEnum'
 import { belopSum } from '@/common/Utils'
-import React, { useEffect, useState } from 'react'
-import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 import { DESKTOP_WIDTH } from '@/FormContainer' // Import the CSS file
 
@@ -20,10 +20,9 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
     const closedText = 'Vis månedsoversikt'
     const openText = 'Skjul månedsoversikt'
 
-    const handleWindowSize = () => setWidth(window.innerWidth)
-
     useEffect(() => {
         setButtonText(isOpen ? openText : closedText)
+        const handleWindowSize = () => setWidth(window.innerWidth)
         window.addEventListener('resize', handleWindowSize)
         return () => window.removeEventListener('resize', handleWindowSize)
     }, [isOpen])
@@ -48,13 +47,14 @@ export const DinInntektTable = ({ data, children, type }: DinInntektTableProps) 
                         onClick={handleButton}
                         variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+                    >
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }
 
 const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
@@ -68,8 +68,8 @@ const Innhold = (props: { data: InntektDetaljer[]; type?: string }) => {
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {props.data.map(({ maned, belop, inntektsgivere }, i) => (
-                    <Table.Row key={i} className="table-row" shadeOnHover={false}>
+                {props.data.map(({ maned, belop, inntektsgivere }) => (
+                    <Table.Row key={maned} className="table-row" shadeOnHover={false}>
                         <Table.DataCell scope="row">{Month[maned]}</Table.DataCell>
                         <Table.DataCell>
                             <FormatKroner value={belop} />
@@ -97,8 +97,8 @@ const InnholdMobile = (props: { data: InntektDetaljer[]; type?: string }) => {
     return (
         <Table>
             <Table.Body>
-                {props.data.map(({ maned, belop, inntektsgivere }, i) => (
-                    <Table.Row key={i} shadeOnHover={false}>
+                {props.data.map(({ maned, belop, inntektsgivere }) => (
+                    <Table.Row key={maned} shadeOnHover={false}>
                         <Table.DataCell>
                             <div>
                                 <strong>{Month[maned]}</strong>

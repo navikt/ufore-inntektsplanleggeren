@@ -1,8 +1,8 @@
-import { InntektDetaljer } from '@/api/model/ApiRequests'
-import { DinInntektTable } from './DinInntektTable'
 import { BodyLong, Heading } from '@navikt/ds-react'
-import { FormatKroner } from '../utils/FormatKroner'
+import type { InntektDetaljer } from '@/api/model/ApiRequests'
 import { belopSum } from '@/common/Utils'
+import { FormatKroner } from '../utils/FormatKroner'
+import { DinInntektTable } from './DinInntektTable'
 
 interface IProps {
     uforeHeleAaret: boolean

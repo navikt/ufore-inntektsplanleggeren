@@ -1,5 +1,5 @@
 export enum EpsType {
-  SAMBOER = 'SAMBOER',
-  EKTEFELLE = 'EKTEFELLE',
-  PARTNER = 'PARTNER',
+    SAMBOER = 'SAMBOER',
+    EKTEFELLE = 'EKTEFELLE',
+    PARTNER = 'PARTNER',
 }
