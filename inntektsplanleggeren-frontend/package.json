@@ -30,7 +30,7 @@
         "dotenv": "17.4.2",
         "express": "^5.2.1",
         "express-prom-bundle": "^8.0.0",
-        "http-proxy-middleware": "^3.0.5",
+        "http-proxy-middleware": "^3.0.7",
         "unleash-client": "^6.11.0",
         "winston": "^3.19.0"
     },
