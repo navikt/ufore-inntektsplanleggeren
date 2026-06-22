@@ -79,6 +79,7 @@ app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/toggles', (req, res) => 
     console.log('GET - /toggles')
     res.status(200).json({
         'inntektsplanleggeren.nedetid': false,
+        'inntektsplanleggeren.regelverksendringer.tekst': false,
     })
 })
 

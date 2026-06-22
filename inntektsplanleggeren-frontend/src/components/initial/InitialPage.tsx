@@ -11,12 +11,14 @@ import { YearView } from '@/components/initial/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
+import { useToggle } from '@/hooks/useToggle'
 
 export function InitialPage() {
     const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
     const { setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt } = useContext(FormStateContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const regelverksEndringer2026 = useToggle('inntektsplanleggeren.regelverksendringer.tekst')
 
     const handleButtonClick = async (year: number, previousYear: number | null) => {
         setIsLoading(true)
@@ -160,10 +162,16 @@ export function InitialPage() {
                 <Accordion.Item>
                     <Accordion.Header>Har du andre pengestøtter i tillegg til uføretrygd fra Nav?</Accordion.Header>
                     <Accordion.Content>
-                        Inntektsplanleggeren viser bare hvordan inntekt påvirker uføretrygden. Innsending via inntektsplanleggeren påvirker kun din uføretrygd,
-                        og eventuelt barnetillegg og gjenlevendetillegg hvis du har det. Har du andre pengestøtter fra Nav, må du si i fra om ny inntekt til
-                        disse. Endring i din inntekt kan påvirke pengestøtter fra andre enn Nav, og kan det være at du må melde fra om endring i inntekt til
-                        disse også.
+                        {regelverksEndringer2026 ? (
+                            <>Dette er en test</>
+                        ) : (
+                            <>
+                                Inntektsplanleggeren viser bare hvordan inntekt påvirker uføretrygden. Innsending via inntektsplanleggeren påvirker kun din
+                                uføretrygd, og eventuelt barnetillegg og gjenlevendetillegg hvis du har det. Har du andre pengestøtter fra Nav, må du si i fra
+                                om ny inntekt til disse. Endring i din inntekt kan påvirke pengestøtter fra andre enn Nav, og kan det være at du må melde fra om
+                                endring i inntekt til disse også.
+                            </>
+                        )}
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>

@@ -170,6 +170,12 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
         })
 })
 
+app.get(`${BASE_PATH}/toggles`, (req, res) => {
+    res.json({
+        'inntektsplanleggeren.regelverksendringer.tekst': unleash.isEnabled('inntektsplanleggeren.regelverksendringer.tekst'),
+    })
+})
+
 app.get('/*splat', async (req, res) => {
     if (AUTH_PROVIDER === 'azure') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
