@@ -13,7 +13,7 @@ export function InntektsgrenseCard(props: { displayData: InitiateData }) {
     const handleButton = () => {
         setIsOpen(!isOpen)
         if (isOpen) {
-            inntektsgrenseCardRef!.current!.scrollIntoView()
+            inntektsgrenseCardRef?.current?.scrollIntoView()
         }
         setButtonText(isOpen ? 'Vis grenser og trekkprosent' : 'Skjul grenser og trekkprosent')
     }

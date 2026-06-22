@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import App from '@/App'
 import { BeregningPage } from '@/components/beregning/BeregningPage'
-import { InitialPage } from '@/components/initial/InitialPage'
+import { Startside } from '@/components/initial/Startside'
 import { InnfyllingPage } from '@/components/innfylling/InnfyllingPage'
 import { KvitteringPage } from '@/components/kvittering/KvitteringPage'
 import { NedetidPage } from '@/components/nedetid/NedetidPage'
@@ -24,7 +24,7 @@ export const AppRoutes = () => {
         <BrowserRouter basename={BASE_PATH}>
             <Routes>
                 <Route element={<App />}>
-                    <Route index element={<InitialPage />} />
+                    <Route index element={<Startside />} />
                     <Route index path={PageLinks.FORRIGE_INNTEKTER} element={<PreviousYearPage />} />
                     <Route element={<YearGuard />}>
                         <Route element={<FormContainer />}>

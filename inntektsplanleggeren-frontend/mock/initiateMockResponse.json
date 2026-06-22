@@ -1,26 +1,25 @@
 {
-  "messages": [
-  ],
-  "pid": "12345678901",
-  "navn": "Ola Nordmann",
-  "loggetInnSom": "Veileder Veiledersen",
-  "data": {
-    "forventetInntekt": {
-      "2025": 89343
-    },
-    "forventetInntektAnnenForelder": {
-      "2025": 12341
-    },
-    "inntektsgrense": 49611,
-    "kompensasjonsgrad": 49.7,
-    "grenseStoppAvUfoeretrygd": 460060,
-    "aktuelleAar": [
-      2025
-    ],
-    "annetRelevantAar": 2014,
-    "hasVarigTilrettelagtArbeid": true,
-    "hasBarneTilleggFellesbarn": true,
-    "hasBarnetilleggSaerkullsbarn": true,
-    "hasGjenlevendeTillegg": true
-  }
+    "messages": [],
+    "pid": "12345678901",
+    "navn": "Ola Nordmann",
+    "loggetInnSom": "Veileder Veiledersen",
+    "data": {
+        "forventetInntekt": {
+            "2026": 89343,
+            "2027": 30000
+        },
+        "forventetInntektAnnenForelder": {
+            "2026": 12341,
+            "2027": 30000
+        },
+        "inntektsgrense": 49611,
+        "kompensasjonsgrad": 49.7,
+        "grenseStoppAvUfoeretrygd": 460060,
+        "aktuelleAar": [2027],
+        "annetRelevantAar": 2026,
+        "hasVarigTilrettelagtArbeid": true,
+        "hasBarneTilleggFellesbarn": true,
+        "hasBarnetilleggSaerkullsbarn": true,
+        "hasGjenlevendeTillegg": true
+    }
 }
