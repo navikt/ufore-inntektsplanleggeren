@@ -76,7 +76,11 @@ export function Startside() {
 
     return (
         <VStack className="form-container">
-            {regelverksendringer2026 ? <StartsideInnhold data={initiateResponse.data} /> : <StartsideInnholdGammel data={initiateResponse.data} />}
+            {regelverksendringer2026 ? (
+                <StartsideInnhold data={initiateResponse.data} handleButtonClick={handleButtonClick} isLoading={isLoading} />
+            ) : (
+                <StartsideInnholdGammel data={initiateResponse.data} />
+            )}
 
             {initiateResponse?.data?.aktuelleAar?.length > 0 && (
                 <YearView

@@ -1,13 +1,16 @@
 import { Accordion, BodyLong, BodyShort, Box, GuidePanel, Heading, Link, List, VStack } from '@navikt/ds-react'
 import React from 'react'
 import type { InitiateData } from '@/api/model/ApiRequests'
+import { YearView } from '@/components/initial/YearView'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 
 interface Props {
     data: InitiateData
+    handleButtonClick: (year: number, previousYear: number | null) => Promise<void>
+    isLoading: boolean
 }
 
-export default function StartsideInnhold({ data }: Props) {
+export default function StartsideInnhold({ data, handleButtonClick, isLoading }: Props) {
     const forventetInntektMap = new Map(Object.entries(data.forventetInntekt))
     const forventetInntektAnnenForelderMap = new Map(Object.entries(data.forventetInntektAnnenForelder))
 
@@ -80,6 +83,16 @@ export default function StartsideInnhold({ data }: Props) {
                         Dine opplysninger lagres dessverre ikke hvis du logger ut av innteksplanleggeren, eller tar en lang pause. Vi beklager for dette.
                     </BodyShort>
                 </GuidePanel>
+            </section>
+            <section>
+                {data?.aktuelleAar?.length > 0 && (
+                    <YearView
+                        availableYears={data.aktuelleAar}
+                        anotherAvalableYear={data.annetRelevantAar}
+                        handleSubmit={handleButtonClick}
+                        isLoading={isLoading}
+                    ></YearView>
+                )}
             </section>
             <section aria-label={'Dine tall'}>
                 <VStack gap={'space-32'}>
