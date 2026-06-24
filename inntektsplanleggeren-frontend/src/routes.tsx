@@ -5,17 +5,20 @@ import { BeregningPage } from '@/components/beregning/BeregningPage'
 import { InitialPage } from '@/components/initial/InitialPage'
 import { InnfyllingPage } from '@/components/innfylling/InnfyllingPage'
 import { KvitteringPage } from '@/components/kvittering/KvitteringPage'
+import { NedetidPage } from '@/components/nedetid/NedetidPage'
 import { OppsummeringPage } from '@/components/oppsummering/OppsummeringPage'
 import { PreviousYearPage } from '@/components/previousYear/PreviousYearPage'
 import { FormStateContext } from '@/context/FormData'
 import { SelectedYearProvider } from '@/context/SelectedYear'
 import { FormContainer, PageLinks } from '@/FormContainer'
+import { useToggle } from '@/hooks/useToggle'
 
 export const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 
 export const AppRoutes = () => {
-    // TODO: få på plass feature toggling
-    //return <NedetidPage />
+    const nedetid = useToggle('inntektsplanleggeren.nedetid')
+
+    if (nedetid) return <NedetidPage />
 
     return (
         <BrowserRouter basename={BASE_PATH}>

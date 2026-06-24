@@ -1,8 +1,8 @@
 import react from '@vitejs/plugin-react'
-import { fileURLToPath } from 'url'
-import { viteMockServe } from 'vite-plugin-mock'
 import { resolve } from 'path'
+import { fileURLToPath } from 'url'
 import { loadEnv } from 'vite'
+import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 const buildConfig = {
@@ -53,6 +53,7 @@ const devConfig = (env) => ({
     server: {
         proxy: {
             '/uforetrygd/selvbetjening/inntektsplanleggeren/api': `${env.VITE_PROXY_BACKEND}`,
+            '/uforetrygd/selvbetjening/inntektsplanleggeren/toggles': `${env.VITE_PROXY_BACKEND}`,
         },
     },
 })
