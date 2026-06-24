@@ -1,15 +1,15 @@
-import express, { NextFunction, Request, Response } from 'express'
-import winston, { format } from 'winston'
-import { createProxyMiddleware } from 'http-proxy-middleware'
 import { getToken, requestOboToken, validateToken } from '@navikt/oasis'
-import promBundle from 'express-prom-bundle'
-import path from 'path'
-import loggerMiddleware from './middleware/logger.js'
-import dotenv from 'dotenv'
-import ensureEnv from './ensureEnv.js'
-import { initialize } from 'unleash-client'
 import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
+import dotenv from 'dotenv'
+import express, { type NextFunction, type Request, type Response } from 'express'
+import promBundle from 'express-prom-bundle'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+import path from 'path'
+import { initialize } from 'unleash-client'
+import winston, { format } from 'winston'
+import ensureEnv from './ensureEnv.js'
 import correlationIdMiddleware from './middleware/correlationId.js'
+import loggerMiddleware from './middleware/logger.js'
 
 const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 const PORT = process.env.PORT || 8080
@@ -135,6 +135,12 @@ app.use(stengForReguleringMiddleware({ env: isDevelopment ? 'dev' : 'prod', unle
 app.use(metricsMiddleware)
 app.use(correlationIdMiddleware)
 app.use(loggerMiddleware(logger))
+
+app.get(`${BASE_PATH}/toggles`, (req, res) => {
+    res.json({
+        'inntektsplanleggeren.nedetid': unleash.isEnabled('inntektsplanleggeren.nedetid'),
+    })
+})
 
 app.use(`${BASE_PATH}/assets`, (req: Request, res: Response, next: NextFunction) => {
     const assetFolder = path.join(__dirname, './dist', 'assets')
