@@ -174,7 +174,6 @@ export const KvitteringPage = () => {
             </section>
             <HStack gap="space-16">
                 <Button as={Link} to={import.meta.env.VITE_DIN_UFORETRYGD_URL} variant="primary" className="button-container">
-                    {' '}
                     Din uføretrygd
                 </Button>
             </HStack>

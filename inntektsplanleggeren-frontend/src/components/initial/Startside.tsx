@@ -79,16 +79,18 @@ export function Startside() {
             {regelverksendringer2026 ? (
                 <StartsideInnhold data={initiateResponse.data} handleButtonClick={handleButtonClick} isLoading={isLoading} />
             ) : (
-                <StartsideInnholdGammel data={initiateResponse.data} />
-            )}
-
-            {initiateResponse?.data?.aktuelleAar?.length > 0 && (
-                <YearView
-                    availableYears={initiateResponse.data.aktuelleAar}
-                    anotherAvalableYear={initiateResponse.data.annetRelevantAar}
-                    handleSubmit={handleButtonClick}
-                    isLoading={isLoading}
-                ></YearView>
+                <>
+                    <StartsideInnholdGammel data={initiateResponse.data} />
+                    {initiateResponse?.data?.aktuelleAar?.length > 0 && (
+                        <YearView
+                            availableYears={initiateResponse.data.aktuelleAar}
+                            anotherAvalableYear={initiateResponse.data.annetRelevantAar}
+                            handleSubmit={handleButtonClick}
+                            isLoading={isLoading}
+                            regelverksendringer2026={regelverksendringer2026}
+                        />
+                    )}
+                </>
             )}
         </VStack>
     )

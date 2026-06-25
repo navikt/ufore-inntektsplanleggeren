@@ -1,4 +1,4 @@
-import { Accordion, BodyLong, BodyShort, Box, GuidePanel, Heading, Link, List, VStack } from '@navikt/ds-react'
+import { Accordion, BodyLong, BodyShort, Box, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
 import React from 'react'
 import type { InitiateData } from '@/api/model/ApiRequests'
 import { YearView } from '@/components/initial/YearView'
@@ -84,16 +84,15 @@ export default function StartsideInnhold({ data, handleButtonClick, isLoading }:
                     </BodyShort>
                 </GuidePanel>
             </section>
-            <section>
-                {data?.aktuelleAar?.length > 0 && (
-                    <YearView
-                        availableYears={data.aktuelleAar}
-                        anotherAvalableYear={data.annetRelevantAar}
-                        handleSubmit={handleButtonClick}
-                        isLoading={isLoading}
-                    ></YearView>
-                )}
-            </section>
+            {data?.aktuelleAar?.length > 0 && (
+                <YearView
+                    availableYears={data.aktuelleAar}
+                    anotherAvalableYear={data.annetRelevantAar}
+                    handleSubmit={handleButtonClick}
+                    isLoading={isLoading}
+                    regelverksendringer2026={true}
+                />
+            )}
             <section aria-label={'Dine tall'}>
                 <VStack gap={'space-32'}>
                     {Array.from(forventetInntektMap.keys()).map((year) => (
@@ -127,12 +126,20 @@ export default function StartsideInnhold({ data, handleButtonClick, isLoading }:
                                 Ser du at inntekten din blir annerledes enn det du tidligere har meldt inn, bør du melde fra til oss så fort som mulig. Du kan
                                 bruke inntektsplanleggeren så ofte du trenger.
                             </BodyShort>
-                            {/* TODO: hvilken lenke? */}
-                            <Link>
-                                På nav.no finner du mer informasjon om hvordan du legger inn riktig inntekt, og eksempler på beregning når inntekten din endrer
-                                seg.
-                            </Link>
                         </VStack>
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item>
+                    <Accordion.Header>Tidspunkt for å registrere inntekt</Accordion.Header>
+                    <Accordion.Content>
+                        <List>
+                            <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekt for dette året.</List.Item>
+                            <List.Item>Fra 1. oktober - 30. november kan du både legge inn inntekt for dette året og neste år.</List.Item>
+                            <List.Item>
+                                Fra 1. til 31. desember kan du bare registrere inntekt for neste år, fordi endringen ikke vil påvirke utbetalingen din før til
+                                neste år.
+                            </List.Item>
+                        </List>
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
