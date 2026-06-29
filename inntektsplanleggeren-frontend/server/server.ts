@@ -139,6 +139,8 @@ app.use(loggerMiddleware(logger))
 app.get(`${BASE_PATH}/toggles`, (req, res) => {
     res.json({
         'inntektsplanleggeren.nedetid': unleash.isEnabled('inntektsplanleggeren.nedetid'),
+        'inntektsplanleggeren.regelverksendringer.tekst': unleash.isEnabled('inntektsplanleggeren.regelverksendringer.tekst'),
+
     })
 })
 
@@ -168,12 +170,6 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
         .catch(() => {
             res.sendStatus(401)
         })
-})
-
-app.get(`${BASE_PATH}/toggles`, (req, res) => {
-    res.json({
-        'inntektsplanleggeren.regelverksendringer.tekst': unleash.isEnabled('inntektsplanleggeren.regelverksendringer.tekst'),
-    })
 })
 
 app.get('/*splat', async (req, res) => {
