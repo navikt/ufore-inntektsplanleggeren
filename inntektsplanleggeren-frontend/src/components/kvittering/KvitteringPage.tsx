@@ -8,12 +8,14 @@ import { KvitteringStatusBox } from '@/components/kvittering/KvitteringStatusBox
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
+import { useToggle } from '@/hooks/useToggle'
 
 export const KvitteringPage = () => {
     const [isWaiting, setIsWaiting] = useState(true)
     const { setFormStep, getBrukerinntektSum, getAnnenForelderInntektSum, selectedYear } = useContext(FormStateContext)
     const { statusResponse, setStatusResponse, sendResponse } = useContext(DataContext)
     const [systemErrorMessage, setSystemErrorMessage] = useState<ErrorCode | null>(null)
+    const regelverksendringer2026 = useToggle('inntektsplanleggeren.regelverksendringer.tekst')
 
     useEffect(() => {
         setFormStep(null)
@@ -106,34 +108,55 @@ export const KvitteringPage = () => {
                 <Heading className="header" level="2" size={'large'}>
                     Etteroppgjør
                 </Heading>
-                <BodyLong>
-                    Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant annet
-                    Skatteetaten. Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette kalles
-                    etteroppgjør.{' '}
-                    <Link to={import.meta.env.VITE_NAV_UFORETRYGD_INFO_URL + '#etteroppgjor'} target="_blank">
-                        Les mer om etteroppgjøret (åpnes i ny fane).
-                    </Link>
-                </BodyLong>
+                {regelverksendringer2026 ? (
+                    <BodyLong>
+                        Hver høst sjekker vi om du har fått utbetalt riktig beløp i uføretrygd. Har du fått utbetalt for mye, må du betale tilbake. Har du fått
+                        utbetalt for lite, får du tilbake fra oss. Dette kalles etteroppgjør.{' '}
+                        <Link to={import.meta.env.VITE_NAV_UFORETRYGD_INFO_URL + '#etteroppgjor'} target="_blank">
+                            Les mer om etteroppgjøret (åpnes i ny fane).
+                        </Link>
+                    </BodyLong>
+                ) : (
+                    <BodyLong>
+                        Hver høst sjekker vi om du har fått utbetalt riktig beløp. Det gjør vi ved å hente dine inntektsopplysninger fra forrige år, fra blant
+                        annet Skatteetaten. Har du fått utbetalt for mye, må du betale tilbake. Har du fått utbetalt for lite, betaler vi deg tilbake. Dette
+                        kalles etteroppgjør.{' '}
+                        <Link to={import.meta.env.VITE_NAV_UFORETRYGD_INFO_URL + '#etteroppgjor'} target="_blank">
+                            Les mer om etteroppgjøret (åpnes i ny fane).
+                        </Link>
+                    </BodyLong>
+                )}
             </section>
-            <section aria-label={'Hvis inntekten din endrer seg'}>
-                <Heading className="header" level="2" size={'large'}>
-                    Hvis inntekten din endrer seg
-                </Heading>
-                <BodyLong>
-                    Ser du at inntekten din blir annerledes enn det du meldte inn her, bør du melde inn ny inntekt så fort som mulig. Det gir mindre risiko for
-                    stor tilbakebetaling i etteroppgjøret. Du kan melde ny endring i inntektsplanleggeren så mange ganger du trenger i løpet av året.
-                </BodyLong>
-            </section>
+            {!regelverksendringer2026 && (
+                <section aria-label={'Hvis inntekten din endrer seg'}>
+                    <Heading className="header" level="2" size={'large'}>
+                        Hvis inntekten din endrer seg
+                    </Heading>
+                    <BodyLong>
+                        Ser du at inntekten din blir annerledes enn det du meldte inn her, bør du melde inn ny inntekt så fort som mulig. Det gir mindre risiko
+                        for stor tilbakebetaling i etteroppgjøret. Du kan melde ny endring i inntektsplanleggeren så mange ganger du trenger i løpet av året.
+                    </BodyLong>
+                </section>
+            )}
             <section aria-label={'Husk å oppdatere skattekortet'}>
                 <Heading className="header" level="2" size={'large'}>
                     Husk å oppdatere skattekortet
                 </Heading>
-                <BodyLong>
-                    Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres.{' '}
-                    <Link to={import.meta.env.VITE_SKATTEETATEN_SKATTEKORT_URL} target="_blank">
-                        Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane).
-                    </Link>
-                </BodyLong>
+                {regelverksendringer2026 ? (
+                    <BodyLong>
+                        Skatteetaten trenger også beskjed hvis du har fått endring i inntekt.{' '}
+                        <Link to={import.meta.env.VITE_SKATTEETATEN_SKATTEKORT_URL} target="_blank">
+                            Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane).
+                        </Link>
+                    </BodyLong>
+                ) : (
+                    <BodyLong>
+                        Hvis du har fått endret inntekt, kan det være at skattekortet ditt må oppdateres.{' '}
+                        <Link to={import.meta.env.VITE_SKATTEETATEN_SKATTEKORT_URL} target="_blank">
+                            Les om skattekort og endre det hos Skatteetaten (åpnes i ny fane).
+                        </Link>
+                    </BodyLong>
+                )}
             </section>
             <section aria-label={'Må du melde fra til flere?'}>
                 <Heading className="header" level="2" size={'large'}>

@@ -1,10 +1,10 @@
+import path from 'node:path'
 import { getToken, requestOboToken, validateToken } from '@navikt/oasis'
 import { stengForReguleringMiddleware } from '@navikt/steng-for-regulering/express'
 import dotenv from 'dotenv'
 import express, { type NextFunction, type Request, type Response } from 'express'
 import promBundle from 'express-prom-bundle'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import path from 'path'
 import { initialize } from 'unleash-client'
 import winston, { format } from 'winston'
 import ensureEnv from './ensureEnv.js'
@@ -139,6 +139,8 @@ app.use(loggerMiddleware(logger))
 app.get(`${BASE_PATH}/toggles`, (req, res) => {
     res.json({
         'inntektsplanleggeren.nedetid': unleash.isEnabled('inntektsplanleggeren.nedetid'),
+        'inntektsplanleggeren.regelverksendringer.tekst': unleash.isEnabled('inntektsplanleggeren.regelverksendringer.tekst'),
+
     })
 })
 

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test'
 
 test('Test enkel skjemaflyt', async ({ page }) => {
     await page.goto('/')
@@ -10,7 +10,7 @@ test('Test enkel skjemaflyt', async ({ page }) => {
     const mainHeading = page.getByRole('heading', { name: 'Inntektsplanleggeren', level: 1 })
     await expect(mainHeading, 'Tittel på hovedside vises').toBeVisible()
 
-    const gåTilForventetInntektKnapp = page.getByRole('button', { name: 'Registrer inntekt for 2025' })
+    const gåTilForventetInntektKnapp = page.getByRole('button', { name: /Start inntektsplanlegger|Registrer inntekt for/ })
     await expect(gåTilForventetInntektKnapp, 'Gå til forventet inntekt knapp vises').toBeVisible()
     await gåTilForventetInntektKnapp.click()
 
@@ -41,4 +41,4 @@ test('Test enkel skjemaflyt', async ({ page }) => {
 
     const kvitteringHeading = page.getByRole('heading', { name: 'Kvittering', level: 2 })
     await expect(kvitteringHeading, 'Tittel på kvitteringsside vises').toBeVisible()
-});
+})
