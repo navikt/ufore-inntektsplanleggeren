@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { BodyLong, Button, HStack, Modal } from '@navikt/ds-react'
+import { useState } from 'react'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 
 export function CancelConfirmationModal() {
@@ -40,5 +40,5 @@ export function CancelConfirmationModal() {
                 </Modal.Footer>
             </Modal>
         </>
-    );
+    )
 }

@@ -1,16 +1,16 @@
 import { Alert, BodyLong, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
-import { FormEvent, MouseEvent, useContext, useEffect } from 'react'
+import { type FormEvent, type MouseEvent, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FormStateContext } from '@/context/FormData'
-import { SimulationTable } from '@/components/beregning/SimulationTable'
-import { DataContext } from '@/context/DataContextProvider'
-import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
+import { BeregningWarnings } from '@/components/beregning/BeregningWarnings'
 import { Graph } from '@/components/beregning/Graph'
 import { InputSummary } from '@/components/beregning/InputSummary'
-import { FormatKroner } from '@/components/utils/FormatKroner'
-import { BeregningWarnings } from '@/components/beregning/BeregningWarnings'
+import { SimulationTable } from '@/components/beregning/SimulationTable'
 import { ErrorView } from '@/components/common/Error'
+import { FormatKroner } from '@/components/utils/FormatKroner'
+import { DataContext } from '@/context/DataContextProvider'
+import { FormStateContext } from '@/context/FormData'
+import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import './BeregningPage.css'
 import Knapperad from '@/components/common/Knapperad'
 
@@ -159,5 +159,5 @@ export const BeregningPage = () => {
                 </BodyLong>
                 <Knapperad handleSubmit={handleSubmit} tilbakePageLink={PageLinks.FORVENTET_INNTEKT} />
             </VStack>
-        );
+        )
 }

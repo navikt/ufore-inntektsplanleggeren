@@ -1,6 +1,6 @@
-import React from 'react'
-import { BodyLong, Box, Button, Heading, HStack, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
+import { BodyLong, Box, Button, Heading, HStack, VStack } from '@navikt/ds-react'
+import React from 'react'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 
 interface ExpectedIncomeBoxProps {
@@ -74,11 +74,12 @@ export const ExpectedIncomeBox: React.FC<ExpectedIncomeBoxProps> = ({ forventetI
                         onClick={handleButton}
                         variant="secondary"
                         iconPosition="right"
-                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}>
+                        icon={isOpen ? <ChevronUpIcon aria-hidden /> : <ChevronDownIcon aria-hidden />}
+                    >
                         {buttonText}
                     </Button>
                 </HStack>
             </VStack>
         </Box>
-    );
+    )
 }

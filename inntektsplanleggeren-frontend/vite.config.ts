@@ -1,10 +1,8 @@
 import react from '@vitejs/plugin-react'
-import eslint from 'vite-plugin-eslint2'
-import stylelint from 'vite-plugin-stylelint'
-import { fileURLToPath } from 'url'
-import { viteMockServe } from 'vite-plugin-mock'
 import { resolve } from 'path'
+import { fileURLToPath } from 'url'
 import { loadEnv } from 'vite'
+import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 const buildConfig = {
@@ -19,7 +17,7 @@ const buildConfig = {
             external: ['./nais.js'],
         },
     },
-    plugins: [react(), eslint(), stylelint({ fix: true })],
+    plugins: [react()],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -55,6 +53,7 @@ const devConfig = (env) => ({
     server: {
         proxy: {
             '/uforetrygd/selvbetjening/inntektsplanleggeren/api': `${env.VITE_PROXY_BACKEND}`,
+            '/uforetrygd/selvbetjening/inntektsplanleggeren/toggles': `${env.VITE_PROXY_BACKEND}`,
         },
     },
 })
@@ -62,7 +61,7 @@ const devConfig = (env) => ({
 // https://vitejs.dev/config/
 export default ({ command, mode }) => {
     const env = loadEnv(mode, process.cwd())
-    if (command == 'serve') {
+    if (command === 'serve') {
         return devConfig(env)
     } else {
         return buildConfig

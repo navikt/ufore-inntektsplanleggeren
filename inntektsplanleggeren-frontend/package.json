@@ -18,60 +18,47 @@
         "build:production:veileder": "tsc && vite build --mode production-veileder && npm run build:server",
         "build:server": "tsc -p tsconfig.server.json",
         "preview": "vite preview",
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
-        "lint": "eslint ./src ./server",
-        "lint:fix": "eslint --fix ./src ./server"
+        "check": "biome check src/ ; tsc --noEmit",
+        "fix": "biome check --write src/ --max-diagnostics=none"
     },
     "dependencies": {
         "@navikt/nav-dekoratoren-moduler": "^3.7.2",
         "@navikt/oasis": "^4.1.4",
         "@navikt/steng-for-regulering": "^0.0.7",
-        "@grafana/faro-web-sdk": "^2.7.0",
+        "@grafana/faro-web-sdk": "^2.8.0",
         "cors": "^2.8.6",
         "dotenv": "17.4.2",
         "express": "^5.2.1",
         "express-prom-bundle": "^8.0.0",
-        "http-proxy-middleware": "^3.0.5",
+        "http-proxy-middleware": "^3.0.7",
         "unleash-client": "^6.11.0",
         "winston": "^3.19.0"
     },
     "devDependencies": {
-        "@navikt/aksel-icons": "^8.11.1",
-        "@navikt/ds-css": "^8.11.1",
-        "@navikt/ds-react": "^8.11.1",
-        "@playwright/test": "^1.60.0",
+        "@navikt/aksel-icons": "^8.13.1",
+        "@navikt/ds-css": "^8.13.1",
+        "@navikt/ds-react": "^8.13.1",
+        "@playwright/test": "^1.61.1",
         "@types/express": "^5.0.6",
-        "@types/node": "^25.9.1",
-        "@types/react": "^19.2.15",
+        "@types/node": "^25.9.3",
+        "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^5.1.4",
-        "concurrently": "^9.2.1",
+        "concurrently": "^10.0.3",
         "date-fns": "^4.4.0",
-        "eslint": "^9.39.2",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-react": "^7.37.5",
+        "@biomejs/biome": "latest",
         "highcharts": "^12.6.0",
         "highcharts-react-official": "^3.2.3",
         "nodemon": "^3.1.14",
         "openapi-typescript": "^7.13.0",
-        "prettier": "^3.8.3",
-        "react": "^19.2.6",
-        "react-dom": "^19.2.6",
-        "react-router-dom": "^7.16.0",
-        "stylelint-config-standard": "^40.0.0",
-        "stylelint-config-standard-scss": "^17.0.0",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
+        "react-router-dom": "^7.18.0",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.60.0",
         "vite": "^7.3.2",
-        "vite-plugin-eslint2": "^5.1.0",
-        "vite-plugin-mock": "^3.0.2",
-        "vite-plugin-stylelint": "^6.1.0"
+        "vite-plugin-mock": "^3.0.2"
     },
     "overrides": {
-        "jose": "^6.0.12",
-        "vite-plugin-stylelint": {
-            "stylelint": "^17.0.0"
-        }
+        "jose": "^6.0.12"
     }
 }

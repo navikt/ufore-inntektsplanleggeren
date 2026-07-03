@@ -1,79 +1,15 @@
-import { Accordion, Alert, BodyLong, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
+import { Accordion, BodyLong, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
+import type { InitiateData } from '@/api/model/ApiRequests'
 import { InntektsgrenseCard } from '@/components/initial/DinInntektsgrenseCard'
-import { useNavigate } from 'react-router-dom'
-import { useContext, useState } from 'react'
-import { YearView } from '@/components/initial/YearView'
-import { DataContext } from '@/context/DataContextProvider'
-import { FormStateContext } from '@/context/FormData'
-import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { ExpectedIncomeBox } from '@/components/initial/ExpectedIncomeBox'
-import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
-import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import { LoadingBox } from '@/components/initial/LoadingBox'
-import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
 
-export function InitialPage() {
-    const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
-    const { setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt } = useContext(FormStateContext)
-    const navigate = useNavigate()
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+interface Props {
+    data: InitiateData
+}
 
-    const handleButtonClick = async (year: number, previousYear: number | null) => {
-        setIsLoading(true)
-        setSelectedYear(year)
-        if (previousYear !== null) {
-            try {
-                const data = await getInntekter(previousYear)
-                if (data instanceof ErrorResponse) {
-                    setErrorMessage(data.message)
-                } else {
-                    setPreviousYearInntekterResponse(data)
-                }
-            } catch {
-                setErrorMessage(ErrorCode.GENERIC_ERROR)
-            }
-            navigate(getFullPathForPage(PageLinks.FORRIGE_INNTEKTER))
-        } else {
-            try {
-                const data = await getInntekterForSimulering(year)
-                if (data instanceof ErrorResponse) {
-                    setErrorMessage(data.message)
-                } else {
-                    setInntekterResponse(data)
-                    setBrukerinntekt(data.forventedeInntekter.bruker)
-                    setAnnenForelderInntekt(data.forventedeInntekter.eps)
-                    setIsLoading(false)
-                }
-            } catch {
-                setErrorMessage(ErrorCode.GENERIC_ERROR)
-            }
-            navigate(getFullPathForPage(PageLinks.FORVENTET_INNTEKT))
-        }
-        setIsLoading(false)
-    }
-
-    if (errorMessage) {
-        return <ErrorView message={errorMessage} />
-    }
-
-    if (!initiateResponse) {
-        return <LoadingBox />
-    }
-
-    if (initiateResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
-        return <Alert variant="warning">Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.</Alert>
-    } else if (initiateResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET)) {
-        return (
-            <Alert variant="warning">
-                Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
-            </Alert>
-        )
-    } else if (initiateResponse.messages.some((message) => message.type === MessageTypes.ERROR)) {
-        return <ErrorView message={errorMessage} />
-    }
-
+export default function StartsideInnholdGammel({ data }: Props) {
     return (
-        <VStack className="form-container">
+        <>
             <section aria-label={'Greit å vite'}>
                 <GuidePanel poster>
                     <Heading size="medium" level="2" spacing>
@@ -97,12 +33,12 @@ export function InitialPage() {
                     <List.Item>melde inn forventet inntekt til oss</List.Item>
                 </List>
             </section>
-            {initiateResponse.data !== null && (
+            {data !== null && (
                 <section aria-label={'Registrert forventet inntekt'}>
                     <ExpectedIncomeBox
-                        forventetInntekt={initiateResponse.data.forventetInntekt}
-                        forventetInntektAnnenForelder={initiateResponse.data.forventetInntektAnnenForelder}
-                        hasBarnetilleggFellesbarn={initiateResponse.data.hasBarneTilleggFellesbarn}
+                        forventetInntekt={data.forventetInntekt}
+                        forventetInntektAnnenForelder={data.forventetInntektAnnenForelder}
+                        hasBarnetilleggFellesbarn={data.hasBarneTilleggFellesbarn}
                     />
                 </section>
             )}
@@ -112,9 +48,9 @@ export function InitialPage() {
                     tilbakebetaling i etteroppgjøret.
                 </BodyLong>
             </section>
-            {initiateResponse.data !== null && (
+            {data !== null && (
                 <section aria-label="Inntektsgrense og trekkprosent">
-                    <InntektsgrenseCard displayData={initiateResponse.data} />
+                    <InntektsgrenseCard displayData={data} />
                 </section>
             )}
             <Accordion>
@@ -167,14 +103,6 @@ export function InitialPage() {
                     </Accordion.Content>
                 </Accordion.Item>
             </Accordion>
-            {initiateResponse?.data?.aktuelleAar?.length > 0 && (
-                <YearView
-                    availableYears={initiateResponse.data.aktuelleAar}
-                    anotherAvalableYear={initiateResponse.data.annetRelevantAar}
-                    handleSubmit={handleButtonClick}
-                    isLoading={isLoading}
-                ></YearView>
-            )}
-        </VStack>
+        </>
     )
 }

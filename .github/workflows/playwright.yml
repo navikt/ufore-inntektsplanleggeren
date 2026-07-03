@@ -8,7 +8,7 @@ jobs:
       run:
         working-directory: ./inntektsplanleggeren-frontend
     steps:
-    - uses: actions/checkout@v6.0.2
+    - uses: actions/checkout@v7.0.0
     - uses: actions/setup-node@v6.4.0
       with:
           node-version: 20
@@ -23,7 +23,7 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       if: ${{ !cancelled() }}
       with:
         name: playwright-report

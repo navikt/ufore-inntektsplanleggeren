@@ -1,11 +1,9 @@
 .vstack-gap {
-  margin-bottom: var(--ax-space-40); /* Adjust the value as needed */
+    margin-bottom: var(--ax-space-40); /* Adjust the value as needed */
 }
 
 .sum {
-  font-weight: bold;
-  font-size: 1.5em;
-  margin: 0;
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 0;
 }
-
-

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.6</version>
+		<version>4.0.7</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -20,13 +20,10 @@
 		<kotlin.version>2.3.21</kotlin.version>
 		<jackson.version>2.22.0</jackson.version>
 		<logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
-		<mockwebserver.version>5.3.2</mockwebserver.version>
-		<micrometer.version>1.16.5</micrometer.version>
-		<logback.version>1.5.33</logback.version>
+		<mockwebserver.version>5.4.0</mockwebserver.version>
+		<micrometer.version>1.17.0</micrometer.version>
+		<logback.version>1.5.36</logback.version>
 		<logback-access.version>2.0.12</logback-access.version>
-		<!-- CVE fixes: override transitive dependency versions managed by Spring Boot BOM -->
-		<netty.version>4.2.14.Final</netty.version>
-		<tomcat.version>11.0.22</tomcat.version>
 	</properties>
 	<dependencies>
 		<dependency>

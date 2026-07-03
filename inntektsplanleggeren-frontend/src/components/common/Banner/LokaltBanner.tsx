@@ -1,9 +1,7 @@
 import { injectDecoratorClientSide } from '@navikt/nav-dekoratoren-moduler'
-
-import VeilederBanner from '@/components/common/Banner/VeilederBanner'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useState } from 'react'
 import BorgerBanner from '@/components/common/Banner/BorgerBanner'
-
+import VeilederBanner from '@/components/common/Banner/VeilederBanner'
 
 // LokaltBanner brukes kun når vi kjører opp lokalt for å simulere header i veileder vs borger-modus
 // fordi det anbefales å ikke bruke nav-dekoratoren-moduler i client side rendering
