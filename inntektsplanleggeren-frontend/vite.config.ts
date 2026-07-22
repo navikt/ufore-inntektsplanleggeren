@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { loadEnv } from 'vite'
+import { type ConfigEnv, loadEnv } from 'vite'
 import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
@@ -25,7 +25,7 @@ const buildConfig = {
     },
 }
 
-const devConfig = (env) => ({
+const devConfig = (env: Record<string, string>) => ({
     base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
     build: {
         manifest: true,
@@ -59,7 +59,7 @@ const devConfig = (env) => ({
 })
 
 // https://vitejs.dev/config/
-export default ({ command, mode }) => {
+export default ({ command, mode }: ConfigEnv) => {
     const env = loadEnv(mode, process.cwd())
     if (command === 'serve') {
         return devConfig(env)
