@@ -1,7 +1,7 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
 import jakarta.servlet.http.Cookie
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktClient
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebeskyttelsesgradering
@@ -26,7 +26,7 @@ class AuthorizationServiceTest {
     private val tokenService = mock(TokenService::class.java)
     private val skjermingClient = mock(SkjermingClient::class.java)
     private val personService = mock(PersonService::class.java)
-    private val fullmaktClient = mock(FullmaktClient::class.java)
+    private val representasjonClient = mock(RepresentasjonClient::class.java)
 
     private val authorizationService = AuthorizationService(
         strengtFortroligAdresseGroupId,
@@ -39,7 +39,7 @@ class AuthorizationServiceTest {
         tokenService,
         skjermingClient,
         personService,
-        fullmaktClient
+        representasjonClient
     )
     //---------------------------
     // -- Veileder/saksbehandler
@@ -301,7 +301,7 @@ class AuthorizationServiceTest {
         val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
         val httpMethod = "GET"
         `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
-        `when` (fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
+        `when` (representasjonClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie)
         assertEquals(resourcePid,authenticatedUserDetails.pid)
@@ -316,7 +316,7 @@ class AuthorizationServiceTest {
         val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
         val httpMethod = "GET"
         `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
-        `when` (fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
+        `when` (representasjonClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(true)
         assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
     }
@@ -329,7 +329,7 @@ class AuthorizationServiceTest {
         val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
         val httpMethod = "GET"
         `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
-        `when` (fullmaktClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(false,null, resourcePidKryptert, resourcePid))
+        `when` (representasjonClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(false,null, resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
         assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
     }
