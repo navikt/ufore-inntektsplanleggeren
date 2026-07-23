@@ -2,7 +2,6 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { type ConfigEnv, loadEnv } from 'vite'
-import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 const buildConfig = {
@@ -37,14 +36,7 @@ const devConfig = (env: Record<string, string>) => ({
             external: ['./nais.js'],
         },
     },
-    plugins: [
-        react(),
-        viteMockServe({
-            // default
-            mockPath: 'mock',
-            enable: true,
-        }),
-    ],
+    plugins: [react()],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
