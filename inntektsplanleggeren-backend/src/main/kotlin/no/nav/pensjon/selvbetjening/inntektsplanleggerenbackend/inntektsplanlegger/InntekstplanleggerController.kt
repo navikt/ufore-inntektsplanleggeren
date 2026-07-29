@@ -4,6 +4,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.audit.Auditor
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import org.springframework.format.annotation.DateTimeFormat
@@ -18,8 +19,31 @@ import java.time.LocalDateTime
 class InntektsplanleggerController(
     private val inntektsPlanleggerService: InntektsplanleggerService,
     private val auditor: Auditor,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val personService: PersonService
 ) {
+
+    @GetMapping("veilederbanner")
+    fun hentVeilederBannerInfo(): ResponseEntity<VeilederBannerInfo>{
+        val pid = SecurityContextUtil.getPidFromContext()
+        val borgerNavn = personService.getNavn(pid)
+        val veilederNavn = tokenService.determineLoggedInUser()
+
+        if (tokenService.isUserLoggedInAsSaksbehandler()) {
+            auditor.auditInternalUserRead(
+                tokenService.determineLoggedInUserId(),
+                SecurityContextUtil.getPidFromContext()
+            )
+        } else if (SecurityContextUtil.isFullmakt()) {
+            auditor.auditFullmaktRead(
+                tokenService.determineLoggedInUserId(),
+                SecurityContextUtil.getPidFromContext()
+            )
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(VeilederBannerInfo(pid, borgerNavn ?: "", veilederNavn))
+    }
+
     @GetMapping("initiate")
     fun getInntektsplanleggerenInitialData(): ResponseEntity<InntektsplanleggerenInitialResponse> {
         try {
