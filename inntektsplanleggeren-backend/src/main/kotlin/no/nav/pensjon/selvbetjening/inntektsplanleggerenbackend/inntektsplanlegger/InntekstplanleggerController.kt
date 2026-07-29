@@ -25,23 +25,28 @@ class InntektsplanleggerController(
 
     @GetMapping("veilederbanner")
     fun hentVeilederBannerInfo(): ResponseEntity<VeilederBannerInfo>{
-        val pid = SecurityContextUtil.getPidFromContext()
-        val borgerNavn = personService.getNavn(pid)
-        val veilederNavn = tokenService.determineLoggedInUser()
+        try {
+            val pid = SecurityContextUtil.getPidFromContext()
+            val borgerNavn = personService.getNavn(pid)
+            val veilederNavn = tokenService.determineLoggedInUser()
 
-        if (tokenService.isUserLoggedInAsSaksbehandler()) {
-            auditor.auditInternalUserRead(
-                tokenService.determineLoggedInUserId(),
-                SecurityContextUtil.getPidFromContext()
-            )
-        } else if (SecurityContextUtil.isFullmakt()) {
-            auditor.auditFullmaktRead(
-                tokenService.determineLoggedInUserId(),
-                SecurityContextUtil.getPidFromContext()
-            )
+            return ResponseEntity.status(HttpStatus.OK).body(VeilederBannerInfo(pid, borgerNavn ?: "", veilederNavn))
+                .also {
+                    if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                        auditor.auditInternalUserRead(
+                            tokenService.determineLoggedInUserId(),
+                            SecurityContextUtil.getPidFromContext()
+                        )
+                    } else if (SecurityContextUtil.isFullmakt()) {
+                        auditor.auditFullmaktRead(
+                            tokenService.determineLoggedInUserId(),
+                            SecurityContextUtil.getPidFromContext()
+                        )
+                    }
+                }
+        } catch (exception: Exception) {
+            throw ErrorHandler.exceptionToErrorResponse(exception)
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(VeilederBannerInfo(pid, borgerNavn ?: "", veilederNavn))
     }
 
     @GetMapping("initiate")

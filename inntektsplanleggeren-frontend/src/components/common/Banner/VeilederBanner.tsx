@@ -1,20 +1,27 @@
 import './veilederbanner.css'
 import { BodyShort, Box, CopyButton, HStack, InternalHeader, Spacer } from '@navikt/ds-react'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { hentVeilederBannerInfo, type VeilederBannerInfo } from '@/api/hentVeilederBannerInfo'
+import { ErrorResponse } from '@/components/common/Error'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
+import { DataContext } from '@/context/DataContextProvider'
 import { BASE_PATH } from '@/routes'
 
 export default function VeilederBanner() {
     const [veilederBannerInfo, setVeilederBannerInfo] = useState<VeilederBannerInfo>()
+    const { setErrorMessage } = useContext(DataContext)
 
     useEffect(() => {
         const hentInfo = async () => {
             const veileder = await hentVeilederBannerInfo()
-            setVeilederBannerInfo(veileder)
+            if (veileder instanceof ErrorResponse) {
+                setErrorMessage(veileder.message)
+            } else {
+                setVeilederBannerInfo(veileder)
+            }
         }
         hentInfo()
-    }, [])
+    }, [setErrorMessage])
 
     const formatFnr = (fnr: string) => {
         return `${fnr.slice(0, 6)} ${fnr.slice(6)}`

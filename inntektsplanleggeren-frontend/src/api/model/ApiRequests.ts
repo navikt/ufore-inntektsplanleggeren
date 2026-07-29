@@ -11,9 +11,6 @@ export type Message = {
 export interface InitiateResponse {
     messages: Message[]
     data: InitiateData
-    pid: string
-    navn: string
-    loggetInnSom: string
 }
 
 export interface InitiateData {
