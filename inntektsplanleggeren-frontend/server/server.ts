@@ -139,8 +139,6 @@ app.use(loggerMiddleware(logger))
 app.get(`${BASE_PATH}/toggles`, (req, res) => {
     res.json({
         'inntektsplanleggeren.nedetid': unleash.isEnabled('inntektsplanleggeren.nedetid'),
-        'inntektsplanleggeren.regelverksendringer.tekst': unleash.isEnabled('inntektsplanleggeren.regelverksendringer.tekst'),
-
     })
 })
 

@@ -1,24 +1,21 @@
-import { Alert, VStack } from '@navikt/ds-react'
+import { Accordion, Alert, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
 import { LoadingBox } from '@/components/initial/LoadingBox'
-import StartsideInnhold from '@/components/initial/StartsideInnhold'
-import StartsideInnholdGammel from '@/components/initial/StartsideInnholdGammel'
 import { YearView } from '@/components/initial/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import { useToggle } from '@/hooks/useToggle'
+import ForventetInntekt from '@/components/initial/ForventetInntekt'
 
 export function Startside() {
     const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
     const { setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt } = useContext(FormStateContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const regelverksendringer2026 = useToggle('inntektsplanleggeren.regelverksendringer.tekst')
 
     const handleButtonClick = async (year: number, previousYear: number | null) => {
         setIsLoading(true)
@@ -76,22 +73,75 @@ export function Startside() {
 
     return (
         <VStack className="form-container">
-            {regelverksendringer2026 ? (
-                <StartsideInnhold data={initiateResponse.data} handleButtonClick={handleButtonClick} isLoading={isLoading} />
-            ) : (
-                <>
-                    <StartsideInnholdGammel data={initiateResponse.data} />
-                    {initiateResponse?.data?.aktuelleAar?.length > 0 && (
-                        <YearView
-                            availableYears={initiateResponse.data.aktuelleAar}
-                            anotherAvalableYear={initiateResponse.data.annetRelevantAar}
-                            handleSubmit={handleButtonClick}
-                            isLoading={isLoading}
-                            regelverksendringer2026={regelverksendringer2026}
-                        />
-                    )}
-                </>
+            <section aria-label={'Greit å vite'}>
+                <GuidePanel poster>
+                    <Heading size="medium" level="2" spacing>
+                        Greit å vite
+                    </Heading>
+                    <BodyShort spacing>
+                        I inntektsplanleggeren kan du se hvordan inntekt påvirker uføretrygden din, og melde inn inntekt til oss. Vi bruker inntekten du melder
+                        inn til å beregne riktig utbetaling av uføretrygd og eventuelle tillegg.
+                    </BodyShort>
+                    <BodyShort spacing>Du kan melde fra om inntekt så ofte du trenger.</BodyShort>
+                    <BodyShort>
+                        Dine opplysninger lagres dessverre ikke hvis du logger ut av inntektsplanleggeren, eller tar en lang pause. Vi beklager for dette.
+                    </BodyShort>
+                </GuidePanel>
+            </section>
+            {initiateResponse.data?.aktuelleAar?.length > 0 && (
+                <YearView
+                    availableYears={initiateResponse.data.aktuelleAar}
+                    anotherAvalableYear={initiateResponse.data.annetRelevantAar}
+                    handleSubmit={handleButtonClick}
+                    isLoading={isLoading}
+                />
             )}
+            <section aria-label={'Dine tall'}>
+                <ForventetInntekt data={initiateResponse.data}/>
+            </section>
+            <Accordion>
+                <Accordion.Item>
+                    <Accordion.Header>Dette bør du melde fra om</Accordion.Header>
+                    <Accordion.Content>
+                        <List>
+                            <List.Item>Hvis du har barnetillegg og bor sammen med barnets andre forelder, skal du også oppgi forelderens inntekt.</List.Item>
+                            <List.Item>Du kan melde fra om forventet inntekt for neste år fra oktober i år.</List.Item>
+                            <List.Item>Har du ingen endring i inntekten din til neste år, bør du likevel melde inn forventet inntekt.</List.Item>
+                            <List.Item>
+                                Melder du ikke fra om forventet inntekt til neste år, vil vi bruke inntekten du har oppgitt i år og justere den ved årsskiftet.
+                            </List.Item>
+                        </List>
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item>
+                    <Accordion.Header>Usikker på hva du kommer til å tjene?</Accordion.Header>
+                    <Accordion.Content>
+                        <VStack gap="space-32">
+                            <BodyShort>
+                                Har du variabel inntekt, kan det være vanskelig å vite hva du kommer til å tjene fremover. Vi stoler på at du melder fra til oss
+                                så godt du kan.
+                            </BodyShort>
+                            <BodyShort>
+                                Ser du at inntekten din blir annerledes enn det du tidligere har meldt inn, bør du melde fra til oss så fort som mulig. Du kan
+                                bruke inntektsplanleggeren så ofte du trenger.
+                            </BodyShort>
+                        </VStack>
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item>
+                    <Accordion.Header>Tidspunkt for å registrere inntekt</Accordion.Header>
+                    <Accordion.Content>
+                        <List>
+                            <List.Item>I perioden 1. januar - 30. september kan du bare legge inn inntekt for dette året.</List.Item>
+                            <List.Item>Fra 1. oktober - 30. november kan du både legge inn inntekt for dette året og neste år.</List.Item>
+                            <List.Item>
+                                Fra 1. til 31. desember kan du bare registrere inntekt for neste år, fordi endringen ikke vil påvirke utbetalingen din før til
+                                neste år.
+                            </List.Item>
+                        </List>
+                    </Accordion.Content>
+                </Accordion.Item>
+            </Accordion>
         </VStack>
     )
 }
