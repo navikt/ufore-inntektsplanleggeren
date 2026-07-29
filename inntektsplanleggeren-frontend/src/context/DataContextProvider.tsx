@@ -3,11 +3,6 @@ import { getInitiate } from '@/api/apiFetching'
 import type { InitiateResponse, InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 
-interface BorgerInfo {
-    pid: string
-    navn: string | null
-}
-
 interface DataContextValue {
     initiateResponse: InitiateResponse | null
     setInitiateResponse: (value: InitiateResponse) => void
@@ -40,8 +35,6 @@ interface DataContextValue {
     setFeilmeldingkode: (value: string) => void
     success: boolean
     setSuccess: (value: boolean) => void
-    borgerInfo?: BorgerInfo
-    loggetInnSom: string | null
 }
 
 const DataContextDefaultValue: DataContextValue = {
@@ -76,8 +69,6 @@ const DataContextDefaultValue: DataContextValue = {
     setFeilmeldingkode: () => undefined,
     success: false,
     setSuccess: () => undefined,
-    borgerInfo: undefined,
-    loggetInnSom: null,
 }
 
 export const DataContext = createContext(DataContextDefaultValue)
@@ -99,8 +90,6 @@ function DataContextProvider(props: DataContextProviderProps) {
     const [loadingError, setLoadingError] = useState(DataContextDefaultValue.loadingError)
     const [feilmeldingkode, setFeilmeldingkode] = useState(DataContextDefaultValue.feilmeldingkode)
     const [success, setSuccess] = useState(DataContextDefaultValue.success)
-    const [borgerInfo, setBorgerInfo] = useState(DataContextDefaultValue.borgerInfo)
-    const [loggetInnSom, setLoggetInnSom] = useState(DataContextDefaultValue.loggetInnSom)
 
     useCallback((res: boolean) => {
         setRefetch(res)
@@ -123,11 +112,6 @@ function DataContextProvider(props: DataContextProviderProps) {
                         setErrorMessage(inntektsPlanleggerenResponse.message)
                     } else {
                         setInitiateResponse(inntektsPlanleggerenResponse)
-                        setBorgerInfo({
-                            pid: inntektsPlanleggerenResponse.pid,
-                            navn: inntektsPlanleggerenResponse.navn,
-                        })
-                        setLoggetInnSom(inntektsPlanleggerenResponse.loggetInnSom)
                     }
                 } catch {
                     setErrorMessage(ErrorCode.GENERIC_ERROR)
@@ -164,8 +148,6 @@ function DataContextProvider(props: DataContextProviderProps) {
                 setFeilmeldingkode,
                 success,
                 setSuccess,
-                borgerInfo,
-                loggetInnSom,
             }}
         >
             {props.children}

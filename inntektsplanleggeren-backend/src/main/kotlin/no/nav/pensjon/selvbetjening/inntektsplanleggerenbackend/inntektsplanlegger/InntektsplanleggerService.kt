@@ -170,15 +170,10 @@ class InntektsplanleggerService(
             )
         }
         val messages = validator.validateUserInitialData(uforetrygd, aktuelleAar)
-        val navn = personService.getNavn(pid)
-        val loggetInnSom = tokenService.determineLoggedInUser()
 
         val response = InntektsplanleggerenInitialResponse(
             messages,
             mapInntektsplanleggerenInitialData(pid, uforetrygd, aktuelleAar, messages),
-            pid,
-            navn,
-            loggetInnSom
         )
 
         InitiateInntektsplanleggerMetricsCounter.count(response)
