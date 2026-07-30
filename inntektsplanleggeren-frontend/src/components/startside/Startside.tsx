@@ -1,7 +1,8 @@
 import { Accordion, Alert, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
+import { hentStartsideData, type StartsideData } from '@/api/hentStartsideData'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
 import ForventetInntekt from '@/components/startside/ForventetInntekt'
@@ -12,10 +13,23 @@ import { FormStateContext } from '@/context/FormData'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 
 export function Startside() {
-    const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
+    const { setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
     const { setSelectedYear, setBrukerinntekt, setAnnenForelderInntekt } = useContext(FormStateContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [data, setData] = useState<StartsideData | null>(null)
+
+    useEffect(() => {
+        const hentData = async () => {
+            const data = await hentStartsideData()
+            if (data instanceof ErrorResponse) {
+                setErrorMessage(data.message)
+            } else {
+                setData(data)
+            }
+        }
+        hentData()
+    }, [setErrorMessage])
 
     const handleButtonClick = async (year: number, previousYear: number | null) => {
         setIsLoading(true)
@@ -55,19 +69,19 @@ export function Startside() {
         return <ErrorView message={errorMessage} />
     }
 
-    if (!initiateResponse) {
+    if (!data) {
         return <LoadingBox />
     }
 
-    if (initiateResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
+    if (data.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_UFORE)) {
         return <Alert variant="warning">Du har ikke uføretrygd. Derfor kan du ikke bruke inntektsplanleggeren.</Alert>
-    } else if (initiateResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET)) {
+    } else if (data.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET)) {
         return (
             <Alert variant="warning">
                 Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.
             </Alert>
         )
-    } else if (initiateResponse.messages.some((message) => message.type === MessageTypes.ERROR)) {
+    } else if (data.messages.some((message) => message.type === MessageTypes.ERROR)) {
         return <ErrorView message={errorMessage} />
     }
 
@@ -88,16 +102,16 @@ export function Startside() {
                     </BodyShort>
                 </GuidePanel>
             </section>
-            {initiateResponse.uforetrygd?.aarKanRegistrereInntekt?.length > 0 && (
+            {data.uforetrygd?.aarKanRegistrereInntekt?.length > 0 && (
                 <YearView
-                    availableYears={initiateResponse.uforetrygd.aarKanRegistrereInntekt}
-                    anotherAvalableYear={initiateResponse.uforetrygd.seTallForAar}
+                    availableYears={data.uforetrygd.aarKanRegistrereInntekt}
+                    anotherAvalableYear={data.uforetrygd.seTallForAar}
                     handleSubmit={handleButtonClick}
                     isLoading={isLoading}
                 />
             )}
             <section aria-label={'Dine tall'}>
-                <ForventetInntekt data={initiateResponse.uforetrygd} />
+                <ForventetInntekt data={data.uforetrygd} />
             </section>
             <Accordion>
                 <Accordion.Item>
