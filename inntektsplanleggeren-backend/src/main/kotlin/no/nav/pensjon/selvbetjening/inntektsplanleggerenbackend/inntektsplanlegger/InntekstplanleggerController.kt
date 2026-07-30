@@ -50,7 +50,7 @@ class InntektsplanleggerController(
     }
 
     @GetMapping("initiate")
-    fun getInntektsplanleggerenInitialData(): ResponseEntity<InntektsplanleggerenInitialResponse> {
+    fun getInntektsplanleggerenInitialData(): ResponseEntity<StartsideData> {
         try {
             return ResponseEntity(
                 inntektsPlanleggerService.hentInitielleData(

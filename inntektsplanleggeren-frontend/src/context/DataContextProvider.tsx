@@ -1,11 +1,11 @@
 import { createContext, useCallback, useEffect, useState } from 'react'
-import { getInitiate } from '@/api/apiFetching'
-import type { InitiateResponse, InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
+import { hentStartsideData, type StartsideData } from '@/api/hentStartsideData'
+import type { InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
 import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 
 interface DataContextValue {
-    initiateResponse: InitiateResponse | null
-    setInitiateResponse: (value: InitiateResponse) => void
+    initiateResponse: StartsideData | null
+    setInitiateResponse: (value: StartsideData) => void
 
     previousYearInntekterResponse: InntekterResponse | null
     setPreviousYearInntekterResponse: (value: InntekterResponse) => void
@@ -107,11 +107,11 @@ function DataContextProvider(props: DataContextProviderProps) {
         ;(async () => {
             if (refetch) {
                 try {
-                    const inntektsPlanleggerenResponse = await getInitiate()
-                    if (inntektsPlanleggerenResponse instanceof ErrorResponse) {
-                        setErrorMessage(inntektsPlanleggerenResponse.message)
+                    const response = await hentStartsideData()
+                    if (response instanceof ErrorResponse) {
+                        setErrorMessage(response.message)
                     } else {
-                        setInitiateResponse(inntektsPlanleggerenResponse)
+                        setInitiateResponse(response)
                     }
                 } catch {
                     setErrorMessage(ErrorCode.GENERIC_ERROR)

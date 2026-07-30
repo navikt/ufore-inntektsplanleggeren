@@ -2,6 +2,8 @@ package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto
 
 import java.time.LocalDate
 
+
+// TODO: endre navn her og, men også i Pen
 data class Uforetrygd(
     val inntektsgrense: Int,
     val kompensasjonsgrad: Double,

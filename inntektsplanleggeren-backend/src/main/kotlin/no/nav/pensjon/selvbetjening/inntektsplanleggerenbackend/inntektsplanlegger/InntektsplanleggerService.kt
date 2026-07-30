@@ -15,7 +15,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClien
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.BehandlingStatus
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.StatusInnsendingResponse
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
@@ -32,7 +31,6 @@ class InntektsplanleggerService(
     private val simuleringService: SimuleringService,
     private val tokenService: TokenService,
     private val nowProvider: NowProvider,
-    private val personService: PersonService
 ) {
 
     fun sendInntektsendring(
@@ -94,7 +92,7 @@ class InntektsplanleggerService(
             gjeldendeForventedeInntekter,
             pid,
             simuleringsAar,
-            getAktuelleAar(uforetrygd?.hasLopendeUforeVedtakThisYear, uforetrygd?.hasLopendeUforeVedtakNextYear)
+            finnAarKanRegistrereFor(uforetrygd?.hasLopendeUforeVedtakThisYear, uforetrygd?.hasLopendeUforeVedtakNextYear)
         )
 
         val response: SimuleringResponse
@@ -161,17 +159,17 @@ class InntektsplanleggerService(
     fun hentInitielleData(
         pid: String,
         simuleringsaar: Int
-    ): InntektsplanleggerenInitialResponse {
+    ): StartsideData {
         val uforetrygd = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
         val aktuelleAar = uforetrygd.let {
-            getAktuelleAar(
+            finnAarKanRegistrereFor(
                 it?.hasLopendeUforeVedtakThisYear,
                 it?.hasLopendeUforeVedtakNextYear
             )
         }
         val messages = validator.validateUserInitialData(uforetrygd, aktuelleAar)
 
-        val response = InntektsplanleggerenInitialResponse(
+        val response = StartsideData(
             messages,
             mapInntektsplanleggerenInitialData(pid, uforetrygd, aktuelleAar, messages),
         )
@@ -219,22 +217,19 @@ class InntektsplanleggerService(
         uforetrygd: Uforetrygd?,
         aktuelleAar: List<Int>,
         messages: List<InntektsplanleggerMessage>
-    ): InntektsplanleggerenInitialData? {
+    ): UføretrygdOversikt? {
         if (uforetrygd != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
             val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, uforetrygd, it) }
 
-            return InntektsplanleggerenInitialData(
+            return UføretrygdOversikt(
                 forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
                 forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
                 inntektsgrense = uforetrygd.inntektsgrense,
-                kompensasjonsgrad = uforetrygd.kompensasjonsgrad,
-                grenseStoppAvUfoeretrygd = uforetrygd.grenseStoppAvUfoeretrygd,
-                hasGjenlevendeTillegg = uforetrygd.hasGjenlevendeTillegg,
-                hasBarneTilleggFellesbarn = uforetrygd.barnetilleggFellesbarn,
-                hasBarnetilleggSaerkullsbarn = uforetrygd.barnetilleggSaerkullsbarn,
-                hasVarigTilrettelagtArbeid = uforetrygd.hasVarigTilrettelagtArbeid,
-                aktuelleAar = aktuelleAar,
-                annetRelevantAar = getAnnetRelevantAar()
+                reduksjonsprosent = uforetrygd.kompensasjonsgrad,
+                inntektstak = uforetrygd.grenseStoppAvUfoeretrygd,
+                harBarnetilleggFellesbarn = uforetrygd.barnetilleggFellesbarn,
+                aarKanRegistrereInntekt = aktuelleAar,
+                seTallForAar = getAnnetRelevantAar()
             )
         }
         return null
@@ -252,7 +247,7 @@ class InntektsplanleggerService(
             aktuelleAar
         }
 
-    private fun getAktuelleAar(
+    private fun finnAarKanRegistrereFor(
         hasLopendeUforeVedtakThisYear: Boolean?,
         hasLopendeUforeVedtakNextYear: Boolean?
     ): List<Int> {

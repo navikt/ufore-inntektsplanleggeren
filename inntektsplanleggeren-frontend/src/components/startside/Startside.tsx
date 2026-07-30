@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
 import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
-import { LoadingBox } from '@/components/initial/LoadingBox'
-import { YearView } from '@/components/initial/YearView'
+import ForventetInntekt from '@/components/startside/ForventetInntekt'
+import { LoadingBox } from '@/components/startside/LoadingBox'
+import { YearView } from '@/components/startside/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
-import ForventetInntekt from '@/components/initial/ForventetInntekt'
 
 export function Startside() {
     const { initiateResponse, setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
@@ -88,16 +88,16 @@ export function Startside() {
                     </BodyShort>
                 </GuidePanel>
             </section>
-            {initiateResponse.data?.aktuelleAar?.length > 0 && (
+            {initiateResponse.uforetrygd?.aarKanRegistrereInntekt?.length > 0 && (
                 <YearView
-                    availableYears={initiateResponse.data.aktuelleAar}
-                    anotherAvalableYear={initiateResponse.data.annetRelevantAar}
+                    availableYears={initiateResponse.uforetrygd.aarKanRegistrereInntekt}
+                    anotherAvalableYear={initiateResponse.uforetrygd.seTallForAar}
                     handleSubmit={handleButtonClick}
                     isLoading={isLoading}
                 />
             )}
             <section aria-label={'Dine tall'}>
-                <ForventetInntekt data={initiateResponse.data}/>
+                <ForventetInntekt data={initiateResponse.uforetrygd} />
             </section>
             <Accordion>
                 <Accordion.Item>
