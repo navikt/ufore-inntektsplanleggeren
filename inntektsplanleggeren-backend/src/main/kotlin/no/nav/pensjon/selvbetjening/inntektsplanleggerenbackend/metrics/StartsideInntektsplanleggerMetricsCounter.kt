@@ -5,7 +5,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegg
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import org.slf4j.LoggerFactory
 
-class InitiateInntektsplanleggerMetricsCounter {
+class StartsideInntektsplanleggerMetricsCounter {
     companion object{
         private const val EVENT_NAME = "inntektsplanlegger_initiate"
         private val logger = LoggerFactory.getLogger(StartsideData::class.java)

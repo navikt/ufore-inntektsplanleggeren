@@ -19,7 +19,7 @@ export async function hentStartsideData(): Promise<StartsideData | ErrorResponse
         }
     }
 
-    return await fetch(`${BASE_PATH}/api/initiate`, {
+    return await fetch(`${BASE_PATH}/api/startside`, {
         method: 'GET',
         credentials: 'include',
         headers: headers,

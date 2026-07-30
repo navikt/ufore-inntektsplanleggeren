@@ -1,8 +1,6 @@
 package no.nav.pensjon.selvbetjening.alderspensjonendringssoknadbackend.metrics
 
 import io.micrometer.core.instrument.Metrics
-import no.nav.pensjon.selvbetjening.alderspensjonendringssoknadbackend.metrics.InitiateInntektsplanleggerMetricsCounter.Companion
-import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import org.slf4j.LoggerFactory
 
 class InntekterInntektsplanleggerMetricsCounter {

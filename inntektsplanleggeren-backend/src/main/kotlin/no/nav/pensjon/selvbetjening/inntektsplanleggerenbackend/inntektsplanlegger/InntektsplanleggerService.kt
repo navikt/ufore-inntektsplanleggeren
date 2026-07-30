@@ -156,29 +156,6 @@ class InntektsplanleggerService(
         return response
     }
 
-    fun hentInitielleData(
-        pid: String,
-        simuleringsaar: Int
-    ): StartsideData {
-        val uforetrygd = penClient.fetchInntektsplanleggerData(pid, getSimuleringFomDato(simuleringsaar))
-        val aktuelleAar = uforetrygd.let {
-            finnAarKanRegistrereFor(
-                it?.hasLopendeUforeVedtakThisYear,
-                it?.hasLopendeUforeVedtakNextYear
-            )
-        }
-        val messages = validator.validateUserInitialData(uforetrygd, aktuelleAar)
-
-        val response = StartsideData(
-            messages,
-            mapInntektsplanleggerenInitialData(pid, uforetrygd, aktuelleAar, messages),
-        )
-
-        InitiateInntektsplanleggerMetricsCounter.count(response)
-
-        return response
-    }
-
     fun hentStatus(
         fnr: String,
         simuleringsAar: Int,
@@ -212,42 +189,7 @@ class InntektsplanleggerService(
         return response
     }
 
-    private fun mapInntektsplanleggerenInitialData(
-        pid: String,
-        uforetrygd: Uforetrygd?,
-        aktuelleAar: List<Int>,
-        messages: List<InntektsplanleggerMessage>
-    ): UføretrygdOversikt? {
-        if (uforetrygd != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
-            val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, uforetrygd, it) }
-
-            return UføretrygdOversikt(
-                forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
-                forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
-                inntektsgrense = uforetrygd.inntektsgrense,
-                reduksjonsprosent = uforetrygd.kompensasjonsgrad,
-                inntektstak = uforetrygd.grenseStoppAvUfoeretrygd,
-                harBarnetilleggFellesbarn = uforetrygd.barnetilleggFellesbarn,
-                aarKanRegistrereInntekt = aktuelleAar,
-                seTallForAar = getAnnetRelevantAar()
-            )
-        }
-        return null
-    }
-
-    private fun getAnnetRelevantAar(): Int? =
-        if (isMonthDecember()) {
-            nowProvider.now().year
-        } else null
-
-    private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> =
-        if (isMonthDecember()) {
-            (listOf(nowProvider.now().year) + aktuelleAar).distinct()
-        } else {
-            aktuelleAar
-        }
-
-    private fun finnAarKanRegistrereFor(
+    fun finnAarKanRegistrereFor(
         hasLopendeUforeVedtakThisYear: Boolean?,
         hasLopendeUforeVedtakNextYear: Boolean?
     ): List<Int> {
@@ -272,7 +214,7 @@ class InntektsplanleggerService(
         return emptyList()
     }
 
-    private fun isMonthDecember() = nowProvider.now().month.value == Month.DECEMBER.value
+    fun isMonthDecember() = nowProvider.now().month.value == Month.DECEMBER.value
 
     private fun accumulateAllInntekterForSameMonth(maanedsinntekter: List<Maanedsinntekt>?): List<AccumulatedMaanedsinntekt> {
         val inntekterEachMonth = mutableMapOf<Int, MutableList<Maanedsinntekt>>()
@@ -296,7 +238,7 @@ class InntektsplanleggerService(
         }
     }
 
-    private fun getSimuleringFomDato(simuleringsaar: Int): LocalDate =
+    fun getSimuleringFomDato(simuleringsaar: Int): LocalDate =
         if (simuleringsaar > nowProvider.now().year)
             LocalDate.of(simuleringsaar, Month.JANUARY, 1)
         else

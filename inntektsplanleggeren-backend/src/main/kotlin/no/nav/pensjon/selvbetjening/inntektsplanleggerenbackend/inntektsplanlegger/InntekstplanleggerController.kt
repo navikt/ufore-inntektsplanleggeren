@@ -4,6 +4,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.audit.Auditor
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.ForventedeInntekter
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.inntekt.InntekterResponse
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.simulering.SimuleringResponse
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.inntektsplanlegger.startside.StartsideService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.SecurityContextUtil
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
@@ -20,7 +21,8 @@ class InntektsplanleggerController(
     private val inntektsPlanleggerService: InntektsplanleggerService,
     private val auditor: Auditor,
     private val tokenService: TokenService,
-    private val personService: PersonService
+    private val personService: PersonService,
+    private val startsideService: StartsideService
 ) {
 
     @GetMapping("veilederbanner")
@@ -49,11 +51,11 @@ class InntektsplanleggerController(
         }
     }
 
-    @GetMapping("initiate")
+    @GetMapping("startside")
     fun getInntektsplanleggerenInitialData(): ResponseEntity<StartsideData> {
         try {
             return ResponseEntity(
-                inntektsPlanleggerService.hentInitielleData(
+                startsideService.hentStartsideData(
                     SecurityContextUtil.getPidFromContext(),
                     LocalDate.now().year),
                 HttpStatus.OK

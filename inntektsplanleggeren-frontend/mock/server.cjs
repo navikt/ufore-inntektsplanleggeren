@@ -4,8 +4,8 @@ const app = express()
 const port = 3000
 var cors = require('cors')
 
-const mockInitiateResponse = JSON.parse(fs.readFileSync('mock/initiateMockResponse.json', 'utf8'))
-const mockInitiateResponseError = JSON.parse(fs.readFileSync('mock/initiateMockResponseError.json', 'utf8'))
+const mockStartsideResponse = JSON.parse(fs.readFileSync('mock/startsideMockResponse.json', 'utf8'))
+const mockStartsideResponseError = JSON.parse(fs.readFileSync('mock/startsideMockResponseError.json', 'utf8'))
 const mockForbiddenResponse = JSON.parse(fs.readFileSync('mock/mockForbiddenResponse.json', 'utf8'))
 const mockInntekterResponse = JSON.parse(fs.readFileSync('mock/inntekterMockResponse.json', 'utf8'))
 const mockSimulationResponse = JSON.parse(fs.readFileSync('mock/simulateMockResponse.json', 'utf8'))
@@ -21,13 +21,13 @@ app.use(
     })
 )
 
-app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/initiate', (req, res) => {
-    console.log('GET - /api/initiate')
+app.get('/uforetrygd/selvbetjening/inntektsplanleggeren/api/startside', (req, res) => {
+    console.log('GET - /api/startside')
     //403 response
     //res.status(403).send(mockForbiddenResponse)
 
     //200 response
-    res.status(200).send(mockInitiateResponse)
+    res.status(200).send(mockStartsideResponse)
 
     //200 response
     // res.status(200).send(mockInitiateResponseError)
