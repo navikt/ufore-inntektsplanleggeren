@@ -13,6 +13,7 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.PenClien
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Uforetrygd
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.springframework.stereotype.Service
+import java.time.Month
 
 @Service
 class StartsideService(
@@ -69,13 +70,13 @@ class StartsideService(
         return null
     }
 
-    private fun getAnnetRelevantAar(): Int? =
-        if (inntektsplanleggerService.isMonthDecember()) {
+    internal fun getAnnetRelevantAar(): Int? =
+        if (nowProvider.now().month.value == Month.DECEMBER.value) {
             nowProvider.now().year
         } else null
 
     private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> =
-        if (inntektsplanleggerService.isMonthDecember()) {
+        if (nowProvider.now().month.value == Month.DECEMBER.value) {
             (listOf(nowProvider.now().year) + aktuelleAar).distinct()
         } else {
             aktuelleAar

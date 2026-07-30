@@ -19,6 +19,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
     })
     const errorSummaryRef = useRef<HTMLDivElement>(null)
 
+    console.log('availableYears', availableYears)
     if (availableYears.length === 0) {
         return null
     }

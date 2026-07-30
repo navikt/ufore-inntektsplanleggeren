@@ -19,6 +19,7 @@ export function Startside() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<StartsideData | null>(null)
 
+    console.log(data)
     useEffect(() => {
         const hentData = async () => {
             const data = await hentStartsideData()

@@ -15,7 +15,6 @@ import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.pensjon.dto.Ufor
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security.TokenService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.util.NowProvider
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
@@ -59,297 +58,6 @@ class InntektsplanleggerServiceTest {
         `when`(nowProvider.now()).thenReturn(LocalDate.now())
     }
 
-    @Test
-    fun `should return InntektsplanleggerInitialData from uforetrygd, validation result and forventede inntekter when hentInitielleData`() {
-        val year = LocalDate.now().year
-
-        val expectedForventetInntektBruker = mapOf(year to 5000)
-        val expectedForventetInntektEps = mapOf(year to 6000)
-        val expectedInntektsgrense = 232
-        val expectedKompensasjonsgrad = 23.2
-        val expectedGrenseStoppAvUfoeretrygd = 564654
-
-        val uforetrygd = uforetrygd(
-            inntektsgrense = expectedInntektsgrense,
-            kompensasjonsgrad = expectedKompensasjonsgrad,
-            grenseStoppAvUfoeretrygd = expectedGrenseStoppAvUfoeretrygd,
-            hasGjenlevendeTillegg = true,
-            barnetilleggFellesbarn = true,
-            barnetilleggSaerkullsbarn = false,
-            hasVarigTilrettelagtArbeid = true,
-            hasLopendeUforeVedtakThisYear = true
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year)).thenReturn(
-            ForventedeInntekterSummary(
-                ForventedeInntekter(
-                    PersonInntekter(null, null, null, null, null),
-                    null
-                ),
-                expectedForventetInntektBruker[year]!!,
-                expectedForventetInntektEps[year]!!
-            )
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year+1)).thenReturn(
-            ForventedeInntekterSummary(
-                ForventedeInntekter(
-                    PersonInntekter(null, null, null, null, null),
-                    null
-                ),
-                mapOf(year to 0)[year]!!,
-                mapOf(year to 0)[year]!!
-            )
-        )
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-
-        assertEquals(expectedForventetInntektBruker, initialData.uforetrygd!!.forventetInntekt[year]?.let { mapOf(year to it) })
-        assertEquals(expectedForventetInntektEps, initialData.uforetrygd.forventetInntektAnnenForelder[year]?.let { mapOf(year to it) })
-        assertEquals(expectedInntektsgrense, initialData.uforetrygd.inntektsgrense)
-        assertEquals(expectedKompensasjonsgrad, initialData.uforetrygd.reduksjonsprosent)
-        assertEquals(expectedGrenseStoppAvUfoeretrygd, initialData.uforetrygd.inntektstak)
-        assertTrue(initialData.uforetrygd.harBarnetilleggFellesbarn)
-    }
-
-    @Test
-    fun `should not set InntektsplanleggerInitialData when error in validation`(){
-        val year = LocalDate.now().year
-        val expectedMessages = listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.FIELD_CAN_NOT_BE_NULL))
-
-        val uforetrygd = uforetrygd()
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-
-        assertEquals(expectedMessages, initialData.messages)
-        assertNull(initialData.uforetrygd)
-
-    }
-
-    @Test
-    fun `should set annetRelevantAar to previous year when december`() {
-        val year = LocalDate.now().year
-
-        val uforetrygd = uforetrygd(
-            hasLopendeUforeVedtakThisYear = true,
-            hasLopendeUforeVedtakNextYear = true
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(
-            inntektService.getForventedeInntekter(
-                PID,
-                uforetrygd,
-                year
-            )
-        ).thenReturn(forventedeInntekterRegistrert())
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year + 1)).thenReturn(
-            forventedeInntekterRegistrert()
-        )
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertEquals(year, initialData.uforetrygd!!.seTallForAar)
-    }
-
-    @Test
-    fun `should set annetRelevantAar to null when not december`() {
-        val year = LocalDate.now().year
-
-        val uforetrygd = uforetrygd(
-            hasLopendeUforeVedtakThisYear = true,
-            hasLopendeUforeVedtakNextYear = true
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(
-            inntektService.getForventedeInntekter(
-                PID,
-                uforetrygd,
-                year
-            )
-        ).thenReturn(forventedeInntekterRegistrert())
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year + 1)).thenReturn(
-            forventedeInntekterRegistrert()
-        )
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.NOVEMBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertNull(initialData.uforetrygd!!.seTallForAar)
-    }
-
-    @Test
-    fun `should set aktuelleAar to current year only when before october and hasLopendeUforeVedtakThisYear`() {
-        val year = LocalDate.now().year
-        val expectedInntekter = forventedeInntekterRegistrert()
-
-        val uforetrygd = uforetrygd(
-            hasLopendeUforeVedtakThisYear = true,
-            hasLopendeUforeVedtakNextYear = false
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year)).thenReturn(expectedInntekter)
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.SEPTEMBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertEquals(1, initialData.uforetrygd!!.aarKanRegistrereInntekt.size)
-        assertEquals(year, initialData.uforetrygd.aarKanRegistrereInntekt[0])
-        assertEquals(setOf(year), initialData.uforetrygd.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.uforetrygd.forventetInntekt[year])
-        assertEquals(setOf(year), initialData.uforetrygd.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.uforetrygd.forventetInntektAnnenForelder[year])
-    }
-
-    @Test
-    fun `should set aktuelleAar to current year and next year when after october and hasLopendeUforeVedtakThisYear`() {
-        val year = LocalDate.now().year
-        val expectedInntekter = forventedeInntekterRegistrert()
-
-        val uforetrygd = uforetrygd(
-            hasLopendeUforeVedtakThisYear = true,
-            hasLopendeUforeVedtakNextYear = false
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year)).thenReturn(expectedInntekter)
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year + 1)).thenReturn(expectedInntekter)
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertEquals(2, initialData.uforetrygd!!.aarKanRegistrereInntekt.size)
-        assertEquals(year, initialData.uforetrygd.aarKanRegistrereInntekt[0])
-        assertEquals(year + 1, initialData.uforetrygd.aarKanRegistrereInntekt[1])
-
-        assertEquals(setOf(year, year + 1), initialData.uforetrygd.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.uforetrygd.forventetInntekt[year])
-        assertEquals(setOf(year, year + 1), initialData.uforetrygd.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.uforetrygd.forventetInntektAnnenForelder[year])
-
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.uforetrygd.forventetInntekt[year + 1])
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.uforetrygd.forventetInntektAnnenForelder[year + 1])
-    }
-
-    @Test
-    fun `should set aktuelleAar to next year when after october and hasLopendeUforeVedtakNextYear`() {
-        val year = LocalDate.now().year
-        val expectedAktueltAar = year + 1
-        val expectedInntekter = forventedeInntekterRegistrert()
-
-        val uforetrygd = uforetrygd(
-            hasLopendeUforeVedtakThisYear = false,
-            hasLopendeUforeVedtakNextYear = true
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, expectedAktueltAar)).thenReturn(expectedInntekter)
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertEquals(1, initialData.uforetrygd!!.aarKanRegistrereInntekt.size)
-        assertEquals(expectedAktueltAar, initialData.uforetrygd.aarKanRegistrereInntekt[0])
-        assertEquals(setOf(expectedAktueltAar), initialData.uforetrygd.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.uforetrygd.forventetInntekt[expectedAktueltAar])
-        assertEquals(setOf(expectedAktueltAar), initialData.uforetrygd.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.uforetrygd.forventetInntektAnnenForelder[expectedAktueltAar])
-    }
-
-    @Test
-    fun `should always set aktuelleAar to next year when december but include inntekter for this year and next year`() {
-        val year = LocalDate.now().year
-        val expectedInntekter = forventedeInntekterRegistrert()
-
-        val uforetrygd = uforetrygd(
-            hasLopendeUforeVedtakThisYear = true,
-            hasLopendeUforeVedtakNextYear = true
-        )
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year)).thenReturn(expectedInntekter)
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year + 1)).thenReturn(expectedInntekter)
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertEquals(1, initialData.uforetrygd!!.aarKanRegistrereInntekt.size)
-        assertEquals(year + 1, initialData.uforetrygd.aarKanRegistrereInntekt[0])
-
-        assertEquals(setOf(year, year + 1), initialData.uforetrygd.forventetInntekt.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.uforetrygd.forventetInntekt[year])
-        assertEquals(expectedInntekter.sumBenyttedeInntekterBruker, initialData.uforetrygd.forventetInntekt[year + 1])
-
-        assertEquals(setOf(year, year + 1), initialData.uforetrygd.forventetInntektAnnenForelder.keys)
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.uforetrygd.forventetInntektAnnenForelder[year])
-        assertEquals(expectedInntekter.sumBenyttedeInntekterEps, initialData.uforetrygd.forventetInntektAnnenForelder[year + 1])
-    }
-
-    @Test
-    fun `should set data to null when validation returns error`() {
-        val year = LocalDate.now().year
-        val expectedMessages = listOf(InntektsplanleggerMessage(InntektsplanleggerMessageCode.USER_HAS_NO_UFORE))
-
-        val uforetrygd = uforetrygd()
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertNull(initialData.uforetrygd)
-        assertEquals(expectedMessages, initialData.messages)
-    }
-
-    @Test
-    fun `should set data to null when uforetrygd is null`() {
-        val year = LocalDate.now().year
-
-        val uforetrygd = null
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertNull(initialData.uforetrygd)
-        assertTrue(initialData.messages.isEmpty())
-    }
-
-    @Test
-    fun `should not set data to null when validation returns info or warning`() {
-        val year = LocalDate.now().year
-        val expectedMessages = listOf(InntektsplanleggerMessage(
-            InntektsplanleggerMessageCode.FORVENTET_INNTEKT_THIS_YEAR_USED_NEXT_YEAR_INFO),
-            InntektsplanleggerMessage(InntektsplanleggerMessageCode.EPS_INNTEKT_CHANGED))
-
-        val uforetrygd = uforetrygd()
-        `when`(penClient.fetchInntektsplanleggerData(PID, LocalDate.now().plusMonths(1).withDayOfMonth(1))).thenReturn(
-            uforetrygd
-        )
-        `when`(inntektService.getForventedeInntekter(PID, uforetrygd, year)).thenReturn(forventedeInntekterRegistrert())
-        `when`(validator.validateUserInitialData(any(), any())).thenReturn(expectedMessages)
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
-
-        val initialData = inntektsplanleggerService.hentInitielleData(PID, year)
-        assertNotNull(initialData.uforetrygd)
-        assertEquals(expectedMessages, initialData.messages)
-    }
 
     @Test
     fun `should return InntekterResponse from inntektskomponent data when hentAarligeInntekter`() {
@@ -866,19 +574,92 @@ class InntektsplanleggerServiceTest {
     }
 
     @Test
-    fun `should set simuleringFomDato to first in next month when simuleringsaar is this year`(){
-        val year = LocalDate.now().year
-        inntektsplanleggerService.hentInitielleData(PID, year)
-        verify(penClient, times(1)).fetchInntektsplanleggerData(any(), capture(virkCaptor))
-        assertEquals(LocalDate.now().plusMonths(1).withDayOfMonth(1), virkCaptor.value)
+    fun `finnAarKanRegistrereFor skal returnere tom liste når bruker ikke har løpende vedtak`() {
+        val år = LocalDate.now().year
+        val uforetrygd = uforetrygd(
+            hasLopendeUforeVedtakThisYear = false,
+            hasLopendeUforeVedtakNextYear = false
+        )
+
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.JUNE.value))
+
+        val aarKanRegistrereFor = inntektsplanleggerService.finnAarKanRegistrereFor( uforetrygd.hasLopendeUforeVedtakThisYear, uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertEquals(emptyList(), aarKanRegistrereFor)
     }
 
     @Test
-    fun `should set simuleringFomDato to first in next year when simuleringsaar is next year`(){
-        val year = LocalDate.now().year + 1
-        inntektsplanleggerService.hentInitielleData(PID, year)
-        verify(penClient, times(1)).fetchInntektsplanleggerData(any(), capture(virkCaptor))
-        assertEquals(LocalDate.now().plusYears(1).withDayOfYear(1), virkCaptor.value)
+    fun `finnAarKanRegistrereFor skal returnere bare dette år når før oktober og bruker har løpende vedtak`() {
+        val år = LocalDate.now().year
+        val uforetrygd = uforetrygd(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.JUNE.value))
+
+        val aarKanRegistrereFor = inntektsplanleggerService.finnAarKanRegistrereFor( uforetrygd.hasLopendeUforeVedtakThisYear, uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertEquals(listOf(år), aarKanRegistrereFor)
+    }
+
+    @Test
+    fun `finnAarKanRegistrereFor skal returnere dette år og neste år når mellom oktober og desember og bruker har løpende vedtak begge år`() {
+        val iÅr = LocalDate.now().year
+        val nesteÅr = iÅr +1
+        val uforetrygd = uforetrygd(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
+
+        val aarKanRegistrereFor = inntektsplanleggerService.finnAarKanRegistrereFor( uforetrygd.hasLopendeUforeVedtakThisYear, uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertEquals(listOf(iÅr, nesteÅr), aarKanRegistrereFor)
+    }
+
+    @Test
+    fun `finnAarKanRegistrereFor skal returnere neste år når mellom oktober og desember og bruker har løpende vedtak neste år`() {
+        val iÅr = LocalDate.now().year
+        val nesteÅr = iÅr + 1
+        val uforetrygd = uforetrygd(
+            hasLopendeUforeVedtakThisYear = false,
+            hasLopendeUforeVedtakNextYear = true
+        )
+
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.OCTOBER.value))
+
+        val aarKanRegistrereFor = inntektsplanleggerService.finnAarKanRegistrereFor( uforetrygd.hasLopendeUforeVedtakThisYear, uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertEquals(listOf(nesteÅr), aarKanRegistrereFor)
+    }
+
+    @Test
+    fun `finnAarKanRegistrereFor skal returnere neste år når desember og bruker har løpende vedtak`() {
+        val iÅr = LocalDate.now().year
+        val nesteÅr = iÅr + 1
+        val uforetrygd = uforetrygd(
+            hasLopendeUforeVedtakThisYear = true,
+            hasLopendeUforeVedtakNextYear = true
+        )
+
+        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
+
+        val aarKanRegistrereFor = inntektsplanleggerService.finnAarKanRegistrereFor( uforetrygd.hasLopendeUforeVedtakThisYear, uforetrygd.hasLopendeUforeVedtakNextYear)
+        assertEquals(listOf(nesteÅr), aarKanRegistrereFor)
+    }
+
+    @Test
+    fun `getSimuleringFomDato skal være første neste måned når simuleringsår er i år`() {
+        val iÅr = LocalDate.now().year
+
+        val simuleringFomDato = inntektsplanleggerService.getSimuleringFomDato(iÅr)
+        assertEquals(LocalDate.now().plusMonths(1).withDayOfMonth(1), simuleringFomDato)
+    }
+
+    @Test
+    fun `getSimuleringFomDato skal være første neste år når simuleringsår er neste år`() {
+        val nesteÅr = LocalDate.now().year + 1
+
+        val simuleringFomDato = inntektsplanleggerService.getSimuleringFomDato(nesteÅr)
+        assertEquals(LocalDate.now().plusYears(1).withDayOfMonth(1).withMonth(1), simuleringFomDato)
     }
 
     private fun assertInnteksgrunnlag(

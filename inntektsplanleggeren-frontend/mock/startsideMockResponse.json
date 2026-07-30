@@ -10,8 +10,8 @@
         "inntektsgrense": 49611,
         "reduksjonsprosent": 49.7,
         "inntektstak": 460060,
-        "aktuelleAar": [2026],
-        "annetRelevantAar": null,
+        "aarKanRegistrereInntekt": [2026],
+        "seTallForAar": null,
         "harBarnetilleggFellesbarn": true
     }
 }
