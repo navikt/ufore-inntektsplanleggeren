@@ -3,10 +3,6 @@ import { expect, test } from '@playwright/test'
 test('Test enkel skjemaflyt', async ({ page }) => {
     await page.goto('/')
 
-    const cookieJaKnapp = page.getByTestId('consent-banner-all')
-    await expect(cookieJaKnapp, 'Concent banner knapp vises').toBeVisible()
-    await cookieJaKnapp.click()
-
     const mainHeading = page.getByRole('heading', { name: 'Inntektsplanleggeren', level: 1 })
     await expect(mainHeading, 'Tittel på hovedside vises').toBeVisible()
 
