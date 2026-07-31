@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from '@navikt/aksel-icons'
-import { Alert, Button, ErrorSummary, Heading, HStack, List, Radio, RadioGroup, ReadMore, VStack } from '@navikt/ds-react'
+import { Alert, Button, ErrorSummary, Heading, HStack, Radio, RadioGroup, VStack } from '@navikt/ds-react'
 import { useContext, useRef, useState } from 'react'
 import { FormStateContext } from '@/context/FormData'
 
@@ -19,6 +19,7 @@ export function YearView({ availableYears, anotherAvalableYear, handleSubmit, is
     })
     const errorSummaryRef = useRef<HTMLDivElement>(null)
 
+    console.log('availableYears', availableYears)
     if (availableYears.length === 0) {
         return null
     }

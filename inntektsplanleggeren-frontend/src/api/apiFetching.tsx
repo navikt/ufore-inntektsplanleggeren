@@ -1,5 +1,4 @@
 import type {
-    InitiateResponse,
     InntekterResponse,
     PersonInntekter,
     SendApplicationResponse,
@@ -9,39 +8,7 @@ import type {
 } from '@/api/model/ApiRequests'
 import { ErrorResponse } from '@/components/common/Error'
 
-const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
-
-export async function getInitiate(): Promise<InitiateResponse | ErrorResponse> {
-    const searchParams = new URLSearchParams(document.location.search)
-    const pid: string | null = searchParams.get('pid')
-
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
-
-    return await fetch(`${BASE_PATH}/api/initiate`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-        return response.json()
-    })
-}
+export const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
 
 export async function getInntekterForSimulering(year: number): Promise<InntekterResponse | ErrorResponse> {
     const searchParams = new URLSearchParams(document.location.search)

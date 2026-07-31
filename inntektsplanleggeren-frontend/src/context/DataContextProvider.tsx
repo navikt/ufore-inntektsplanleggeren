@@ -1,12 +1,8 @@
-import { createContext, useCallback, useEffect, useState } from 'react'
-import { getInitiate } from '@/api/apiFetching'
-import type { InitiateResponse, InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
-import { ErrorCode, ErrorResponse } from '@/components/common/Error'
+import { createContext, useCallback, useState } from 'react'
+import type { InntekterResponse, SendApplicationResponse, SimulationResponse, StatusResponse } from '@/api/model/ApiRequests'
+import type { ErrorCode } from '@/components/common/Error'
 
 interface DataContextValue {
-    initiateResponse: InitiateResponse | null
-    setInitiateResponse: (value: InitiateResponse) => void
-
     previousYearInntekterResponse: InntekterResponse | null
     setPreviousYearInntekterResponse: (value: InntekterResponse) => void
 
@@ -38,9 +34,6 @@ interface DataContextValue {
 }
 
 const DataContextDefaultValue: DataContextValue = {
-    initiateResponse: null,
-    setInitiateResponse: () => undefined,
-
     previousYearInntekterResponse: null,
     setPreviousYearInntekterResponse: () => undefined,
 
@@ -79,7 +72,6 @@ interface DataContextProviderProps {
 
 function DataContextProvider(props: DataContextProviderProps) {
     const [refetch, setRefetch] = useState(DataContextDefaultValue.refetch)
-    const [initiateResponse, setInitiateResponse] = useState(DataContextDefaultValue.initiateResponse)
     const [previousYearInntekterResponse, setPreviousYearInntekterResponse] = useState(DataContextDefaultValue.previousYearInntekterResponse)
     const [inntekterResponse, setInntekterResponse] = useState(DataContextDefaultValue.inntekterResponse)
     const [simulationResponse, setSimulationResponse] = useState(DataContextDefaultValue.simulationResponse)
@@ -103,29 +95,9 @@ function DataContextProvider(props: DataContextProviderProps) {
         setLoadingError(res)
     }, [])
 
-    useEffect(() => {
-        ;(async () => {
-            if (refetch) {
-                try {
-                    const inntektsPlanleggerenResponse = await getInitiate()
-                    if (inntektsPlanleggerenResponse instanceof ErrorResponse) {
-                        setErrorMessage(inntektsPlanleggerenResponse.message)
-                    } else {
-                        setInitiateResponse(inntektsPlanleggerenResponse)
-                    }
-                } catch {
-                    setErrorMessage(ErrorCode.GENERIC_ERROR)
-                }
-                setRefetch(false)
-            }
-        })()
-    }, [refetch])
-
     return (
         <DataContext.Provider
             value={{
-                initiateResponse,
-                setInitiateResponse,
                 previousYearInntekterResponse,
                 setPreviousYearInntekterResponse,
                 inntekterResponse,

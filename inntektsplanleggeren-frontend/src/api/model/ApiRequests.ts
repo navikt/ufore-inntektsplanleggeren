@@ -8,25 +8,6 @@ export type Message = {
     metadata: Record<string, unknown>
 }
 
-export interface InitiateResponse {
-    messages: Message[]
-    data: InitiateData
-}
-
-export interface InitiateData {
-    forventetInntekt: Record<number, number>
-    forventetInntektAnnenForelder: Record<number, number | null>
-    inntektsgrense: number
-    kompensasjonsgrad: number
-    grenseStoppAvUfoeretrygd: number
-    aktuelleAar: number[]
-    annetRelevantAar: number | null
-    hasVarigTilrettelagtArbeid: boolean
-    hasGjenlevendeTillegg: boolean
-    hasBarneTilleggFellesbarn: boolean
-    hasBarnetilleggSaerkullsbarn: boolean
-}
-
 export type InntektDetaljer = {
     maned: number
     belop: number
