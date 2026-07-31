@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component
 class AudienceValidator(@Value("\${oauth2.tokenX.clientId}") val audience: String) : OAuth2TokenValidator<Jwt> {
 
     override fun validate(jwt: Jwt): OAuth2TokenValidatorResult =
-        if (jwt.audience.contains(audience))
+        if (jwt.audience?.contains(audience) == true)
             OAuth2TokenValidatorResult.success()
         else
-            OAuth2TokenValidatorResult.failure(OAuth2Error("Invalid audience: ${jwt.audience.joinToString()}"))
+            OAuth2TokenValidatorResult.failure(OAuth2Error("Invalid audience: ${jwt.audience?.joinToString()}"))
 }

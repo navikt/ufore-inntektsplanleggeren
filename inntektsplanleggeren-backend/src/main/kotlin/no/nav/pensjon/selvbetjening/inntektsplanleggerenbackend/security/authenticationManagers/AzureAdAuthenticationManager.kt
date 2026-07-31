@@ -47,7 +47,7 @@ class AzureAdAuthenticationManager (
         val issuerValidator = JwtValidators.createDefaultWithIssuer(azureAdIssuer)
         val audienceValidator =
             OAuth2TokenValidator { token: Jwt ->
-                if (token.audience.any { azureAdAudience.contains(it) }) {
+                if (token.audience?.any { azureAdAudience.contains(it) } == true) {
                     OAuth2TokenValidatorResult.success()
                 } else {
                     OAuth2TokenValidatorResult.failure(

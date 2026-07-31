@@ -89,9 +89,9 @@ class TokenService(
         SecurityContextHolder.getContext().authentication.let {
             val token = (it as JwtAuthenticationToken).token
             if (determineTokenType() == TokenType.TOKEN_X) {
-                return token.getClaim("pid")
+                return token.getClaim("pid") ?: throw IllegalStateException("Mangler pid claim i token")
             } else if (determineTokenType() == TokenType.AZURE_AD_ON_BEHALF_OF) {
-                return token.getClaim("name")
+                return token.getClaim("name") ?: throw IllegalStateException("Mangler name claim i token")
             }
         }
         return "SYSTEM"
@@ -101,11 +101,11 @@ class TokenService(
         SecurityContextHolder.getContext().authentication.let {
             val token = (it as JwtAuthenticationToken).token
             if (determineTokenType() == TokenType.TOKEN_X) {
-                return token.getClaim("pid")
+                return token.getClaim("pid") ?: throw IllegalStateException("Mangler pid claim i token")
             } else if (determineTokenType() == TokenType.AZURE_AD_ON_BEHALF_OF) {
-                return token.getClaim("NAVident")
+                return token.getClaim("NAVident") ?: throw IllegalStateException("Mangler NAVident claim i token")
             } else if (determineTokenType() == TokenType.AZURE_AD_CLIENT_CREDENTIALS) {
-                return token.getClaim("azp_name")
+                return token.getClaim("azp_name") ?: throw IllegalStateException("Mangler azp_name claim i token")
             }
         }
         throw RuntimeException("Unknown token type")
