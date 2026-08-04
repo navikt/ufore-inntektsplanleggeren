@@ -1,11 +1,18 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
+import io.micrometer.core.instrument.Metrics
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import jakarta.servlet.http.Cookie
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.OBO_TILGANG_EVENT
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.OboTilgangOutcome
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebeskyttelsesgradering
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming.SkjermingClient
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
@@ -28,6 +35,8 @@ class AuthorizationServiceTest {
     private val personService = mock(PersonService::class.java)
     private val representasjonClient = mock(RepresentasjonClient::class.java)
 
+    private lateinit var meterRegistry: SimpleMeterRegistry
+
     private val authorizationService = AuthorizationService(
         strengtFortroligAdresseGroupId,
         fortroligAdresseGroupId,
@@ -41,6 +50,27 @@ class AuthorizationServiceTest {
         personService,
         representasjonClient
     )
+
+    @BeforeEach
+    fun setupMetrics() {
+        reset(tokenService, skjermingClient, personService, representasjonClient)
+        meterRegistry = SimpleMeterRegistry()
+        Metrics.addRegistry(meterRegistry)
+    }
+
+    @AfterEach
+    fun cleanupMetrics() {
+        Metrics.removeRegistry(meterRegistry)
+        meterRegistry.clear()
+    }
+
+    private fun counterValue(outcome: OboTilgangOutcome, method: String = "GET") =
+        meterRegistry.find(OBO_TILGANG_EVENT)
+            .tag("outcome", outcome.tag)
+            .tag("method", method)
+            .counter()
+            ?.count() ?: 0.0
+
     //---------------------------
     // -- Veileder/saksbehandler
     //----------------------------
@@ -306,6 +336,7 @@ class AuthorizationServiceTest {
         val authenticatedUserDetails = authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie)
         assertEquals(resourcePid,authenticatedUserDetails.pid)
         assertEquals(true,authenticatedUserDetails.isFullmakt)
+        assertEquals(1.0, counterValue(OboTilgangOutcome.INNVILGET))
     }
 
     @Test
@@ -319,6 +350,7 @@ class AuthorizationServiceTest {
         `when` (representasjonClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(true,"Ole Brum", resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(true)
         assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
+        assertEquals(1.0, counterValue(OboTilgangOutcome.ADRESSEBESKYTTELSE))
     }
 
     @Test
@@ -332,5 +364,20 @@ class AuthorizationServiceTest {
         `when` (representasjonClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid)).thenReturn(RepresentasjonsforholdValidity(false,null, resourcePidKryptert, resourcePid))
         `when` (personService.hasAdressebeskyttelse(resourcePid)).thenReturn(false)
         assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
+        assertEquals(1.0, counterValue(OboTilgangOutcome.INGEN_GYLDIG_REPRESENTASJON))
+    }
+
+    @Test
+    fun `should return Exception and count fullmakt feil when representasjon client fails`() {
+        val subjectPid = "12345678901"
+        val resourcePidKryptert = "fnr_kryptert"
+        val navOnBehalfOfCCookie = Cookie("navOnBehalfOfCookie", resourcePidKryptert)
+        val httpMethod = "POST"
+        `when` (tokenService.determineRequestingPid()).thenReturn(subjectPid)
+        `when` (representasjonClient.hasValidRepresentasjonsforhold(httpMethod, resourcePidKryptert, subjectPid))
+            .thenThrow(FullmaktException("representasjon", "feil"))
+
+        assertThrows<NoFullmaktPresentException> { authorizationService.checkBorgerTilgang(httpMethod, navOnBehalfOfCCookie) }
+        assertEquals(1.0, counterValue(OboTilgangOutcome.FULLMAKT_FEIL, "POST"))
     }
 }

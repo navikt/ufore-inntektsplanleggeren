@@ -34,7 +34,7 @@ class RepresentasjonClient(
                     .bodyValue(ValidRepresentasjonsforholdRequest(
                         representertPid,
                         representantPid,
-                        validRepresentajsjonstyper(httpMethod)))
+                        requiredRepresentasjonstyper(httpMethod)))
                     .headers { headers: HttpHeaders ->
                         headers.setBearerAuth(it!!)
                         headers[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_JSON_VALUE
@@ -57,12 +57,6 @@ class RepresentasjonClient(
         }
     }
 
-    private fun validRepresentajsjonstyper(httpMethod: String) =
-        if (listOf("POST", "PUT", "DELETE").contains(httpMethod))
-            VALID_SKRIV_REPRESENTASJONSTYPER
-        else
-            VALID_LES_REPRESENTASJONSTYPER
-
     private fun urlValidRepresentasjonsforhold() =
         UriComponentsBuilder.fromUriString(baseUrl)
             .path(PATH_HASREPRESENTASJONSFORHOLD)
@@ -75,14 +69,19 @@ class RepresentasjonClient(
         private const val PATH_HASREPRESENTASJONSFORHOLD = "/representasjon/hasValidRepresentasjonsforhold"
 
         const val NAV_CALL_ID = "Nav-Call-Id"
-        private val VALID_LES_REPRESENTASJONSTYPER = listOf(
-            "UFORETRYGD_LES", "VERGE_UFORETRYGD_LES")
-
-        private val VALID_SKRIV_REPRESENTASJONSTYPER = listOf(
-            "UFORETRYGD_SKRIV", "VERGE_UFORETRYGD_SKRIV")
-
         private val logger: Logger = LoggerFactory.getLogger(RepresentasjonClient::class.java)
 
     }
 }
 
+fun requiredRepresentasjonstyper(httpMethod: String) =
+    if (listOf("POST", "PUT", "DELETE").contains(httpMethod))
+        VALID_SKRIV_REPRESENTASJONSTYPER
+    else
+        VALID_LES_REPRESENTASJONSTYPER
+
+private val VALID_LES_REPRESENTASJONSTYPER = listOf(
+    "UFORETRYGD_LES", "VERGE_UFORETRYGD_LES")
+
+private val VALID_SKRIV_REPRESENTASJONSTYPER = listOf(
+    "UFORETRYGD_SKRIV", "VERGE_UFORETRYGD_SKRIV")

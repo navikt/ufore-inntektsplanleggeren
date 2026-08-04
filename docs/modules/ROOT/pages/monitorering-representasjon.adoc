@@ -1,0 +1,81 @@
+=== Monitorering av representasjon (OBO)
+
+Representasjon gjelder borgerkall med `nav-obo`-cookie. Det måles med Micrometer-metrikken `representasjon_obo_tilgang`, som eksponeres i Prometheus som `representasjon_obo_tilgang_total` på `/actuator/prometheus`.
+
+[cols="1,2,3"]
+|===
+|Tag |Verdier |Beskrivelse
+
+|`outcome`
+|`innvilget`, `ingen_gyldig_representasjon`, `adressebeskyttelse`, `fullmakt_feil`
+|Resultatet av tilgangssjekken for OBO-kallet.
+
+|`method`
+|`GET`, `POST`
+|HTTP-metoden som ble brukt i forespørselen.
+|===
+
+Alle kjente kombinasjoner av `outcome` og faktisk tilgjengelige borgermetoder registreres med verdi 0 ved `ApplicationReadyEvent`. Denne appen eksponerer borgerendepunkter med `GET` og `POST`, derfor forhåndsregistreres disse metodene.
+
+Kun avslag logges. Vellykkede OBO-kall logges ikke; de telles i metrikken. Avslag logges strukturert med `StructuredArguments.kv(...)`, slik at feltene kan filtreres i OpenSearch.
+
+[cols="1,2,2"]
+|===
+|Felt |Verdier |Når
+
+|`event`
+|`obo_tilgang_avvist`
+|Alle avslag.
+
+|`obo_outcome`
+|`ingen_gyldig_representasjon`, `adressebeskyttelse`, `fullmakt_feil`
+|Alle avslag.
+
+|`obo_method`
+|HTTP-metode
+|Alle avslag.
+
+|`obo_paakrevde_typer`
+|Kommaseparerte representasjonstyper
+|Alle avslag.
+
+|`obo_tomt_svar`
+|`true`/`false`
+|Kun `ingen_gyldig_representasjon`.
+
+|`obo_feilmelding`
+|Feilmelding fra exception
+|Kun `fullmakt_feil`.
+|===
+
+`MdcFilter` og `AuthorizationJsonProvider` legger allerede på representasjonskontekst som `obo_pid` basert på `nav-obo`-cookie, maskert før logging. De strukturerte avslagene bruker derfor egne felt med `obo_*`-navn for årsak, metode og påkrevde typer, og logger ikke PID.
+
+Grafana: bruk datakilde `prometheus-prod-gcp` i https://grafana.nav.cloud.nais.io/explore. Siden representasjon brukes sjelden, bruk `increase(...[7d])` og ikke `rate(...[5m])`.
+
+[source,promql]
+----
+sum by (app, outcome) (increase(representasjon_obo_tilgang_total[7d]))
+----
+
+[source,promql]
+----
+sum(increase(representasjon_obo_tilgang_total{outcome!="innvilget"}[7d]))
+  / sum(increase(representasjon_obo_tilgang_total[7d]))
+----
+
+[source,promql]
+----
+sum by (app, method, outcome) (increase(representasjon_obo_tilgang_total[7d]))
+----
+
+OpenSearch: bruk https://logs.adeo.no med basefilter `application: "inntektsplanleggeren-backend" and cluster: "prod-gcp"`. For avslag kan det filtreres på `event: "obo_tilgang_avvist"`, og grupperes på `obo_outcome` og `obo_method`.
+
+Verifiser at instrumenteringen er live etter deploy:
+
+[source,bash]
+----
+kubectl --context=prod-gcp -n ufore exec deploy/inntektsplanleggeren-backend -- \
+  curl -s localhost:8080/actuator/prometheus | grep representasjon_obo_tilgang
+----
+
+Seriene for `method="GET"` og `method="POST"` skal finnes med verdi 0 før første OBO-kall.

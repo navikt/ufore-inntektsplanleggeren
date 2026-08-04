@@ -1,9 +1,14 @@
 package no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.security
 
 import jakarta.servlet.http.Cookie
+import net.logstash.logback.argument.StructuredArguments.kv
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.EVENT_OBO_AVVIST
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.FullmaktException
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.OboTilgangOutcome
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonClient
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.RepresentasjonsforholdValidity
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.countOboTilgang
+import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.fullmakt.requiredRepresentasjonstyper
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.PersonService
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.person.pdl.PdlAdressebeskyttelsesgradering
 import no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.skjerming.SkjermingClient
@@ -38,10 +43,10 @@ class AuthorizationService(
     fun checkBorgerTilgang(httpMethod: String, navOnBehalfOfCookie: Cookie?) : AuthenticatedUserDetails {
         val requestingPid = tokenService.determineRequestingPid()
         if (navOnBehalfOfCookie != null) {
-            log.info("Cookie'en nav-obo er satt og det antyder fullmaktscenario")
             val representertPidKryptert = navOnBehalfOfCookie.value
             val representasjonsforhold = haandterFullmakt(httpMethod, representertPidKryptert, requestingPid)
             if (representasjonsforhold.representertPid != requestingPid) {
+                countOboTilgang(OboTilgangOutcome.INNVILGET, httpMethod)
                 return AuthenticatedUserDetails(representasjonsforhold.representertPid, true)
             }
         }
@@ -106,22 +111,45 @@ class AuthorizationService(
     }
 
     private fun haandterFullmakt(httpMethod: String, representertPid: String, requestingPid: String): RepresentasjonsforholdValidity {
+        val requiredRepresentasjonstyper = requiredRepresentasjonstyper(httpMethod)
         try {
             val harGyldigFullmakt = representasjonClient.hasValidRepresentasjonsforhold(httpMethod, representertPid, requestingPid)
             if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
-                log.info("Fullmaktsforhold er ikke funnet. Nekter adgang")
+                countOboTilgang(OboTilgangOutcome.INGEN_GYLDIG_REPRESENTASJON, httpMethod)
+                log.warn(
+                    "Fullmaktsforhold er ikke funnet. Nekter adgang",
+                    kv("event", EVENT_OBO_AVVIST),
+                    kv("obo_outcome", OboTilgangOutcome.INGEN_GYLDIG_REPRESENTASJON.tag),
+                    kv("obo_method", httpMethod),
+                    kv("obo_paakrevde_typer", requiredRepresentasjonstyper.joinToString(",")),
+                    kv("obo_tomt_svar", harGyldigFullmakt == null)
+                )
                 throw NoFullmaktPresentException()
             }
 
             if(personService.hasAdressebeskyttelse(harGyldigFullmakt.representertPid)) {
-                log.info("Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang")
+                countOboTilgang(OboTilgangOutcome.ADRESSEBESKYTTELSE, httpMethod)
+                log.warn(
+                    "Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang",
+                    kv("event", EVENT_OBO_AVVIST),
+                    kv("obo_outcome", OboTilgangOutcome.ADRESSEBESKYTTELSE.tag),
+                    kv("obo_method", httpMethod),
+                    kv("obo_paakrevde_typer", requiredRepresentasjonstyper.joinToString(","))
+                )
                 throw NoFullmaktPresentException()
             }
 
             return harGyldigFullmakt
         } catch (e: FullmaktException) {
-            log.error("Noe gikk galt ved kall til fullmakt. Nekter adgang")
-            log.warn("FullmaktException: ${e.message}")
+            countOboTilgang(OboTilgangOutcome.FULLMAKT_FEIL, httpMethod)
+            log.error(
+                "Noe gikk galt ved kall til fullmakt. Nekter adgang",
+                kv("event", EVENT_OBO_AVVIST),
+                kv("obo_outcome", OboTilgangOutcome.FULLMAKT_FEIL.tag),
+                kv("obo_method", httpMethod),
+                kv("obo_paakrevde_typer", requiredRepresentasjonstyper.joinToString(",")),
+                kv("obo_feilmelding", e.message)
+            )
             throw NoFullmaktPresentException()
         }
     }
