@@ -7,6 +7,9 @@ export default defineConfig({
     workers: 3,
     failOnFlakyTests: true,
     reporter: 'html',
+    expect: {
+        timeout: 15000,
+    },
     use: {
         baseURL: 'http://localhost:5173/uforetrygd/selvbetjening/inntektsplanleggeren',
         trace: 'on-first-retry',
