@@ -117,7 +117,7 @@ class AuthorizationService(
             if (harGyldigFullmakt == null || !harGyldigFullmakt.hasValidRepresentasjonsforhold) {
                 countOboTilgang(OboTilgangOutcome.INGEN_GYLDIG_REPRESENTASJON, httpMethod)
                 log.warn(
-                    "Fullmaktsforhold er ikke funnet. Nekter adgang",
+                    "Fullmaktsforhold er ikke funnet. Nekter adgang {} {} {} {} {}",
                     kv("event", EVENT_OBO_AVVIST),
                     kv("obo_outcome", OboTilgangOutcome.INGEN_GYLDIG_REPRESENTASJON.tag),
                     kv("obo_method", httpMethod),
@@ -130,7 +130,7 @@ class AuthorizationService(
             if(personService.hasAdressebeskyttelse(harGyldigFullmakt.representertPid)) {
                 countOboTilgang(OboTilgangOutcome.ADRESSEBESKYTTELSE, httpMethod)
                 log.warn(
-                    "Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang",
+                    "Fullmaktsforhold for bruker med adressebeskyttelse. Nekter adgang {} {} {} {}",
                     kv("event", EVENT_OBO_AVVIST),
                     kv("obo_outcome", OboTilgangOutcome.ADRESSEBESKYTTELSE.tag),
                     kv("obo_method", httpMethod),
@@ -143,12 +143,13 @@ class AuthorizationService(
         } catch (e: FullmaktException) {
             countOboTilgang(OboTilgangOutcome.FULLMAKT_FEIL, httpMethod)
             log.error(
-                "Noe gikk galt ved kall til fullmakt. Nekter adgang",
+                "Noe gikk galt ved kall til fullmakt. Nekter adgang {} {} {} {} {}",
                 kv("event", EVENT_OBO_AVVIST),
                 kv("obo_outcome", OboTilgangOutcome.FULLMAKT_FEIL.tag),
                 kv("obo_method", httpMethod),
                 kv("obo_paakrevde_typer", requiredRepresentasjonstyper.joinToString(",")),
-                kv("obo_feilmelding", e.message)
+                kv("obo_feilmelding", e.message),
+                e
             )
             throw NoFullmaktPresentException()
         }

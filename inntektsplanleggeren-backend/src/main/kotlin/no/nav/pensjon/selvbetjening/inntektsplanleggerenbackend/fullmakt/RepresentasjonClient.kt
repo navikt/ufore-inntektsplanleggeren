@@ -75,10 +75,10 @@ class RepresentasjonClient(
 }
 
 fun requiredRepresentasjonstyper(httpMethod: String) =
-    if (listOf("POST", "PUT", "DELETE").contains(httpMethod))
-        VALID_SKRIV_REPRESENTASJONSTYPER
-    else
-        VALID_LES_REPRESENTASJONSTYPER
+    when (httpMethod) {
+        "POST", "PUT", "DELETE" -> VALID_SKRIV_REPRESENTASJONSTYPER
+        else -> VALID_LES_REPRESENTASJONSTYPER
+    }
 
 private val VALID_LES_REPRESENTASJONSTYPER = listOf(
     "UFORETRYGD_LES", "VERGE_UFORETRYGD_LES")
