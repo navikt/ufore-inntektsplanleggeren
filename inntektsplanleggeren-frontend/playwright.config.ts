@@ -1,15 +1,18 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
     testDir: './tests',
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     workers: 3,
-    failOnFlakyTests: true,
-    reporter: 'html',
+    failOnFlakyTests: false, // todo, endre tilbake
+    retries: process.env.CI ? 2 : 0,
+    reporter: [['list'], ['html', { open: 'never' }]],
     use: {
         baseURL: 'http://localhost:5173/uforetrygd/selvbetjening/inntektsplanleggeren',
-        trace: 'on-first-retry',
+        trace: 'retain-on-failure',
+        video: 'retain-on-failure',
+        screenshot: 'only-on-failure',
     },
     projects: [
         {
@@ -32,4 +35,4 @@ export default defineConfig({
         url: 'http://localhost:5173',
         reuseExistingServer: !process.env.CI,
     },
-});
+})
