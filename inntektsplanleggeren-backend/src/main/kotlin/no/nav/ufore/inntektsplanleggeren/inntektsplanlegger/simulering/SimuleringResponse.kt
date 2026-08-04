@@ -1,0 +1,24 @@
+package no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.simulering
+
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.validation.InntektsplanleggerMessage
+
+data class SimuleringResponse(
+    val messages: List<InntektsplanleggerMessage>,
+    val result: Simuleringsresultat?
+)
+
+data class Simuleringsresultat(
+    val uforetrygd: SimuleringAmounts,
+    val forventetInntekt: SimuleringAmounts,
+    val barnetilleggFellesbarn: SimuleringAmounts?,
+    val barnetilleggSaerkullsbarn: SimuleringAmounts?,
+    val gjenlevendetillegg: SimuleringAmounts?,
+    val sum: SimuleringAmounts,
+)
+
+data class SimuleringAmounts(
+    val monthly: BeforeAndAfterValues,
+    var yearly: BeforeAndAfterValues
+)
+
+data class BeforeAndAfterValues(var before: Int?, val after: Int)

@@ -25,7 +25,7 @@
                         }
                     </pattern>
                 </pattern>
-                <provider class="no.nav.pensjon.selvbetjening.inntektsplanleggerenbackend.logging.AuthorizationJsonProvider"/>
+                <provider class="no.nav.ufore.inntektsplanleggeren.logging.AuthorizationJsonProvider"/>
             </providers>
         </encoder>
 
