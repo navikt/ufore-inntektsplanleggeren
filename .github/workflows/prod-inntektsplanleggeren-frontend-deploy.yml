@@ -36,7 +36,7 @@ jobs:
       - name: "Send slack-notifikasjon om bygget feiler"
         if: ${{ failure() }}
         run: |
-          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Bygg av inntektsplanleggeren-frontend (borger) før deploy til prod feilet* :bomb::hellmo:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
+          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Bygg av inntektsplanleggeren-frontend (borger) før deploy til prod feilet* :bomb::hellmo:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/ufore-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
           chmod +x "${GITHUB_WORKSPACE}/.github/notify-slack.sh"
           "${GITHUB_WORKSPACE}/.github/notify-slack.sh" "${SSH_KEY}" "${AUTHOR}" "${PAYLOAD}" "${WEBHOOK_URL}"
         env:
@@ -68,7 +68,7 @@ jobs:
       - name: "Send slack-notifikasjon om bygget feiler"
         if: ${{ failure() }}
         run: |
-          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Bygg av inntektsplanleggeren-frontend (veileder) før deploy til prod feilet* :bomb::hellmo:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
+          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Bygg av inntektsplanleggeren-frontend (veileder) før deploy til prod feilet* :bomb::hellmo:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/ufore-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
           chmod +x "${GITHUB_WORKSPACE}/.github/notify-slack.sh"
           "${GITHUB_WORKSPACE}/.github/notify-slack.sh" "${SSH_KEY}" "${AUTHOR}" "${PAYLOAD}" "${WEBHOOK_URL}"
         env:
@@ -122,7 +122,7 @@ jobs:
       - name: "Send slack-notifikasjon om deploy til borger feiler"
         if: ${{ failure() }}
         run: |
-          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Deploy av inntektsplanleggeren-frontend (borger) til prod feilet* :bomb::fire:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
+          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Deploy av inntektsplanleggeren-frontend (borger) til prod feilet* :bomb::fire:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/ufore-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
           chmod +x "${GITHUB_WORKSPACE}/.github/notify-slack.sh"
           "${GITHUB_WORKSPACE}/.github/notify-slack.sh" "${SSH_KEY}" "${AUTHOR}" "${PAYLOAD}" "${WEBHOOK_URL}"
         env:
@@ -151,7 +151,7 @@ jobs:
       - name: "Send slack-notifikasjon om deploy til veileder feiler"
         if: ${{ failure() }}
         run: |
-          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Deploy av inntektsplanleggeren-frontend (veileder) til prod feilet* :bomb::fire:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/pensjon-selvbetjening-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
+          PAYLOAD="payload={ \"attachments\": [{\"color\": \"danger\", \"text\": \":calc:*Deploy av inntektsplanleggeren-frontend (veileder) til prod feilet* :bomb::fire:\nAnsvarlig: \${slack_id}\nCommit: <https://github.com/navikt/ufore-inntektsplanleggeren/commit/$GITHUB_SHA|$GITHUB_SHA>\" }] }"
           chmod +x "${GITHUB_WORKSPACE}/.github/notify-slack.sh"
           "${GITHUB_WORKSPACE}/.github/notify-slack.sh" "${SSH_KEY}" "${AUTHOR}" "${PAYLOAD}" "${WEBHOOK_URL}"
         env:
