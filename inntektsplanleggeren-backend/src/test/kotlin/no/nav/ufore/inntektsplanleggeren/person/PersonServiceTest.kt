@@ -1,0 +1,41 @@
+package no.nav.ufore.inntektsplanleggeren.person
+
+import no.nav.ufore.inntektsplanleggeren.person.parallellesannheter.ParallelleSannheterService
+import no.nav.ufore.inntektsplanleggeren.person.pdl.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import java.time.LocalDate
+
+class PersonServiceTest {
+
+    private val pdlClient = Mockito.mock(PdlClient::class.java)
+    private val parallelleSannheterService = Mockito.mock(ParallelleSannheterService::class.java)
+
+    private val personService = PersonService(pdlClient, parallelleSannheterService)
+
+    @Test
+    fun getFodselsdato() {
+        val date = LocalDate.of(2000, 1, 1)
+        `when`(pdlClient.performQuery(any())).thenReturn(PdlPerson(null, null, null))
+        `when`(parallelleSannheterService.decideFodselsdato(any())).thenReturn(date)
+        val result = personService.getFodselsdato("aaaa")
+        assertEquals(date, result)
+    }
+
+    @Test
+    fun getAgeAtYear_calculates_age() {
+        val resultAge = personService.getAgeAtYear(LocalDate.of(1999, 1, 1), 2015)
+        assertEquals(resultAge, 16)
+    }
+
+    @Test
+    fun getAgeAtYear_throws_exception() {
+        org.junit.jupiter.api.assertThrows<IllegalStateException> {
+            personService.getAgeAtYear(LocalDate.of(2016, 1, 1), 2015)
+        }
+    }
+
+    private fun <T> any(): T = Mockito.any()
+}
