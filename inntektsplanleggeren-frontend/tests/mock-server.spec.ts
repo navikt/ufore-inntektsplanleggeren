@@ -4,7 +4,7 @@ test('Test enkel skjemaflyt', async ({ page }) => {
     // Hindrer at dekoratøren lastes fordi den er treg, og cookie banneret av og til ikke laster
     await page.route(/nav\.no|uxsignals\.com/, (route) => route.abort())
 
-    await page.goto('/')
+    await page.goto('./')
 
     const mainHeading = page.getByRole('heading', { name: 'Inntektsplanleggeren', level: 1 })
     await expect(mainHeading, 'Tittel på hovedside vises').toBeVisible()
