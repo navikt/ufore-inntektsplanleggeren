@@ -7,9 +7,6 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { FormStateComponent } from '@/context/FormData'
 
 export function App() {
-    const mode = import.meta.env.VITE_MODE
-
-    console.log('Mode: ', mode)
     const location = useLocation()
     useEffect(() => {
         if (!location.hash) {
