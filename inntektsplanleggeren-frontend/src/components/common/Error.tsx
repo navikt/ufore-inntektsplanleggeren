@@ -1,6 +1,9 @@
 import { Alert, BodyShort } from '@navikt/ds-react'
 
 export const ErrorView = (props: { message: ErrorCode | null }) => {
+    const mode = import.meta.env.VITE_MODE
+    const erVeileder = mode.includes('veileder')
+
     const getErrorMessage = () => {
         switch (props.message) {
             case ErrorCode.LOGIN_LEVEL_TOO_LOW:
@@ -12,7 +15,11 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
                 )
             case ErrorCode.VEILEDER_UNAUTHORIZED:
             case ErrorCode.NO_FULLMAKT_PRESENT:
+            case ErrorCode.FORBIDDEN_ERROR:
                 return 'Du har ikke tilgang til denne siden.'
+            case ErrorCode.MANGLER_TILGANG_INNTEKTSKOMPONENTEN:
+                if (erVeileder) return 'Du mangler tilgang til inntektskomponenten. Hør med nærmeste leder som kan gi deg tilgang. '
+                else return 'Du har ikke tilgang til denne siden. '
             case ErrorCode.GENERIC_ERROR:
                 return (
                     'Det har skjedd en teknisk feil. Hvis du har registrert informasjon, har den dessverre ikke blitt lagret. ' +
@@ -41,8 +48,8 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
 export class ErrorResponse {
     message: ErrorCode
 
-    constructor(data: ErrorResponse) {
-        this.message = data.message
+    constructor(data: { detail?: string; message?: ErrorCode }) {
+        this.message = (data.detail ?? data.message ?? 'GENERIC_ERROR') as ErrorCode
     }
 }
 
@@ -52,4 +59,6 @@ export enum ErrorCode {
     NO_FULLMAKT_PRESENT = 'NO_FULLMAKT_PRESENT',
     GENERIC_ERROR = 'GENERIC_ERROR',
     STATUS_ERROR = 'STATUS_ERROR',
+    MANGLER_TILGANG_INNTEKTSKOMPONENTEN = 'MANGLER_TILGANG_INNTEKTSKOMPONENTEN',
+    FORBIDDEN_ERROR = 'FORBIDDEN_ERROR',
 }

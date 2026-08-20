@@ -27,56 +27,48 @@ class InntektsplanleggerController(
 ) {
 
     @GetMapping("veilederbanner")
-    fun hentVeilederBannerInfo(): ResponseEntity<VeilederBannerInfo>{
-        try {
-            val pid = SecurityContextUtil.getPidFromContext()
-            val borgerNavn = personService.getNavn(pid)
-            val veilederNavn = tokenService.determineLoggedInUser()
+    fun hentVeilederBannerInfo(): ResponseEntity<VeilederBannerInfo> {
+        val pid = SecurityContextUtil.getPidFromContext()
+        val borgerNavn = personService.getNavn(pid)
+        val veilederNavn = tokenService.determineLoggedInUser()
 
-            return ResponseEntity.status(HttpStatus.OK).body(VeilederBannerInfo(pid, borgerNavn ?: "", veilederNavn))
-                .also {
-                    if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                        auditor.auditInternalUserRead(
-                            tokenService.determineLoggedInUserId(),
-                            SecurityContextUtil.getPidFromContext()
-                        )
-                    } else if (SecurityContextUtil.isFullmakt()) {
-                        auditor.auditFullmaktRead(
-                            tokenService.determineLoggedInUserId(),
-                            SecurityContextUtil.getPidFromContext()
-                        )
-                    }
+        return ResponseEntity.status(HttpStatus.OK).body(VeilederBannerInfo(pid, borgerNavn ?: "", veilederNavn))
+            .also {
+                if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                    auditor.auditInternalUserRead(
+                        tokenService.determineLoggedInUserId(),
+                        SecurityContextUtil.getPidFromContext()
+                    )
+                } else if (SecurityContextUtil.isFullmakt()) {
+                    auditor.auditFullmaktRead(
+                        tokenService.determineLoggedInUserId(),
+                        SecurityContextUtil.getPidFromContext()
+                    )
                 }
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+            }
     }
 
     @GetMapping("startside")
     fun getInntektsplanleggerenInitialData(): ResponseEntity<StartsideData> {
-        try {
-            return ResponseEntity(
-                startsideService.hentStartsideData(
-                    SecurityContextUtil.getPidFromContext(),
-                    LocalDate.now().year),
-                HttpStatus.OK
-            )
-                .also {
-                    if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                        auditor.auditInternalUserRead(
-                            tokenService.determineLoggedInUserId(),
-                            SecurityContextUtil.getPidFromContext()
-                        )
-                    } else if (SecurityContextUtil.isFullmakt()) {
-                        auditor.auditFullmaktRead(
-                            tokenService.determineLoggedInUserId(),
-                            SecurityContextUtil.getPidFromContext()
-                        )
-                    }
+        return ResponseEntity(
+            startsideService.hentStartsideData(
+                SecurityContextUtil.getPidFromContext(),
+                LocalDate.now().year),
+            HttpStatus.OK
+        )
+            .also {
+                if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                    auditor.auditInternalUserRead(
+                        tokenService.determineLoggedInUserId(),
+                        SecurityContextUtil.getPidFromContext()
+                    )
+                } else if (SecurityContextUtil.isFullmakt()) {
+                    auditor.auditFullmaktRead(
+                        tokenService.determineLoggedInUserId(),
+                        SecurityContextUtil.getPidFromContext()
+                    )
                 }
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+            }
     }
 
     @GetMapping("inntekter")
@@ -84,33 +76,25 @@ class InntektsplanleggerController(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
         @RequestParam("fetchForventedeInntekter", required = false) fetchForventedeInntekter: Boolean?
     ): ResponseEntity<InntekterResponse> {
-        return try {
-            ResponseEntity(
-                inntektsPlanleggerService.hentInntekter(
-                    SecurityContextUtil.getPidFromContext(),
-                    simuleringsaar,
-                    fetchForventedeInntekter?:true
-                ), HttpStatus.OK
-            )
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+        return ResponseEntity(
+            inntektsPlanleggerService.hentInntekter(
+                SecurityContextUtil.getPidFromContext(),
+                simuleringsaar,
+                fetchForventedeInntekter ?: true
+            ), HttpStatus.OK
+        )
     }
 
     @GetMapping("inntekter-for-aar")
     fun getInntekter(
         @RequestParam("aar", required = true) aar: Int,
     ): ResponseEntity<InntekterResponse> {
-        return try {
-            ResponseEntity(
-                inntektsPlanleggerService.hentAarligeInntekter(
-                    SecurityContextUtil.getPidFromContext(),
-                    aar,
-                ), HttpStatus.OK
-            )
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+        return ResponseEntity(
+            inntektsPlanleggerService.hentAarligeInntekter(
+                SecurityContextUtil.getPidFromContext(),
+                aar,
+            ), HttpStatus.OK
+        )
     }
 
     @PostMapping("simuler")
@@ -118,17 +102,13 @@ class InntektsplanleggerController(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
         @RequestBody forventedeInntekter: ForventedeInntekter
     ): ResponseEntity<SimuleringResponse> {
-        return try {
-            ResponseEntity(
-                inntektsPlanleggerService.simulerInntektsendring(
-                    SecurityContextUtil.getPidFromContext(),
-                    simuleringsaar,
-                    forventedeInntekter
-                ), HttpStatus.OK
-            )
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+        return ResponseEntity(
+            inntektsPlanleggerService.simulerInntektsendring(
+                SecurityContextUtil.getPidFromContext(),
+                simuleringsaar,
+                forventedeInntekter
+            ), HttpStatus.OK
+        )
     }
 
     @PostMapping("send")
@@ -136,30 +116,26 @@ class InntektsplanleggerController(
         @RequestParam("simuleringsaar", required = true) simuleringsaar: Int,
         @RequestBody forventedeInntekter: ForventedeInntekter
     ): ResponseEntity<InntektsplanleggerenSendResponse> {
-        try {
-            return ResponseEntity(
-                inntektsPlanleggerService.sendInntektsendring(
-                    SecurityContextUtil.getPidFromContext(),
-                    simuleringsaar,
-                    forventedeInntekter
-                ), HttpStatus.OK
-            )
-                .also {
-                    if (tokenService.isUserLoggedInAsSaksbehandler()) {
-                        auditor.auditInternalUserCreate(
-                            tokenService.determineLoggedInUserId(),
-                            SecurityContextUtil.getPidFromContext()
-                        )
-                    } else if (SecurityContextUtil.isFullmakt()) {
-                        auditor.auditFullmaktCreate(
-                            tokenService.determineLoggedInUserId(),
-                            SecurityContextUtil.getPidFromContext()
-                        )
-                    }
+        return ResponseEntity(
+            inntektsPlanleggerService.sendInntektsendring(
+                SecurityContextUtil.getPidFromContext(),
+                simuleringsaar,
+                forventedeInntekter
+            ), HttpStatus.OK
+        )
+            .also {
+                if (tokenService.isUserLoggedInAsSaksbehandler()) {
+                    auditor.auditInternalUserCreate(
+                        tokenService.determineLoggedInUserId(),
+                        SecurityContextUtil.getPidFromContext()
+                    )
+                } else if (SecurityContextUtil.isFullmakt()) {
+                    auditor.auditFullmaktCreate(
+                        tokenService.determineLoggedInUserId(),
+                        SecurityContextUtil.getPidFromContext()
+                    )
                 }
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+            }
     }
 
     @GetMapping("status")
@@ -167,16 +143,12 @@ class InntektsplanleggerController(
         @RequestParam("valgtaar", required = true) valgtAr: Int,
         @RequestParam("innsendingstidspunkt", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") innsendingsTidspunkt: LocalDateTime,
     ): ResponseEntity<InntektsplanleggerenStatusResponse> {
-        return try {
-            ResponseEntity(
-                inntektsPlanleggerService.hentStatus(
-                    SecurityContextUtil.getPidFromContext(),
-                    valgtAr,
-                    innsendingsTidspunkt.minusSeconds(3)//juster tidspunkt noen sekunder tilbake så vi er sikker på å få med alt
-                ), HttpStatus.OK
-            )
-        } catch (exception: Exception) {
-            throw ErrorHandler.exceptionToErrorResponse(exception)
-        }
+        return ResponseEntity(
+            inntektsPlanleggerService.hentStatus(
+                SecurityContextUtil.getPidFromContext(),
+                valgtAr,
+                innsendingsTidspunkt.minusSeconds(3) //juster tidspunkt noen sekunder tilbake så vi er sikker på å få med alt
+            ), HttpStatus.OK
+        )
     }
 }
