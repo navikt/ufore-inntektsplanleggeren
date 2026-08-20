@@ -1,19 +1,20 @@
 # Inntektsplanleggeren-backend
 
-## Først
-1. Gå til utils/fetch.secrets-to-env og følg readme
-
 ## API Documentation
 Dev: https://inntektsplanleggeren-backend-q2.intern.dev.nav.no/swagger-ui/index.html
 
-## How to run locally
-Set the following env variables:
-* AZURE_APP_CLIENT_SECRET
-* TOKEN_X_PRIVATE_JWK
+## Lokal utvikling
 
-Or use EnvFile - se fetch-secrets.sh
+Du må være lagt til i teamet ufore i Nais Console
 
-URL: http://localhost:8080/api/..
+For å kjøre backenden lokalt trengs noen miljøvariabler fra Nais. Disse hentes automatisk første gang appen startes med `local`-profilen.
+Miljøvariablene må hentes på nytt når appen deployes til testmiljø, det må gjøres manuelt ved å kjøre skriptet `./fetch-secrets.sh`.
+Skriptet lagrer miljøvariablene i mappen `/tmp` og fjernes når maskinen slåes av.
+
+I IntelliJ kan du velge `edit configurations` ved siden av run-knappen.
+* Sett `local` i  active profiles
+
+URL: http://localhost:8080/api/...
 
 ### Tokens for test
 
