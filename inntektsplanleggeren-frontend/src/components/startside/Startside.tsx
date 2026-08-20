@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { hentStartsideData, type StartsideData } from '@/api/hentStartsideData'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
-import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import { ApiError, ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
 import ForventetInntekt from '@/components/startside/ForventetInntekt'
 import { LoadingBox } from '@/components/startside/LoadingBox'
 import { YearView } from '@/components/startside/YearView'
@@ -22,14 +22,14 @@ export function Startside() {
     console.log(data)
     useEffect(() => {
         const hentData = async () => {
-            const data = await hentStartsideData()
-            if (data instanceof ErrorResponse) {
-                setErrorMessage(data.message)
-            } else {
+            try {
+                const data = await hentStartsideData()
                 setData(data)
+            } catch (e) {
+                setErrorMessage(e instanceof ApiError ? e.errorCode : ErrorCode.GENERIC_ERROR)
             }
         }
-        hentData()
+        void hentData()
     }, [setErrorMessage])
 
     const handleButtonClick = async (year: number, previousYear: number | null) => {

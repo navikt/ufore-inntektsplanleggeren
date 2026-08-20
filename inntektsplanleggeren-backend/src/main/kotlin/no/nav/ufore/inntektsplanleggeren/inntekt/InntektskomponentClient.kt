@@ -36,6 +36,7 @@ class InntektskomponentClient(
         pid: String,
         inntektsAar: List<Int>
     ): HentForventetInntektResponse {
+        throw ManglerTilgangInntektskomponentenException(AppId.INNTEKTSKOMPONENTEN.name, "", "", null)
         val path = "/rs/api/v1/forventetinntekt"
         try {
             return tokenService.getEgressToken(scope = scope, pid = pid, appId = AppId.INNTEKTSKOMPONENTEN)

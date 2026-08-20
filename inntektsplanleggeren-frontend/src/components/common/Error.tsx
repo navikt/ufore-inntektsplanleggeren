@@ -47,9 +47,17 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
 
 export class ErrorResponse {
     message: ErrorCode
+    constructor(message: ErrorCode) {
+        this.message = message
+    }
+}
 
-    constructor(data: { detail?: string; message?: ErrorCode }) {
-        this.message = (data.detail ?? data.message ?? 'GENERIC_ERROR') as ErrorCode
+export class ApiError extends Error {
+    errorCode: ErrorCode
+
+    constructor(errorCode: ErrorCode) {
+        super(errorCode)
+        this.errorCode = errorCode
     }
 }
 
