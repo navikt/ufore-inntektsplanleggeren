@@ -2,7 +2,6 @@ package no.nav.ufore.inntektsplanleggeren
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import java.io.File
 
 @SpringBootApplication
 class InntektsplanleggerenBackendApplication
@@ -17,9 +16,7 @@ fun fetchSecretsLokalt() {
 		?.split(",")
 		?.contains("local") == true
 
-	val secretsFile = File("/tmp/inntektsplanleggeren.env")
-
-	if (isLocal && !secretsFile.exists()) {
+	if (isLocal) {
 		ProcessBuilder("./inntektsplanleggeren-backend/fetch-secrets.sh")
 			.inheritIO()
 			.start()
