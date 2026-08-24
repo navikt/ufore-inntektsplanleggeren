@@ -23,7 +23,7 @@
 		<mockwebserver.version>5.4.0</mockwebserver.version>
 		<micrometer.version>1.17.0</micrometer.version>
 		<logback.version>1.6.2</logback.version>
-		<logback-access.version>2.0.14</logback-access.version>
+		<logback-access.version>2.0.15</logback-access.version>
 	</properties>
 	<dependencies>
 		<dependency>
