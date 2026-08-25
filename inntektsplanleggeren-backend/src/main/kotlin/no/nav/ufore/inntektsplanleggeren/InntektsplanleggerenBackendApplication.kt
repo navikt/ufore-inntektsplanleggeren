@@ -7,5 +7,19 @@ import org.springframework.boot.runApplication
 class InntektsplanleggerenBackendApplication
 
 fun main(args: Array<String>) {
-	runApplication<no.nav.ufore.inntektsplanleggeren.InntektsplanleggerenBackendApplication>(*args)
+	fetchSecretsLokalt()
+	runApplication<InntektsplanleggerenBackendApplication>(*args)
+}
+
+fun fetchSecretsLokalt() {
+	val isLocal = System.getProperty("spring.profiles.active")
+		?.split(",")
+		?.contains("local") == true
+
+	if (isLocal) {
+		ProcessBuilder("./inntektsplanleggeren-backend/fetch-secrets.sh")
+			.inheritIO()
+			.start()
+			.waitFor()
+	}
 }
