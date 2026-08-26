@@ -25,7 +25,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleForbidden(ex: ForbiddenException): ProblemDetail {
         log.warn("Forbidden fra ${ex.system}/${ex.service}: ${ex.message}. NAV-Call-ID: ${getCurrentCallId()}", ex)
         return ProblemDetail.forStatus(HttpStatus.FORBIDDEN).apply {
-            detail = "GENERIC_ERROR"
+            detail = "FORBIDDEN_ERROR"
         }
     }
 
@@ -36,4 +36,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
             detail = "GENERIC_ERROR"
         }
     }
+
+    // TODO: gjør om til enum
 }

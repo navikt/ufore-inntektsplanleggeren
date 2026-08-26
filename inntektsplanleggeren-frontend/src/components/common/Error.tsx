@@ -51,16 +51,6 @@ export class ErrorResponse {
         this.message = message
     }
 }
-
-export class ApiError extends Error {
-    errorCode: ErrorCode
-
-    constructor(errorCode: ErrorCode) {
-        super(errorCode)
-        this.errorCode = errorCode
-    }
-}
-
 export enum ErrorCode {
     LOGIN_LEVEL_TOO_LOW = 'LOGIN_LEVEL_TOO_LOW',
     VEILEDER_UNAUTHORIZED = 'VEILEDER_UNAUTHORIZED',
