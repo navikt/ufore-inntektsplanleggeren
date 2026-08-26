@@ -1,4 +1,4 @@
-import { ErrorResponse } from '@/components/common/Error'
+import { lagHeadere, lagResponse, type Result } from '@/api/apiHjelpere'
 import { BASE_PATH } from '@/routes'
 
 export interface VeilederBannerInfo {
@@ -7,35 +7,17 @@ export interface VeilederBannerInfo {
     veilederNavn?: string
 }
 
-export async function hentVeilederBannerInfo(): Promise<VeilederBannerInfo> {
+export async function hentVeilederBannerInfo(): Promise<Result<VeilederBannerInfo>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
+    const headers = lagHeadere(pid)
 
     return await fetch(`${BASE_PATH}/api/veilederbanner`, {
         method: 'GET',
         credentials: 'include',
         headers: headers,
     }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-
-        if (response.status >= 300) {
-            throw Error()
-        }
-        return response.json()
+        return lagResponse(response)
     })
 }

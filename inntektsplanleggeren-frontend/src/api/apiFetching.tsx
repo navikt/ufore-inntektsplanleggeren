@@ -1,3 +1,4 @@
+import { lagHeadere, lagResponse, type Result } from '@/api/apiHjelpere'
 import type {
     InntekterResponse,
     PersonInntekter,
@@ -6,96 +7,43 @@ import type {
     StatusResponse,
     SubmitInntekterRequest,
 } from '@/api/model/ApiRequests'
-import { ErrorResponse } from '@/components/common/Error'
+import { BASE_PATH } from '@/routes'
 
-export const BASE_PATH = '/uforetrygd/selvbetjening/inntektsplanleggeren'
-
-export async function getInntekterForSimulering(year: number): Promise<InntekterResponse | ErrorResponse> {
+export async function getInntekterForSimulering(year: number): Promise<Result<InntekterResponse>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
+    const headers = lagHeadere(pid)
 
     return await fetch(`${BASE_PATH}/api/inntekter?simuleringsaar=${year}`, {
         method: 'GET',
         credentials: 'include',
         headers: headers,
     }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-
-        return response.json()
+        return lagResponse(response)
     })
 }
 
-export async function getInntekter(aar: number): Promise<InntekterResponse | ErrorResponse> {
+export async function getInntekter(aar: number): Promise<Result<InntekterResponse>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
+    const headers = lagHeadere(pid)
 
     return await fetch(`${BASE_PATH}/api/inntekter-for-aar?aar=${aar}`, {
         method: 'GET',
         credentials: 'include',
         headers: headers,
     }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-
-        return response.json()
+        return lagResponse(response)
     })
 }
 
-export async function simulate(
-    brukerInntekter: PersonInntekter,
-    epsInntekter: PersonInntekter | null,
-    year: number
-): Promise<SimulationResponse | ErrorResponse> {
+export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<Result<SimulationResponse>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
+    const headers = lagHeadere(pid)
 
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
@@ -108,37 +56,15 @@ export async function simulate(
         headers: headers,
         body: JSON.stringify(request),
     }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-
-        return response.json()
+        return lagResponse(response)
     })
 }
 
-export async function send(
-    brukerInntekter: PersonInntekter,
-    epsInntekter: PersonInntekter | null,
-    year: number
-): Promise<SendApplicationResponse | ErrorResponse> {
+export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<Result<SendApplicationResponse>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
+    const headers = lagHeadere(pid)
 
     const request: SubmitInntekterRequest = {
         bruker: brukerInntekter,
@@ -151,33 +77,15 @@ export async function send(
         headers: headers,
         body: JSON.stringify(request),
     }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-
-        return response.json()
+        return lagResponse(response)
     })
 }
 
-export async function getStatus(valgtaar: number, innsendingstidspunkt: string): Promise<StatusResponse | ErrorResponse> {
+export async function getStatus(valgtaar: number, innsendingstidspunkt: string): Promise<Result<StatusResponse>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
-
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
+    const headers = lagHeadere(pid)
 
     const url = encodeURI(`${BASE_PATH}/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
     return await fetch(url, {
@@ -185,13 +93,6 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
         credentials: 'include',
         headers: headers,
     }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-
-        return response.json()
+        return lagResponse(response)
     })
 }

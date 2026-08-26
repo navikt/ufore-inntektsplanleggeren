@@ -1,7 +1,6 @@
-import { BASE_PATH } from '@/api/apiFetching'
-import { lagHeadere, type Result } from '@/api/apiHjelpere'
+import { lagHeadere, lagResponse, type Result } from '@/api/apiHjelpere'
 import type { Message } from '@/api/model/ApiRequests'
-import { ErrorCode } from '@/components/common/Error'
+import { BASE_PATH } from '@/routes'
 
 export async function hentStartsideData(): Promise<Result<StartsideData>> {
     const searchParams = new URLSearchParams(document.location.search)
@@ -14,15 +13,7 @@ export async function hentStartsideData(): Promise<Result<StartsideData>> {
         credentials: 'include',
         headers: headers,
     }).then(async (response) => {
-        if (!response.ok) {
-            const error = await response.json()
-            const errorCode = (error.detail ?? error.message ?? ErrorCode.GENERIC_ERROR) as ErrorCode
-            return { ok: false, error: errorCode }
-        }
-
-        const data = await response.json()
-
-        return { ok: true, data: data }
+        return lagResponse(response)
     })
 }
 

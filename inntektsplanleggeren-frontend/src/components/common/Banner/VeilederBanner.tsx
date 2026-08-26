@@ -2,7 +2,6 @@ import './veilederbanner.css'
 import { BodyShort, Box, CopyButton, HStack, InternalHeader, Spacer } from '@navikt/ds-react'
 import { useContext, useEffect, useState } from 'react'
 import { hentVeilederBannerInfo, type VeilederBannerInfo } from '@/api/hentVeilederBannerInfo'
-import { ErrorCode } from '@/components/common/Error'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 import { DataContext } from '@/context/DataContextProvider'
 import { BASE_PATH } from '@/routes'
@@ -13,12 +12,13 @@ export default function VeilederBanner() {
 
     useEffect(() => {
         const hentInfo = async () => {
-            try {
-                const veileder = await hentVeilederBannerInfo()
-                setVeilederBannerInfo(veileder)
-            } catch (e) {
-                setErrorMessage(ErrorCode.GENERIC_ERROR)
+            const veilederResultat = await hentVeilederBannerInfo()
+
+            if (!veilederResultat.ok) {
+                setErrorMessage(veilederResultat.error)
+                return
             }
+            setVeilederBannerInfo(veilederResultat.data)
         }
         void hentInfo()
     }, [setErrorMessage])

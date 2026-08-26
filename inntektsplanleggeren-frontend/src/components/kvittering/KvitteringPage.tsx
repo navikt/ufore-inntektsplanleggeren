@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getStatus } from '@/api/apiFetching'
 import { StatusCodes } from '@/api/model/StatusCodes'
-import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import { ErrorCode, ErrorView } from '@/components/common/Error'
 import { KvitteringStatusBox } from '@/components/kvittering/KvitteringStatusBox'
 import { getPidQueryParamString } from '@/components/utils/UrlUtil'
 import { DataContext } from '@/context/DataContextProvider'
@@ -33,12 +33,12 @@ export const KvitteringPage = () => {
             if (selectedYear && sendResponse?.innsendingsTidspunkt && attempts > 3) {
                 getStatus(selectedYear, sendResponse.innsendingsTidspunkt)
                     .then((result) => {
-                        if (result instanceof ErrorResponse) {
-                            setSystemErrorMessage(result.message)
+                        if (!result.ok) {
+                            setSystemErrorMessage(result.error)
                         } else {
                             setSystemErrorMessage(null)
-                            setStatusResponse(result)
-                            if (result.status === 'BEHANDLET_MEDFOERER_ENDRING' || result.status === 'BEHANDLET_MEDFOERER_INGEN_ENDRING') {
+                            setStatusResponse(result.data)
+                            if (result.data.status === 'BEHANDLET_MEDFOERER_ENDRING' || result.data.status === 'BEHANDLET_MEDFOERER_INGEN_ENDRING') {
                                 setIsWaiting(false)
                                 clearInterval(intervalId)
                             }
