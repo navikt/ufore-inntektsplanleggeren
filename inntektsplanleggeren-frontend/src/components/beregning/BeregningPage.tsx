@@ -1,4 +1,4 @@
-import { Alert, BodyLong, Heading, HelpText, HStack, Link, ReadMore, VStack } from '@navikt/ds-react'
+import { Alert, BodyLong, BodyShort, Heading, HelpText, HStack, InfoCard, Link, ReadMore, VStack } from '@navikt/ds-react'
 import { type FormEvent, type MouseEvent, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
@@ -12,12 +12,15 @@ import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
 import './BeregningPage.css'
+import { ExclamationmarkTriangleFillIcon } from '@navikt/aksel-icons'
 import Knapperad from '@/components/common/Knapperad'
+import { useToggle } from '@/hooks/useToggle'
 
 export const BeregningPage = () => {
     const { selectedYear, setFormStep, brukerinntekt, annenForelderInntekt } = useContext(FormStateContext)
     const { simulationResponse, errorMessage } = useContext(DataContext)
     const navigate = useNavigate()
+    const skalViseOmregningVarsel = useToggle('ufore.omregning-varsel')
 
     useEffect(() => {
         setFormStep(2)
@@ -44,6 +47,20 @@ export const BeregningPage = () => {
     if (simulationResponse?.result)
         return (
             <VStack gap="space-32">
+                {skalViseOmregningVarsel && (
+                    <InfoCard data-color="warning">
+                        <InfoCard.Message icon={<ExclamationmarkTriangleFillIcon aria-hidden color="#C95100" />}>
+                            <Heading size="small" level="2" spacing>
+                                Viktig informasjon om beregningene dine
+                            </Heading>
+                            <BodyShort spacing>
+                                Melder du fra om inntekt før 1. oktober, vil beregningen du ser her ikke ta hensyn til de nye reglene om økt bunnfradrag. Du kan
+                                trygt melde fra likevel. Vi gjør en ny beregning av uføretrygden din for oktober, slik at utbetalingen din blir riktig.
+                            </BodyShort>
+                            <BodyShort spacing>Oppdatert informasjon om nytt bunnfradrag vil komme innen oktober.</BodyShort>
+                        </InfoCard.Message>
+                    </InfoCard>
+                )}
                 {simulationResponse.messages.some((message) => message.messageCode === MessageCodes.USER_HAS_NO_LOPENDE_VEDTAK_YET) ? (
                     <Alert variant="warning">
                         Du kan ikke bruke inntektsplanleggeren ennå. Din inntekt kan registreres her fra måneden før din første utbetaling av uføretrygd.

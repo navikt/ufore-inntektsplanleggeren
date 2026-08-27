@@ -1,4 +1,5 @@
-import { Accordion, Alert, BodyShort, GuidePanel, Heading, List, VStack } from '@navikt/ds-react'
+import { InformationSquareFillIcon } from '@navikt/aksel-icons'
+import { Accordion, Alert, BodyShort, GuidePanel, Heading, InfoCard, List, VStack } from '@navikt/ds-react'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
@@ -11,6 +12,7 @@ import { YearView } from '@/components/startside/YearView'
 import { DataContext } from '@/context/DataContextProvider'
 import { FormStateContext } from '@/context/FormData'
 import { getFullPathForPage, PageLinks } from '@/FormContainer'
+import { useToggle } from '@/hooks/useToggle'
 
 export function Startside() {
     const { setInntekterResponse, setPreviousYearInntekterResponse, errorMessage, setErrorMessage } = useContext(DataContext)
@@ -18,8 +20,8 @@ export function Startside() {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<StartsideData | null>(null)
+    const skalViseOmregningVarsel = useToggle('ufore.omregning-varsel')
 
-    console.log(data)
     useEffect(() => {
         const hentData = async () => {
             const data = await hentStartsideData()
@@ -88,6 +90,20 @@ export function Startside() {
 
     return (
         <VStack className="form-container">
+            {skalViseOmregningVarsel && (
+                <InfoCard>
+                    <InfoCard.Message icon={<InformationSquareFillIcon aria-hidden color="#417DA0" />}>
+                        <Heading size="small" level="2" spacing>
+                            Viktig informasjon om beregningene dine
+                        </Heading>
+                        <BodyShort spacing>
+                            Melder du fra om inntekt før 1. oktober, vil beregningen du ser her ikke ta hensyn til de nye reglene om økt bunnfradrag. Du kan
+                            trygt melde fra likevel. Vi gjør en ny beregning av uføretrygden din for oktober, slik at utbetalingen din blir riktig.
+                        </BodyShort>
+                        <BodyShort spacing>Oppdatert informasjon om nytt bunnfradrag vil komme innen oktober.</BodyShort>
+                    </InfoCard.Message>
+                </InfoCard>
+            )}
             <section aria-label={'Greit å vite'}>
                 <GuidePanel poster>
                     <Heading size="medium" level="2" spacing>
