@@ -17,7 +17,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleManglerTilgangInntektskomponenten(ex: ManglerTilgangInntektskomponentenException): ProblemDetail {
         log.warn("Mangler tilgang til inntektskomponenten. NAV-Call-ID: ${getCurrentCallId()}", ex)
         return ProblemDetail.forStatus(HttpStatus.FORBIDDEN).apply {
-            detail = "MANGLER_TILGANG_INNTEKTSKOMPONENTEN"
+            detail = ErrorKoderTilFrontend.MANGLER_TILGANG_INNTEKTSKOMPONENTEN.name
         }
     }
 
@@ -25,7 +25,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleForbidden(ex: ForbiddenException): ProblemDetail {
         log.warn("Forbidden fra ${ex.system}/${ex.service}: ${ex.message}. NAV-Call-ID: ${getCurrentCallId()}", ex)
         return ProblemDetail.forStatus(HttpStatus.FORBIDDEN).apply {
-            detail = "FORBIDDEN_ERROR"
+            detail = ErrorKoderTilFrontend.FORBIDDEN_ERROR.name
         }
     }
 
@@ -33,9 +33,14 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleGeneric(ex: Exception): ProblemDetail {
         log.error("Uventet feil: ${ex.message}. NAV-Call-ID: ${getCurrentCallId()}", ex)
         return ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR).apply {
-            detail = "GENERIC_ERROR"
+            detail = ErrorKoderTilFrontend.GENERIC_ERROR.name
         }
     }
 
-    // TODO: gjør om til enum
+}
+
+enum class ErrorKoderTilFrontend {
+    GENERIC_ERROR,
+    MANGLER_TILGANG_INNTEKTSKOMPONENTEN,
+    FORBIDDEN_ERROR,
 }
