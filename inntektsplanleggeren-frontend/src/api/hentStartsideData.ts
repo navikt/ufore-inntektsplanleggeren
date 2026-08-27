@@ -1,4 +1,4 @@
-import { lagHeadere, lagResponse, type Result } from '@/api/apiHjelpere'
+import { hentData, lagHeadere, type Result } from '@/api/apiHjelpere'
 import type { Message } from '@/api/model/ApiRequests'
 import { BASE_PATH } from '@/routes'
 
@@ -8,13 +8,7 @@ export async function hentStartsideData(): Promise<Result<StartsideData>> {
 
     const headers = lagHeadere(pid)
 
-    return await fetch(`${BASE_PATH}/api/startside`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+    return hentData(`${BASE_PATH}/api/startside`, 'GET', headers)
 }
 
 export interface StartsideData {

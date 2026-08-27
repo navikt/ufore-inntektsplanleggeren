@@ -1,4 +1,4 @@
-import { lagHeadere, lagResponse, type Result } from '@/api/apiHjelpere'
+import { hentData, lagHeadere, type Result } from '@/api/apiHjelpere'
 import { BASE_PATH } from '@/routes'
 
 export interface VeilederBannerInfo {
@@ -13,11 +13,5 @@ export async function hentVeilederBannerInfo(): Promise<Result<VeilederBannerInf
 
     const headers = lagHeadere(pid)
 
-    return await fetch(`${BASE_PATH}/api/veilederbanner`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+    return hentData(`${BASE_PATH}/api/veilederbanner`, 'GET', headers)
 }

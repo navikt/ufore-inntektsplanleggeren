@@ -1,4 +1,4 @@
-import { lagHeadere, lagResponse, type Result } from '@/api/apiHjelpere'
+import { hentData, lagHeadere, type Result } from '@/api/apiHjelpere'
 import type {
     InntekterResponse,
     PersonInntekter,
@@ -15,13 +15,7 @@ export async function getInntekterForSimulering(year: number): Promise<Result<In
 
     const headers = lagHeadere(pid)
 
-    return await fetch(`${BASE_PATH}/api/inntekter?simuleringsaar=${year}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+    return hentData(`${BASE_PATH}/api/inntekter?simuleringsaar=${year}`, 'GET', headers)
 }
 
 export async function getInntekter(aar: number): Promise<Result<InntekterResponse>> {
@@ -29,14 +23,7 @@ export async function getInntekter(aar: number): Promise<Result<InntekterRespons
     const pid: string | null = searchParams.get('pid')
 
     const headers = lagHeadere(pid)
-
-    return await fetch(`${BASE_PATH}/api/inntekter-for-aar?aar=${aar}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+    return hentData(`${BASE_PATH}/api/inntekter-for-aar?aar=${aar}`, 'GET', headers)
 }
 
 export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<Result<SimulationResponse>> {
@@ -50,14 +37,7 @@ export async function simulate(brukerInntekter: PersonInntekter, epsInntekter: P
         eps: epsInntekter,
     }
 
-    return await fetch(`${BASE_PATH}/api/simuler?simuleringsaar=${year}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: headers,
-        body: JSON.stringify(request),
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+    return hentData(`${BASE_PATH}/api/simuler?simuleringsaar=${year}`, 'POST', headers, JSON.stringify(request))
 }
 
 export async function send(brukerInntekter: PersonInntekter, epsInntekter: PersonInntekter | null, year: number): Promise<Result<SendApplicationResponse>> {
@@ -71,14 +51,7 @@ export async function send(brukerInntekter: PersonInntekter, epsInntekter: Perso
         eps: epsInntekter,
     }
 
-    return await fetch(`${BASE_PATH}/api/send?simuleringsaar=${year}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: headers,
-        body: JSON.stringify(request),
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+    return hentData(`${BASE_PATH}/api/send?simuleringsaar=${year}`, 'POST', headers, JSON.stringify(request))
 }
 
 export async function getStatus(valgtaar: number, innsendingstidspunkt: string): Promise<Result<StatusResponse>> {
@@ -88,11 +61,6 @@ export async function getStatus(valgtaar: number, innsendingstidspunkt: string):
     const headers = lagHeadere(pid)
 
     const url = encodeURI(`${BASE_PATH}/api/status?valgtaar=${valgtaar}&innsendingstidspunkt=${innsendingstidspunkt}`)
-    return await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        return lagResponse(response)
-    })
+
+    return hentData(url, 'GET', headers)
 }
