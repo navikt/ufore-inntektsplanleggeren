@@ -10,6 +10,7 @@ import no.nav.ufore.inntektsplanleggeren.inntekt.dto.AbonnerteInntekterIdentOgPe
 import no.nav.ufore.inntektsplanleggeren.inntekt.dto.Aktoer
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ClientException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ForbiddenException
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ManglerTilgangInntektskomponentenException
 import no.nav.ufore.inntektsplanleggeren.security.TokenService
 import no.nav.ufore.inntektsplanleggeren.util.NAV_CALL_ID_MDC
 import okhttp3.mockwebserver.MockResponse
@@ -210,9 +211,9 @@ class InntektskomponentClientTest: WebClientTest()  {
     }
 
     @Test
-    fun `should throw ForbiddenException when 403 from inntektskomponenten when fetching ForventetInntekt`(){
+    fun `should throw ManglerTilgangInntektskomponentenException when 403 from inntektskomponenten when fetching ForventetInntekt`(){
         prepare(jsonResponse(HttpStatus.FORBIDDEN) ?: MockResponse())
-        val exception = assertThrows<ForbiddenException> {
+        val exception = assertThrows<ManglerTilgangInntektskomponentenException> {
             inntektskomponentClient.hentForventetInntekt("12345678901", listOf(2024))
         }
         assertEquals(AppId.INNTEKTSKOMPONENTEN.name, exception.system)

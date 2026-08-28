@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import './PreviousYearPage.css'
 import { useNavigate } from 'react-router-dom'
 import { getInntekterForSimulering } from '@/api/apiFetching'
-import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 import Knapperad from '@/components/common/Knapperad'
 import { PreviousExpectedIncomeTable } from '@/components/previousYear/PreviousExpectedIncomeTable'
 import { DataContext } from '@/context/DataContextProvider'
@@ -19,18 +18,15 @@ export const PreviousYearPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const onClickButton = async () => {
-        try {
-            const data = await getInntekterForSimulering(selectedYear)
-            if (data instanceof ErrorResponse) {
-                setErrorMessage(data.message)
-            } else {
-                setInntekterResponse(data)
-                setBrukerinntekt(data.forventedeInntekter.bruker)
-                setAnnenForelderInntekt(data.forventedeInntekter.eps)
-            }
-        } catch {
-            setErrorMessage(ErrorCode.GENERIC_ERROR)
+        const inntekterResultat = await getInntekterForSimulering(selectedYear)
+        if (!inntekterResultat.ok) {
+            setErrorMessage(inntekterResultat.error)
+        } else {
+            setInntekterResponse(inntekterResultat.data)
+            setBrukerinntekt(inntekterResultat.data.forventedeInntekter.bruker)
+            setAnnenForelderInntekt(inntekterResultat.data.forventedeInntekter.eps)
         }
+
         setIsLoading(false)
         navigate(getFullPathForPage(PageLinks.FORVENTET_INNTEKT))
     }

@@ -1,37 +1,14 @@
-import { BASE_PATH } from '@/api/apiFetching'
+import { hentData, lagHeadere, type Result } from '@/api/apiHjelpere'
 import type { Message } from '@/api/model/ApiRequests'
-import { ErrorResponse } from '@/components/common/Error'
+import { BASE_PATH } from '@/routes'
 
-export async function hentStartsideData(): Promise<StartsideData | ErrorResponse> {
+export async function hentStartsideData(): Promise<Result<StartsideData>> {
     const searchParams = new URLSearchParams(document.location.search)
     const pid: string | null = searchParams.get('pid')
 
-    let headers: HeadersInit
+    const headers = lagHeadere(pid)
 
-    if (pid) {
-        headers = {
-            'Content-Type': 'application/json',
-            pid: pid,
-        }
-    } else {
-        headers = {
-            'Content-Type': 'application/json',
-        }
-    }
-
-    return await fetch(`${BASE_PATH}/api/startside`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: headers,
-    }).then(async (response) => {
-        if (response.status === 403) {
-            return await response.json().then((it) => new ErrorResponse(it))
-        }
-        if (response.status >= 300) {
-            throw Error()
-        }
-        return response.json()
-    })
+    return hentData(`${BASE_PATH}/api/startside`, 'GET', headers)
 }
 
 export interface StartsideData {

@@ -6,7 +6,6 @@ import { simulate } from '@/api/apiFetching'
 import type { PersonInntekter, SimulationResponse } from '@/api/model/ApiRequests'
 import { MessageCodes } from '@/api/model/MessageCodes'
 import { numberFormatWithKr } from '@/common/Utils'
-import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 import Knapperad from '@/components/common/Knapperad'
 import { FormFieldsEps } from '@/components/innfylling/FormFieldsEps'
 import { DataContext } from '@/context/DataContextProvider'
@@ -99,28 +98,23 @@ export const InnfyllingPage = () => {
         e.preventDefault()
         setFormDirty(true)
 
-        try {
-            setIsLoading(true)
-            if (checkForFieldErrors()) {
-                setIsLoading(false)
-                return
-            }
-            const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear)
-            if (result instanceof ErrorResponse) {
-                setErrorMessage(result.message)
+        setIsLoading(true)
+        if (checkForFieldErrors()) {
+            setIsLoading(false)
+            return
+        }
+        const result = await simulate(brukerinntekt, annenForelderInntekt, selectedYear)
+        if (!result.ok) {
+            setErrorMessage(result.error)
+            setIsLoading(false)
+        } else {
+            if (checkForSendingErrors(result.data)) {
                 setIsLoading(false)
             } else {
-                if (checkForSendingErrors(result)) {
-                    setIsLoading(false)
-                } else {
-                    setIsLoading(false)
-                    setSimulationResponse(result)
-                    navigate(getFullPathForPage(PageLinks.BEREGNING))
-                }
+                setIsLoading(false)
+                setSimulationResponse(result.data)
+                navigate(getFullPathForPage(PageLinks.BEREGNING))
             }
-        } catch {
-            setIsLoading(false)
-            setErrorMessage(ErrorCode.GENERIC_ERROR)
         }
     }
 

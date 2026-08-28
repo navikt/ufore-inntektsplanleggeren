@@ -2,7 +2,6 @@ import { Alert, VStack } from '@navikt/ds-react'
 import { type FormEvent, type MouseEvent, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { send } from '@/api/apiFetching'
-import { ErrorCode, ErrorResponse } from '@/components/common/Error'
 import Knapperad from '@/components/common/Knapperad'
 import { InntektSummary } from '@/components/oppsummering/InntektSummary'
 import { DataContext } from '@/context/DataContextProvider'
@@ -22,19 +21,14 @@ export const OppsummeringPage = () => {
     const handleSubmit = async (e: MouseEvent | FormEvent) => {
         e.preventDefault()
 
-        try {
-            setIsLoading(true)
-            const result = await send(brukerinntekt, annenForelderInntekt, selectedYear)
-            if (result instanceof ErrorResponse) {
-                setErrorMessage(result.message)
-                setIsLoading(false)
-            } else {
-                setSendResponse(result)
-                navigate(getFullPathForPage(PageLinks.KVITTERING))
-            }
-        } catch {
-            setErrorMessage(ErrorCode.GENERIC_ERROR)
+        setIsLoading(true)
+        const result = await send(brukerinntekt, annenForelderInntekt, selectedYear)
+        if (!result.ok) {
+            setErrorMessage(result.error)
             setIsLoading(false)
+        } else {
+            setSendResponse(result.data)
+            navigate(getFullPathForPage(PageLinks.KVITTERING))
         }
 
         navigate(getFullPathForPage(PageLinks.KVITTERING))

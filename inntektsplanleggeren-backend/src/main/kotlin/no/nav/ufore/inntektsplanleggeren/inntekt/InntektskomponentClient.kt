@@ -10,6 +10,7 @@ import no.nav.ufore.inntektsplanleggeren.inntekt.dto.HentAbonnerteInntekterBolkR
 import no.nav.ufore.inntektsplanleggeren.inntekt.dto.HentForventetInntektResponse
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ClientException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ForbiddenException
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ManglerTilgangInntektskomponentenException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.PersonNotFoundException
 import no.nav.ufore.inntektsplanleggeren.security.TokenService
 import no.nav.ufore.inntektsplanleggeren.util.NAV_CALL_ID_HEADER
@@ -56,7 +57,7 @@ class InntektskomponentClient(
                 }
         } catch (e: WebClientResponseException) {
             when (e.statusCode) {
-                HttpStatus.FORBIDDEN -> throw ForbiddenException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
+                HttpStatus.FORBIDDEN -> throw ManglerTilgangInntektskomponentenException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
                 HttpStatus.NOT_FOUND  -> throw PersonNotFoundException(AppId.INNTEKTSKOMPONENTEN.name, path, e.message, e)
                 HttpStatus.BAD_REQUEST  -> {
                     logger.error("Bad request "+ e.responseBodyAsString)

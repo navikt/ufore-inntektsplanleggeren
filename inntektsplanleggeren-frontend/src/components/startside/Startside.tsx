@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { getInntekter, getInntekterForSimulering } from '@/api/apiFetching'
 import { hentStartsideData, type StartsideData } from '@/api/hentStartsideData'
 import { MessageCodes, MessageTypes } from '@/api/model/MessageCodes'
-import { ErrorCode, ErrorResponse, ErrorView } from '@/components/common/Error'
+import { ErrorView } from '@/components/common/Error'
 import ForventetInntekt from '@/components/startside/ForventetInntekt'
 import { LoadingBox } from '@/components/startside/LoadingBox'
 import { YearView } from '@/components/startside/YearView'
@@ -24,44 +24,37 @@ export function Startside() {
 
     useEffect(() => {
         const hentData = async () => {
-            const data = await hentStartsideData()
-            if (data instanceof ErrorResponse) {
-                setErrorMessage(data.message)
-            } else {
-                setData(data)
+            const result = await hentStartsideData()
+
+            if (!result.ok) {
+                setErrorMessage(result.error)
+                return
             }
+            setData(result.data)
         }
-        hentData()
+        void hentData()
     }, [setErrorMessage])
 
     const handleButtonClick = async (year: number, previousYear: number | null) => {
         setIsLoading(true)
         setSelectedYear(year)
         if (previousYear !== null) {
-            try {
-                const data = await getInntekter(previousYear)
-                if (data instanceof ErrorResponse) {
-                    setErrorMessage(data.message)
-                } else {
-                    setPreviousYearInntekterResponse(data)
-                }
-            } catch {
-                setErrorMessage(ErrorCode.GENERIC_ERROR)
+            const inntekterResultat = await getInntekter(previousYear)
+            if (!inntekterResultat.ok) {
+                setErrorMessage(inntekterResultat.error)
+            } else {
+                setPreviousYearInntekterResponse(inntekterResultat.data)
             }
             navigate(getFullPathForPage(PageLinks.FORRIGE_INNTEKTER))
         } else {
-            try {
-                const data = await getInntekterForSimulering(year)
-                if (data instanceof ErrorResponse) {
-                    setErrorMessage(data.message)
-                } else {
-                    setInntekterResponse(data)
-                    setBrukerinntekt(data.forventedeInntekter.bruker)
-                    setAnnenForelderInntekt(data.forventedeInntekter.eps)
-                    setIsLoading(false)
-                }
-            } catch {
-                setErrorMessage(ErrorCode.GENERIC_ERROR)
+            const inntekterResultat = await getInntekterForSimulering(year)
+            if (!inntekterResultat.ok) {
+                setErrorMessage(inntekterResultat.error)
+            } else {
+                setInntekterResponse(inntekterResultat.data)
+                setBrukerinntekt(inntekterResultat.data.forventedeInntekter.bruker)
+                setAnnenForelderInntekt(inntekterResultat.data.forventedeInntekter.eps)
+                setIsLoading(false)
             }
             navigate(getFullPathForPage(PageLinks.FORVENTET_INNTEKT))
         }
