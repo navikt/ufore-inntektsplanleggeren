@@ -21,7 +21,7 @@
 		<jackson.version>2.22.2</jackson.version>
 		<logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
 		<mockwebserver.version>5.5.0</mockwebserver.version>
-		<micrometer.version>1.17.0</micrometer.version>
+		<micrometer.version>1.17.1</micrometer.version>
 		<logback.version>1.6.3</logback.version>
 		<logback-access.version>2.0.15</logback-access.version>
 	</properties>
