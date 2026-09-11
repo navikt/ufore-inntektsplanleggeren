@@ -64,12 +64,10 @@ const env =
         ? ensureEnv({
               oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
               inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-              pselvUrl: 'URL_PSELV_INNTEKTSPLANLEGGER',
           })
         : ensureEnv({
               oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
               inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-              pselvUrl: 'URL_PSELV_INNTEKTSPLANLEGGER',
           })
 
 const unleash = initialize({
