@@ -7,7 +7,7 @@ import promBundle from 'express-prom-bundle'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { initialize } from 'unleash-client'
 import winston, { format } from 'winston'
-import ensureEnv from './ensureEnv.js'
+import { env } from './env.js'
 import correlationIdMiddleware from './middleware/correlationId.js'
 import loggerMiddleware from './middleware/logger.js'
 
@@ -58,18 +58,6 @@ const unleashUrl = process.env.UNLEASH_SERVER_API_URL
 const unleashToken = process.env.UNLEASH_SERVER_API_TOKEN
 const unleashEnv = process.env.UNLEASH_SERVER_API_ENV
 
-// Sett miljøvariabler for veileder eller borger
-const env =
-    AUTH_PROVIDER === 'tokenx'
-        ? ensureEnv({
-              oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
-              inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-          })
-        : ensureEnv({
-              oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
-              inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-          })
-
 const unleash = initialize({
     disableAutoStart: !(unleashToken && unleashUrl && unleashEnv),
     url: `${unleashUrl}/api`,
@@ -107,7 +95,7 @@ const getOboToken = async (req: Request) => {
         throw new Error('401')
     }
 
-    const obo = await requestOboToken(token, env.oboAudience)
+    const obo = await requestOboToken(token, env().INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE)
     if (!obo.ok) {
         logger.error('Failed to get OBO token', {
             error: obo.error.message,
@@ -156,7 +144,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
     getOboToken(req)
         .then((oboToken) => {
             createProxyMiddleware({
-                target: `${env.inntektsplanleggerenBackendUrl}/api`,
+                target: `${env().INNTEKTSPLANLEGGEREN_BACKEND_URL}/api`,
                 changeOrigin: true,
                 headers: {
                     Authorization: `Bearer ${oboToken}`,
