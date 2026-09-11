@@ -68,7 +68,7 @@ spec:
   env:
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_URL"
       value: "http://inntektsplanleggeren-backend"
-    - name: "INNTEKTSPLANLEGGEREN_BACKEND_SCOPE"
-      value: "api://prod-gcp.ufore.inntektsplanleggeren-backend/.default"
+    - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
+      value: "prod-gcp:ufore:inntektsplanleggeren-backend"
   envFrom:
     - secret: inntektsplanleggeren-frontend-unleash-api-token
