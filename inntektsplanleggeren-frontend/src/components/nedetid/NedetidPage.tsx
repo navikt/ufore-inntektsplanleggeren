@@ -16,7 +16,7 @@ export const NedetidPage = () => {
                     Inntektsplanleggeren er midlertidig stengt
                 </Heading>
                 <BodyShort align="center">
-                    Inntektsplanleggeren er ikke tilgjengelig til fredag 26. juni kl. 9:00 på grunn av vedlikehold. Vi beklager for ulempen.
+                    Inntektsplanleggeren er ikke tilgjengelig til mandag 21. september kl. 9:00 på grunn av vedlikehold. Vi beklager ulempen.
                 </BodyShort>
             </VStack>
         </main>
