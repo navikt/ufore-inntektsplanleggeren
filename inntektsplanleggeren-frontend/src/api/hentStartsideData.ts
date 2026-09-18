@@ -19,7 +19,7 @@ export interface StartsideData {
 export interface UføretrygdOversikt {
     forventetInntekt: Record<number, number>
     forventetInntektAnnenForelder: Record<number, number | null>
-    inntektsgrense: number
+    bunnfradrag: number
     reduksjonsprosent: number
     inntektstak: number
     aarKanRegistrereInntekt: number[]

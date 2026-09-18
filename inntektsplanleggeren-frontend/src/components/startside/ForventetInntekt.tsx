@@ -45,9 +45,9 @@ export default function ForventetInntekt({ data }: Props) {
                         <></>
                     )}
                     <BodyLong>
-                        Din inntektsgrense:{' '}
+                        Ditt bunnfradrag:{' '}
                         <strong>
-                            <FormatKroner value={data.inntektsgrense} />
+                            <FormatKroner value={data.bunnfradrag} />
                         </strong>
                     </BodyLong>
                     <BodyLong>

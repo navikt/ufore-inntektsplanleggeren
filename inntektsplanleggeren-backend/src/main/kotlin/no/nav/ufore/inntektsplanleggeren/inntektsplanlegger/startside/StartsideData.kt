@@ -11,7 +11,7 @@ data class StartsideData(
 data class UføretrygdOversikt(
     val forventetInntekt: Map<Int, Int>,
     val forventetInntektAnnenForelder: Map<Int, Int?>,
-    val inntektsgrense: Int,
+    val bunnfradrag: Int,
     val reduksjonsprosent: Double,
     val inntektstak: Int,
     val harBarnetilleggFellesbarn: Boolean,
