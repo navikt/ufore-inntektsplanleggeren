@@ -48,12 +48,12 @@ class StartsideServiceTest {
 
         val expectedForventetInntektBruker = mapOf(year to 5000)
         val expectedForventetInntektEps = mapOf(year to 6000)
-        val expectedInntektsgrense = 232
+        val expectedBunnfradrag = 232
         val expectedKompensasjonsgrad = 23.2
         val expectedGrenseStoppAvUfoeretrygd = 564654
 
         val uforetrygd = uforetrygd(
-            inntektsgrense = expectedInntektsgrense,
+            inntektsgrense = expectedBunnfradrag,
             kompensasjonsgrad = expectedKompensasjonsgrad,
             grenseStoppAvUfoeretrygd = expectedGrenseStoppAvUfoeretrygd,
             barnetilleggFellesbarn = true,
@@ -82,7 +82,7 @@ class StartsideServiceTest {
 
         assertEquals(expectedForventetInntektBruker, startsideData.uforetrygd!!.forventetInntekt[year]?.let { mapOf(year to it) })
         assertEquals(expectedForventetInntektEps, startsideData.uforetrygd.forventetInntektAnnenForelder[year]?.let { mapOf(year to it) })
-        assertEquals(expectedInntektsgrense, startsideData.uforetrygd.inntektsgrense)
+        assertEquals(expectedBunnfradrag, startsideData.uforetrygd.bunnfradrag)
         assertEquals(expectedKompensasjonsgrad, startsideData.uforetrygd.reduksjonsprosent)
         assertEquals(expectedGrenseStoppAvUfoeretrygd, startsideData.uforetrygd.inntektstak)
         assertTrue(startsideData.uforetrygd.harBarnetilleggFellesbarn)

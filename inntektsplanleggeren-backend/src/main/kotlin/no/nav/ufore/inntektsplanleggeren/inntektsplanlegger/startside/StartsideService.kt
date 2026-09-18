@@ -57,7 +57,7 @@ class StartsideService(
             return UføretrygdOversikt(
                 forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
                 forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
-                inntektsgrense = uforetrygd.inntektsgrense,
+                bunnfradrag = uforetrygd.inntektsgrense,
                 reduksjonsprosent = uforetrygd.kompensasjonsgrad,
                 inntektstak = uforetrygd.grenseStoppAvUfoeretrygd,
                 harBarnetilleggFellesbarn = uforetrygd.barnetilleggFellesbarn,
