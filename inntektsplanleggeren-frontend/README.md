@@ -1,9 +1,5 @@
 # Inntektsplanleggeren
 
-## Først
-1. Gå til utils/fetch.secrets-to-env og følg readme
-
-
 ## Start mock
 1. Installer avhentigheter: `npm i`
 2. Start: `npm run mock`
@@ -20,3 +16,7 @@
 2. Start: `npm run q2-veileder` eller `npm run local-veileder`
     - For lokal kjøring, kjør opp backend på samme port som ligger i .env.development-local
 3. Legg til `?pid=<brukers_pid>` i url-en
+
+## Om TOKEN_X_ISSUER / AZURE_OPENID_CONFIG_ISSUER
+
+`npm run local`/`q2` og `npm run local-veileder`/`q2-veileder` setter hhv. `TOKEN_X_ISSUER=dummy` og `AZURE_OPENID_CONFIG_ISSUER=dummy`. Serveren bruker kun *om* variabelen finnes til å velge borger- eller veileder-modus, men selve verdien brukes ikke (`ACCESS_TOKEN` erstatter ekte token-validering lokalt).
