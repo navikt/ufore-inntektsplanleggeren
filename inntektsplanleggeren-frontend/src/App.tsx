@@ -4,6 +4,7 @@ import '@navikt/ds-css'
 import { Heading } from '@navikt/ds-react'
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { ApmDebugPanel } from '@/ApmDebugPanel'
 import { FormStateComponent } from '@/context/FormData'
 
 export function App() {
@@ -24,6 +25,7 @@ export function App() {
                     <Outlet />
                 </div>
             </main>
+            <ApmDebugPanel />
         </FormStateComponent>
     )
 }
