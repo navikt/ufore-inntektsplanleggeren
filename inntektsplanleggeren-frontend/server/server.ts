@@ -137,7 +137,6 @@ app.use(loggerMiddleware(logger))
 app.get(`${BASE_PATH}/toggles`, (req, res) => {
     res.json({
         'inntektsplanleggeren.nedetid': unleash.isEnabled('inntektsplanleggeren.nedetid'),
-        'ufore.omregning-varsel': unleash.isEnabled('ufore.omregning-varsel'),
     })
 })
 
