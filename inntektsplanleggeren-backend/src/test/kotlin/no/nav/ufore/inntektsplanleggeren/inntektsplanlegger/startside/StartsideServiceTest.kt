@@ -49,12 +49,12 @@ class StartsideServiceTest {
         val expectedForventetInntektBruker = mapOf(year to 5000)
         val expectedForventetInntektEps = mapOf(year to 6000)
         val expectedBunnfradrag = 232
-        val expectedKompensasjonsgrad = 23.2
+        val expectedReduksjonsprosent = 23.2
         val expectedGrenseStoppAvUfoeretrygd = 564654
 
         val uforetrygd = uforetrygd(
-            inntektsgrense = expectedBunnfradrag,
-            kompensasjonsgrad = expectedKompensasjonsgrad,
+            bunnfradrag = expectedBunnfradrag,
+            reduksjonsprosent = expectedReduksjonsprosent,
             grenseStoppAvUfoeretrygd = expectedGrenseStoppAvUfoeretrygd,
             barnetilleggFellesbarn = true,
         )
@@ -83,7 +83,7 @@ class StartsideServiceTest {
         assertEquals(expectedForventetInntektBruker, startsideData.uforetrygd!!.forventetInntekt[year]?.let { mapOf(year to it) })
         assertEquals(expectedForventetInntektEps, startsideData.uforetrygd.forventetInntektAnnenForelder[year]?.let { mapOf(year to it) })
         assertEquals(expectedBunnfradrag, startsideData.uforetrygd.bunnfradrag)
-        assertEquals(expectedKompensasjonsgrad, startsideData.uforetrygd.reduksjonsprosent)
+        assertEquals(expectedReduksjonsprosent, startsideData.uforetrygd.reduksjonsprosent)
         assertEquals(expectedGrenseStoppAvUfoeretrygd, startsideData.uforetrygd.inntektstak)
         assertTrue(startsideData.uforetrygd.harBarnetilleggFellesbarn)
         assertEquals(emptyList(), startsideData.messages)
@@ -160,8 +160,8 @@ class StartsideServiceTest {
     }
 
     private fun uforetrygd(
-        inntektsgrense: Int = 300000,
-        kompensasjonsgrad: Double = 65.5,
+        bunnfradrag: Int = 300000,
+        reduksjonsprosent: Double = 65.5,
         grenseStoppAvUfoeretrygd: Int = 500000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
@@ -175,8 +175,8 @@ class StartsideServiceTest {
         inntekterFromOpenKravEps: List<Inntektsgrunnlag>? = null
     ): Uforetrygd =
         Uforetrygd(
-            inntektsgrense = inntektsgrense,
-            kompensasjonsgrad = kompensasjonsgrad,
+            bunnfradrag = bunnfradrag,
+            reduksjonsprosent = reduksjonsprosent,
             grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,

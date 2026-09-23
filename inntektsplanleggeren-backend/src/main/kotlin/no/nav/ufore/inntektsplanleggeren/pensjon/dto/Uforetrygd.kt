@@ -3,10 +3,9 @@ package no.nav.ufore.inntektsplanleggeren.pensjon.dto
 import java.time.LocalDate
 
 
-// TODO: endre navn her og, men også i Pen
 data class Uforetrygd(
-    val inntektsgrense: Int,
-    val kompensasjonsgrad: Double,
+    val bunnfradrag: Int,
+    val reduksjonsprosent: Double,
     val grenseStoppAvUfoeretrygd: Int,
     val hasLopendeUforeVedtakThisYear: Boolean,
     val hasLopendeUforeVedtakNextYear: Boolean,

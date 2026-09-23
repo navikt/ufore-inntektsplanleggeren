@@ -934,8 +934,8 @@ class InntektValidatorTest {
 
     private fun uforetrygd(): Uforetrygd =
         Uforetrygd(
-            inntektsgrense = 300000,
-            kompensasjonsgrad = 65.5,
+            bunnfradrag = 300000,
+            reduksjonsprosent = 65.5,
             grenseStoppAvUfoeretrygd = 500000,
             hasLopendeUforeVedtakThisYear = false,
             hasLopendeUforeVedtakNextYear = false,
@@ -954,8 +954,8 @@ class InntektValidatorTest {
         hasBarnetilleggSaerkullsbarn: Boolean
     ): Uforetrygd =
         Uforetrygd(
-            inntektsgrense = 300000,
-            kompensasjonsgrad = 65.5,
+            bunnfradrag = 300000,
+            reduksjonsprosent = 65.5,
             grenseStoppAvUfoeretrygd = 500000,
             hasLopendeUforeVedtakThisYear = false,
             hasLopendeUforeVedtakNextYear = false,

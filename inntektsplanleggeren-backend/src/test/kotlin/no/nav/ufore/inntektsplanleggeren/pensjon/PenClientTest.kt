@@ -316,7 +316,7 @@ class PenClientTest : WebClientTest() {
         assertEquals("/api/selvbetjening/inntektsplanleggeren/data?simuleringFom=2024-11-01", request.path)
 
         assertEquals("19447917729", uforetrygd?.epsPid)
-        assertEquals(49611, uforetrygd?.inntektsgrense)
+        assertEquals(49611, uforetrygd?.bunnfradrag)
         assertEquals(460060, uforetrygd?.grenseStoppAvUfoeretrygd)
         assertTrue(uforetrygd!!.hasLopendeUforeVedtakThisYear)
         assertFalse(uforetrygd.hasLopendeUforeVedtakNextYear)
@@ -463,8 +463,8 @@ class PenClientTest : WebClientTest() {
             .setBody(
                 """
                     {
-    "inntektsgrense": 49611,
-    "kompensasjonsgrad": 49.7,
+    "bunnfradrag": 49611,
+    "reduksjonsprosent": 49.7,
     "grenseStoppAvUfoeretrygd": 460060,
     "hasLopendeUforeVedtakThisYear": true,
     "hasLopendeUforeVedtakNextYear": false,

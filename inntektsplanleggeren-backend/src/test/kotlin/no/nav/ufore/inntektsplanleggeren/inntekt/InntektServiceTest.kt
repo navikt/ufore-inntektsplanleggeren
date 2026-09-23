@@ -1509,8 +1509,8 @@ class InntektServiceTest {
     }
 
     private fun createUforetrygd(
-        inntektsgrense: Int = 300000,
-        kompensasjonsgrad: Double = 65.5,
+        bunnfradrag: Int = 300000,
+        reduksjonsprosent: Double = 65.5,
         grenseStoppAvUfoeretrygd: Int = 500000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
@@ -1528,8 +1528,8 @@ class InntektServiceTest {
         inntekterFromOpenKravEps: List<Inntektsgrunnlag>? = null
     ): Uforetrygd =
         Uforetrygd(
-            inntektsgrense = inntektsgrense,
-            kompensasjonsgrad = kompensasjonsgrad,
+            bunnfradrag = bunnfradrag,
+            reduksjonsprosent = reduksjonsprosent,
             grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,
