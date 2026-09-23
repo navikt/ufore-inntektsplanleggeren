@@ -32,7 +32,8 @@
         "express-prom-bundle": "^8.0.0",
         "http-proxy-middleware": "^4.2.0",
         "unleash-client": "^6.12.1",
-        "winston": "^3.19.0"
+        "winston": "^3.19.0",
+        "zod": "^4.5.4"
     },
     "devDependencies": {
         "@navikt/aksel-icons": "^8.16.2",

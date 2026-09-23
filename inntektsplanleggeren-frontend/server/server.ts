@@ -7,7 +7,7 @@ import promBundle from 'express-prom-bundle'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 import { initialize } from 'unleash-client'
 import winston, { format } from 'winston'
-import ensureEnv from './ensureEnv.js'
+import { env } from './env.js'
 import correlationIdMiddleware from './middleware/correlationId.js'
 import loggerMiddleware from './middleware/logger.js'
 
@@ -34,41 +34,9 @@ const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
 })
 
-const AUTH_PROVIDER = (() => {
-    const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
-    const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER
-    if (tokenx && azure) {
-        throw new Error('Both TOKEN_X_ISSUER and AZURE_OPENID_CONFIG_ISSUER are set. Only one of these can be set.')
-    }
-
-    if (!tokenx && !azure) {
-        throw new Error('No auth provider is set')
-    }
-
-    if (tokenx) {
-        return 'tokenx'
-    }
-
-    if (azure) {
-        return 'azure'
-    }
-})() as 'tokenx' | 'azure'
-
 const unleashUrl = process.env.UNLEASH_SERVER_API_URL
 const unleashToken = process.env.UNLEASH_SERVER_API_TOKEN
 const unleashEnv = process.env.UNLEASH_SERVER_API_ENV
-
-// Sett miljøvariabler for veileder eller borger
-const env =
-    AUTH_PROVIDER === 'tokenx'
-        ? ensureEnv({
-              oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE',
-              inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-          })
-        : ensureEnv({
-              oboAudience: 'INNTEKTSPLANLEGGEREN_BACKEND_SCOPE',
-              inntektsplanleggerenBackendUrl: 'INNTEKTSPLANLEGGEREN_BACKEND_URL',
-          })
 
 const unleash = initialize({
     disableAutoStart: !(unleashToken && unleashUrl && unleashEnv),
@@ -107,7 +75,7 @@ const getOboToken = async (req: Request) => {
         throw new Error('401')
     }
 
-    const obo = await requestOboToken(token, env.oboAudience)
+    const obo = await requestOboToken(token, env('INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE'))
     if (!obo.ok) {
         logger.error('Failed to get OBO token', {
             error: obo.error.message,
@@ -155,7 +123,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
     getOboToken(req)
         .then((oboToken) => {
             createProxyMiddleware({
-                target: `${env.inntektsplanleggerenBackendUrl}/api`,
+                target: `${env('INNTEKTSPLANLEGGEREN_BACKEND_URL')}/api`,
                 changeOrigin: true,
                 headers: {
                     Authorization: `Bearer ${oboToken}`,
@@ -169,7 +137,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
 })
 
 app.get('/*splat', async (req, res) => {
-    if (AUTH_PROVIDER === 'azure') {
+    if (env('VITE_MODE') === 'veileder') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
         res.sendFile(path.resolve(__dirname, './dist', 'index-borger.html'))
@@ -177,5 +145,5 @@ app.get('/*splat', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    logger.info(`Started server with AUTH_PROVIDER ${AUTH_PROVIDER} on port ${PORT}`)
+    logger.info(`Started server on port ${PORT}`)
 })
