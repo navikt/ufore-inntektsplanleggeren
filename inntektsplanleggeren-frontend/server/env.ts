@@ -8,4 +8,8 @@ const schema = z.object({
 
 type Env = z.infer<typeof schema>
 
-export const env = (): Env => schema.parse(process.env)
+// export const env = (): Env => schema.parse(process.env)
+
+export function env<Key extends keyof Env>(key: Key): Env[Key] {
+    return schema.parse(process.env)[key]
+}

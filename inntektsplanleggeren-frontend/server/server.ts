@@ -75,7 +75,7 @@ const getOboToken = async (req: Request) => {
         throw new Error('401')
     }
 
-    const obo = await requestOboToken(token, env().INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE)
+    const obo = await requestOboToken(token, env('INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE'))
     if (!obo.ok) {
         logger.error('Failed to get OBO token', {
             error: obo.error.message,
@@ -123,7 +123,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
     getOboToken(req)
         .then((oboToken) => {
             createProxyMiddleware({
-                target: `${env().INNTEKTSPLANLEGGEREN_BACKEND_URL}/api`,
+                target: `${env('INNTEKTSPLANLEGGEREN_BACKEND_URL')}/api`,
                 changeOrigin: true,
                 headers: {
                     Authorization: `Bearer ${oboToken}`,
@@ -137,7 +137,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
 })
 
 app.get('/*splat', async (req, res) => {
-    if (env().VITE_MODE === 'veileder') {
+    if (env('VITE_MODE') === 'veileder') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
         res.sendFile(path.resolve(__dirname, './dist', 'index-borger.html'))
