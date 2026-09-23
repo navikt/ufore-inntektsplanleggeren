@@ -34,26 +34,6 @@ const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
 })
 
-const AUTH_PROVIDER = (() => {
-    const tokenx: boolean = !!process.env.TOKEN_X_ISSUER
-    const azure: boolean = !!process.env.AZURE_OPENID_CONFIG_ISSUER
-    if (tokenx && azure) {
-        throw new Error('Both TOKEN_X_ISSUER and AZURE_OPENID_CONFIG_ISSUER are set. Only one of these can be set.')
-    }
-
-    if (!tokenx && !azure) {
-        throw new Error('No auth provider is set')
-    }
-
-    if (tokenx) {
-        return 'tokenx'
-    }
-
-    if (azure) {
-        return 'azure'
-    }
-})() as 'tokenx' | 'azure'
-
 const unleashUrl = process.env.UNLEASH_SERVER_API_URL
 const unleashToken = process.env.UNLEASH_SERVER_API_TOKEN
 const unleashEnv = process.env.UNLEASH_SERVER_API_ENV
@@ -157,7 +137,7 @@ app.use(`${BASE_PATH}/api`, (req: Request, res: Response, next: NextFunction) =>
 })
 
 app.get('/*splat', async (req, res) => {
-    if (AUTH_PROVIDER === 'azure') {
+    if (env().VITE_MODE === 'veileder') {
         res.sendFile(path.resolve(__dirname, './dist', 'index-veileder.html'))
     } else {
         res.sendFile(path.resolve(__dirname, './dist', 'index-borger.html'))
@@ -165,5 +145,5 @@ app.get('/*splat', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    logger.info(`Started server with AUTH_PROVIDER ${AUTH_PROVIDER} on port ${PORT}`)
+    logger.info(`Started server on port ${PORT}`)
 })

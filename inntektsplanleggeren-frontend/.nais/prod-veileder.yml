@@ -70,5 +70,7 @@ spec:
       value: "http://inntektsplanleggeren-backend"
     - name: "INNTEKTSPLANLEGGEREN_BACKEND_AUDIENCE"
       value: "prod-gcp:ufore:inntektsplanleggeren-backend"
+    - name: "VITE_MODE"
+      value: "veileder"
   envFrom:
     - secret: inntektsplanleggeren-frontend-unleash-api-token
