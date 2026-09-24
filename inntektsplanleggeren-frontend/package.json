@@ -24,7 +24,7 @@
     "dependencies": {
         "@grafana/faro-react": "^2.12.0",
         "@grafana/faro-web-sdk": "^2.11.0",
-        "@nais/apm": "^0.6.3",
+        "@nais/apm": "^0.7.2",
         "@navikt/nav-dekoratoren-moduler": "^4.3.0",
         "@navikt/oasis": "^4.2.2",
         "@navikt/steng-for-regulering": "^0.0.7",
