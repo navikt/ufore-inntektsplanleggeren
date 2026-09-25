@@ -27,7 +27,7 @@
         "@navikt/steng-for-regulering": "^0.0.7",
         "@grafana/faro-web-sdk": "^2.11.0",
         "cors": "^2.8.6",
-        "dotenv": "17.4.2",
+        "dotenv": "18.0.0",
         "express": "^5.2.1",
         "express-prom-bundle": "^8.0.0",
         "http-proxy-middleware": "^4.2.0",
