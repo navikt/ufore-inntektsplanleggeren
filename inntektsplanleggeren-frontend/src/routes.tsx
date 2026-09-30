@@ -1,5 +1,6 @@
+import { ApmErrorBoundary, ApmRoutes } from '@nais/apm/react'
 import { useContext } from 'react'
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Outlet, Route } from 'react-router-dom'
 import App from '@/App'
 import { BeregningPage } from '@/components/beregning/BeregningPage'
 import { InnfyllingPage } from '@/components/innfylling/InnfyllingPage'
@@ -22,20 +23,22 @@ export const AppRoutes = () => {
 
     return (
         <BrowserRouter basename={BASE_PATH}>
-            <Routes>
-                <Route element={<App />}>
-                    <Route index element={<Startside />} />
-                    <Route index path={PageLinks.FORRIGE_INNTEKTER} element={<PreviousYearPage />} />
-                    <Route element={<YearGuard />}>
-                        <Route element={<FormContainer />}>
-                            <Route index path={PageLinks.FORVENTET_INNTEKT} element={<InnfyllingPage />} />
-                            <Route index path={PageLinks.BEREGNING} element={<BeregningPage />} />
-                            <Route index path={PageLinks.OPPSUMMERING} element={<OppsummeringPage />} />
-                            <Route index path={PageLinks.KVITTERING} element={<KvitteringPage />} />
+            <ApmErrorBoundary>
+                <ApmRoutes>
+                    <Route element={<App />}>
+                        <Route index element={<Startside />} />
+                        <Route index path={PageLinks.FORRIGE_INNTEKTER} element={<PreviousYearPage />} />
+                        <Route element={<YearGuard />}>
+                            <Route element={<FormContainer />}>
+                                <Route index path={PageLinks.FORVENTET_INNTEKT} element={<InnfyllingPage />} />
+                                <Route index path={PageLinks.BEREGNING} element={<BeregningPage />} />
+                                <Route index path={PageLinks.OPPSUMMERING} element={<OppsummeringPage />} />
+                                <Route index path={PageLinks.KVITTERING} element={<KvitteringPage />} />
+                            </Route>
                         </Route>
                     </Route>
-                </Route>
-            </Routes>
+                </ApmRoutes>
+            </ApmErrorBoundary>
         </BrowserRouter>
     )
 }

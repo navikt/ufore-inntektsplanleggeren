@@ -8,6 +8,7 @@ const buildConfig = {
     base: '/uforetrygd/selvbetjening/inntektsplanleggeren',
     build: {
         outDir: './dist',
+        sourcemap: true,
         rollupOptions: {
             input: {
                 appBorger: resolve(__dirname, './index-borger.html'),
