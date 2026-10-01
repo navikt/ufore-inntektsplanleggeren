@@ -12,8 +12,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <DataContextProvider>
             <Theme>
-                <BorgerBanner />
-                <AppRoutes />
+                <BorgerBanner>
+                    <AppRoutes />
+                </BorgerBanner>
             </Theme>
         </DataContextProvider>
     </React.StrictMode>
