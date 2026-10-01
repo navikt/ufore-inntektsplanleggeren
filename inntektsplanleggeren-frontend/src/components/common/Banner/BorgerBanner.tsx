@@ -13,7 +13,7 @@ export default function BorgerBanner({ children }: PropsWithChildren) {
             injectDecoratorClientSide({
                 env: decoratorEnv,
                 params: {
-                    teamName: 'ufore',
+                    teamName: 'ufore.ufore',
                     context: 'privatperson',
                     breadcrumbs: [
                         {
