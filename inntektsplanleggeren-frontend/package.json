@@ -29,7 +29,7 @@
         "@navikt/oasis": "^4.2.2",
         "@navikt/steng-for-regulering": "^0.0.7",
         "cors": "^2.8.6",
-        "dotenv": "18.0.3",
+        "dotenv": "18.0.4",
         "express": "^5.2.1",
         "express-prom-bundle": "^8.0.0",
         "http-proxy-middleware": "^4.2.0",
