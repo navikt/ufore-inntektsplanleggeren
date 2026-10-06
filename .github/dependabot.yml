@@ -30,6 +30,9 @@ updates:
         patterns:
           - 'react'
           - 'react-dom'
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
 
   - package-ecosystem: github-actions
     directory: "/"
