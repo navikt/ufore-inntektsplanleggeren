@@ -23,7 +23,7 @@
 		<logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
 		<mockwebserver.version>5.5.0</mockwebserver.version>
 		<micrometer.version>1.17.1</micrometer.version>
-		<logback.version>1.6.4</logback.version>
+		<logback.version>1.6.5</logback.version>
 		<logback-access.version>2.0.15</logback-access.version>
 	</properties>
 	<dependencies>
