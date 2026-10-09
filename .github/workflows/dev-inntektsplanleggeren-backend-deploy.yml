@@ -43,7 +43,7 @@ jobs:
         run: cd ./inntektsplanleggeren-backend && mvn -B package --file pom.xml
 
       - name: docker-build-push
-        uses: nais/docker-build-push@cd5ec5663feb0e05c3fa374d1fb442605b046c6b # v0
+        uses: nais/docker-build-push@bfe52e3ad6d0e96fd1056a03acb7b619aaffb39d # v0
         id: docker-build-push
         with:
           team: ufore
