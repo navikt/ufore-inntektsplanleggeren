@@ -30,9 +30,6 @@ updates:
         patterns:
           - 'react'
           - 'react-dom'
-      codeql:
-        patterns:
-          - "github/codeql-action/*"
 
   - package-ecosystem: github-actions
     directory: "/"
@@ -43,3 +40,7 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 10
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action*"
