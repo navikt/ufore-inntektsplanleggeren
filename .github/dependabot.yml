@@ -8,7 +8,7 @@ updates:
       time: "08:00"
       timezone: "Europe/Oslo"
     cooldown:
-      default-days: 7
+      default-days: 3
     open-pull-requests-limit: 50
 
   - package-ecosystem: npm
@@ -19,7 +19,7 @@ updates:
       time: "08:00"
       timezone: "Europe/Oslo"
     cooldown:
-      default-days: 7
+      default-days: 3
     open-pull-requests-limit: 50
     groups:
       designsystemet:
@@ -38,7 +38,7 @@ updates:
       time: "08:00"
       timezone: "Europe/Oslo"
     cooldown:
-      default-days: 7
+      default-days: 3
     open-pull-requests-limit: 10
     groups:
       codeql:
