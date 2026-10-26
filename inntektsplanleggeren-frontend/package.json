@@ -40,9 +40,9 @@
     "devDependencies": {
         "@biomejs/biome": "^2.5.15",
         "@highcharts/react": "^5.4.0",
-        "@navikt/aksel-icons": "^8.19.2",
-        "@navikt/ds-css": "^8.19.2",
-        "@navikt/ds-react": "^8.19.2",
+        "@navikt/aksel-icons": "^8.20.0",
+        "@navikt/ds-css": "^8.20.0",
+        "@navikt/ds-react": "^8.20.0",
         "@playwright/test": "^1.64.1",
         "@types/express": "^5.0.6",
         "@types/node": "^26.6.5",
