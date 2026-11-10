@@ -38,7 +38,7 @@
         "zod": "^4.6.7"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.6.5",
+        "@biomejs/biome": "^2.6.6",
         "@highcharts/react": "^5.4.0",
         "@navikt/aksel-icons": "^8.22.1",
         "@navikt/ds-css": "^8.22.1",
