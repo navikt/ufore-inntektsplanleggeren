@@ -15,7 +15,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ManglerTilgangInntektskomponentenException::class)
     fun handleManglerTilgangInntektskomponenten(ex: ManglerTilgangInntektskomponentenException): ProblemDetail {
-        log.warn("Mangler tilgang til inntektskomponenten. NAV-Call-ID: ${getCurrentCallId()}", ex)
         return ProblemDetail.forStatus(HttpStatus.FORBIDDEN).apply {
             detail = ErrorKoderTilFrontend.MANGLER_TILGANG_INNTEKTSKOMPONENTEN.name
         }
@@ -23,7 +22,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ForbiddenException::class)
     fun handleForbidden(ex: ForbiddenException): ProblemDetail {
-        log.warn("Forbidden fra ${ex.system}/${ex.service}: ${ex.message}. NAV-Call-ID: ${getCurrentCallId()}", ex)
         return ProblemDetail.forStatus(HttpStatus.FORBIDDEN).apply {
             detail = ErrorKoderTilFrontend.FORBIDDEN_ERROR.name
         }

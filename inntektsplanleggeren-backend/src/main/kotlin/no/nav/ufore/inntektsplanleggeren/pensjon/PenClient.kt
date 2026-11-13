@@ -169,9 +169,6 @@ class PenClient(
             if (HttpStatus.NOT_FOUND == e.statusCode) {
                 return null
             }
-            if (HttpStatus.BAD_REQUEST == e.statusCode) {
-                logger.warn(e.responseBodyAsString)
-            }
             throw ClientException(AppId.PEN.name, path, e.message, e)
         } catch (e: Exception) {
             throw ClientException(AppId.PEN.name, path, e.message, e)

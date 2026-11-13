@@ -120,8 +120,7 @@ class AuthorizationService(
 
             return harGyldigFullmakt
         } catch (e: FullmaktException) {
-            log.error("Noe gikk galt ved kall til fullmakt. Nekter adgang")
-            log.warn("FullmaktException: ${e.message}")
+            log.error("Noe gikk galt ved kall til fullmakt. Nekter adgang. ", e)
             throw NoFullmaktPresentException()
         }
     }

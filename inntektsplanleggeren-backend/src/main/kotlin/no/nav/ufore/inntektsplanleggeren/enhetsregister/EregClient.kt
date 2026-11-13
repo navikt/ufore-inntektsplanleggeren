@@ -23,8 +23,6 @@ class EregClient(
     @Value("\${ereg-services.endpoint.url}") private val url: String,
     private val webClient: WebClient,
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(EregClient::class.java)
-
     fun hentOrganisasjonsnavn(organisasjonsnummer: String, gyldigDato: LocalDate? = null): String {
         val path = "/api/v2/organisasjon/$organisasjonsnummer/noekkelinfo"
         try {
@@ -45,7 +43,6 @@ class EregClient(
         } catch (e: WebClientResponseException) {
             when (e.statusCode) {
                 HttpStatus.NOT_FOUND -> {
-                    logger.warn("404 fra ereg-services, organisasjon ikke funnet - orgnr: $organisasjonsnummer")
                     return organisasjonsnummer
                 }
                 HttpStatus.FORBIDDEN -> throw ForbiddenException(AppId.EREG.name, path, e.message, e)
