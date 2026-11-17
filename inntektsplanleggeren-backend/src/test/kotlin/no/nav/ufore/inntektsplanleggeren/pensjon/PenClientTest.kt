@@ -1,6 +1,7 @@
 package no.nav.ufore.inntektsplanleggeren.pensjon
 
 import no.nav.ufore.inntektsplanleggeren.WebClientTest
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.BarnetilleggOpphøresException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ClientException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ForbiddenException
 import no.nav.ufore.inntektsplanleggeren.pensjon.dto.Inntektsgrunnlag
@@ -17,6 +18,7 @@ import org.mockito.Mockito.`when`
 import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.time.*
 import java.util.UUID
 
@@ -281,6 +283,30 @@ class PenClientTest : WebClientTest() {
         }
         assertEquals("PEN", exception.system)
         assertEquals("/api/selvbetjening/inntektsplanleggeren/simuler", exception.service)
+    }
+
+    @Test
+    fun `should throw BarnetilleggOpphøresException when 400 from simulerInntektsendring contains barnetillegg merknad`() {
+        val responseBody = """
+            {
+                "feilmelding": "en feilmelding",
+                "merknader": [
+                    {
+                        kode: "VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles",
+                        "argumentListeString": "BARN"
+                    }
+                ]
+            }
+        """.trimIndent()
+        prepare(jsonResponse(HttpStatus.BAD_REQUEST)!!.setBody(responseBody))
+
+        val exception = assertThrows<BarnetilleggOpphøresException> {
+            penClient.simulerInntektsendring(PID, LocalDate.of(2027, 1, 1), emptyList(), emptyList())
+        }
+
+        val cause = assertInstanceOf(WebClientResponseException::class.java, exception.cause)
+        assertEquals(HttpStatus.BAD_REQUEST, cause.statusCode)
+        assertEquals(responseBody, cause.responseBodyAsString)
     }
 
     @Test
