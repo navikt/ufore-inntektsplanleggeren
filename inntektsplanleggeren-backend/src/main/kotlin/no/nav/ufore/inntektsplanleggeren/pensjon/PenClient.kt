@@ -117,6 +117,7 @@ class PenClient(
     }
 
     private fun barnetilleggetOpphøres(e: WebClientResponseException): Boolean {
+        logger.info("Fikk feilmelding fra PEN {}", e.responseBodyAsString)
         return e.responseBodyAsString.contains("VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles")
                 && e.responseBodyAsString.contains("BARN")
     }
