@@ -33,7 +33,7 @@ spec:
           - id: "a3f91493-1ab8-4b64-a544-0a77cbba9240" # 0000-GA-Pensjon_VEILEDER
           - id: "9e122ddd-e542-4cc1-a7eb-92c99140fe0e" # 0000-GA-PENSJON_BRUKERHJELPA
           - id: "05ae245b-7b47-428a-9074-4ff6b59eddbc" # 0000-GA-Pensjon_Okonomi
-          - id: "dbe4ad45-320b-4e9a-aaa1-73cca4ee124d" # 0000-GA-Egne_ansatte
+          - id: "8df187e3-f6ab-4a5d-8830-61bf148e59fe" # 0000-GA-Egne_ansatte
           - id: "2e1dc582-f762-4510-a660-88bf68fb7128" # 0000-GA-Fortrolig_Adresse
           - id: "a1b518e2-3947-478d-8929-e5d685c47cac" # 0000-GA-Strengt_Fortrolig_Adresse
   tokenx:
@@ -118,7 +118,7 @@ spec:
     - name: EREG_SERVICES_URL
       value: https://ereg-services.dev-fss-pub.nais.io
     - name: SKJERMET_TILGANG_GROUP_ID
-      value: dbe4ad45-320b-4e9a-aaa1-73cca4ee124d
+      value: 8df187e3-f6ab-4a5d-8830-61bf148e59fe
     - name: FORTROLIG_TILGANG_GROUP_ID
       value: 2e1dc582-f762-4510-a660-88bf68fb7128
     - name: STRENGT_FORTROLIG_TILGANG_GROUP_ID
