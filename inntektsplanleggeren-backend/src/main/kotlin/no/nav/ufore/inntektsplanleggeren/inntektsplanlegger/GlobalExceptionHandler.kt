@@ -35,10 +35,19 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         }
     }
 
+    @ExceptionHandler(BarnetilleggOpphøresException::class)
+    fun handleBarnetilleggOpphøres(ex: BarnetilleggOpphøresException): ProblemDetail {
+        log.info("Barnetillegg opphøres for barn som fyller 18 år: ${ex.message}. NAV-Call-ID: ${getCurrentCallId()}", ex)
+        return ProblemDetail.forStatus(HttpStatus.BAD_REQUEST).apply {
+            detail = ErrorKoderTilFrontend.BARNETILLEGG_OPPHØRES.name
+        }
+    }
+
 }
 
 enum class ErrorKoderTilFrontend {
     GENERIC_ERROR,
     MANGLER_TILGANG_INNTEKTSKOMPONENTEN,
     FORBIDDEN_ERROR,
+    BARNETILLEGG_OPPHØRES,
 }

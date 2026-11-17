@@ -3,6 +3,7 @@ package no.nav.ufore.inntektsplanleggeren.pensjon
 import no.nav.ufore.inntektsplanleggeren.configuration.AppId
 import no.nav.ufore.inntektsplanleggeren.configuration.retryOnTimeout
 import no.nav.ufore.inntektsplanleggeren.configuration.withMdcContext
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.BarnetilleggOpphøresException
 import no.nav.ufore.inntektsplanleggeren.util.getCurrentCallId
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ClientException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ForbiddenException
@@ -106,10 +107,18 @@ class PenClient(
             if (HttpStatus.FORBIDDEN == e.statusCode) {
                 throw ForbiddenException(AppId.PEN.name, path, e.message, e)
             }
+            if (HttpStatus.BAD_REQUEST == e.statusCode && barnetilleggetOpphøres(e)) {
+                throw BarnetilleggOpphøresException(e)
+            }
             throw ClientException(AppId.PEN.name, path, e.message, e)
         } catch (e: Exception) {
             throw ClientException(AppId.PEN.name, path, e.message, e)
         }
+    }
+
+    private fun barnetilleggetOpphøres(e: WebClientResponseException): Boolean {
+        return e.responseBodyAsString.contains("VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles")
+                && e.responseBodyAsString.contains("BARN")
     }
 
     fun fetchInntektsplanleggerData(pid: String, simuleringFom: LocalDate): Uforetrygd? {

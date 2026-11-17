@@ -21,6 +21,10 @@ open class ForbiddenException(
     override val cause: Throwable?
 ) : RuntimeException("Tilgang ikke gitt når kaller service $service i $system. DetailMessage:  $message", cause)
 
+open class BarnetilleggOpphøresException(
+    override val cause: Throwable?
+) : RuntimeException("Bruker med barnetillegg fyller 18 år i planlagt inntektsperiode", cause)
+
 class ManglerTilgangInntektskomponentenException(
     val system: String,
     val service: String,
