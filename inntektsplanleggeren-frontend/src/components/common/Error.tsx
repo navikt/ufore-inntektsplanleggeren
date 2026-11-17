@@ -27,8 +27,8 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
                 )
             case ErrorCode.BARNETILLEGG_OPPHØRES:
                 return (
-                    'Barnetillegget opphører i perioden som inntekten er planlagt. ' +
-                    'Vi beklager for dette. Du kan prøve igjen senere. Ta gjerne kontakt med oss hvis problemet fortsetter.'
+                    'Fordi du har barnetillegg for et barn som snart blir 18 år, kan du ikke melde fra om ny inntekt i inntektsplanleggeren akkurat nå. ' +
+                    'Du kan enten ringe kontaktsenteret for hjelp, eller vente til barnetillegget har opphørt. Du får brev av oss når barnetillegget opphører.'
                 )
             case ErrorCode.STATUS_ERROR:
                 return 'Det har skjedd en teknisk feil. Vi klarte ikke å sjekke status på behandlingen av inntektsendringen din. Ta gjerne kontakt med oss hvis problemet fortsetter.'
