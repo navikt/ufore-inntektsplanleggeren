@@ -289,13 +289,13 @@ class PenClientTest : WebClientTest() {
     fun `should throw BarnetilleggOpphøresException when 400 from simulerInntektsendring contains barnetillegg merknad`() {
         val responseBody = """
             {
-                "feilmelding": "en feilmelding",
-                "merknader": [
-                    {
-                        kode: "VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles",
-                        "argumentListeString": "BARN"
-                    }
-                ]
+              "feilmelding" : "VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles BARN",
+              "merknader" : [ {
+                "ar" : null,
+                "argumentListeString" : "BARN",
+                "kode" : "VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles",
+                "argumentListe" : [ "BARN" ]
+              } ]
             }
         """.trimIndent()
         prepare(jsonResponse(HttpStatus.BAD_REQUEST)!!.setBody(responseBody))
