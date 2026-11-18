@@ -4,6 +4,7 @@ import no.nav.ufore.inntektsplanleggeren.WebClientTest
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.BarnetilleggOpphøresException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ClientException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ForbiddenException
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.OvergangAlderspensjonException
 import no.nav.ufore.inntektsplanleggeren.pensjon.dto.Inntektsgrunnlag
 import no.nav.ufore.inntektsplanleggeren.security.TokenService
 import no.nav.ufore.inntektsplanleggeren.util.NAV_CALL_ID_MDC
@@ -301,6 +302,30 @@ class PenClientTest : WebClientTest() {
         prepare(jsonResponse(HttpStatus.BAD_REQUEST)!!.setBody(responseBody))
 
         val exception = assertThrows<BarnetilleggOpphøresException> {
+            penClient.simulerInntektsendring(PID, LocalDate.of(2027, 1, 1), emptyList(), emptyList())
+        }
+
+        val cause = assertInstanceOf(WebClientResponseException::class.java, exception.cause)
+        assertEquals(HttpStatus.BAD_REQUEST, cause.statusCode)
+        assertEquals(responseBody, cause.responseBodyAsString)
+    }
+
+    @Test
+    fun `should throw OvergangAlderspensjonException when 400 from simulerInntektsendring contains pensjonsalder merknad`() {
+        val responseBody = """
+            {
+              "feilmelding" : "UFOREGRUNNLAG_GeneriskKontrollpunkt Virkningstidspunkt (2027-01-01) er fom normert pensjonsdato (2027-01-01)",
+              "merknader" : [ {
+                "ar" : null,
+                "argumentListeString" : "2027-01-01",
+                "kode" : "UFOREGRUNNLAG_GeneriskKontrollpunkt",
+                "argumentListe" : [ "2027-01-01","2027-01-01" ]
+              } ]
+            }
+        """.trimIndent()
+        prepare(jsonResponse(HttpStatus.BAD_REQUEST)!!.setBody(responseBody))
+
+        val exception = assertThrows<OvergangAlderspensjonException> {
             penClient.simulerInntektsendring(PID, LocalDate.of(2027, 1, 1), emptyList(), emptyList())
         }
 
