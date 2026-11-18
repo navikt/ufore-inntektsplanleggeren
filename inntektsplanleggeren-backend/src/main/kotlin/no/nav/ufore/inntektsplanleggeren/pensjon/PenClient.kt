@@ -116,11 +116,8 @@ class PenClient(
         }
     }
 
-    private fun barnetilleggetOpphøres(e: WebClientResponseException): Boolean {
-        logger.info("Fikk feilmelding fra PEN {}", e.responseBodyAsString)
-        return e.responseBodyAsString.contains("VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles")
-                && e.responseBodyAsString.contains("BARN")
-    }
+    private fun barnetilleggetOpphøres(e: WebClientResponseException) =
+        e.responseBodyAsString.contains("VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles BARN")
 
     fun fetchInntektsplanleggerData(pid: String, simuleringFom: LocalDate): Uforetrygd? {
         val path = "/api/selvbetjening/inntektsplanleggeren/data"
