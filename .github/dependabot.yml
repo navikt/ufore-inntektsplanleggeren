@@ -49,3 +49,16 @@ updates:
       codeql:
         patterns:
           - "github/codeql-action*"
+
+  - package-ecosystem: docker
+    ignore: # hold Java-version på gjeldende major-release. Ved oppgradering av major-versjon, oppdater også pom.xml
+      - dependency-name: "cgr-nav/pull-through/nav.no/jre"
+        update-types: [ "version-update:semver-major" ]
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "08:00"
+      timezone: "Europe/Oslo"
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 10
