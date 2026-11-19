@@ -30,6 +30,10 @@ export const ErrorView = (props: { message: ErrorCode | null }) => {
                     'Fordi du har barnetillegg for et barn som snart blir 18 år, kan du ikke melde fra om ny inntekt i inntektsplanleggeren akkurat nå. ' +
                     'Du kan enten ringe kontaktsenteret for hjelp, eller vente til barnetillegget har opphørt. Du får brev av oss når barnetillegget opphører.'
                 )
+            case ErrorCode.BRUKER_PENSJONERES:
+                return (
+                    'Fordi du skal gå over til alderspensjon snart, kan du ikke legge inn inntekt for neste år. '
+                )
             case ErrorCode.STATUS_ERROR:
                 return 'Det har skjedd en teknisk feil. Vi klarte ikke å sjekke status på behandlingen av inntektsendringen din. Ta gjerne kontakt med oss hvis problemet fortsetter.'
             default:
@@ -62,6 +66,7 @@ export enum ErrorCode {
     NO_FULLMAKT_PRESENT = 'NO_FULLMAKT_PRESENT',
     GENERIC_ERROR = 'GENERIC_ERROR',
     BARNETILLEGG_OPPHØRES = 'BARNETILLEGG_OPPHØRES',
+    BRUKER_PENSJONERES = 'BRUKER_PENSJONERES',
     STATUS_ERROR = 'STATUS_ERROR',
     MANGLER_TILGANG_INNTEKTSKOMPONENTEN = 'MANGLER_TILGANG_INNTEKTSKOMPONENTEN',
     FORBIDDEN_ERROR = 'FORBIDDEN_ERROR',

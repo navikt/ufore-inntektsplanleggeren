@@ -25,6 +25,10 @@ open class BarnetilleggOpphøresException(
     override val cause: Throwable?
 ) : RuntimeException("Bruker med barnetillegg fyller 18 år i planlagt inntektsperiode", cause)
 
+open class OvergangAlderspensjonException(
+    override val cause: Throwable?
+) : RuntimeException("Bruker går av med pensjon", cause)
+
 class ManglerTilgangInntektskomponentenException(
     val system: String,
     val service: String,

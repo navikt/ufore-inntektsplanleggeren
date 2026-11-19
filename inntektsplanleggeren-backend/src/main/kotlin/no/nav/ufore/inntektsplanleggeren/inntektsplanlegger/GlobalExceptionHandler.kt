@@ -43,6 +43,14 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         }
     }
 
+    @ExceptionHandler(OvergangAlderspensjonException::class)
+    fun handleBrukerPensjoneres(ex: OvergangAlderspensjonException): ProblemDetail {
+        log.info("Bruker pensjoneres snart: ${ex.message}. NAV-Call-ID: ${getCurrentCallId()}", ex)
+        return ProblemDetail.forStatus(HttpStatus.BAD_REQUEST).apply {
+            detail = ErrorKoderTilFrontend.BRUKER_PENSJONERES.name
+        }
+    }
+
 }
 
 enum class ErrorKoderTilFrontend {
@@ -50,4 +58,5 @@ enum class ErrorKoderTilFrontend {
     MANGLER_TILGANG_INNTEKTSKOMPONENTEN,
     FORBIDDEN_ERROR,
     BARNETILLEGG_OPPHØRES,
+    BRUKER_PENSJONERES,
 }

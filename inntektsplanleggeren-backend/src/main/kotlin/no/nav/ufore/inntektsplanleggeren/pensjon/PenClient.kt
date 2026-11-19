@@ -7,6 +7,7 @@ import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.BarnetilleggOpphøre
 import no.nav.ufore.inntektsplanleggeren.util.getCurrentCallId
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ClientException
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.ForbiddenException
+import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.OvergangAlderspensjonException
 import no.nav.ufore.inntektsplanleggeren.pensjon.dto.*
 import no.nav.ufore.inntektsplanleggeren.security.TokenService
 import no.nav.ufore.inntektsplanleggeren.util.NAV_CALL_ID_HEADER
@@ -110,10 +111,18 @@ class PenClient(
             if (HttpStatus.BAD_REQUEST == e.statusCode && barnetilleggetOpphøres(e)) {
                 throw BarnetilleggOpphøresException(e)
             }
+            if (HttpStatus.BAD_REQUEST == e.statusCode && brukerPensjoneres(e)) {
+                throw OvergangAlderspensjonException(e)
+            }
             throw ClientException(AppId.PEN.name, path, e.message, e)
         } catch (e: Exception) {
             throw ClientException(AppId.PEN.name, path, e.message, e)
         }
+    }
+
+    private fun brukerPensjoneres(e: WebClientResponseException): Boolean {
+        logger.info("Fikk feilmelding fra PEN {}", e.responseBodyAsString)
+        return e.responseBodyAsString.contains("UFOREGRUNNLAG_GeneriskKontrollpunkt Virkningstidspunkt") && e.responseBodyAsString.contains("er fom normert pensjonsdato")
     }
 
     private fun barnetilleggetOpphøres(e: WebClientResponseException) =
