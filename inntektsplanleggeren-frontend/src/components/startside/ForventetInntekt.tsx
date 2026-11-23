@@ -3,12 +3,15 @@ import type { UføretrygdOversikt } from '@/api/hentStartsideData'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 
 interface Props {
-    data: UføretrygdOversikt
+    data: Record<number, UføretrygdOversikt>
 }
 
 export default function ForventetInntekt({ data }: Props) {
+    const oversiktMap = new Map(Object.entries(data))
     const forventetInntektMap = new Map(Object.entries(data.forventetInntekt))
     const forventetInntektAnnenForelderMap = new Map(Object.entries(data.forventetInntektAnnenForelder))
+
+  const
 
     const ForventetInntektInnhold = ({ år }: { år: string }) => {
         const forventetInntekt = forventetInntektMap.get(år)

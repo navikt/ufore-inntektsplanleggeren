@@ -1511,7 +1511,7 @@ class InntektServiceTest {
     private fun createUforetrygd(
         bunnfradrag: Int = 300000,
         reduksjonsprosent: Double = 65.5,
-        grenseStoppAvUfoeretrygd: Int = 500000,
+        inntektstak: Int = 500000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
         hasVarigTilrettelagtArbeid: Boolean = false,
@@ -1529,11 +1529,13 @@ class InntektServiceTest {
     ): Uforetrygd =
         Uforetrygd(
             bunnfradrag = bunnfradrag,
+            bunnfradragNesteAar = TODO(),
             reduksjonsprosent = reduksjonsprosent,
-            grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,
+            reduksjonsprosentNesteAar = TODO(),
+            inntektstak = inntektstak,
+            inntektstakNesteAar = TODO(),
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,
-            hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
@@ -1541,7 +1543,7 @@ class InntektServiceTest {
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
             inntekterFromOpenKravEps = inntekterFromOpenKravEps,
-            uforeFomDato = null
+            uforeFomDato = null,
         )
 
     private fun inntektsgrunnlag(

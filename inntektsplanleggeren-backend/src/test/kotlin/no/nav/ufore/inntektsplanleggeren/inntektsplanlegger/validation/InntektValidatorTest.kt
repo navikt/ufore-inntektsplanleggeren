@@ -936,7 +936,7 @@ class InntektValidatorTest {
         Uforetrygd(
             bunnfradrag = 300000,
             reduksjonsprosent = 65.5,
-            grenseStoppAvUfoeretrygd = 500000,
+            inntektstak = 500000,
             hasLopendeUforeVedtakThisYear = false,
             hasLopendeUforeVedtakNextYear = false,
             hasVarigTilrettelagtArbeid = false,
@@ -956,7 +956,7 @@ class InntektValidatorTest {
         Uforetrygd(
             bunnfradrag = 300000,
             reduksjonsprosent = 65.5,
-            grenseStoppAvUfoeretrygd = 500000,
+            inntektstak = 500000,
             hasLopendeUforeVedtakThisYear = false,
             hasLopendeUforeVedtakNextYear = false,
             hasVarigTilrettelagtArbeid = false,

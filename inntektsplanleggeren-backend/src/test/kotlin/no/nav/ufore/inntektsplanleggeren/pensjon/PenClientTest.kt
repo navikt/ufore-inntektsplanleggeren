@@ -368,7 +368,7 @@ class PenClientTest : WebClientTest() {
 
         assertEquals("19447917729", uforetrygd?.epsPid)
         assertEquals(49611, uforetrygd?.bunnfradrag)
-        assertEquals(460060, uforetrygd?.grenseStoppAvUfoeretrygd)
+        assertEquals(460060, uforetrygd?.inntektstak)
         assertTrue(uforetrygd!!.hasLopendeUforeVedtakThisYear)
         assertFalse(uforetrygd.hasLopendeUforeVedtakNextYear)
         assertFalse(uforetrygd.hasVarigTilrettelagtArbeid)
@@ -516,7 +516,7 @@ class PenClientTest : WebClientTest() {
                     {
     "bunnfradrag": 49611,
     "reduksjonsprosent": 49.7,
-    "grenseStoppAvUfoeretrygd": 460060,
+    "inntektstak": 460060,
     "hasLopendeUforeVedtakThisYear": true,
     "hasLopendeUforeVedtakNextYear": false,
     "hasVarigTilrettelagtArbeid": false,

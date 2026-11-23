@@ -736,11 +736,13 @@ class InntektsplanleggerServiceTest {
 
     private fun uforetrygd(
         bunnfradrag: Int = 300000,
+        bunnfradragNesteAr: Int = 310000,
         reduksjonsprosent: Double = 65.5,
-        grenseStoppAvUfoeretrygd: Int = 500000,
+        reduksjonsprosentNesteAr: Double = 66.5,
+        inntektstak: Int = 500000,
+        inntektstakNesteAr: Int = 510000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
-        hasVarigTilrettelagtArbeid: Boolean = false,
         hasGjenlevendeTillegg: Boolean = false,
         uforeHeleAaret: Boolean = false,
         barnetilleggFellesbarn: Boolean = false,
@@ -751,11 +753,13 @@ class InntektsplanleggerServiceTest {
     ): Uforetrygd =
         Uforetrygd(
             bunnfradrag = bunnfradrag,
+            bunnfradragNesteAar = bunnfradragNesteAr,
             reduksjonsprosent = reduksjonsprosent,
-            grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,
+            reduksjonsprosentNesteAar = reduksjonsprosentNesteAr,
+            inntektstak = inntektstak,
+            inntektstakNesteAar = inntektstakNesteAr,
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,
-            hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,

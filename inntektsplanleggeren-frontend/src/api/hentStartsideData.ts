@@ -13,7 +13,7 @@ export async function hentStartsideData(): Promise<Result<StartsideData>> {
 
 export interface StartsideData {
     messages: Message[]
-    uforetrygd: UføretrygdOversikt
+    uforetrygd: Record<number, UføretrygdOversikt>
 }
 
 export interface UføretrygdOversikt {

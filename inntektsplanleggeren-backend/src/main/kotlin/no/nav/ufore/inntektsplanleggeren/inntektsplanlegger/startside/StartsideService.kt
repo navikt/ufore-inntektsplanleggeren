@@ -33,11 +33,34 @@ class StartsideService(
                 it?.hasLopendeUforeVedtakNextYear
             )
         }
+
         val messages = validator.validateUserInitialData(uforetrygd, aktuelleAar)
+
+        val dataMap: MutableMap<Int, UføretrygdOversikt> = mutableMapOf()
+
+        if (uforetrygd == null || messages.any { it.type == InntektsplanleggerMessageType.ERROR }) {
+            return StartsideData(
+                messages = messages,
+                uforetrygd = null,
+                aarKanRegistrereInntekt = aktuelleAar,
+                seTallForAar = getAnnetRelevantAar(),
+            )
+        }
+
+        val today = NowProvider().now()
+        if (aktuelleAar.contains(today.year)) {
+            dataMap[today.year] = finnStartsideDataForIÅr(pid,uforetrygd, today.year)
+        }
+
+        if (aktuelleAar.contains(today.year + 1)) {
+            dataMap[today.year + 1] = finnStartsideDataForNesteÅr(pid,uforetrygd, today.year + 1)
+        }
 
         val response = StartsideData(
             messages,
-            mapInntektsplanleggerenInitialData(pid, uforetrygd, aktuelleAar, messages),
+            uforetrygd = dataMap,
+            seTallForAar = getAnnetRelevantAar(),
+            aarKanRegistrereInntekt = aktuelleAar,
         )
 
         StartsideInntektsplanleggerMetricsCounter.count(response)
@@ -45,40 +68,33 @@ class StartsideService(
         return response
     }
 
-    private fun mapInntektsplanleggerenInitialData(
-        pid: String,
-        uforetrygd: Uforetrygd?,
-        aktuelleAar: List<Int>,
-        messages: List<InntektsplanleggerMessage>
-    ): UføretrygdOversikt? {
-        if (uforetrygd != null && messages.none { it.type == InntektsplanleggerMessageType.ERROR }) {
-            val forventedeInntekter = getAktuelleAarForInntekt(aktuelleAar).associateWith { inntektService.getForventedeInntekter(pid, uforetrygd, it) }
+    private fun finnStartsideDataForIÅr(pid: String, uføretrygd: Uforetrygd, år: Int): UføretrygdOversikt {
+        val forventedeInntekter = inntektService.getForventedeInntekter(pid, uføretrygd, år)
+        return UføretrygdOversikt(
+            forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
+            forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps ?: 0,
+            bunnfradrag = uføretrygd.bunnfradrag,
+            reduksjonsprosent = uføretrygd.reduksjonsprosent,
+            inntektstak = uføretrygd.inntektstak,
+            harBarnetilleggFellesbarn = uføretrygd.barnetilleggFellesbarn,
+        )
+    }
 
-            return UføretrygdOversikt(
-                forventetInntekt = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterBruker }.toMap(),
-                forventetInntektAnnenForelder = forventedeInntekter.map { it.key to it.value.sumBenyttedeInntekterEps }.toMap(),
-                bunnfradrag = uforetrygd.bunnfradrag,
-                reduksjonsprosent = uforetrygd.reduksjonsprosent,
-                inntektstak = uforetrygd.grenseStoppAvUfoeretrygd,
-                harBarnetilleggFellesbarn = uforetrygd.barnetilleggFellesbarn,
-                aarKanRegistrereInntekt = aktuelleAar,
-                seTallForAar = getAnnetRelevantAar()
-            )
-        }
-        return null
+    private fun finnStartsideDataForNesteÅr(pid: String, uføretrygd: Uforetrygd, år: Int): UføretrygdOversikt {
+        val forventedeInntekter = inntektService.getForventedeInntekter(pid, uføretrygd, år)
+        return UføretrygdOversikt(
+            forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
+            forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps ?: 0,
+            bunnfradrag = uføretrygd.bunnfradragNesteAar,
+            reduksjonsprosent = uføretrygd.reduksjonsprosentNesteAar,
+            inntektstak = uføretrygd.inntektstakNesteAar,
+            harBarnetilleggFellesbarn = uføretrygd.barnetilleggFellesbarn,
+        )
     }
 
     internal fun getAnnetRelevantAar(): Int? =
         if (nowProvider.now().month.value == Month.DECEMBER.value) {
             nowProvider.now().year
         } else null
-
-    private fun getAktuelleAarForInntekt(aktuelleAar: List<Int>): List<Int> =
-        if (nowProvider.now().month.value == Month.DECEMBER.value) {
-            (listOf(nowProvider.now().year) + aktuelleAar).distinct()
-        } else {
-            aktuelleAar
-        }
-
 
 }

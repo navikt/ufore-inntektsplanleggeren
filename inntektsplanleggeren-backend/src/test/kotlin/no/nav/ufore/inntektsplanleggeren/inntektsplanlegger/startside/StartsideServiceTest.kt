@@ -50,12 +50,12 @@ class StartsideServiceTest {
         val expectedForventetInntektEps = mapOf(year to 6000)
         val expectedBunnfradrag = 232
         val expectedReduksjonsprosent = 23.2
-        val expectedGrenseStoppAvUfoeretrygd = 564654
+        val expectedinntektstak = 564654
 
         val uforetrygd = uforetrygd(
             bunnfradrag = expectedBunnfradrag,
             reduksjonsprosent = expectedReduksjonsprosent,
-            grenseStoppAvUfoeretrygd = expectedGrenseStoppAvUfoeretrygd,
+            inntektstak = expectedinntektstak,
             barnetilleggFellesbarn = true,
         )
 
@@ -84,7 +84,7 @@ class StartsideServiceTest {
         assertEquals(expectedForventetInntektEps, startsideData.uforetrygd.forventetInntektAnnenForelder[year]?.let { mapOf(year to it) })
         assertEquals(expectedBunnfradrag, startsideData.uforetrygd.bunnfradrag)
         assertEquals(expectedReduksjonsprosent, startsideData.uforetrygd.reduksjonsprosent)
-        assertEquals(expectedGrenseStoppAvUfoeretrygd, startsideData.uforetrygd.inntektstak)
+        assertEquals(expectedinntektstak, startsideData.uforetrygd.inntektstak)
         assertTrue(startsideData.uforetrygd.harBarnetilleggFellesbarn)
         assertEquals(emptyList(), startsideData.messages)
     }
@@ -162,7 +162,7 @@ class StartsideServiceTest {
     private fun uforetrygd(
         bunnfradrag: Int = 300000,
         reduksjonsprosent: Double = 65.5,
-        grenseStoppAvUfoeretrygd: Int = 500000,
+        inntektstak: Int = 500000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
         hasVarigTilrettelagtArbeid: Boolean = false,
@@ -177,7 +177,7 @@ class StartsideServiceTest {
         Uforetrygd(
             bunnfradrag = bunnfradrag,
             reduksjonsprosent = reduksjonsprosent,
-            grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,
+            inntektstak = inntektstak,
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,
             hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,

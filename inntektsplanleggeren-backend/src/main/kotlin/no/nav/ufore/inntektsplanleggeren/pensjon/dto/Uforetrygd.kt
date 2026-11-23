@@ -5,11 +5,13 @@ import java.time.LocalDate
 
 data class Uforetrygd(
     val bunnfradrag: Int,
+    val bunnfradragNesteAar: Int,
     val reduksjonsprosent: Double,
-    val grenseStoppAvUfoeretrygd: Int,
+    val reduksjonsprosentNesteAar: Double,
+    val inntektstak: Int,
+    val inntektstakNesteAar: Int,
     val hasLopendeUforeVedtakThisYear: Boolean,
     val hasLopendeUforeVedtakNextYear: Boolean,
-    val hasVarigTilrettelagtArbeid: Boolean,
     val hasGjenlevendeTillegg: Boolean,
     val uforeHeleAaret: Boolean,
     val barnetilleggSaerkullsbarn: Boolean,
