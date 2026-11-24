@@ -939,7 +939,6 @@ class InntektValidatorTest {
             inntektstak = 500000,
             hasLopendeUforeVedtakThisYear = false,
             hasLopendeUforeVedtakNextYear = false,
-            hasVarigTilrettelagtArbeid = false,
             hasGjenlevendeTillegg = false,
             uforeHeleAaret = false,
             barnetilleggSaerkullsbarn = false,
@@ -947,7 +946,10 @@ class InntektValidatorTest {
             epsPid = null,
             inntekterFromOpenKravBruker = null,
             inntekterFromOpenKravEps = null,
-            uforeFomDato = null
+            bunnfradragNesteAar = 310000,
+            reduksjonsprosentNesteAar = 66.5,
+            inntektstakNesteAar = 510000,
+            uforeFomDato = null,
         )
     private fun uforetrygd(
         hasBarnetilleggFellesbarn: Boolean,
@@ -959,7 +961,6 @@ class InntektValidatorTest {
             inntektstak = 500000,
             hasLopendeUforeVedtakThisYear = false,
             hasLopendeUforeVedtakNextYear = false,
-            hasVarigTilrettelagtArbeid = false,
             hasGjenlevendeTillegg = false,
             uforeHeleAaret = false,
             barnetilleggSaerkullsbarn = hasBarnetilleggSaerkullsbarn,
@@ -967,7 +968,10 @@ class InntektValidatorTest {
             epsPid = PID_EPS,
             inntekterFromOpenKravBruker = null,
             inntekterFromOpenKravEps = null,
-            uforeFomDato = null
+            uforeFomDato = null,
+            bunnfradragNesteAar = 310000,
+            reduksjonsprosentNesteAar = 66.5,
+            inntektstakNesteAar = 510000,
         )
 
     private fun <T> any(): T = Mockito.any()

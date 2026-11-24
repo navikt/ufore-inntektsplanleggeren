@@ -371,7 +371,6 @@ class PenClientTest : WebClientTest() {
         assertEquals(460060, uforetrygd?.inntektstak)
         assertTrue(uforetrygd!!.hasLopendeUforeVedtakThisYear)
         assertFalse(uforetrygd.hasLopendeUforeVedtakNextYear)
-        assertFalse(uforetrygd.hasVarigTilrettelagtArbeid)
         assertFalse(uforetrygd.hasGjenlevendeTillegg)
         assertTrue(uforetrygd.uforeHeleAaret)
         assertFalse(uforetrygd.barnetilleggSaerkullsbarn)
@@ -515,11 +514,13 @@ class PenClientTest : WebClientTest() {
                 """
                     {
     "bunnfradrag": 49611,
+    "bunnfradragNesteAar": 49612,
     "reduksjonsprosent": 49.7,
+    "reduksjonsprosentNesteAar": 49.8,
     "inntektstak": 460060,
+    "inntektstakNesteAar": 460061,
     "hasLopendeUforeVedtakThisYear": true,
     "hasLopendeUforeVedtakNextYear": false,
-    "hasVarigTilrettelagtArbeid": false,
     "hasGjenlevendeTillegg": false,
     "uforeHeleAaret": true,
     "barnetilleggSaerkullsbarn": false,

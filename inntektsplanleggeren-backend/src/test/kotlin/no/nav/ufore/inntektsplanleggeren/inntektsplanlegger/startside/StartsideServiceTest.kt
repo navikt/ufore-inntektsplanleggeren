@@ -46,8 +46,8 @@ class StartsideServiceTest {
     fun `hentStartsideData skal returnere StartsideData fra uforetrygd, valideringsmeldinger og forventede inntekter`() {
         val year = LocalDate.now().year
 
-        val expectedForventetInntektBruker = mapOf(year to 5000)
-        val expectedForventetInntektEps = mapOf(year to 6000)
+        val expectedForventetInntektBruker = 5000
+        val expectedForventetInntektEps =  6000
         val expectedBunnfradrag = 232
         val expectedReduksjonsprosent = 23.2
         val expectedinntektstak = 564654
@@ -69,8 +69,8 @@ class StartsideServiceTest {
                     PersonInntekter(null, null, null, null, null),
                     null
                 ),
-                expectedForventetInntektBruker[year]!!,
-                expectedForventetInntektEps[year]!!
+                expectedForventetInntektBruker,
+                expectedForventetInntektEps
             )
         )
 
@@ -80,12 +80,12 @@ class StartsideServiceTest {
 
         val startsideData = startsideService.hentStartsideData(PID, year)
 
-        assertEquals(expectedForventetInntektBruker, startsideData.uforetrygd!!.forventetInntekt[year]?.let { mapOf(year to it) })
-        assertEquals(expectedForventetInntektEps, startsideData.uforetrygd.forventetInntektAnnenForelder[year]?.let { mapOf(year to it) })
-        assertEquals(expectedBunnfradrag, startsideData.uforetrygd.bunnfradrag)
-        assertEquals(expectedReduksjonsprosent, startsideData.uforetrygd.reduksjonsprosent)
-        assertEquals(expectedinntektstak, startsideData.uforetrygd.inntektstak)
-        assertTrue(startsideData.uforetrygd.harBarnetilleggFellesbarn)
+        assertEquals(expectedForventetInntektBruker, startsideData.uforetrygdIAar!!.forventetInntekt)
+        assertEquals(expectedForventetInntektEps, startsideData.uforetrygdIAar.forventetInntektAnnenForelder)
+        assertEquals(expectedBunnfradrag, startsideData.uforetrygdIAar.bunnfradrag)
+        assertEquals(expectedReduksjonsprosent, startsideData.uforetrygdIAar.reduksjonsprosent)
+        assertEquals(expectedinntektstak, startsideData.uforetrygdIAar.inntektstak)
+        assertTrue(startsideData.uforetrygdIAar.harBarnetilleggFellesbarn)
         assertEquals(emptyList(), startsideData.messages)
     }
 
@@ -103,7 +103,7 @@ class StartsideServiceTest {
         val initialData = startsideService.hentStartsideData(PID, year)
 
         assertEquals(expectedMessages, initialData.messages)
-        assertNull(initialData.uforetrygd)
+        assertNull(initialData.uforetrygdIAar)
     }
 
     @Test
@@ -132,7 +132,7 @@ class StartsideServiceTest {
         `when`(validator.validateUserInitialData(any(), any())).thenReturn(emptyList())
 
         val initialData = startsideService.hentStartsideData(PID, year)
-        assertNull(initialData.uforetrygd)
+        assertNull(initialData.uforetrygdIAar)
         assertTrue(initialData.messages.isEmpty())
     }
 
@@ -155,7 +155,7 @@ class StartsideServiceTest {
         `when`(inntektsplanleggerService.finnAarKanRegistrereFor(any(), any())).thenReturn(listOf(year))
 
         val initialData = startsideService.hentStartsideData(PID, year)
-        assertNotNull(initialData.uforetrygd)
+        assertNotNull(initialData.uforetrygdIAar)
         assertEquals(expectedMessages, initialData.messages)
     }
 
@@ -165,7 +165,6 @@ class StartsideServiceTest {
         inntektstak: Int = 500000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
-        hasVarigTilrettelagtArbeid: Boolean = false,
         hasGjenlevendeTillegg: Boolean = false,
         uforeHeleAaret: Boolean = false,
         barnetilleggFellesbarn: Boolean = false,
@@ -180,7 +179,6 @@ class StartsideServiceTest {
             inntektstak = inntektstak,
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,
-            hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
             hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
@@ -188,7 +186,10 @@ class StartsideServiceTest {
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
             inntekterFromOpenKravEps = inntekterFromOpenKravEps,
-            uforeFomDato = null
+            uforeFomDato = null,
+            bunnfradragNesteAar = bunnfradrag,
+            reduksjonsprosentNesteAar = reduksjonsprosent,
+            inntektstakNesteAar = inntektstak
         )
 
     private fun forventedeInntekterRegistrert() = ForventedeInntekterSummary(
