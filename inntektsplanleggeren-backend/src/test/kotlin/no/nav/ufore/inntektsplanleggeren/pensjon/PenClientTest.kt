@@ -520,7 +520,6 @@ class PenClientTest : WebClientTest() {
     "inntektstakNesteAar": 460061,
     "hasLopendeUforeVedtakThisYear": true,
     "hasLopendeUforeVedtakNextYear": false,
-    "hasGjenlevendeTillegg": false,
     "uforeHeleAaret": true,
     "barnetilleggSaerkullsbarn": false,
     "grenseStoppAvBarnetilleggSaerkullsbarn": null,

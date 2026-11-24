@@ -109,15 +109,16 @@ class StartsideServiceTest {
     @Test
     fun `getAnnetRelevantAar skal kun sette seTallForAar til dette år når det er desember`() {
         val år = LocalDate.now().year
+        val now = nowProvider.now()
 
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
+        `when`(now).thenReturn(LocalDate.now().withMonth(Month.DECEMBER.value))
 
-        val annetRelevantÅrNårDesember = startsideService.getAnnetRelevantAar()
+        val annetRelevantÅrNårDesember = startsideService.getAnnetRelevantAar(now)
         assertEquals(år, annetRelevantÅrNårDesember)
 
-        `when`(nowProvider.now()).thenReturn(LocalDate.now().withMonth(Month.JUNE.value))
+        `when`(now).thenReturn(LocalDate.now().withMonth(Month.JUNE.value))
 
-        val annetRelevantÅrNårJuni = startsideService.getAnnetRelevantAar()
+        val annetRelevantÅrNårJuni = startsideService.getAnnetRelevantAar(now)
         assertEquals(null, annetRelevantÅrNårJuni)
     }
 
