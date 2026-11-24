@@ -371,7 +371,6 @@ class PenClientTest : WebClientTest() {
         assertEquals(460060, uforetrygd?.inntektstak)
         assertTrue(uforetrygd!!.hasLopendeUforeVedtakThisYear)
         assertFalse(uforetrygd.hasLopendeUforeVedtakNextYear)
-        assertFalse(uforetrygd.hasGjenlevendeTillegg)
         assertTrue(uforetrygd.uforeHeleAaret)
         assertFalse(uforetrygd.barnetilleggSaerkullsbarn)
         assertTrue(uforetrygd.barnetilleggFellesbarn)

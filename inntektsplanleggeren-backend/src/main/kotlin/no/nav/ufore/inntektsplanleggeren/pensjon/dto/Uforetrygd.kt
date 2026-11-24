@@ -12,7 +12,6 @@ data class Uforetrygd(
     val inntektstakNesteAar: Int,
     val hasLopendeUforeVedtakThisYear: Boolean,
     val hasLopendeUforeVedtakNextYear: Boolean,
-    val hasGjenlevendeTillegg: Boolean,
     val uforeHeleAaret: Boolean,
     val barnetilleggSaerkullsbarn: Boolean,
     val barnetilleggFellesbarn: Boolean,
