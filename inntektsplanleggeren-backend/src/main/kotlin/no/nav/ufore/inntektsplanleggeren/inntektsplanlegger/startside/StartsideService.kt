@@ -4,7 +4,6 @@ package no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.startside
 import no.nav.ufore.inntektsplanleggeren.metrics.StartsideInntektsplanleggerMetricsCounter
 import no.nav.ufore.inntektsplanleggeren.inntekt.InntektService
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.InntektsplanleggerService
-import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.validation.InntektsplanleggerMessage
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.validation.InntektsplanleggerMessageType
 import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.validation.Validator
 import no.nav.ufore.inntektsplanleggeren.pensjon.PenClient
@@ -41,7 +40,8 @@ class StartsideService(
         if (uforetrygd == null || messages.any { it.type == InntektsplanleggerMessageType.ERROR }) {
             return StartsideData(
                 messages = messages,
-                uforetrygd = null,
+                uforetrygdIAar = null,
+                uforetrygdNesteAar = null,
                 aarKanRegistrereInntekt = aktuelleAar,
                 seTallForAar = getAnnetRelevantAar(),
             )
@@ -58,7 +58,8 @@ class StartsideService(
 
         val response = StartsideData(
             messages,
-            uforetrygd = dataMap,
+            uforetrygdIAar = dataMap[today.year],
+            uforetrygdNesteAar = dataMap[today.year + 1],
             seTallForAar = getAnnetRelevantAar(),
             aarKanRegistrereInntekt = aktuelleAar,
         )
@@ -71,6 +72,7 @@ class StartsideService(
     private fun finnStartsideDataForIÅr(pid: String, uføretrygd: Uforetrygd, år: Int): UføretrygdOversikt {
         val forventedeInntekter = inntektService.getForventedeInntekter(pid, uføretrygd, år)
         return UføretrygdOversikt(
+            forAar = år,
             forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
             forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps ?: 0,
             bunnfradrag = uføretrygd.bunnfradrag,
@@ -83,6 +85,7 @@ class StartsideService(
     private fun finnStartsideDataForNesteÅr(pid: String, uføretrygd: Uforetrygd, år: Int): UføretrygdOversikt {
         val forventedeInntekter = inntektService.getForventedeInntekter(pid, uføretrygd, år)
         return UføretrygdOversikt(
+            forAar = år,
             forventetInntekt = forventedeInntekter.sumBenyttedeInntekterBruker,
             forventetInntektAnnenForelder = forventedeInntekter.sumBenyttedeInntekterEps ?: 0,
             bunnfradrag = uføretrygd.bunnfradragNesteAar,
