@@ -1511,37 +1511,32 @@ class InntektServiceTest {
     private fun createUforetrygd(
         bunnfradrag: Int = 300000,
         reduksjonsprosent: Double = 65.5,
-        grenseStoppAvUfoeretrygd: Int = 500000,
+        inntektstak: Int = 500000,
         hasLopendeUforeVedtakThisYear: Boolean = false,
         hasLopendeUforeVedtakNextYear: Boolean = false,
-        hasVarigTilrettelagtArbeid: Boolean = false,
-        hasGjenlevendeTillegg: Boolean = false,
         uforeHeleAaret: Boolean = false,
         barnetilleggFellesbarn: Boolean = false,
         barnetilleggSaerkullsbarn: Boolean = false,
-        grenseStoppAvBarnetilleggFellesbarn: Int = 100000,
-        grenseStoppAvBarnetilleggSaerkullsbarn: Int = 200000,
-        fribelopBarnetilleggSaerkullsbarn: Int = 150000,
-        fribelopBarnetilleggFellesbarn: Int = 150000,
         epsPid: String? = PID_EPS,
         inntekterFromOpenKravBruker: List<Inntektsgrunnlag>? = null,
         inntekterFromOpenKravEps: List<Inntektsgrunnlag>? = null
     ): Uforetrygd =
         Uforetrygd(
             bunnfradrag = bunnfradrag,
+            bunnfradragNesteAar = bunnfradrag,
             reduksjonsprosent = reduksjonsprosent,
-            grenseStoppAvUfoeretrygd = grenseStoppAvUfoeretrygd,
+            reduksjonsprosentNesteAar = reduksjonsprosent,
+            inntektstak = inntektstak,
+            inntektstakNesteAar = inntektstak,
             hasLopendeUforeVedtakThisYear = hasLopendeUforeVedtakThisYear,
             hasLopendeUforeVedtakNextYear = hasLopendeUforeVedtakNextYear,
-            hasVarigTilrettelagtArbeid = hasVarigTilrettelagtArbeid,
-            hasGjenlevendeTillegg = hasGjenlevendeTillegg,
             uforeHeleAaret = uforeHeleAaret,
             barnetilleggSaerkullsbarn = barnetilleggSaerkullsbarn,
             barnetilleggFellesbarn = barnetilleggFellesbarn,
             epsPid = epsPid,
             inntekterFromOpenKravBruker = inntekterFromOpenKravBruker,
             inntekterFromOpenKravEps = inntekterFromOpenKravEps,
-            uforeFomDato = null
+            uforeFomDato = null,
         )
 
     private fun inntektsgrunnlag(

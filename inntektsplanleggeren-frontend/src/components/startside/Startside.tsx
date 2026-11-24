@@ -95,16 +95,16 @@ export function Startside() {
                     </BodyShort>
                 </GuidePanel>
             </section>
-            {data.uforetrygd?.aarKanRegistrereInntekt?.length > 0 && (
+            {data.aarKanRegistrereInntekt.length > 0 && (
                 <YearView
-                    availableYears={data.uforetrygd.aarKanRegistrereInntekt}
-                    anotherAvalableYear={data.uforetrygd.seTallForAar}
+                    availableYears={data.aarKanRegistrereInntekt}
+                    anotherAvalableYear={data.seTallForAar}
                     handleSubmit={handleButtonClick}
                     isLoading={isLoading}
                 />
             )}
             <section aria-label={'Dine tall'}>
-                <ForventetInntekt data={data.uforetrygd} />
+                <ForventetInntekt data={[data.uforetrygdIAar, data.uforetrygdNesteAar]} />
             </section>
             <Accordion>
                 <Accordion.Item>

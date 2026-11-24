@@ -144,12 +144,13 @@ class ValidatorTest {
     private fun uforetrygd(hasLopendeVedtakThisYear: Boolean, hasLopvedtakNextYear: Boolean) =
         Uforetrygd(
             0,
+            0,
             0.0,
+            0.1,
+            0,
             0,
             hasLopendeVedtakThisYear,
             hasLopvedtakNextYear,
-            false,
-            false,
             false,
             false,
             false,

@@ -3,72 +3,52 @@ import type { UføretrygdOversikt } from '@/api/hentStartsideData'
 import { FormatKroner } from '@/components/utils/FormatKroner'
 
 interface Props {
-    data: UføretrygdOversikt
+    data: (UføretrygdOversikt | null)[]
 }
 
 export default function ForventetInntekt({ data }: Props) {
-    const forventetInntektMap = new Map(Object.entries(data.forventetInntekt))
-    const forventetInntektAnnenForelderMap = new Map(Object.entries(data.forventetInntektAnnenForelder))
-
-    const ForventetInntektInnhold = ({ år }: { år: string }) => {
-        const forventetInntekt = forventetInntektMap.get(år)
-        const expectedIncomeAnnenForelder = forventetInntektAnnenForelderMap.get(år)
-
-        return (
-            <Box borderRadius="12" padding="space-16" background="accent-soft">
-                <VStack gap="space-28">
-                    <Heading level="2" size="small">
-                        Registrert forventet inntekt for {år}
-                    </Heading>
-                    <BodyLong>
-                        Din registrerte forventede inntekt:{' '}
-                        {forventetInntekt !== null && forventetInntekt !== undefined ? (
-                            <strong>
-                                <FormatKroner value={forventetInntekt} />
-                            </strong>
-                        ) : (
-                            <strong>Ingen registrert forventet inntekt funnet</strong>
-                        )}
-                    </BodyLong>
-                    {data.harBarnetilleggFellesbarn ? (
-                        <BodyLong>
-                            Annen forelder du bor med sin forventede inntekt:{' '}
-                            {expectedIncomeAnnenForelder !== null && expectedIncomeAnnenForelder !== undefined ? (
-                                <strong>
-                                    <FormatKroner value={expectedIncomeAnnenForelder} />
-                                </strong>
-                            ) : (
-                                <strong>Ingen registrert forventet inntekt funnet</strong>
-                            )}
-                        </BodyLong>
-                    ) : (
-                        <></>
-                    )}
-                    <BodyLong>
-                        Ditt bunnfradrag:{' '}
-                        <strong>
-                            <FormatKroner value={data.bunnfradrag} />
-                        </strong>
-                    </BodyLong>
-                    <BodyLong>
-                        Reduksjonsprosent: <strong>{data.reduksjonsprosent} prosent</strong>
-                    </BodyLong>
-                    <BodyLong>
-                        Inntektstak:{' '}
-                        <strong>
-                            <FormatKroner value={data.inntektstak} />
-                        </strong>
-                    </BodyLong>
-                </VStack>
-            </Box>
-        )
-    }
-
     return (
-        <VStack gap={'space-32'}>
-            {Array.from(forventetInntektMap.keys()).map((year) => (
-                <ForventetInntektInnhold key={year} år={year} />
-            ))}
+        <VStack gap="space-32">
+            {data
+                .filter((oversikt) => oversikt !== null)
+                .map((oversikt) => (
+                    <Box key={oversikt.forAar} borderRadius="12" padding="space-16" background="accent-soft">
+                        <VStack gap="space-28">
+                            <Heading level="2" size="small">
+                                Registrert forventet inntekt for {oversikt.forAar}
+                            </Heading>
+                            <BodyLong>
+                                Din registrerte forventede inntekt:{' '}
+                                <strong>
+                                    <FormatKroner value={oversikt.forventetInntekt} />
+                                </strong>
+                            </BodyLong>
+                            {oversikt.harBarnetilleggFellesbarn && (
+                                <BodyLong>
+                                    Annen forelder du bor med sin forventede inntekt:{' '}
+                                    <strong>
+                                        <FormatKroner value={oversikt.forventetInntektAnnenForelder} />
+                                    </strong>
+                                </BodyLong>
+                            )}
+                            <BodyLong>
+                                Ditt bunnfradrag:{' '}
+                                <strong>
+                                    <FormatKroner value={oversikt.bunnfradrag} />
+                                </strong>
+                            </BodyLong>
+                            <BodyLong>
+                                Reduksjonsprosent: <strong>{oversikt.reduksjonsprosent} prosent</strong>
+                            </BodyLong>
+                            <BodyLong>
+                                Inntektstak:{' '}
+                                <strong>
+                                    <FormatKroner value={oversikt.inntektstak} />
+                                </strong>
+                            </BodyLong>
+                        </VStack>
+                    </Box>
+                ))}
         </VStack>
     )
 }

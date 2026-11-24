@@ -4,17 +4,18 @@ import no.nav.ufore.inntektsplanleggeren.inntektsplanlegger.validation.Inntektsp
 
 data class StartsideData(
     val messages: List<InntektsplanleggerMessage>,
-    val uforetrygd: UføretrygdOversikt?,
+    val uforetrygdIAar: UføretrygdOversikt?,
+    val uforetrygdNesteAar: UføretrygdOversikt?,
+    val aarKanRegistrereInntekt: List<Int>,
+    val seTallForAar: Int?,
 )
 
-
 data class UføretrygdOversikt(
-    val forventetInntekt: Map<Int, Int>,
-    val forventetInntektAnnenForelder: Map<Int, Int?>,
+    val forAar: Int,
+    val forventetInntekt: Int,
+    val forventetInntektAnnenForelder: Int,
     val bunnfradrag: Int,
     val reduksjonsprosent: Double,
     val inntektstak: Int,
     val harBarnetilleggFellesbarn: Boolean,
-    val aarKanRegistrereInntekt: List<Int>,
-    val seTallForAar: Int?,
 )

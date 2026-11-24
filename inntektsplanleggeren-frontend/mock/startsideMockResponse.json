@@ -1,17 +1,15 @@
 {
     "messages": [],
-    "uforetrygd": {
-        "forventetInntekt": {
-            "2026": 89343
-        },
-        "forventetInntektAnnenForelder": {
-            "2026": 12341
-        },
+    "uforetrygdIAar": {
+        "forAar": 2026,
+        "forventetInntekt": 89343,
+        "forventetInntektAnnenForelder": 12341,
         "bunnfradrag": 49611,
         "reduksjonsprosent": 49.7,
         "inntektstak": 460060,
-        "aarKanRegistrereInntekt": [2026],
-        "seTallForAar": null,
         "harBarnetilleggFellesbarn": true
-    }
+    },
+    "uforetrygdNesteAar": null,
+    "aarKanRegistrereInntekt": [2026],
+    "seTallForAar": null
 }
