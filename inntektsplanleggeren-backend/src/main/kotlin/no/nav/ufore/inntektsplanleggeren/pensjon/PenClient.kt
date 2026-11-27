@@ -120,10 +120,8 @@ class PenClient(
         }
     }
 
-    private fun brukerPensjoneres(e: WebClientResponseException): Boolean {
-        logger.info("Fikk feilmelding fra PEN {}", e.responseBodyAsString)
-        return e.responseBodyAsString.contains("UFOREGRUNNLAG_GeneriskKontrollpunkt Virkningstidspunkt") && e.responseBodyAsString.contains("er fom normert pensjonsdato")
-    }
+    private fun brukerPensjoneres(e: WebClientResponseException): Boolean =
+        e.responseBodyAsString.contains("UFOREGRUNNLAG_GeneriskKontrollpunkt Virkningstidspunkt") && e.responseBodyAsString.contains("er fom normert pensjonsdato")
 
     private fun barnetilleggetOpphøres(e: WebClientResponseException) =
         e.responseBodyAsString.contains("VILKARSVEDTAK_KontrollerVilkarsVedtakLogiskSammenhengRS.BT_VedtakKanIkkeBehandles BARN")

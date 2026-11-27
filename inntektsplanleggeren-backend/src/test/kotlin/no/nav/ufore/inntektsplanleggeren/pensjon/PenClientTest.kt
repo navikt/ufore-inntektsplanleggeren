@@ -314,12 +314,12 @@ class PenClientTest : WebClientTest() {
     fun `should throw OvergangAlderspensjonException when 400 from simulerInntektsendring contains pensjonsalder merknad`() {
         val responseBody = """
             {
-              "feilmelding" : "UFOREGRUNNLAG_GeneriskKontrollpunkt Virkningstidspunkt (2027-01-01) er fom normert pensjonsdato (2027-01-01)",
+              "feilmelding" : "UFOREGRUNNLAG_GeneriskKontrollpunkt Virkningstidspunkt (2027-01-01) er fom normert pensjonsdato (2027-01-01).",
               "merknader" : [ {
                 "ar" : null,
-                "argumentListeString" : "2027-01-01",
+                "argumentListeString" : "Virkningstidspunkt (2027-01-01) er fom normert pensjonsdato (2027-01-01).",
                 "kode" : "UFOREGRUNNLAG_GeneriskKontrollpunkt",
-                "argumentListe" : [ "2027-01-01","2027-01-01" ]
+                "argumentListe" : [ "Virkningstidspunkt (2027-01-01) er fom normert pensjonsdato (2027-01-01)." ]
               } ]
             }
         """.trimIndent()
